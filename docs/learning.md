@@ -6,3 +6,4 @@
 
 ---
 
+[Check projects readme](../projs/readme.md)
