@@ -1,3 +1,0 @@
-refspecversion: 1.00a_EWHardened
-refvcdb: vici
-refprojectid: 35150

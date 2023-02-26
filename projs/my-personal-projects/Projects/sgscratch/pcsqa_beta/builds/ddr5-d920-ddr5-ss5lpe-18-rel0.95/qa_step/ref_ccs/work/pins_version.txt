@@ -1,2 +1,0 @@
-Pin product: ddr5
-Pin product version: ver6.01

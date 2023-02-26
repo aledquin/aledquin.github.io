@@ -1,1 +1,0 @@
-/u/mehakk/GitLab/ddr-hbm-phy-automation-team/ddr-utils/dev/main/bin/pincheck.py
