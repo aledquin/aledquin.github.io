@@ -1,0 +1,46 @@
+---
+calibre_verifs: true
+releasePhyvMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_vddqclamp_ns
+    - dwc_ddrphy_vaaclamp
+    - dwc_ddrphy_decapvaa_tile
+releaseShimMacro: 
+    - dwc_ddrphy_gradient
+    - dwc_ddrphy_gradient_wide
+    - dwc_ddrphy_pllshim
+releasePmMailDist: jfisher,samy,domenic,thomasr,sg-d54-s10-ckt@synopsys.com
+supply_pins_override: 
+    dwc_ddrphy_techrevision: D3 M6
+    dwc_ddrphy_lcdl: D1 M4
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: D5 M8
+releaseUtilityMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_vddqclamp_ns
+releaseIgnoreMacro: 
+    - dwc_ddrphy_rxac_ns
+    - dwc_ddrphy_rxdq_ns
+    - dwc_ddrphy_rxdqs_ns
+    - dwc_ddrphy_txfe_ns
+    - dwc_ddrphy_txfedqs_ns
+    - dwc_ddrphy_txbe_ns
+    - dwc_ddrphy_bdl
+    - dwc_ddrphy_dqsenreplica_ns
+releaseMailDist: 
+    jfisher,ujjal,sg-d54-s10-ckt@synopsys.com,d803-ddr54-ss10lpp18@synopsys.com,sg-ddr-ckt-release@synopsys.com
+metal_stack: 13M_3Mx_6Dx_2Hx_2Iz_LB
+metal_stack_ip: 8M_3Mx_5Dx
+layers: M1 M2 M3 D1 D2 D3 D4 D5 OVERLAP
+release_gds_cdl: icv
+layout_tag: Prelim LVS-clean release
+reference_date_time: 24 days ago
+rel: 1.00a_pre2_v1.2.2dk
+vcrel: 0.20a
+p4_release_root: 
+    - products/ddr54/project/d803-ddr54-ss10lpp18
+    - products/ddr43_lpddr4_v2/project/d523-ddr43-ss10lpp18
+process: ss10lpp-18
+

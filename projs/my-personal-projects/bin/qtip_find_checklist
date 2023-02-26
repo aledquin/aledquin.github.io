@@ -1,0 +1,18 @@
+#!/bin/csh -f
+
+
+set qtip_location = '/slowfs/dcopt103/alvaro/alvaro_qtip/dwh/qtip/productFamilies'
+
+set compliance_file  = $1
+set compliance_sheet = $2
+
+cd $qtip_location
+
+p4 sync
+if ($2 != "") then
+	find -name \* -not -type d | xargs grep "$compliance_file" | grep "$compliance_sheet"
+else
+	find -name \* -not -type d | xargs grep "$compliance_file"
+endif
+	
+cd -

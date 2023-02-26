@@ -1,0 +1,13 @@
+flow_order|2000000
+Host|us01msem-amd-63cx970g-2818-036
+Tool|tcl
+Version|8.6.6
+Cores|1
+Wall Time|27
+CPU Time|NA
+CPU Efficiency|NA
+Mem|NA
+User|alvaro
+Logfile|/slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00/qa_step/ref_ccs/logs/get_ref_ccs.log
+Stop Time|1658175318
+License|LicenseDataUnavailable

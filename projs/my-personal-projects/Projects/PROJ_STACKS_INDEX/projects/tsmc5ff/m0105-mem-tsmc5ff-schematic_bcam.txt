@@ -1,0 +1,11 @@
+tsmc5ff-12_13M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Z /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMz_DRC/ICVN5LO_13M_1X1Xb1Xe1Ya1Yb5Y2Z_014.12a.encrypt
+tsmc5ff-12_14M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2R /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_14M_1X1Xb1Xe1Ya1Yb4Y2Yy2R_014.12a.encrypt
+tsmc5ff-12_14M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Z /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMz_DRC/ICVN5LO_14M_1X1Xb1Xe1Ya1Yb4Y2Yy2Z_014.12a.encrypt
+tsmc5ff-12_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2R /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_15M_1X1Xb1Xe1Ya1Yb5Y2Yy2R_014.12a.encrypt
+tsmc5ff-12_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2R_SHDMIM /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_15M_1X1Xb1Xe1Ya1Yb5Y2Yy2R_014.12a.encrypt
+tsmc5ff-12_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMz_DRC/ICVN5LO_15M_1X1Xb1Xe1Ya1Yb5Y2Yy2Z_014.12a.encrypt
+tsmc5ff-12_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z_SHDMIM /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMz_DRC/ICVN5LO_15M_1X1Xb1Xe1Ya1Yb5Y2Yy2Z_014.12a.encrypt
+tsmc5ff-12_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_16M_1X1Xb1Xe1Ya1Yb4Y2Yy2Yx2R_014.12a.encrypt
+tsmc5ff-12_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_SHDMIM /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_16M_1X1Xb1Xe1Ya1Yb4Y2Yy2Yx2R_014.12a.encrypt
+tsmc5ff-12_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Yx2R /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_17M_1X1Xb1Xe1Ya1Yb5Y2Yy2Yx2R_014.12a.encrypt
+tsmc5ff-12_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Yx2R_SHDMIM /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMr_DRC/ICVN5LO_17M_1X1Xb1Xe1Ya1Yb5Y2Yy2Yx2R_014.12a.encrypt

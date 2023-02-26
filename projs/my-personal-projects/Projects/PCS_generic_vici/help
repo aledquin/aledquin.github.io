@@ -1,0 +1,47 @@
+                    Lynx Design System: Runtime Manager (TM)
+
+                 Version Q-2020.09 for linux64 - Aug 27, 2020
+
+                    Copyright (c) 2010 - 2020 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+            or distribution of this software is strictly prohibited.
+
+Information: Initializing FLEXlm ....
+Information: Checking out licenses from the server ....
+Information: Successfully checked out license.
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_js.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_tools.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_rc.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_user_defined_buttons.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_reports.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_public.tcl
+Loading /slowfs/sgscratch/alvaro/pcsqa/scripts_global/rtm_shell/rtm_init_override.tcl
+Information: Initializing Variables...
+Information: Initializing Builds...
+
+Information: Starting Script
+
+set_flow_options -task_limit 0
+set id [new_session -build_name lpddr5x-d930-lpddr5x-tsmc5ff12-rel0.90_tc]
+Loading Session...
+ ...Checking Flow (Part 1)                             [100%]
+ ...Loading lpddr5x-d930-lpddr5x-tsmc5ff12-rel0.90_tc Flow Files [100%]
+ ...Checking Flow (Part 2)                             [100%]
+ ...Graphing Flows                                     [100%]
+ ...Insert Flows (Part 1)                              [100%]
+ ...Adding Tasks to Library                            [100%]
+ ...Adding Edges to Graph                              [100%]
+ ...Checking Flow (Cycle Check)                        [100%]
+ ...Insert Generator Files                             [100%]
+ ...Checking Flow (Part 3)                             [100%]
+ ...Initialize File Cache                              [100%]
+ ...Refresh Model                                      [100%]
+Done
+run_flow -id $id -obj tf_pcs_qa/evaluate_status  -background 0 -job_enable 1
+Information: Finished lpddr5x-d930-lpddr5x-tsmc5ff12-rel0.90_tc/1: Master-Goal.
+Error: Task finished with errors: Flow: lpddr5x-d930-lpddr5x-tsmc5ff12-rel0.90_tc/1 - Task: lpddr5x-d930-lpddr5x-tsmc5ff12-rel0.90_tc/tf_pcs_qa/get_p4_content.
+See builds/lpddr5x-d930-lpddr5x-tsmc5ff12-rel0.90_tc/qa_step/get_p4_content/logs/get_p4_content.log for more info.
+exit

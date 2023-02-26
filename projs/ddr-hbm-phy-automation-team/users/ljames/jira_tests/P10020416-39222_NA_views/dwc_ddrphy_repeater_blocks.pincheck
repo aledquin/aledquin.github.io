@@ -1,0 +1,406 @@
+
+
+#######################################################
+###  Date , Time     : 'Tue Dec 13 10:53:55 2022'
+###  Begin Running   : 'alphaPinCheck.pl'
+###  Author          : 'ddr-da team'
+###  Release Version : '2022.12'
+#######################################################
+
+-I- Logging to /u/ljames/GitLab/ddr-hbm-phy-automation-team/users/ljames/jira_tests/P10020416-39222_NA_views/dwc_ddrphy_repeater_blocks.pincheck
+-I- Current cell macro: dwc_ddrphy_rpt1ch_ns
+-I- Running /remote/us01home50/ljames/GitLab/ddr-hbm-phy-automation-team/ddr-ckt-rel/dev/main/bin/alphaPinCheck.pl
+-I- Arguments:
+
+	-verbosity 1 
+	-log /u/ljames/GitLab/ddr-hbm-phy-automation-team/users/ljames/jira_tests/P10020416-39222_NA_views/dwc_ddrphy_repeater_blocks.pincheck 
+	-nousage 
+	-appendlog 
+	-macro dwc_ddrphy_rpt1ch_ns 
+	-tech tsmc12ffcll-18 
+	-lefObsLayers M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 MTOP MTOP-1 OVERLAP 
+	-lefPinLayers M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 MTOP MTOP-1 OVERLAP 
+	-PGlayers M8 M9 M10 M11 MTOP MTOP-1 
+	-since 2022-11-28 17:33:00 
+	-dateRef CDATE 
+	-bracket square 
+	-streamLayermap /remote/cad-rep/projects/cad/c243-tsmc12ffcll-1.8v/rel6.0.1/cad/9M_2Xa1Xd_h_3Xe_vhv_2Z/stream/STD/stream.layermap 
+	-verilog /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/behavior/dwc_ddrphy_repeater_blocks.v 
+	-gds /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz 
+	-verilog /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/interface/dwc_ddrphy_repeater_blocks_interface.v 
+	-lef /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef 
+	-lef /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef 
+	-cdl /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/netlist/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.cdl 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v0c_pg.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v125c_pg.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88vn40c_pg.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v0c_pg.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v125c_pg.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72vn40c_pg.lib.gz 
+	-liberty /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_tt0p8v25c_pg.lib.gz 
+-I- Current time is Tue Dec 13 10:53:55 2022
+-I- File read successful: '/remote/cad-rep/projects/cad/c243-tsmc12ffcll-1.8v/rel6.0.1/cad/9M_2Xa1Xd_h_3Xe_vhv_2Z/stream/STD/stream.layermap'
+-I- File read successful: '/remote/cad-rep/msip/ude_conf/lef_vs_gds/tsmc12ffcll-18/msip_lefVsGds.map'
+-I- Reference for PG Pins derived from PG Liberty file(s) ...
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v0c_pg.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v125c_pg.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88vn40c_pg.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v0c_pg.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v125c_pg.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72vn40c_pg.lib.gz'
+-I- Reading liberty file: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_tt0p8v25c_pg.lib.gz'
+-I- Found PG pins: VDD,VDDQ,VSS
+-I- Legal LEF pin layers:  {M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 MTOP MTOP-1 OVERLAP}
+-I- Legal LEF obs layers:  {M1 M10 M11 M2 M3 M4 M5 M6 M7 M8 M9 MTOP MTOP-1 OVERLAP}
+-I- Verilog Files
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/behavior/dwc_ddrphy_repeater_blocks.v
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/interface/dwc_ddrphy_repeater_blocks_interface.v
+-I- Verilog Nopg Files
+-I- 	<None>
+-I- Liberty Files
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v0c_pg.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v125c_pg.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88vn40c_pg.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v0c_pg.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v125c_pg.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72vn40c_pg.lib.gz
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_tt0p8v25c_pg.lib.gz
+-I- Liberty Nopg Files
+-I- 	<None>
+-I- Lef Files
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef
+-I- CDL Files
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/netlist/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.cdl
+-I- GDS Files
+-I- 	/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz
+-I- Oasis Files
+-I- 	<None>
+-I- Pininfo CSV files
+-I- 	<None>
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/behavior/dwc_ddrphy_repeater_blocks.v
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/interface/dwc_ddrphy_repeater_blocks_interface.v
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:33 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:05 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:05 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:13 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:15 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:30 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:45 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v0c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:33 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v0c_pg.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v125c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:05 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v125c_pg.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88vn40c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:05 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88vn40c_pg.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v0c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:13 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v0c_pg.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v125c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:15 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v125c_pg.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72vn40c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:30 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72vn40c_pg.lib.gz'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_tt0p8v25c_pg.lib.gz
+-I- Creation date 'Thu Oct 29 16:20:45 2020' in LIB file:
+	'/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_tt0p8v25c_pg.lib.gz'
+-I- File read successful: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef'
+-I- File read successful: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/netlist/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.cdl
+-I- File read successful: '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/netlist/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.cdl'
+-I- Reading /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz
+-S- file /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz
+/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz: gzip compressed data, was "dwc_ddrphy_repeater_blocks.gds", from Unix, last modified: Fri May  6 03:46:05 2022
+-S- run_system_cmd 'gunzip -c /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz > /tmp/ljames_gunzip_9738/dwc_ddrphy_repeater_blocks.gds'
+-I- Wrote file successfully: 'getGdsInfo.sh'
+-I- Using alpha gds pininfo extractor
+-I- Wrote file successfully: 'bash_config.sh'
+-I- Wrote file successfully: 'icwb_config'
+-I- Checking across all views for PG pin existence ...
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDD'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDD'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-I- PG pin 'VDD'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDD'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDD' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDD'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDDQ'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDDQ'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-I- PG pin 'VDDQ'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDDQ'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VDDQ' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VDDQ'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VSS'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VSS'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-I- PG pin 'VSS'
+-I- 	 missing in '/u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VSS'
+-I- 	 missing in 'N/A'
+-W- PG pin 'VSS' has attribute TYPE that's  not defined! Bad pin definition in view -> 
+	 'N/A'
+-I- PG pin 'VSS'
+-I- 	 missing in 'N/A'
+
+
+-I- Checking across all views for pin existence ...
+-I- Wrote file successfully: 'mydatastruct.href'
+-I- CLEAN!
+
+
+-I- Checking across all views for pin direction consistency...
+-I- CLEAN!
+
+
+-I- Checking across all views for type consistency...
+-I- CLEAN!
+
+
+-I- Checking across all views for related_power consistency...
+-I- CLEAN!
+
+
+-I- Checking across all views for related_ground consistency...
+-I- CLEAN!
+
+
+-I- Checking bracket consistency across all views;  -I- All views must have "square" brackets
+-I- CLEAN!
+
+
+-I- Checking for macro area consistency
+-I- CLEAN!
+
+
+-I- Checking view file mod dates vs. 2022-11-28 17:33:00
+-I- 
+Undefined CDATE for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/behavior/dwc_ddrphy_repeater_blocks.v. Skipping date check.
+-I- CLEAN!
+-I- 
+Undefined CDATE for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/interface/dwc_ddrphy_repeater_blocks_interface.v. Skipping date check.
+-I- CLEAN!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v0c.lib.gz (Thu Oct 29 16:20:33 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88v125c.lib.gz (Thu Oct 29 16:20:05 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ff0p88vn40c.lib.gz (Thu Oct 29 16:20:05 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v0c.lib.gz (Thu Oct 29 16:20:13 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72v125c.lib.gz (Thu Oct 29 16:20:15 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_ss0p72vn40c.lib.gz (Thu Oct 29 16:20:30 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib/dwc_ddrphy_repeater_blocks_tt0p8v25c.lib.gz (Thu Oct 29 16:20:45 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v0c_pg.lib.gz (Thu Oct 29 16:20:33 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88v125c_pg.lib.gz (Thu Oct 29 16:20:05 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ff0p88vn40c_pg.lib.gz (Thu Oct 29 16:20:05 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v0c_pg.lib.gz (Thu Oct 29 16:20:13 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72v125c_pg.lib.gz (Thu Oct 29 16:20:15 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_ss0p72vn40c_pg.lib.gz (Thu Oct 29 16:20:30 2020) is stale
+-W- DIRTY!
+-E- 	Timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/timing/9M_2Xa1Xd_h_3Xe_vhv_2Z/lib_pg/dwc_ddrphy_repeater_blocks_tt0p8v25c_pg.lib.gz (Thu Oct 29 16:20:45 2020) is stale
+-W- DIRTY!
+-I- 
+Undefined CDATE for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef. Skipping date check.
+-I- CLEAN!
+-I- 
+Undefined CDATE for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef. Skipping date check.
+-I- CLEAN!
+-I- 
+Undefined CDATE for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/netlist/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.cdl. Skipping date check.
+-I- CLEAN!
+-E- 	Non-timing File /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz (Fri May  6 11:02:58 2022) is stale
+-W- DIRTY!
+-W- DIRTY!
+
+-I- Checking LEF pin layers:
+
+-I- Checking LEF pin layers for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef:  {M8 M9}
+-I- CLEAN!
+
+-I- Checking LEF OBS layers for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef: {M1 M2 M3 M4 M5 M6 M7 M8 M9}
+-I- CLEAN!
+
+-I- Checking LEF syntax for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef
+-I- Wrote file successfully: 'bash_config.sh'
+-I- Wrote file successfully: 'icwb_config'
+-S- run_system_cmd './bash_config.sh'
+-I- CLEAN!
+
+-I- Checking LEF pin layers for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef:  {M8 M9}
+-I- CLEAN!
+
+-I- Checking LEF OBS layers for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef: {M1 M2 M3 M4 M5 M6 M7 M8 M9}
+-I- CLEAN!
+
+-I- Checking LEF syntax for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef
+-I- Wrote file successfully: 'bash_config.sh'
+-I- Wrote file successfully: 'icwb_config'
+-S- run_system_cmd './bash_config.sh'
+-I- CLEAN!
+
+
+-I- Checking for lef power/ground for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.lef
+-I- CLEAN!
+
+
+-I- Checking for lef power/ground for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/lef/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks_merged.lef
+-I- CLEAN!
+
+
+-I- Checking for gds power/ground for /u/ljames/p4_ws/depot/products/lpddr54/project/d856-lpddr54-tsmc12ffc18/ckt/rel/dwc_ddrphy_repeater_blocks/2.00a/macro/gds/9M_2Xa1Xd_h_3Xe_vhv_2Z/dwc_ddrphy_repeater_blocks.gds.gz
+-I- CLEAN!

@@ -1,0 +1,13 @@
+LastRelease ddr-utils-2022.08
+ThisCommit 0c10015bf08b923fa253864e2a79bdeeab083bc2
+TodaysDate 2022-8-10
+AllCommits
+0c10015 README file renamed to README_alphaCheckHbmPhyInt because it belongs to that script
+cfc8786 fixed a hard-coded path to alphaExtractResults.tcl
+7e6b1d1 Delete pincheck.py
+79b2338 Merge branch 'master' of https://snpsgit.internal.synopsys.com/ddr-hbm/ddr-hbm-phy-automation-team into mehakk_P10020416-34880_Pin_check_table_extraction
+644bee4 Adding pincheck script.
+
+JiraStories
+
+	P10020416-34880

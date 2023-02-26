@@ -1,0 +1,13 @@
+Corner Type	Case	Core Voltage (V)	PLL Voltage (V)	IO Voltage (V)	Temperature (C)	Extraction Corner
+Standard Product	FF	0.825	1.32	1.21 (DDR5)	-40 / 0 / 125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	SS	0.675	1.08	1.08 (DDR5)	-40 / 0 / 125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	TT	0.75	1.2	1.1 (DDR5)	25	RCtypical
+Standard Product	TT	0.75	1.2	1.1 (DDR5)	85	RCtypical
+Standard Product	FFGNP	0.825	1.12	0.55 (LPDDR5X)	-40 / 125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	FFGNP	0.75	1.05	0.55 (LPDDR5X)	25 / 125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	SSGNP	0.675	1.01	0.55 (LPDDR5X)	-40 / 125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	FFGNP	1.16	2.16	0.5 (LPDDR5X)	25	best_CCbest
+Standard Product	FFGNP	1.05	2.16	0.5 (LPDDR5X)	125	best_CCbest
+Standard Product	FFGNP	1.6	2.16	0.5 (LPDDR5X)	25	typical
+Standard Product	SSGNP	1.05	2.16	0.5 (LPDDR5X)	125	cworst_CCworst
+Standard Product	SSGNP	1.16	2.16	0.5 (LPDDR5X)	25	cworst_CCworst

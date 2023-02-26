@@ -1,0 +1,11 @@
+get_ref_ccs
+CHECK FAILED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:40:10 2022
+Execution time: 00:00:00:10
+
+Information: Process ID for tool: 4278
+SNPS_ERROR  : (PCSQA-VC-1) No VC project releases of project d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 (VC PCS (prefix) version 1.30a_mrvl_sup1)
+Get reference CCS version from /remote/cad-rep/projects/ddr54/d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1/cad/project.env
+Reference CCS /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1 found in project.env

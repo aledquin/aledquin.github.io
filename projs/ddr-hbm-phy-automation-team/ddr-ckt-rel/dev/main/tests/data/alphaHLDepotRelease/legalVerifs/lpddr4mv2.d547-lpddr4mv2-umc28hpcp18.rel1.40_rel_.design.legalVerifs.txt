@@ -1,0 +1,10 @@
+## list of tape-out ICV/Calibre verification runs to release
+icv/ant
+icv/drc
+icv/drc_dm
+icv/drc_dpd
+icv/drc_mini
+icv/drc_pm
+icv/erc
+icv/lup
+icv/lvs

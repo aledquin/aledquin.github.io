@@ -1,0 +1,3 @@
+Description,Type_of_lib,Lib_file_name,Pin,Value,Previous_value
+Pin mismatch,lib_pg_lvf,dwc_ddrphy_cmpana_18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB_sfg0p675v125c_pg.lib,Cmpdig_CalDac[0],missing,
+Pin mismatch,lib_pg_lvf,dwc_ddrphy_cmpana_18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB_sfg0p675v125c_pg.lib,PwrOk_VIO,missing,

@@ -1,0 +1,809 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/iprel/scripts_global/bob/multi_something.tcl#2 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This is the standard decision script for data management.
+## * The decision being made is promote vs restore.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## HISTORY
+##
+## 01/12/2015, ahogenhu
+##             Support of predefined release postfixes at VC interface (STAR 9000829077)
+##
+## 03/03/2015, ahogenhu
+## 	       In VC, preliminary releases and patch versions contain spaces in release name (STAR 9000829077)
+##             and therefore they have to be retreived by projectid
+##             A release name with postfix _pre or _pver has to be treated as common release name.
+##
+## 06/09/2015, ahogenhu
+##             Support of PCS Parent/Child relationship in project.env (PCS QA specification 4.1 2.1a) (STAR 9000897886)
+##	       PCS should not use '_beta' release of CCS (PCS QA specification 4.1 2.1z)
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+source $::env(MSIP_CCS_UTILS)/lib/xsxp.tcl
+
+sproc_source -file $SEV(gscript_dir)/qa_scripts/check_rule_applicable.tcl
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set pcs $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+if { [file isdirectory $pcs] == 0 } {
+	set pcs [file normalize [getWorkDir get_p4_content]/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)]
+}
+
+set enablevici 1
+if { $enablevici == 1 } {
+	set vcdb "vici"
+	set portspeccall "PortingSpec"
+} else {
+	set vcdb "vc"
+	set portspeccall "ProjSummaryAdvanced"
+}
+
+set udeproj   $::env(udeproj)
+set ude3proj  /remote/cad-rep/projects
+
+set getviciinfo ""
+
+set projectenv $pcs/cad/project.env
+if { [file exists $projectenv] == 0 } {
+	set projectenv $pcs/design/project.env
+}
+set msip_parentchild_type ""
+set msip_parentchild_type_values [list "PARENT" "CHILD_CAD_SETUP" "CHILD_RnD_LIBS" "CHILD_ALL"]
+if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENTCHILD_TYPE | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parentchild_type
+	if { $msip_parentchild_type != "" && [lsearch -exact $msip_parentchild_type_values $msip_parentchild_type] == -1 } {
+		ruleErrorApplicable "(PCSQA-2.1.1a) MSIP_PARENTCHILD_TYPE environment variable in project.env has wrong value: $msip_parentchild_type"		
+	}
+}
+set parentchild 0
+set ccstext "CCS"
+if { $msip_parentchild_type == "CHILD_CAD_SETUP" || $msip_parentchild_type == "CHILD_ALL" } {
+	set parentchild 1
+	set ccstext "Parent PCS"
+}
+
+## Predefined VC postfixes for releases
+## --hf   - hotfix releases
+## --int  - internal releases
+## --tc   - testchip releases
+## --pre  - preliminary releases
+## --pver - patch_version
+## Preliminary releases and patch versions contain spaces in release name (STAR 9000829077)
+## and therefore are handled by projectid.
+## A release name with postfix _pre or _pver has to be treated as common release name.
+set predefined_vc_postfixes [list "hf" "int" "tc"]
+
+## get reference CCS version from porting spec
+set specversion $SVAR(pcs_version)
+if { [string compare -length 3 "rel" $SVAR(pcs_version)] == 0 } {
+	## no rel
+	set specversion [string range $SVAR(pcs_version) 3 [expr [string length $SVAR(pcs_version)] - 1]]
+}
+if { $SVAR(product_name) == "std" && [string first "_pre" $specversion] != -1 } {
+	## set specversion [string range $specversion 0 [expr [string first "_pre" $specversion] - 1]]
+	## relX.Y.Z_pre<n> releases for std have no VC entry
+	set specversion ""
+}
+set refspecversion ""
+set refprojectid ""
+if { $specversion != "" } {
+set orgspecversion $specversion
+catch { exec $SEV(exec_cmd) -c "rm -f PCS_In_progress porting_spec_ref.xml" } dummy
+sproc_msg -info "Get all VC project releases of PCS $SVAR(pcs_name)/$SVAR(pcs_version) (VC PCS (prefix) version $specversion)"
+set releases ""
+set attempt 1
+while { $attempt <= 3 && $releases == "" } {
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module unload msip_shell_vc_utils && module load msip_shell_vc_utils && msip_${vcdb}GenerateProjectReleasesInformation.pl -p $SVAR(pcs_name) -r $specversion --out project_releases_information.xml" } log
+	if { [file exists project_releases_information.xml] && [file size project_releases_information.xml] > 0 } {
+		if { $vcdb == "vc" } {
+			catch { exec $SEV(exec_cmd) -c "tr -d '\\n' < project_releases_information.xml > project_releases_information_org.xml && sed -e 's/&#xD;/; /g' -e 's#&lt;#<#g' -e 's#&gt;#>#g' -e 's#<_Info>#\\n<_Info>#g' project_releases_information_org.xml > project_releases_information.xml" } dummy
+			catch { exec $SEV(exec_cmd) -c "sed -e 's/<_Release_Id>/\\nRelease_Id/g' -e 's/<\\/_Release_Name>/\\n/g' project_releases_information.xml | grep Release_Id | sed -e 's/<\\/_Release_Id><_Release_Name>/ /g' -e 's/Release_Id//g'" } releases
+		} else {
+			catch { exec $SEV(exec_cmd) -c "cp project_releases_information.xml orig.xml" } dummy
+			set getviciinfo "releases"
+			source $::env(MSIP_CCS_UTILS)/tcl/parse_vici_xml.tcl
+			set getviciinfo ""
+			catch { exec $SEV(exec_cmd) -c "sed -e 's/\\s\\s*$//g' releases.txt > releases.txt2 && mv releases.txt2 releases.txt" } dummy
+			## releases.txt larger than one space and carriage return
+			if { [file exists releases.txt] && [file size releases.txt] > 2 } {
+				catch { exec $SEV(exec_cmd) -c "cat releases.txt" } releases
+			} else {
+				set releases ""
+			}		
+		}
+	} else {
+		after 60000
+	}	
+	incr attempt
+}
+
+if { [file exists project_releases_information.xml] == 0 || [file size project_releases_information.xml] == 0 || $releases == "" } {
+	if { [file exists project_releases_information.xml] == 0 || [file size project_releases_information.xml] == 0 } {
+		puts $log
+	}
+	sproc_msg -error "(PCSQA-VC-1) No VC project releases of project $SVAR(pcs_name)/$SVAR(pcs_version) (VC PCS (prefix) version $specversion)"
+} else {
+	set refccs ""
+	set releases [split $releases "\n"]
+	if { [llength $releases] == 0 } {
+		sproc_msg -error "(PCSQA-VC-1) No VC project releases of project $SVAR(pcs_name)/$SVAR(pcs_version) (VC PCS (prefix) version $specversion)"
+	}
+	foreach release $releases {
+		catch { exec $SEV(exec_cmd) -c "echo \"$release\" | awk '{ print \$3 }'" } version
+		catch { exec $SEV(exec_cmd) -c "echo \"$release\" | awk '{ print \$4 }'" } postversion
+		if { $postversion != "" } { 
+		  	catch { exec $SEV(exec_cmd) -c "echo \"$release\" | awk '{ for (i=3; i<=NF; i++) printf \$i\" \" }'" } totalversion
+			set totalversion [string trimright $totalversion]
+			set totalversion "'$totalversion'"
+		} else {
+			set totalversion $version
+		}
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module unload msip_shell_vc_utils && module load msip_shell_vc_utils && msip_vici_or_vc.pl -p $SVAR(pcs_name) -r $totalversion" } vcversion
+		if { $vcversion == "VICI" } {
+			set vcdb "vici"
+			set portspeccall "PortingSpec"
+		} else {
+			set vcdb "vc"
+			set portspeccall "ProjSummaryAdvanced"
+		}		
+		set vcdbtext [string toupper $vcdb]		
+		## force usage of --id option at VC utilities
+		## to prevent release name clashes at PCS parent/child releases 
+		set postversion "forceid"
+		if { $postversion != "" } {
+			## VC version at of PCS has space in name
+			## use project id instead
+			catch { exec $SEV(exec_cmd) -c "echo \"$release\" | awk '{ for (i=4; i<=NF; i++) printf \$i\" \" }'" } postversion
+			set postversion    [string trimright $postversion]
+			if { $postversion != "" } {
+				set specversiontxt "$version $postversion"
+				set specversion    [string map { " " _ } $specversiontxt]
+				set specversiontxt "'$specversiontxt'"
+			} else {
+				set specversiontxt $version
+				set specversion    $version
+			}
+			## Independent of value of vcdb, msip_viciGeneratePortingSpecXml.pl needs 'ViCi' project_id
+			catch { exec $SEV(exec_cmd) -c "echo \"$release\" | awk '{ print \$1 }'" } project_id
+			sproc_msg -info "Generate Porting Spec of PCS $SVAR(pcs_name)/$SVAR(pcs_version) ($vcdbtext PCS version $specversiontxt (Id $project_id)) from $vcdbtext"
+			set porting_spec porting_spec_$specversion.xml
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module unload msip_shell_vc_utils && module load msip_shell_vc_utils && msip_viciGeneratePortingSpecXml.pl --id $project_id --out $porting_spec | sed -e 's/Error: //g'" } log
+		} else {
+			set specversion    $version
+			set specversiontxt $version			
+			sproc_msg -info "Generate Porting Spec of PCS $SVAR(pcs_name)/$SVAR(pcs_version) ($vcdbtext PCS version $specversion) from $vcdbtext"
+			## separate arguments for VC interface in case the postfix after last underscore of the release name is predefined for VC
+			set rversion       $specversion
+			set postfixoption  ""
+##			if { $vcdb == "vc" && [string last _ $rversion] != -1 && [string last _ $rversion] < [expr [string length $rversion] - 1] } {
+##				set postfix [string range $rversion [expr [string last _ $rversion] + 1] [expr [string length $rversion] - 1]]
+##				if { [lsearch -exact $predefined_vc_postfixes $postfix] != -1 } {
+##					set rversion       [string range $rversion 0 [expr [string last _ $rversion] - 1]]
+##					set postfixoption  "--$postfix"
+##				}
+##			}
+			set porting_spec porting_spec_$specversion.xml
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module unload msip_shell_vc_utils && module load msip_shell_vc_utils && msip_viciGeneratePortingSpecXml.pl -p $SVAR(pcs_name) -r $rversion $postfixoption --out $porting_spec | sed -e 's/Error: //g'" } log
+		}
+		if { [file exists porting_spec_$specversion.xml] } {
+			## keep a version for xml parsing
+			catch { exec $SEV(exec_cmd) -c "cp -f porting_spec_$specversion.xml porting_spec_org_$specversion.xml" } dummy
+			## change the xml to make suitable to retreive easy values
+			catch { exec $SEV(exec_cmd) -c "tr -d '\\n' < porting_spec_$specversion.xml > porting_spec_$specversion.xml2 && sed -e 's/&#xD;/; /g' -e 's#&lt;#<#g' -e 's#&gt;#>#g' -e 's#<_Info>#\\n<_Info>#g' porting_spec_$specversion.xml2 > porting_spec_$specversion.xml && rm -f porting_spec_$specversion.xml2" } dummy
+
+			## At least one porting spec has to have Status 'In progress'
+			## Take the first such spec as reference			
+##			if { $vcdb == "vc" } {
+##				catch { exec $SEV(exec_cmd) -c "sed -e 's/<_Status>/\\nStatus/g' -e 's/<\\/_Status>/\\n/g' porting_spec_$specversion.xml | grep Status | sed -e 's/Status//g' | tail -1" } status
+##			} else {
+				catch { exec $SEV(exec_cmd) -c "cat porting_spec_$specversion.xml | tr -d '\\n' | sed -e 's/<_Label>Release Status<\\/_Label>\\s*<_Value>/\\nReleaseStatus/g' -e 's/<\\/_Value>/\\n/g' | grep ReleaseStatus | sed -e 's/ReleaseStatus//g' | tail -1" } status
+##			}
+
+			## check if all VC porting specs have same CCS version
+##			if { $vcdb == "vc" } {
+##				catch { exec $SEV(exec_cmd) -c "sed -e 's/<_CCS_Project>/\\nCCS_Project/g' -e 's/<\\/_CCS_Project>/\\n/g' porting_spec_$specversion.xml | grep CCS_Project | sed -e 's/CCS_Project//g' -e 's/, Release version /\\/rel/g'" } ccs
+##			} else {
+				catch { exec $SEV(exec_cmd) -c "cat porting_spec_$specversion.xml | tr -d '\\n' | sed -e 's/<_Label>Parent release<\\/_Label>\\s*<_Value>/\\nCCS_Project/g' -e 's/<\\/_Value>/\\n/g' | grep CCS_Project | sed -e 's/CCS_Project//g' -e 's/,\\s*/\\/rel/g'" } ccs
+##			}
+			if { $status == "In progress" } {
+				## store ccs and version of this Porting Spec to compare later with reference ccs (of parent)
+				## if status is 'In progress' (P10020416-25888)
+				set portingspecversiontxt($project_id) $specversiontxt
+				set ccs_of_portingspec($project_id) $ccs
+			}
+			if { $ccs != "" && 
+			     ( ( $parentchild == 0 && [llength [glob -nocomplain $udeproj/cad/${ccs}*]] > 0 ) || $parentchild == 1 ) } {
+##			       ( $parentchild == 1 && [llength [glob -nocomplain $ude3proj/*/${ccs}*]] > 0 ) 
+##				if { $refccs == "" } {
+##					set refccs $ccs
+##					set refccsspecversion $specversiontxt
+##				} else {
+##					if { $ccs != $refccs } {
+##						sproc_msg -error "(PCSQA-VC-1) $ccstext version $ccs in Porting Spec $specversiontxt is different to $ccstext version $refccs in Porting Spec $refccsspecversion"
+##						catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+##					}
+##				}
+			} else {
+				if { $status == "In progress" } {
+					## Accept valid CCS or parent PCS only 
+					## if status is 'In progress' (P10020416-25888)
+					if { $parentchild == 0 } {
+						sproc_msg -error "(PCSQA-CCS-1) No or invalid CCS (CAD Project) entry in Porting Spec $specversiontxt (Id $project_id) of project $SVAR(pcs_name)/$SVAR(pcs_version) from $vcdbtext"
+					} else {
+						ruleErrorApplicable "(PCSQA-2.1.1m) No or invalid parent PCS (Parent release) entry in Porting Spec $specversiontxt (Id $project_id) of project $SVAR(pcs_name)/$SVAR(pcs_version) from $vcdbtext"
+					}
+				}
+			}
+
+			puts "Project Status: $status"
+			if { $status == "In progress" } {
+				if { [file exists porting_spec_ref.xml] == 0 || $project_id < $refprojectid } {
+					## if $project_id < $refprojectid then $project_id = Parent && $refprojectid = Sub release!
+					catch { exec $SEV(exec_cmd) -c "cp porting_spec_$specversion.xml porting_spec_ref.xml" } dummy
+					catch { exec $SEV(exec_cmd) -c "cp porting_spec_org_$specversion.xml porting_spec_org_ref.xml" } dummy
+					set refspecversiontxt $specversiontxt
+					set refspecversion $specversion
+					set refprojectid $project_id
+					set refvcdb $vcdb
+
+					if { $ccs != "" && 
+			     		     ( ( $parentchild == 0 && [llength [glob -nocomplain $udeproj/cad/${ccs}*]] > 0 ) || $parentchild == 1 ) } {
+						set refccs $ccs
+						set refccsspecversion $specversiontxt
+					}
+				}
+			}
+		} else {
+			puts $log
+			sproc_msg -warning "(PCSQA-VC-1) No Porting Spec of project $SVAR(pcs_name)/$SVAR(pcs_version) ($vcdbtext PCS version $specversiontxt (Id $project_id)) from $vcdbtext"
+		}
+	}
+
+	set portspecs [glob -nocomplain porting_spec_*.xml]
+	if { [llength $portspecs] > 0 && [file exists porting_spec_ref.xml] == 0 } {
+		set mappingtext "$orgspecversion.*"
+		if { [string first _ $orgspecversion] != -1 } {
+			set premappingtext  [string range $orgspecversion 0 [expr [string first _ $orgspecversion] - 1 ]]
+			set postmappingtext [string range $orgspecversion [string first _ $orgspecversion] [expr [string length $orgspecversion] - 1 ] ]
+			set mappingtext "$premappingtext\[a-z\]$postmappingtext"
+		}
+		sproc_msg -error "(PCSQA-VC-1) No Porting Spec of project $SVAR(pcs_name)/$SVAR(pcs_version) (VC PCS version $mappingtext) from VC has Status 'In progress'"
+		catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+	}
+	
+	if { $refccs != "" } {
+		foreach portspecid [array names ccs_of_portingspec] {
+			if { $portspecid != $refprojectid } {
+				set ccs $ccs_of_portingspec($portspecid)
+				if { $ccs != "" && $ccs != $refccs } {
+					set specversiontxt $portingspecversiontxt($portspecid) 
+					sproc_msg -error "(PCSQA-VC-1) $ccstext version $ccs in Porting Spec $specversiontxt (Id $portspecid) is different to $ccstext version $refccs in Porting Spec $refccsspecversion (Id $refprojectid)"
+					catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+				}
+			}
+		}
+	}
+
+}
+}
+## $specversion != ""
+
+set ccsfound 0
+if { [file exists porting_spec_ref.xml] } {
+##	if { $refvcdb == "vc" } {
+##		catch { exec $SEV(exec_cmd) -c "sed -e 's/<_CCS_Project>/\\nCCS_Project/g' -e 's/<\\/_CCS_Project>/\\n/g' porting_spec_ref.xml | grep CCS_Project | sed -e 's/CCS_Project//g' -e 's/, Release version /\\/rel/g'" } ccs
+##	} else {
+		catch { exec $SEV(exec_cmd) -c "cat porting_spec_ref.xml | tr -d '\\n' | sed -e 's/<_Label>Parent release<\\/_Label>\\s*<_Value>/\\nCCS_Project/g' -e 's/<\\/_Value>/\\n/g' | grep CCS_Project | sed -e 's/CCS_Project//g' -e 's/,\\s*/\\/rel/g'" } ccs
+##	}
+	set parentchild 0
+	set ccstext "Reference CCS"
+	set ccsfile "ref_ccs"
+	if { $msip_parentchild_type == "CHILD_CAD_SETUP" || $msip_parentchild_type == "CHILD_ALL" } {
+		set parentchild 1
+		set ccstext "Parent PCS"
+		set ccsfile "parent_pcs"
+	}
+	if { $ccs != "" } {
+		if { $parentchild == 0 } {
+			set ccs $udeproj/cad/$ccs
+		} else {
+			set pcsname [string range $ccs 0 [expr [string first / $ccs] - 1]]
+			set pcsrel  [string range $ccs [expr [string first / $ccs] + 1] [expr [string length $ccs] - 1]]		
+			if { [string first " " $pcsrel] != -1 } {
+				## release name of pcsrel on VC contains space
+				set pcsrel [string range $pcsrel 0 [expr [string first " " $pcsrel] - 1]]
+			}
+			
+			if { [string first _ $pcsrel] != -1 } {
+				## remove a-z before _ of pcsrel
+				set pcsrelpre  [string range $pcsrel 0 [expr [string first _ $pcsrel] - 1]]
+				set pcsrelpre  [string trimright $pcsrelpre abcdefghijklmnopqrstuvwxyz]
+				set pcsrelpost [string range $pcsrel [string first _ $pcsrel] [expr [string length $pcsrel] - 1]]
+				set pcsrel $pcsrelpre$pcsrelpost
+			} else {
+				## remove a-z at end of pcsrel
+				set pcsrel     [string trimright $pcsrel abcdefghijklmnopqrstuvwxyz]
+			}
+			
+			set ccs $pcsname/$pcsrel
+			if { [llength [glob -nocomplain $ude3proj/*/${ccs}]] > 0 } {					
+				set ccs [lindex [glob -nocomplain $ude3proj/*/${ccs}] 0]
+			}
+		}
+		if { [llength [glob -nocomplain ${ccs}*]] > 0 } {
+			puts "$ccstext $ccs found in Porting Spec $refspecversiontxt ($refvcdb Id: $refprojectid)"
+			catch { exec $SEV(exec_cmd) -c "echo \"$ccs\" > $ccsfile.txt" } dummy
+			set ccsfound 1
+			if { $parentchild == 1 } {
+				if { [string compare -length [string length "$ude3proj/cad"] "$ude3proj/cad" $ccs] == 0 } {
+					ruleErrorApplicable "(PCSQA-2.1.1k) PCS refers to CCS $ccs in VC instead of Parent PCS"				
+				}
+			}
+		}
+	}
+
+	catch { exec $SEV(exec_cmd) -c "touch PCS_In_progress" } dummy
+
+	## input : orig.xml
+##	if { $refvcdb == "vc" } {
+##		sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/extract_switches.tcl
+		## output: switches_spec.txt
+
+		## extract deck versions from porting spec
+##		catch { exec $SEV(exec_cmd) -c "grep \\<_Information porting_spec_ref.xml > deck_version.xml" } dummy
+##		catch { exec $SEV(exec_cmd) -c "sed -e 's#_Information##g' -e 's#_Info##g' -e 's#_Deck_Name##g' -e 's#<>##g' -e 's#</># #g' -e 's#  # #g' deck_version.xml > deck_version.txt" } dummy
+##	} else {
+		## catch { exec $SEV(exec_cmd) -c "cp -f porting_spec_org_ref.xml orig.xml" } dummy
+		catch { exec $SEV(exec_cmd) -c "sed -e 's/&#xD;/ /g' porting_spec_org_ref.xml > orig.xml" } dummy
+		set getviciinfo "switches"
+		sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/parse_vici_xml.tcl
+		set getviciinfo ""
+		## output: switches_spec.txt, deck_version.txt
+
+		## input : orig.xml
+		set getviciinfo "cost_layers"
+		sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/parse_vici_xml.tcl
+		set getviciinfo ""
+		## output: cost_layers.txt
+		if { [file exists cost_layers.txt] } {
+			catch { exec $SEV(exec_cmd) -c "grep -v \"^\[\[:blank:\]\]*$\" cost_layers.txt > cost_layers.txt2 && mv cost_layers.txt2 cost_layers.txt" } dummy
+			catch { exec $SEV(exec_cmd) -c "cat cost_layers.txt | wc -l" } cost_layers
+			if { $cost_layers == 1 } {
+				catch { exec $SEV(exec_cmd) -c "rm -f cost_layers.txt" } dummy
+			}
+		}
+##	}
+
+}
+
+proc matchccs { refccs pcsccs } {
+
+	if { [string compare -length [string length $refccs] $refccs $pcsccs] == 0 &&
+	     [expr [string length $refccs] + 2] == [string length $pcsccs] &&
+	     [string index $pcsccs [expr [string length $pcsccs] - 2]] == "." &&
+	     [string is digit [string index $pcsccs [expr [string length $pcsccs] - 1]]] } {
+	     	return 1
+	} else {
+		return 0
+	}
+
+}
+	set parentchild 0
+	set ccstext "Reference CCS"
+	set midccstext "reference CCS"
+	set errortype "CCS"
+	set ccsfile "ref_ccs"
+	if { $msip_parentchild_type == "CHILD_CAD_SETUP" || $msip_parentchild_type == "CHILD_ALL" } {
+		set parentchild 1
+		set ccstext "Parent PCS"
+		set midccstext "parent PCS"
+		set errortype "PARENTCHILD"
+		set ccsfile "parent_pcs"
+	}
+
+	## get reference CCS version from project.env, 
+	## use this version x.y.z for beta check if x.y is VC version
+	puts "Get $midccstext version from $projectenv"
+	if { [file exists $projectenv] } {
+		catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PRODUCT_NAME | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_product_name
+		catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PROJ_NAME    | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_proj_name
+		catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_REL_NAME     | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_rel_name
+		if { $msip_parentchild_type == "PARENT" } {
+			if { $msip_parent_pcs_product_name != "" && [string compare $msip_parent_pcs_product_name $SVAR(product_name)] != 0 } {
+				ruleErrorApplicable "(PCSQA-2.1.1c) MSIP_PARENT_PCS_PRODUCT_NAME has no value '$SVAR(product_name)'"
+			}
+			if { $msip_parent_pcs_proj_name != "" && [string compare $msip_parent_pcs_proj_name $SVAR(pcs_name)] != 0 } {
+				ruleErrorApplicable "(PCSQA-2.1.1c) MSIP_PARENT_PCS_PROJ_NAME has no value '$SVAR(pcs_name)'"
+			}
+			if { $msip_parent_pcs_rel_name != "" && [string compare $msip_parent_pcs_rel_name $SVAR(pcs_version)] != 0 } {
+				ruleErrorApplicable "(PCSQA-2.1.1c) MSIP_PARENT_PCS_REL_NAME has no value '$SVAR(pcs_version)'"
+			}
+		}
+		if { $msip_parent_pcs_product_name != "" && $msip_parent_pcs_proj_name != "" && $msip_parent_pcs_rel_name != "" } {
+			## Support of PCS Parent/Child relationship (PCS QA specification 4.1 2.1a)
+			if { $msip_parentchild_type != "PARENT" && $msip_parentchild_type != "CHILD_RnD_LIBS" } {
+				## Support of PCS Parent/Child relationship (PCS QA specification 4.1 2.1a)
+				catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e setenv | sed -e '/^\\s*$/d' -e 's/\\s\\s*$//g' | head -1 | awk '{print \$2}' | sed -e 's#\${MSIP_PROJ_ROOT}#$ude3proj#g' -e 's#\$MSIP_PROJ_ROOT#$ude3proj#g' -e 's/\$MSIP_PARENT_PCS_PRODUCT_NAME/$msip_parent_pcs_product_name/g' -e 's/\$MSIP_PARENT_PCS_PROJ_NAME/$msip_parent_pcs_proj_name/g' -e 's/\$MSIP_PARENT_PCS_REL_NAME/$msip_parent_pcs_rel_name/g' -e 's#\${MSIP_PROJ_ROOT}#$ude3proj#g' -e 's/\${MSIP_PARENT_PCS_PRODUCT_NAME}/$msip_parent_pcs_product_name/g' -e 's/\${MSIP_PARENT_PCS_PROJ_NAME}/$msip_parent_pcs_proj_name/g' -e 's/\${MSIP_PARENT_PCS_REL_NAME}/$msip_parent_pcs_rel_name/g'" } projectenv
+				if { $parentchild == 0 } {
+					puts "Get reference CCS version from Parent PCS $projectenv"
+				}
+				if { [file exists $projectenv] == 0 } {
+					if { $ccsfound == 0 } {
+						if { $errortype == "CCS" } {
+							set errorprefix "$errortype-2"
+						} else {
+							set errorprefix "2.1.1n"
+						}
+						ruleErrorApplicable "(PCSQA-$errorprefix) No project.env file found at $projectenv"
+						catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+						sproc_script_stop -exit
+					}
+				} 
+			}
+		} else {
+			if { $parentchild == 1 || $msip_parentchild_type == "PARENT" } {
+				ruleErrorApplicable "(PCSQA-2.1.1e REMOTESITE) triple MSIP_PARENT_PCS_PRODUCT_NAME, MSIP_PARENT_PCS_PROJ_NAME and MSIP_PARENT_PCS_REL_NAME are not available/complete in PCS project.env file"
+				set parentchild 0
+				set ccstext "Reference CCS"
+				set midccstext "reference CCS"
+				set errortype "CCS"
+				set ccsfile "ref_ccs"
+			}
+		}
+
+		if { $parentchild == 0 } {
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_CAD_PROJ_NAME | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_cad_proj_name
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_CAD_REL_NAME  | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_cad_rel_name
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e setenv | sed '/^\\s*$/d' | head -1 | awk '{print \$2}' | sed -e 's#\${MSIP_PROJ_ROOT}#$ude3proj#g' -e 's#\$MSIP_PROJ_ROOT#$ude3proj#g' -e 's/\${MSIP_CAD_PROJ_NAME}/$msip_cad_proj_name/g' -e 's/\$MSIP_CAD_PROJ_NAME/$msip_cad_proj_name/g' -e 's/\${MSIP_CAD_REL_NAME}/$msip_cad_rel_name/g' -e 's/\$MSIP_CAD_REL_NAME/$msip_cad_rel_name/g'" } projectenvccs
+			if { [file exists $projectenvccs] == 0 } {
+				## enforce (PCSQA-CCS-3) error
+				catch { exec $SEV(exec_cmd) -c "dirname $projectenvccs" } projectenvccs
+			} 
+		} else {
+			set projectenvccs $projectenv
+		}
+		catch { exec $SEV(exec_cmd) -c "basename $projectenvccs" } baseprojectenvccs
+		if { $baseprojectenvccs == "project.env" } {
+			catch { exec $SEV(exec_cmd) -c "dirname \$(dirname $projectenvccs)" } projectenvccs
+			if { $msip_parentchild_type == "CHILD_CAD_SETUP" } {
+				if { [string compare -length [string length "$udeproj/cad"]  "$udeproj/cad"  $projectenvccs] == 0 ||
+				     [string compare -length [string length "$ude3proj/cad"] "$ude3proj/cad" $projectenvccs] == 0 } {
+					ruleErrorApplicable "(PCSQA-2.1.1e) PCS sources CCS $projectenvccs in project.env as Parent PCS"				
+				}
+			}
+			if { $ccsfound == 0 } {
+				puts "$ccstext $projectenvccs found in project.env"
+				catch { exec $SEV(exec_cmd) -c "echo \"$projectenvccs\" > $ccsfile.txt" } dummy
+				set ccs $projectenvccs
+				set ccsfound 1
+			} else {
+				set normccs [file normalize $ccs]
+				set normprojectenvccs [file normalize $projectenvccs]
+				if { [string compare $normccs $normprojectenvccs] != 0 } {
+					if { ( $parentchild == 0 && [matchccs $normccs $normprojectenvccs] == 1 ) ||
+					     ( $parentchild == 1 && [string compare $normccs $normprojectenvccs] == 0 ) } {
+						puts "$ccstext $projectenvccs found in project.env"
+					} else {						
+						if { $parentchild == 0 } {
+							sproc_msg -error "(PCSQA-CCS-4) CCS $projectenvccs found in project.env does not match witch CCS $ccs defined in Porting Spec"
+						} else {
+							ruleErrorApplicable "(PCSQA-2.1.1p) Parent PCS $projectenvccs found in project.env does not match witch parent PCS $ccs defined in Porting Spec"
+						}
+					}
+					## use projectenvccs to check usage of beta CCS
+					catch { exec $SEV(exec_cmd) -c "echo \"$projectenvccs\" > $ccsfile.txt" } dummy
+					set ccs $projectenvccs
+					## in check_pcs.tcl projectenvccs as taken over
+					## as reference CCS if they match
+				}
+			}
+		} else {
+			if { $ccsfound == 0 } {
+			       	if { $errortype == "CCS" } {
+			               set errorprefix "$errortype-3"
+			       	} else {
+			               set errorprefix "2.1.1o"
+			       	}
+				ruleErrorApplicable "(PCSQA-$errorprefix) No $midccstext can be found in $projectenv"
+				catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+			}
+		}
+		if { $parentchild == 1 && [file exists $projectenv] } {
+			if { $ccsfound == 1 && $msip_parentchild_type == "CHILD_CAD_SETUP" || $msip_parentchild_type == "CHILD_ALL" } {
+				catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENTCHILD_TYPE | wc -l" } msip_parentchild_type_of_parent
+				if { $msip_parentchild_type_of_parent > 0 } {
+					catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENTCHILD_TYPE | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parentchild_type_of_parent
+					if { $msip_parentchild_type_of_parent != "PARENT" } {
+						ruleErrorApplicable "(PCSQA-2.1.1d) MSIP_PARENTCHILD_TYPE value in project.env of parent PCS $ccs is not PARENT"						
+					}
+				} else {
+					ruleErrorApplicable "(PCSQA-2.1.1d) Omission of MSIP_PARENTCHILD_TYPE in project.env of parent PCS $ccs"						
+				}
+			}
+			## get reference CCS from the project.env of Parent PCS
+			## previous indications of reference CCS is actually Parent PCS !!
+			set ccsfound 0
+			puts "Get reference CCS version from Parent PCS $projectenv"
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_CAD_PROJ_NAME | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_cad_proj_name
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_CAD_REL_NAME  | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_cad_rel_name
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e setenv | sed '/^\\s*$/d' | head -1 | awk '{print \$2}' | sed -e 's#\${MSIP_PROJ_ROOT}#$ude3proj#g' -e 's#\$MSIP_PROJ_ROOT#$ude3proj#g' -e 's/\${MSIP_CAD_PROJ_NAME}/$msip_cad_proj_name/g' -e 's/\$MSIP_CAD_PROJ_NAME/$msip_cad_proj_name/g' -e 's/\${MSIP_CAD_REL_NAME}/$msip_cad_rel_name/g' -e 's/\$MSIP_CAD_REL_NAME/$msip_cad_rel_name/g'" } projectenvccs
+			if { [file exists $projectenvccs] == 0 } {
+				## enforce (PCSQA-CCS-3) error
+				catch { exec $SEV(exec_cmd) -c "dirname $projectenvccs" } projectenvccs
+			} 
+			catch { exec $SEV(exec_cmd) -c "basename $projectenvccs" } baseprojectenvccs
+			if { $baseprojectenvccs == "project.env" } {
+				catch { exec $SEV(exec_cmd) -c "dirname \$(dirname $projectenvccs)" } projectenvccs
+				puts "Reference CCS $projectenvccs found in project.env"
+				catch { exec $SEV(exec_cmd) -c "echo \"$projectenvccs\" > ref_ccs.txt" } dummy
+				set ccs $projectenvccs
+				set ccsfound 1
+			} else {
+				sproc_msg -error "(PCSQA-CCS-3) No reference CCS can be found in $projectenv"
+				catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+			}
+		}
+	} else {
+		if { $ccsfound == 0 } {
+			if { $errortype == "CCS" } {
+				set errorprefix "$errortype-2"
+			} else {
+				set errorprefix "2.1.1n"
+			}
+			ruleErrorApplicable "(PCSQA-$errorprefix) No project.env file found at $projectenv"
+			catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+		}
+	}				
+
+if { $ccsfound == 1 } {
+	## support of CCS tags version 1 AND 2
+	
+	## Version	1				2
+	## 						STABLE_FOR_PPDK
+	##		BETA_UNDER_CONSTRUCTION		UNDER_CONSTRUCTION
+	##		BETA_MIN_SET
+	##		BETA_STABLE			STABLE
+	##		BETA_EVAL
+	##		ENBL-Alpha
+	##		ENBL-Beta
+	##		COMPLETED			COMPLETED
+	##						FROZEN
+	##		ENBL-Stable
+	##		ENBL-Locked
+	
+	set betatags [list "STABLE_FOR_PPDK" "BETA_UNDER_CONSTRUCTION" "UNDER_CONSTRUCTION" "BETA_MIN_SET" "BETA_STABLE" "STABLE" "BETA_EVAL" "ENBL-Alpha" "ENBL-Beta"]			
+	set stableccs 0
+	set betaversion [string range $ccs [expr [string length $ccs] - 5] [expr [string length $ccs] - 1]]
+	if { $betaversion != "_beta" } {
+		set stableccs 1
+	}
+	foreach betatag $betatags {
+		if { [file exists $ccs/$betatag] || [file exists $ccs/$betatag.txt] } {
+			set stableccs 0
+			break
+		}
+	}
+	set releasestatus ""
+	if { [file exists $ccs/usage.txt] } {
+		catch { exec $SEV(exec_cmd) -c "grep \"Release Status\" $ccs/usage.txt | sed -e 's/:/ : /g' | awk '{print \$4}'" } releasestatus
+		if { $releasestatus != "" } {
+			if { $releasestatus == "COMPLETED" || $releasestatus == "FROZEN" || $releasestatus == "ENBL-Stable" || $releasestatus == "ENBL-Locked" } {
+				set stableccs 1
+			} else {
+				if { [lsearch -exact $betatags "$releasestatus"] != -1 } {
+					set stableccs 0
+				}
+			}
+		}
+	}
+	if { $stableccs == 0 } {
+		## keep CCS path backwards compatible for error message (STAR 9001163309)
+		catch { exec $SEV(exec_cmd) -c "echo \"$ccs\" | sed -e 's#$ude3proj#$udeproj#g'" } ccs
+		ruleErrorApplicable "(PCSQA-2.1z) PCS uses '_beta' release of CCS: $ccs"
+		catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+	}
+	
+	if { $SVAR(product_name) == "std" } {
+		set ccscompleted 0
+		if { [file exists $ccs/COMPLETED] || [file exists $ccs/COMPLETED.txt] || $releasestatus == "COMPLETED" } {
+			set ccscompleted 1
+		}
+		set ccsversion [file tail $ccs]
+		if { $ccscompleted == 1 } {
+			if { $SVAR(pcs_version) != $ccsversion } {
+				ruleErrorApplicable "(PCSQA-2.1tt) $SVAR(product_name) PCS release name '$SVAR(pcs_version)' is not equal to COMPLETED CCS release name '$ccsversion'"
+			}
+		} else {
+			set match 0
+			set refpcsreleasename ${ccsversion}_pre
+			if { [string compare -length [string length $refpcsreleasename] $refpcsreleasename $SVAR(pcs_version)] == 0 } {
+				set preN [string range $SVAR(pcs_version) [string length $refpcsreleasename] [expr [string length $SVAR(pcs_version)] - 1] ]
+				if { [string is integer $preN] == 1 } {
+					set match 1
+				}
+			}
+	
+			if { $match == 0 } {
+				ruleErrorApplicable "(PCSQA-2.1tt) $SVAR(product_name) PCS release name '$SVAR(pcs_version)' is not equal to '${refpcsreleasename}X' (where X=1,2,3,...,n), due to unCOMPLETED CCS release '$ccsversion'"
+			}			
+		}
+	}
+}
+
+## at this point the CCS version is found
+## in VC or
+## in PCS project.env
+
+catch { exec $SEV(exec_cmd) -c "rm -f refproject.txt" } dummy
+## write reference project for successor checks
+if { $refspecversion != "" } {
+	set fp [open refproject.txt w]
+	puts $fp "refspecversion: $refspecversion"
+	puts $fp "refvcdb: $refvcdb"
+	puts $fp "refprojectid: $refprojectid"
+	close $fp
+}
+
+set projectenv $pcs/cad/project.env
+if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep automotive | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } automotivevalue
+	if { $automotivevalue == "" } {
+		if { $msip_parentchild_type == "CHILD_CAD_SETUP" ||
+		     $msip_parentchild_type == "CHILD_ALL" } {
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PRODUCT_NAME | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_product_name
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PROJ_NAME    | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_proj_name
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_REL_NAME     | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_rel_name
+			set parentpcs $ude3proj/$msip_parent_pcs_product_name/$msip_parent_pcs_proj_name/$msip_parent_pcs_rel_name
+			set parentpcsprojectenv $parentpcs/cad/project.env
+			if { [file exists $parentpcsprojectenv] } {
+				catch { exec $SEV(exec_cmd) -c "cat $parentpcsprojectenv | grep -v -e ^\[\[:blank:\]\]*# -e unsetenv | grep setenv | grep automotive | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } automotivevalue
+			}
+		}	
+	}
+	if { $refspecversion != "" } {
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module unload msip_shell_vc_utils && module load msip_shell_vc_utils/latest && msip_viciGetAutomotiveCompliance.pl --id $refprojectid" } autocompliance
+		if { $autocompliance != "Yes" && $autocompliance != "No" && $autocompliance != "N/A" && $autocompliance != "" } {
+			ruleErrorApplicable "(PCSQA-2.1oo) Unexpected value from vc utility msip_viciGetAutomotiveCompliance.pl: $autocompliance" 
+		} else {
+			if { $autocompliance == "No" || $autocompliance == "" || $autocompliance == "N/A" } {
+				if { $automotivevalue == "YES" } {
+					ruleErrorApplicable "(PCSQA-2.1oo) No automotive compliance set in Porting Spec $refspecversion ($refvcdb Id: $refprojectid)"
+				}
+			} else {
+				if { $automotivevalue != "YES" } {
+					ruleErrorApplicable "(PCSQA-2.1oo) No automotive compliance 'setenv automotive \"YES\"' set in project.env, but '$autocompliance' set in Porting Spec $refspecversion ($refvcdb Id: $refprojectid)"
+				}
+			}
+		}
+	}
+}
+
+if { $refprojectid != "" && $refvcdb == "vici" } {
+	## Get Vici Pins version info and cross check
+	## Pins version info is only supported in Vici
+	sproc_msg -info "Generate Porting Spec Summary of PCS $SVAR(pcs_name)/$SVAR(pcs_version) ($refvcdb PCS version $refspecversiontxt (Id $refprojectid)) from $refvcdb"
+	set porting_spec_sum porting_spec_${refspecversion}_sum.xml
+	## ensure in 3 attempts VC returns correct Porting Spec Summary
+	set returnedvcproject ""
+	set returnedvcrel ""
+	set refvcrel $SVAR(pcs_version)
+	if { [string first "rel" $SVAR(pcs_version)] == 0 } {
+		set refvcrel [string range $SVAR(pcs_version) 3 [expr [string length $SVAR(pcs_version)] - 1]]
+	}	
+	if { [string first _ $refvcrel] != -1 } {
+		catch { exec $SEV(exec_cmd) -c "echo $refvcrel | sed -e 's/_/\[a-z\]_/'" } refvcrel1
+		set refvcrel2 $refvcrel1
+	} else {
+		set refvcrel1 $refvcrel
+		catch { exec $SEV(exec_cmd) -c "echo $refvcrel | sed -e 's/$/\[a-z\]/'" } refvcrel2
+	}
+	set attempt 1
+	while { $attempt <= 3 &&
+		( $returnedvcproject != $SVAR(pcs_name) ||
+		 ( [string match $refvcrel1 $returnedvcrel] == 0 &&
+		   [string match $refvcrel2 $returnedvcrel] == 0 ) ) } {
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module unload msip_shell_vc_utils && module load msip_shell_vc_utils && msip_${refvcdb}GenerateProjSummaryAdvancedXml.pl --id $refprojectid --out $porting_spec_sum | sed -e 's/Error: //g'" } log
+		if { [file exists porting_spec_${refspecversion}_sum.xml] } {
+			## remove xml tags and put at each line a label or value in txt file
+			catch { exec $SEV(exec_cmd) -c "cat porting_spec_${refspecversion}_sum.xml | tr -d '\\n' | \
+						        sed -e 's/<_\[a-zA-Z\]*>/\\n/g' \
+							    -e 's/<\\/\[_\]*\[a-zA-Z\]*>//g' \
+							    -e 's/<_\[a-zA-Z\]*\\/>//g' > porting_spec_${refspecversion}_sum.txt" } dummy
+			catch { exec $SEV(exec_cmd) -c "grep -A 1 ^Project$ porting_spec_${refspecversion}_sum.txt | grep -v Project" } returnedvcproject
+			catch { exec $SEV(exec_cmd) -c "grep -A 1 \"^Release Version$\" porting_spec_${refspecversion}_sum.txt | grep -v \"Release Version\" | head -1" } returnedvcrel
+			if { $returnedvcproject == $SVAR(pcs_name) &&
+		 	     ( [string match $refvcrel1 $returnedvcrel] ||
+		   	       [string match $refvcrel2 $returnedvcrel] ) } {
+			       break
+			}
+		}
+		after 60000
+		incr attempt
+	}
+
+	if { $returnedvcproject != $SVAR(pcs_name) ||
+	     ( [string match $refvcrel1 $returnedvcrel] == 0 &&
+	       [string match $refvcrel2 $returnedvcrel] == 0 ) } {
+	       ## remove xml to prevent false errors
+		catch { exec $SEV(exec_cmd) -c "rm -f porting_spec_${refspecversion}_sum.xml" } dummy
+	 	sproc_msg -warning "VC returns Porting Spec Summary of project $returnedvcproject/$returnedvcrel"
+	}
+
+	if { [file exists porting_spec_${refspecversion}_sum.xml] } {
+		## Do not consider 'Main Design Site' meant as Main Design Team Location
+		catch { exec $SEV(exec_cmd) -c "cat porting_spec_${refspecversion}_sum.txt | \
+		                                grep -A 1 -e \"^Site locations\" \
+						          -e \"^Disk Path\" \
+						          -e \"^Alternate design sites\" \
+						          -e \"^Site$\" | sed -e 's/^--$//' | grep -v \"^$\" > site_locations.txt" } dummy
+
+		catch { exec $SEV(exec_cmd) -c "rm -f pins_version.txt" } dummy
+		set pcsproduct $SVAR(product_name)
+		set pcsproducttext "SVAR(product_name)"
+		if { [file exists $projectenv] } {
+			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v '^\[\[:blank:\]\]*#' | grep -e setenv | grep -v unsetenv | grep -e PINS_CUSTOM_PRODUCT | awk '{ print \$3 }' | sed -e 's/\"//g'" }  pins_custom_product_value
+			if { $pins_custom_product_value != "" } {
+				set pcsproduct $pins_custom_product_value
+				set pcsproducttext "PINS_CUSTOM_PRODUCT"
+			}
+		}
+		set pinslabels [list "Pin product" "Pin product version"]
+		foreach pinslabel $pinslabels {
+			catch { exec $SEV(exec_cmd) -c "grep -A 1 \"$pinslabel$\" porting_spec_${refspecversion}_sum.txt | tail -1" } pinsvalue
+			if { $pinsvalue != "" && "$pinsvalue" != "$pinslabel" } {
+				catch { exec $SEV(exec_cmd) -c "echo \"$pinslabel: $pinsvalue\" >> pins_version.txt" } dummy
+				
+				if { $pinslabel == "Pin product" && $pinsvalue != $pcsproduct } {
+					ruleErrorApplicable "(PCSQA-2.1pp) 'Pin product' field value '$pinsvalue' of 'Pin Version' section in $refvcdb is not equal to $pcsproducttext value '$pcsproduct'"
+				}
+			}
+		}
+		set pins_version_fields 0
+		if { [file exists pins_version.txt] } {
+			catch { exec $SEV(exec_cmd) -c "cat pins_version.txt | wc -l" } pins_version_fields
+		}
+		if { [file exists pins_version.txt] == 0 || $pins_version_fields < 2 } {
+			sproc_msg -error "(PCSQA-VC-1) No or incomplete fields of 'Pin Version' section are filled in Porting Spec Summary of project $SVAR(pcs_name)/$SVAR(pcs_version) ($refvcdb PCS version $refspecversiontxt (Id $refprojectid)) from $refvcdb"
+		}
+
+		catch { exec $SEV(exec_cmd) -c "grep -A 1 \"Design Restricted$\" porting_spec_${refspecversion}_sum.txt | tail -1" } designrestrictedvalue
+		if { [file exists $projectenv] && $designrestrictedvalue != "" } {
+   			catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v '^\[\[:blank:\]\]*#' | grep -e setenv | grep -v unsetenv | grep -e MSIPRunDirRestrict | awk '{ print \$3 }' | sed -e 's/\"//g'" }  msiprundirrestrictvalue
+   			if { "$designrestrictedvalue" == "Yes" && $msiprundirrestrictvalue == "" } {
+				ruleErrorApplicable "(PCSQA-2.1ooo) 'Design Restricted' field value '$designrestrictedvalue' of 'Technology process' section in $refvcdb requires MSIPRunDirRestrict definition"
+			}
+   			if { "$designrestrictedvalue" == "No" && $msiprundirrestrictvalue != "" } {
+				ruleErrorApplicable "(PCSQA-2.1ooo) 'Design Restricted' field value '$designrestrictedvalue' of 'Technology process' section in $refvcdb implies no MSIPRunDirRestrict definition"
+			}
+		}
+	} else {
+		puts $log
+		sproc_msg -warning "(PCSQA-VC-1) No Porting Spec Summary of project $SVAR(pcs_name)/$SVAR(pcs_version) ($refvcdb PCS version $refspecversiontxt (Id $refprojectid)) from $refvcdb"
+	}
+}
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

@@ -1,0 +1,161 @@
+--- Information --- Start Customizations according to : Proposal_for_internal_tools_in_CCS_PCS.pptx
+--- Loading default version for ude_internal_tools_falcon
+--- Loading default version for msip_cd_layoutMQA
+--- Loading 2022.05 version for msip_cd_pv
+--- Loading default version for msip_cd_pcs_pv_api
+--- Loading 2022.03-1 version for msip_cd_cck_gui
+--- Loading 2022.05-1 version for msip_cd_hipre
+--- Loading 2022.05  version for msip_cd_lef_gen
+--- Loading 2022.04  version for msip_shared_lib
+--- Loading 2022.04  version for msip_cd_pPDK_utils
+--- Information --- END Customizations according to : Proposal_for_internal_tools_in_CCS_PCS.pptx
+sourcing command line shell extension to project.env -- /tmp/8657502.1.b_msem/tmpDXlakW
+=> PRINT REFERENCE PROJECT INFORMATION
+REFERENCE PROJECT NAME = c269-tsmc3eff-1.2v
+REFERENCE PROJECT RELEASE NAME = rel3.2.0
+
+=> PRINT REFERENCE PARENT PROJECT INFORMATION
+REFERENCE PARENT PCS PRODUCT NAME = UNDEFINED
+REFERENCE PARENT PCS PROJECT NAME = UNDEFINED
+REFERENCE PARENT PCS RELEASE NAME = UNDEFINED
+
+=>PERFORMING CLEANUP IN CD_LIB
+	/remote/cad-rep/msip/tools/Shelltools/ude/2022.06/etc/msip_cleanup_cd_lib -t 7 &
+
+=> PRINT SYSTEM INFORMATION
+
+SITEID = us01
+HOSTNAME = us01msem-amd-64cx1024g-055
+QSC_VERSION = QSC-P
+CPU_BITMODE = AMD.64
+DISPLAY = us01odcvde35411.internal.synopsys.com:260
+USERNAME = alvaro
+SHELL = /bin/tcsh
+
+=> PRINT SYNOPSYS_CUSTOMS INFORMATION
+
+SYNOPSYS_CUSTOM_SITE = /remote/cad-rep/msip/tools/CDtools
+SYNOPSYS_CUSTOM_PROJECT = UNDEFINED
+SYNOPSYS_CUSTOM_USER = UNDEFINED
+
+/u/alvaro/.cdesigner.tcl = ABSENT
+
+/u/alvaro/cd_lib/hbm3/d763-hbm3-v2-tsmc3eff-12-ew/rel1.00_EWHardened/design/.cdesigner.tcl = ABSENT
+
+=> PRINT TOOLS INFORMATION
+
+MSIP_CC_VERSION = 2021.09-SP2 (project.env)
+MSIP_PRIMEWAVE_VERSION = 2021.09-SP2 (default-cc)
+MSIP_CIRANOVA_VERSION = none
+MSIP_HSPICE_VERSION= 2022.06 (project.env)
+MSIP_XA_VERSION= 2021.09-SP2-1 (project.env)
+MSIP_FINESIM_VERSION= 2022.06 (project.env)
+MSIP_PRIMESIM_VERSION= 2022.06 (project.env)
+MSIP_PRIMESIM_EMIR_VERSION =  (default)
+-->WARNING: UDE default PRIMESIM_EMIR version isn't exist in us01, loaded site default
+-->Note: Location of EDA tools default versions in UDE see in /remote/cad-rep/etc/modulefiles/msip/msip_eda_tools
+MSIP_HERCULES_VERSION = 2008.09-SP5-2 (default)
+MSIP_ICV_VERSION = 2021.06-SP2 (project.env)
+MSIP_PV_ICV_VERSION = 2022.03-SP2 (project.env)
+MSIP_STARRCXT_VERSION = 2020.09-SP5-4-VAL-20220524 (project.env)
+MSIP_CX_VERSION = 2020.12-SP1 (default)
+MSIP_CALIBRE_VERSION  = 2022.1-38.18 (project.env)
+-->INFO: CALIBRE_ALLOW_UNSUPPORTED_RHEL4_SLES10 (Not Defined)
+MSIP_NT_VERSION = 2022.03-SP2 (project.env)
+MSIP_PT_VERSION = 2022.03-SP2 (project.env)
+MSIP_LC_VERSION = 2022.03-SP2 (project.env)
+MSIP_SIS_VERSION = 2022.03-SP2 (project.env)
+
+=> PRINT UP TO DATE INTERNAL TOOLS INFORMATION
+
+msip_cd_ad_hoc/2021.08-3(default)
+msip_cd_auto_dmy/2019.07(default)
+msip_cd_bindkeys/2021.11-2(default)
+msip_cd_bonding/2015.01(default)
+msip_cd_cck_gui/2022.03-1(default)
+msip_cd_ceqi_dataIntegrity/2022.06(default)
+msip_cd_config/2021.11(default)
+msip_cd_csimra/2020.07(default)
+msip_cd_data_protection/latest(default)
+msip_cd_densitycheck/2020.10(default)
+msip_cd_design_compare/2021.10(default)
+msip_cd_emba/2020.10(default)
+msip_cd_ercChecks/2020.12-1(default)
+msip_cd_falcon_utils/2018.03(default)
+msip_cd_hipre/2022.05-1(default)
+msip_cd_infra/latest(default)
+msip_cd_init/2022.04(default)
+msip_cd_layoutMQA/2022.06(default)
+msip_cd_layout_utils/2022.07(default)
+msip_cd_mct/2021.02-1(default)
+msip_cd_mct_utils/2022.07(default)
+msip_cd_messaging/2021.08(default)
+msip_cd_netlist_gen/2022.02(default)
+msip_cd_nt/2021.01(default)
+msip_cd_pcs_pv_api/2022.05(default)
+msip_cd_perforce/2022.02(default)
+msip_cd_powerVias/2022.05(default)
+msip_cd_pv/2022.05(default)
+msip_cd_pvLive/2021.09(default)
+msip_cd_qa_utils/2019.12(default)
+msip_cd_sae/2022.07(default)
+msip_cd_sch_check/2015.02-1(default)
+msip_cd_schConvert/2022.07(default)
+msip_cd_shared/2017.07(default)
+msip_cd_showMaxCurrent/2019.03(default)
+msip_cd_ude_utils/2022.06(default)
+msip_cd_uev/2022.03(default)
+msip_cd_utils/2021.10(default)
+msip_eda_tools/2021.05(default)
+msip_shared_lib/2022.04(default)
+msip_shell_cad_utils/2022.05(default)
+msip_shell_calex/2022.07(default)
+msip_shell_eda_tools/2012.03(default)
+msip_shell_lay_utils/2022.06(default)
+msip_shell_lef_utils/2022.06(default)
+msip_shell_netlist/2020.01(default)
+msip_shell_rel_utils/2017.04(default)
+msip_shell_rename/2022.05-1(default)
+msip_shell_rsync/2018.06(default)
+msip_shell_sch_utils/2022.05(default)
+
+
+=> PRINT OUT OF DATE TOOLS INFORMATION
+
+msip_cd_lef_gen/2022.05(default:[4m2022.06[0m)
+msip_cd_pPDK_utils/2022.04(default:[4m2022.06[0m)
+
+
+=> PRINT LICENSE INFORMATION
+
+LM_LICENSE_FILE = 26585@us01genlic:26585@us01snpslmd1:1717@us01misclmd4
+SNPSLMD_LICENSE_FILE = 26585@us01genlic:26585@us01snpslmd1:26585@us01hspicelmd
+INFO: MGLS_LICENSE_FILE not defined
+
+=> PRINT PATH LENGTH
+
+INFO: PATH LENGTH: 1888
+
+=> UDE CONFIGURATION LOADED SUCCESSFULLY
+
+INFO: UDE_MASTER_GROUP: sg_pdks
+
+=> EXECUTING CUSTOM_COMPILER
+
+[1] 63348
+Wait for init
+Xvfb virtual display
+    DISPLAY = :1659
+    PORT = 7659
+    pid = 63348
+UDE session completed for non-gui mode!
+Loading: /remote/cad-rep/msip/tools/Shelltools/ude/2022.06/etc/ude3.conf
+
+=>UDE3 PERFORCE INFORMATION
+
+Using defined P4PORT: 1999
+UDE3 P4 INFO: P4PORT = p4p-us01:1999
+UDE3 P4 INFO: P4CLIENT = msip_cd_alvaro
+UDE3 P4 INFO: P4ROOT = /remote/us01home57/alvaro/p4_ws/
+UDE3 P4 INFO: SPECIAL_FARM = FALSE
+UDE3 P4 INFO: ACCESS = Not Restricted

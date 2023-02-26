@@ -1,0 +1,53 @@
+{
+    "p_column": "pcode (CAL)",
+    "n_column": "ncode (CAL)",
+    "vdd_column": "vdd",
+    "vddq_column": "vddq",
+    "temp_column": "temp",
+    "transistor_column": "mos",
+    "resistor_column": "res",
+    "config": [
+        {
+            "vdd": "0.675",
+            "vddq": "1.14",
+            "temperature": "125",
+            "corner": "s",
+            "name": "ddr5_ss_1"
+        },
+        {
+            "vdd": "0.675",
+            "vddq": "1.14",
+            "temperature": "-40",
+            "corner": "s",
+            "name": "ddr5_ss_2"
+        },
+        {
+            "vdd": "0.935",
+            "vddq": "1.166",
+            "temperature": "-40",
+            "corner": "f",
+            "name": "ddr5_f-40"
+        },
+        {
+            "vdd": "0.935",
+            "vddq": "1.26",
+            "temperature": "-40",
+            "corner": "f",
+            "name": "ddr5_f-40"
+        },
+        {
+            "vdd": "0.675",
+            "vddq": "1.067",
+            "temperature": "125",
+            "corner": "s",
+            "name": "ddr5_ss_125"
+        },
+        {
+            "vdd": "0.85",
+            "vddq": "1.1",
+            "temperature": "-40",
+            "corner": "t",
+            "name": "ddr5_typ_m40"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+The self-heating aware electromigration flow (SHE-EM) is available for this PCS.
+
+Please setup SHE-EM simulation testbenches according to the instructions at
+https://sp-sg/sites/wwcad/Shared%20Documents/7-councils%20and%20expert%20groups/EMIR%20Expert%20Group%20(sg-cad-emir_ba-expert@synopsys.com)/Selfheating/CSIM-RA/tool%20enablement/CSIMRA%20SHE%20flow.pptx
+
+Details on how to analyze the results can be found at
+https://sp-sg/sites/wwcad/Shared%20Documents/7-councils%20and%20expert%20groups/EMIR%20Expert%20Group%20(sg-cad-emir_ba-expert@synopsys.com)/Selfheating/CSIM-RA/tool%20enablement/CSIM-RA%20SHE%20simulation%20setup%20and%20analysis%207nm.pptx
+
+If you have any questions please contact the EMIR Expert Work Group: sg-cad-emir_ba-expert@synopsys.com

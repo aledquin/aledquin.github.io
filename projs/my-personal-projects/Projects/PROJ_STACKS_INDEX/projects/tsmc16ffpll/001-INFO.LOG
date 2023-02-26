@@ -1,0 +1,6 @@
+tsmc16ffpll : rel7.7.0 : 18 : l228-std-tsmc16ffpll-1.8v
+tsmc16ffpll : rel7.4.0 : 18 : x634-usb3-tsmc16ffpll-18-ns
+tsmc16ffpll : rel7.4.0 : 18 : e313-hdmi-txphy-tsmc16ffpll-18
+tsmc16ffpll : rel7.1.0 : 18 : x634-ssp-tsmc16ffpll-18-ns
+tsmc16ffpll : rel7.0.0 : 18 : n100-c10-tsmc16ffpll-18-ns
+tsmc16ffpll : rel7.0.0 : 18 : g218-mphy-tsmc16ffpll-18

@@ -1,0 +1,889 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/ds/scripts_global/demo/demo_script.tcl#50 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This script is used when running the RTM in demo mode.
+## *
+## * The RTM demo mode is enabled by setting the shell variable named
+## * LYNX_DEMO before starting the RTM. The value of LYNX_DEMO does not matter.
+## *
+## * During demo mode, run_flow behavior is adjusted as follows:
+## * - The gen_tasks will run as normal.
+## * - The branch_tasks will run as normal.
+## * - For all other tasks:
+## *   - This script is used instead of the normal script.
+## *   - Tasks not using the tool named 'tcl' will be converted to 'tcl_job'.
+## *     Tasks using the tool named 'tcl' will continue using 'tcl'.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## HISTORY
+##
+## 04/16/2015, ahogenhu
+##             Automatically update .PCSQA_STATUS file when PASS into P4 (STAR 9000876209)
+##
+## 05/18/2015, ahogenhu
+##             Automatically update .PCSQA_STATUS file when PASS into P4,
+##             can be FAIL with only checksum errors (STAR 9000876209)
+##
+## 06/18/2015, ahogenhu
+##             New feature: support of 'all' as 'site name' at waive lines
+##             indicating applicable for all sites
+##
+## 06/29/2015, ahogenhu
+##             Fall back on /usr/local/bin/p4,
+##             if module load p4 or perforce does not exist anymore (CCT 2000739921)
+##
+## 01/12/2016, ahogenhu
+##             check if all cad files in .PCSQA_STATUS with chksum are stored in p4
+##             as pre-condition to automatic upload of .PCSQA_STATUS to p4
+##
+##             Warnings about waive lines in .PCSQA_STATUS which are no longer required 
+##             which can be removed by store new .PCSQA_STATUS in p4 
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+set SEV(exec_cmd) bash
+
+set udeproj   $::env(udeproj)
+set ude3proj  /remote/cad-rep/projects
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+if { [file exists $::env(PCSQA_WORK_DIR)/msip_site_hostlist_qa] } {
+	set default_msip_site_file $::env(PCSQA_WORK_DIR)/msip_site_hostlist_qa
+} else {
+	set default_msip_site_file $::env(udecadrep)/msip/admin/msip_site_hostlist_qa
+}
+catch { exec $SEV(exec_cmd) -c "cat $::env(udecadrep)/msip/admin/msip_site_hostlist_qa | grep -v ^# | awk {'print \$1'} | wc -l" } msipsites	
+catch { exec $SEV(exec_cmd) -c "cat $default_msip_site_file | grep -v ^# | awk {'print \$1'}" } siteslist	
+set sites [split $siteslist "\n"]
+catch { exec $SEV(exec_cmd) -c "/usr/local/bin/siteid" } thissite
+if { [llength $sites] > 0 && [lsearch -exact $sites $thissite] == -1 &&
+     [file isdirectory $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)] } {
+	lappend sites $thissite
+}
+## sitereplace replaces only first (!) appearance of site in error line (=in error prefix) by 'all'
+set sitereplace ""
+set allsitereplace ""
+foreach site $sites {
+	set sitereplace    "$sitereplace -e '0,/ $site);/s// all);/'"
+	set allsitereplace "$allsitereplace -e 's/ $site);/ all);/g'"
+}
+
+set perforceapps [list "p4" "perforce"]
+set perforce ""
+foreach perforceapp $perforceapps {
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module avail $perforceapp > p4avail 2>&1" } dummy
+	if { [file size p4avail] == 0 } {
+		continue
+	} else {
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module load $perforceapp > p4load 2>&1" } dummy
+		catch { exec $SEV(exec_cmd) -c "grep -e \"There is an installation issue for\" -e \"Unable to locate a modulefile for\" p4load | wc -l" } issues
+		if { $issues > 0 } {
+			continue
+		} else {
+			set perforce $perforceapp
+			break
+		}
+	}
+}
+catch { exec $SEV(exec_cmd) -c "rm -f p4avail p4load" } dummy
+if { $perforce != "" } {
+	set p4 "p4"
+	set moduleloadperforce "&& module load $perforce"
+} else {
+	set p4 "/usr/local/bin/p4"
+	set moduleloadperforce ""
+}
+set getp4contentwork [getWorkDir get_p4_content]
+set p4root   [file normalize $getp4contentwork]
+set p4pcscad $p4root/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad
+
+set srcpcsqastatus ".PCSQA_STATUS"
+set tgtpcsqastatus ".PCSQA_STATUS"
+if { [info exists ::env(MSIP_LYNX_PCSQA)] &&
+     [string first "beta" [file tail $::env(MSIP_LYNX_PCSQA)]] != -1 } {
+	set srcpcsqastatus ".PCSQA_STATUS_beta"
+	set tgtpcsqastatus ".PCSQA_STATUS_beta"
+	set installpcsstatus $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/$srcpcsqastatus
+	if { [file exists $installpcsstatus] == 0 } {
+		set srcpcsqastatus ".PCSQA_STATUS"
+	}
+}
+
+set installpcsstatus $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/${srcpcsqastatus}
+if { [file exists $installpcsstatus] == 0 } {
+	## update of .PCSQA_STATUS in pcsqa p4 area (STAR 9001110713)
+	if { [file isdirectory $p4pcscad] } {
+		cd $p4root
+		if { [file exists msip_pcsqa_template] } {
+			catch { exec $SEV(exec_cmd) -c "grep \"^Client\" msip_pcsqa_template | awk '{ print \$2 }'" } clientname
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -i < msip_pcsqa_template" } dummy 
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && cd $p4root && export P4CONFIG=\".p4config\" && $p4 sync $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/${srcpcsqastatus}" } p4message 
+			if { $p4message == "$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/... - protected namespace - access denied." } {			
+				## get p4 content via account csadmin to bypass restricted access
+				catch { exec $SEV(exec_cmd) -c "chmod -R 777 $SVAR(product_name)" } dummy
+				set SSH "export PASSWORD=$::env(PCSQA_PASSWORD); $SEV(gscript_dir)/qa_scripts/sshaskpass ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no csadmin@$::env(HOST)"
+				catch { exec bash -c "$SSH \"cd $p4root && export P4CONFIG=.p4config && /usr/local/bin/p4 sync $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/${srcpcsqastatus}\"" } dummy
+			}
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -d $clientname" } dummy 
+		}
+		cd $run_dir
+	}
+
+	set installpcsstatus $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/${srcpcsqastatus}
+}
+
+set currentpcsstatus ${tgtpcsqastatus}
+if { [file exists $currentpcsstatus] == 0 || 
+     ( [file exists $currentpcsstatus] && [file exists $installpcsstatus] &&
+       [file atime  $installpcsstatus] >  [file atime  $currentpcsstatus] ) } {
+	if { [file exists $installpcsstatus] } {
+		catch { exec $SEV(exec_cmd) -c "cp -f $installpcsstatus ${tgtpcsqastatus}" } dummy
+		catch { exec $SEV(exec_cmd) -c "cp ${tgtpcsqastatus} ${tgtpcsqastatus}_old" } dummy
+	} else {
+		catch { exec $SEV(exec_cmd) -c "touch ${tgtpcsqastatus}" } dummy
+	}
+	catch { exec $SEV(exec_cmd) -c "chmod u+w $currentpcsstatus" } dummy
+} else {
+	catch { exec $SEV(exec_cmd) -c "cp ${tgtpcsqastatus} ${tgtpcsqastatus}_old" } dummy
+}
+if { [file exists ${tgtpcsqastatus}_old] } {
+	catch { exec $SEV(exec_cmd) -c "chmod u+w ${tgtpcsqastatus}_old" } dummy
+}
+set pcsstatus $currentpcsstatus
+
+set chksumerror "(PCSQA-2.1t "
+## remove header
+catch { exec $SEV(exec_cmd) -c "cat ${pcsstatus} | grep '(PCSQA-' | wc -l " } errorlines
+if { $errorlines > 0 } {
+	catch { exec $SEV(exec_cmd) -c "grep -v -e 'PCSQA STATUS:' -e 'PCSQA Project Name:' -e 'PCSQA Project Release:' -e 'PCSQA Score:' -e 'PCSQA Execution details:' -e 'PCSQA CHKSUM:' -e 'PCSQA Violations list:' $pcsstatus > ${pcsstatus}2 && mv ${pcsstatus}2 $pcsstatus" } dummy
+	catch { exec $SEV(exec_cmd) -c "grep '(PCSQA-' $pcsstatus > ${pcsstatus}2 && mv ${pcsstatus}2 $pcsstatus" } dummy
+	## remove chksum violations from pcsstatus before after waiving
+	catch { exec $SEV(exec_cmd) -c "grep -v \"$chksumerror\" $pcsstatus > ${pcsstatus}2 && mv ${pcsstatus}2 $pcsstatus" } dummy
+} else {
+	catch { exec $SEV(exec_cmd) -c "rm -f $pcsstatus && touch $pcsstatus" } dummy
+}
+
+set no_site_execution_error "(PCSQA-REMOTECHECK "
+
+set getp4contentlog [getLogsDir get_p4_content]/get_p4_content.log
+set getrefccslog    [getLogsDir ref_ccs]/get_ref_ccs.log
+set getudeenvdependentcheckslog [getLogsDir ude_env_dependent_checks]/ude_env_dependent_checks.log
+if { [info exists SEV(builds_dir)] &&
+     [info exists SEV(build_name)] &&
+     [info exists SEV(step_name)] } {
+	## since Lynx 2018.06-SP1
+	set p4checklog [glob -nocomplain $SEV(step_dir)/2_check_pcs_sites_p4_*/logs/check_pcs_sites_p4_*.log]
+	set checklogs  [glob -nocomplain $SEV(step_dir)/2_check_pcs_sites*/work/log.*]
+	set sitelogs   [glob -nocomplain $SEV(step_dir)/2_check_pcs_sites*/logs/*.log]
+	set userlogs   [glob -nocomplain $SEV(step_dir)/2_check_pcs_sites*/work/log_$::env(USER).*]
+	set deckslogs  [glob -nocomplain $SEV(step_dir)/21vv_*/logs/*.log]
+} else {
+	## until Lynx 2018.06-SP1
+	set p4checklog [glob -nocomplain $SEV(step_dir)/logs/2_check_pcs_sites_p4_*/check_pcs_sites_p4_*.log]
+	set checklogs  [glob -nocomplain $SEV(work_dir)/2_check_pcs_sites*/log.*]
+	set sitelogs   [glob -nocomplain $SEV(step_dir)/logs/2_check_pcs_sites*/*.log]
+	set userlogs   [glob -nocomplain $SEV(work_dir)/2_check_pcs_sites*/log_$::env(USER).*]
+	set deckslogs  [glob -nocomplain $SEV(step_dir)/logs/21vv_*/*.log]
+}
+set p4checklogstr ""
+foreach p4checklogfile $p4checklog {
+	set p4checklogstr "$p4checklogstr $p4checklogfile"
+}
+set checklogsstr ""
+foreach checklogsfile $checklogs {
+	set checklogsstr "$checklogsstr $checklogsfile"
+}
+set sitelogsstr ""
+foreach sitelogsfile $sitelogs {
+	set sitelogsstr "$sitelogsstr $sitelogsfile"
+}
+set userlogsstr ""
+foreach userlogsfile $userlogs {
+	set userlogsstr "$userlogsstr $userlogsfile"
+}
+set deckslogsstr ""
+foreach deckslogsfile $deckslogs {
+	set deckslogsstr "$deckslogsstr $deckslogsfile"
+}
+
+## create actual status of individual log and log.<site> files
+catch { exec $SEV(exec_cmd) -c "grep -h '(PCSQA-' $getp4contentlog $getrefccslog $getudeenvdependentcheckslog $p4checklogstr | sed -e 's/\[)\] /);/' -e 's#$SEV(workarea_dir)##' > actualstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "grep -h '$no_site_execution_error' $sitelogsstr | sed -e 's/\[)\] /);/' >> actualstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "grep -h '(PCSQA-' $checklogsstr | sed -e 's/\[)\] /);/' -e 's#$SEV(workarea_dir)##' >> actualstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "grep -h '(PCSQA-' $deckslogsstr 2> /dev/null | sed -e 's/\[)\] /);/' -e 's#$SEV(workarea_dir)##' >> actualstatus" } dummy
+## remove chksum violations from actualstatus before and restore after waiving
+catch { exec $SEV(exec_cmd) -c "grep \"$chksumerror\" actualstatus | sed -e 's/SNPS_ERROR  : //g' > chksumviolations" } dummy
+catch { exec $SEV(exec_cmd) -c "grep ^SNPS_WARNING chksumviolations | wc -l" } nrchksumwarnings
+catch { exec $SEV(exec_cmd) -c "grep -v ^SNPS_WARNING chksumviolations > chksumviolations2 && mv chksumviolations2 chksumviolations" } dummy
+catch { exec $SEV(exec_cmd) -c "grep -v \"$chksumerror\" actualstatus > actualstatus2 && mv actualstatus2 actualstatus" } dummy
+
+proc escapechars { line } {
+	return [string map { $ \\$ ` \\` \" \\" < \< > \> } $line]
+}
+
+set actualstatususer actualstatus$::env(USER)
+catch { exec $SEV(exec_cmd) -c "ls -1 $userlogsstr 2> /dev/null | wc -l" } userlog
+if { $userlog > 0 } {
+
+catch { exec $SEV(exec_cmd) -c "grep -h '(PCSQA-' $userlogsstr | sed -e 's/\[)\] /);/' -e 's#$SEV(workarea_dir)##' >> actualstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "grep -h '(PCSQA-' $userlogsstr | sed -e 's/\[)\] /);/' -e 's#$SEV(workarea_dir)##' -e 's/SNPS_ERROR  : //g' > $actualstatususer" } dummy
+## replace in each line (!) of actualstatususer the only first occurence (!) of site
+set fp [open $actualstatususer r]
+set file_data [read $fp]
+close $fp
+set data [split $file_data "\n"]
+set fp [open ${actualstatususer}2 w]
+foreach line $data {
+	set linenovar [escapechars $line]
+	catch { exec $SEV(exec_cmd) -c "echo \"$linenovar\" | sed $sitereplace" } lineall
+	puts $fp "$lineall"
+}
+close $fp
+catch { exec $SEV(exec_cmd) -c "mv ${actualstatususer}2 $actualstatususer" } dummy
+
+}
+## userlog
+
+if { [file exists $actualstatususer] && 
+     [file size $actualstatususer] > 0 &&
+     [file size $pcsstatus] == 0 } {
+     	## automatic waiving by using results from actualstatususer is only enabled
+	## if non empty .PCSQA_STATUS exists
+	## so use actualstatususer as .PCSQA_STATUS
+	catch { exec $SEV(exec_cmd) -c "cp $actualstatususer $pcsstatus" } dummy
+}
+
+catch { exec $SEV(exec_cmd) -c "grep ^SNPS_ERROR   actualstatus | wc -l" } errors
+## subtract errors about no execution at a site
+## should be explicitly visible for user in .PCSQA_STATUS,
+## but cause is not always due to user settings; (temporary) IT issue
+catch { exec $SEV(exec_cmd) -c "grep '$no_site_execution_error' actualstatus | wc -l" } no_site_execution_errors
+incr errors [expr $no_site_execution_errors * -1]
+catch { exec $SEV(exec_cmd) -c "cat chksumviolations | wc -l" } nrchksumerrors
+incr errors $nrchksumerrors
+catch { exec $SEV(exec_cmd) -c "grep ^SNPS_WARNING actualstatus | wc -l" } warnings
+incr warnings $nrchksumwarnings
+
+
+## determine creation date of PCS
+catch { exec $SEV(exec_cmd) -c "/usr/local/bin/siteid" } siteid
+set p4port "export P4PORT=p4p-$siteid:1999"
+set pcstriple $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+catch { exec $SEV(exec_cmd) -c "$p4port && p4 changes //wwcad/msip/projects/$pcstriple/pcs/... | tail -1 | awk '{print \$4}'" } creationdatepcs
+catch { exec $SEV(exec_cmd) -c "date +%s -d $creationdatepcs" } creationdatesecpcs
+if { [string is digit $creationdatesecpcs] == 0 } {
+	set creationdatesecpcs 0
+}
+
+## determine creation date of Parent PCS
+set parentpcs ""
+set parentpcstxt [getWorkDir ref_ccs]/parent_pcs.txt
+if { [file exists $parentpcstxt] } {
+	catch { exec $SEV(exec_cmd) -c "cat $parentpcstxt | head -1" } parentpcs
+}
+set pcs $::env(PCSQA_PROJ_ROOT)/$pcstriple
+set projectenv $pcs/cad/project.env
+set msip_parentchild_type ""
+set msip_parentchild_type_values [list "PARENT" "CHILD_CAD_SETUP" "CHILD_RnD_LIBS" "CHILD_ALL"]
+if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENTCHILD_TYPE | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parentchild_type
+	if { $msip_parentchild_type != "" && [lsearch -exact $msip_parentchild_type_values $msip_parentchild_type] == -1 } {
+		## reset in case of non-valid value
+		set msip_parentchild_type ""
+	}
+}
+set msip_parent_pcs_rel_name      MSIP_PARENT_PCS_REL_NAME
+set msip_parent_pcs_proj_name     MSIP_PARENT_PCS_PROJ_NAME
+set msip_parent_pcs_product_name  MSIP_PARENT_PCS_PRODUCT_NAME
+set parent_pcs_proj_home          $ude3proj/PARENTPCSPRODUCT/PARENTPCS/PARENTPCSVERSION
+if { $parentpcs != "" } {
+	set msip_parent_pcs_rel_name  [file tail $parentpcs]
+	set msip_parent_pcs_proj_name [file tail [file dirname $parentpcs]]
+	set msip_parent_pcs_product_name [file tail [file dirname [file dirname $parentpcs]]] 
+	set parent_pcs_proj_home      $parentpcs
+} else {
+    if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PRODUCT_NAME | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_product_name
+	if { $msip_parent_pcs_product_name == "" } {
+		set msip_parent_pcs_product_name  MSIP_PARENT_PCS_PRODUCT_NAME	
+	}
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PROJ_NAME    | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_proj_name
+	if { $msip_parent_pcs_proj_name == "" } {
+		set msip_parent_pcs_proj_name     MSIP_PARENT_PCS_PROJ_NAME
+	}
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_REL_NAME     | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_rel_name
+	if { $msip_parent_pcs_rel_name == "" } {
+		set msip_parent_pcs_rel_name      MSIP_PARENT_PCS_REL_NAME
+	}
+    }	
+}
+set creationdatesecparentpcs 0
+if { ( $msip_parentchild_type == "CHILD_CAD_SETUP" ||
+       $msip_parentchild_type == "CHILD_ALL" ) &&
+     $parentpcs != "" } {
+	set parentpcstriple $msip_parent_pcs_product_name/$msip_parent_pcs_proj_name/$msip_parent_pcs_rel_name
+	catch { exec $SEV(exec_cmd) -c "$p4port && p4 changes //wwcad/msip/projects/$parentpcstriple/pcs/... | tail -1 | awk '{print \$4}'" } creationdateparentpcs
+	catch { exec $SEV(exec_cmd) -c "date +%s -d $creationdateparentpcs" } creationdatesecparentpcs
+	if { [string is digit $creationdatesecparentpcs] == 0 } {
+		set creationdatesecparentpcs 0
+	}
+}
+catch { exec $SEV(exec_cmd) -c "date +%s -d 2021/10/01" } thresholddate21ccc
+set waiveline21ccc "(PCSQA-2.1ccc);More than 1 PV prefixes" 
+set adderror21ccc  "$waiveline21ccc waive line has been used for (more than) 14 days"
+
+set protectederror  "(PCSQA-2.1mm"
+set autowaivereason "Auto added by PCSQA when running locally;KEEP"
+
+set fp [open actualstatus r]
+set file_data [read $fp]
+close $fp
+set data [split $file_data "\n"]
+catch { exec $SEV(exec_cmd) -c "rm -f newviolations" } dummy		
+set waivelines [list]
+set fp [open newviolations w]
+foreach line $data {
+	set linenotic [escapechars $line]
+	catch { exec $SEV(exec_cmd) -c "echo \"$linenotic\" | grep ^SNPS_ERROR | wc -l" } iserror
+	if { $iserror == 1 } {
+		set snpserror "SNPS_ERROR  : "
+		set noerrorline [string range $line [string length $snpserror] [expr [string length $line] - 1] ]
+		set orgnoerrorline $noerrorline
+
+		set statusfp [open $pcsstatus r]
+		set file_data [read $statusfp]
+		close $statusfp
+		set statusdata [split $file_data "\n"]
+		set waiveline ""
+		foreach statusline $statusdata {
+			## remove spaces around keywords in waive lines from PCSQA_STATUS file
+			## to ensure simple parsing but extended syntax acceptation
+			set statusline [escapechars $statusline]
+			catch { exec $SEV(exec_cmd) -c "echo \"$statusline\" | \
+			                                sed -e 's/;\\s*WAIVE\\s*;/;WAIVE;/g' \
+							    -e 's/;\\s*KEEP\\s*$/;KEEP/g' \
+							    -e 's/;\\s*REVERT/;REVERT/g' \
+							    -e 's/\\s*$//g' " } statusline			
+		
+			set noerrorlinewaive "$noerrorline;WAIVE;"
+			if { [string compare -length [string length $noerrorlinewaive] $noerrorlinewaive $statusline] == 0 } {
+				if { [file exists $actualstatususer] && [file size $actualstatususer] > 0 } {
+					## check if this error also appear in actualstatususer
+					## prevent waiving of violations of local check by user, which have been auto waived in past
+					catch { exec $SEV(exec_cmd) -c "grep \"$noerrorline\" $actualstatususer | wc -l" } usercatched
+					if { $usercatched == 1 && [string compare "${noerrorlinewaive}$autowaivereason" $statusline] == 0 } {
+		               			sproc_msg -warning "Violation '$orgnoerrorline' (also) catched by local check by user $::env(USER) has not been waived by corresponding autowaive line"
+					} else {
+						set waiveline $statusline
+					}
+					break
+				} else {
+					set waiveline $statusline
+					break
+				}
+			} else {
+				## try to replace site name by 'all'
+
+				set noerrorlinenovar [escapechars $noerrorline]
+				catch { exec $SEV(exec_cmd) -c "echo \"$noerrorlinenovar\" | sed $sitereplace" } noerrorlineall
+				set noerrorlineallwaive "$noerrorlineall;WAIVE;"
+				if { [string compare -length [string length $noerrorlineallwaive] $noerrorlineallwaive $statusline] == 0 } {
+					if { [file exists $actualstatususer] && [file size $actualstatususer] > 0 } {
+						## check if this error also appear in actualstatususer
+						## prevent waiving of violations of local check by user, which have been auto waived in past
+						catch { exec $SEV(exec_cmd) -c "grep \"$noerrorlineall\" $actualstatususer | wc -l" } usercatched
+						if { $usercatched == 1 && [string compare "${noerrorlineallwaive}$autowaivereason" $statusline] == 0 } {
+		               				sproc_msg -warning "Violation '$orgnoerrorline' (also) catched by local check by user $::env(USER) has not been waived by corresponding autowaive line"
+						} else {
+							set waiveline $statusline
+						}
+						break
+					} else {
+						set waiveline $statusline
+						break
+					}
+				} else {
+					if { [string first "PCSQA-2.1ss" $noerrorlineall] != -1 &&
+					     [string first "PCSQA-2.1ss" $statusline] != -1 } {
+						## ensure waiving lines for Rule 2.1ss are backwards compatible
+						## independent of column alignment, which is 
+						## dependent of version names lengths since msip_ccs/2020.03.
+						## Therefore, remove at waive and actual line all spaces and tabs at comparison.
+						catch { exec $SEV(exec_cmd) -c "echo \"$noerrorlineallwaive\" | sed -e 's/\\s//g'" } noerrorlineallwaivenospace
+						catch { exec $SEV(exec_cmd) -c "echo \"$statusline\" | sed -e 's/\\s//g'" } statuslinenospace
+						if { [string compare -length [string length $noerrorlineallwaivenospace] $noerrorlineallwaivenospace $statuslinenospace] == 0 } {
+							## use column formating from actual line
+							set waivepostfixtext [string range $statusline [string first "WAIVE" $statusline] [expr [string length $statusline] -1]]
+							set waiveline "$noerrorline;$waivepostfixtext"
+							break
+						}						
+					}
+					if { ( [string first "PCSQA-2.1n" $noerrorlineall] != -1 ||
+					       [string first "(PCSQA-1 all);Broken link found at" $noerrorlineall] != -1 ||
+					       [string first "PCSQA-2.1ff" $noerrorlineall] != -1 ) &&
+					     [file exists $actualstatususer] &&
+					     [file size $actualstatususer] > 0 } {
+						set noerrorlineall [escapechars $noerrorlineall]
+						## check if this error also appear in actualstatususer
+						catch { exec $SEV(exec_cmd) -c "grep \"$noerrorlineall\" $actualstatususer | wc -l" } usercatched
+						if { $usercatched == 0 } {
+							## this error catched by csadmin did not be catched by the user on this site
+							## this can be caused by permissions under restricted group of which the user is a member
+							## waive this error
+							set waiveline "${noerrorlineallwaive}$autowaivereason"
+							break
+						}
+					}
+					if { [string first "PCSQA-2.1hhh" $noerrorlineall] != -1 &&
+					     [string first "PCSQA-2.1cc" $statusline] != -1 } {
+						## ensure waiving lines for Rule 2.1cc (spec 20.1) 
+						## are backwards compatible for Rule 2.1hhh (since spec 21.1)
+						set statuslinehhh [escapechars $statusline]
+						catch { exec $SEV(exec_cmd) -c "echo \"$statuslinehhh\" | sed -e 's/2\.1cc /2\.1hhh /g'" } statuslinehhh
+						if { [string compare -length [string length $noerrorlineallwaive] $noerrorlineallwaive $statuslinehhh] == 0 ||
+						     [string compare -length [string length $noerrorlinewaive] $noerrorlinewaive $statuslinehhh] == 0 } {
+							## use new rule number 2.1hhh in waive line
+							set waiveline "$statuslinehhh"
+							break
+						}						
+					}
+				}				
+			}
+		}
+		if { $waiveline == "" } {
+			if { [string first "(PCSQA-1 cn42);Broken link found at" $noerrorline] != -1 || 
+			     [string first "(PCSQA-1 cn59);Broken link found at" $noerrorline] != -1 ||
+			     [string first "(PCSQA-1 cn58);Broken link found at" $noerrorline] != -1 ||
+			     [string first "(PCSQA-1 mo90);Broken link found at" $noerrorline] != -1 ||
+			     [string first "(PCSQA-1 sg01gcp);Broken link found at" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e cn42);Refered library in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e cn59);Refered library in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e cn58);Refered library in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e mo90);Refered library in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e sg01gcp);Refered library in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e cn42);Include file in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e cn59);Include file in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e cn58);Include file in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e mo90);Include file in" $noerrorline] != -1 ||
+			     [string first "(PCSQA-2.1e sg01gcp);Include file in" $noerrorline] != -1 } {
+				set waiveline "${noerrorline};WAIVE;Auto added by PCSQA because no restricted nodes in cn42, cn59, cn58, mo90 and sg01gcp;KEEP"
+			}
+			set pattern1 "(PCSQA-2.1e *);Refered library in *"
+			set pattern2 "(PCSQA-2.1e *);Include file in *"
+			set design_lib_index [string first "/design/lib_" $noerrorline]
+			if { $design_lib_index != -1 &&
+			     ( [string match $pattern1 $noerrorline] ||
+			       [string match $pattern2 $noerrorline] ) } {
+			     	## $CAD_PROJ_HOME/design/lib_${CAD_METAL_STACK}.defs
+			     	set metalstack [string range $noerrorline [expr $design_lib_index + 12] [expr [string first "." $noerrorline $design_lib_index] - 1]]
+				if { $metalstack != "" } {
+			     		catch { exec $SEV(exec_cmd) -c "grep \"PCSQA\-2\.1f \" $pcsstatus | grep \[\[:blank:\]\]$metalstack\[\[:blank:\]\] | grep WAIVE | wc -l" } custommetalstackwaive
+					if { $custommetalstackwaive > 0 } {
+						## P10020416-18579 item 2)
+						set waiveline "${noerrorline};WAIVE;Auto added by PCSQA because metal stack $metalstack customization waived at 2.1f;KEEP"
+			     		}
+				}
+			}
+		}
+		if { $waiveline != "" } {
+			if { [string first "$no_site_execution_error" $noerrorline] != -1 } {
+				## prevent subtraction of errors at waiving of 
+				## no site checking notifications
+				set waiveline ""
+			}
+			if { [string first "$waiveline21ccc" $noerrorline] != -1 &&
+			     $creationdatesecpcs >= $thresholddate21ccc && 
+			     ( $creationdatesecparentpcs == 0 ||
+			       $creationdatesecparentpcs >= $thresholddate21ccc ) } {
+			       	## PCS created after 2021/10/01�may waive the following violation for�max 2 weeks:�
+				## (PCSQA-2.1ccc);More than 1 PV prefixes '<PREFIX1> ... <PREFIXn>' mapped to�hipre�type '<hipre-type>';WAIVE;aware;KEEP�
+				## Background: violation can be resolved by a request to RE team via PEM to�extend�hipre�types��
+				catch { exec $SEV(exec_cmd) -c "date +%s" } datenowsec
+				## 14 days = 14 * 24 * 60 * 60 = 1209600 seconds
+				set ago14dayssec [expr $datenowsec - 1209600]
+				catch { exec $SEV(exec_cmd) -c "$p4port && p4 changes //wwcad/msip/projects/$pcstriple/pcs/cad/.PCSQA_STATUS | awk '{ print \$4 }'" } changedates
+				set changedates [split $changedates \n]
+				set morethan14daysago ""
+				foreach changedate $changedates {
+					catch { exec $SEV(exec_cmd) -c "date +%s -d $changedate" } changedatesec
+					if { $changedatesec <= $ago14dayssec } {
+						set morethan14daysago $changedate
+						break
+					} 
+				}
+				if { $morethan14daysago != "" } {
+					catch { exec $SEV(exec_cmd) -c "$p4port && p4 print //wwcad/msip/projects/$pcstriple/pcs/cad/.PCSQA_STATUS@$morethan14daysago | grep \"$waiveline21ccc\" | wc -l" } waiveline21cccmorethan14daysago
+					if { $waiveline21cccmorethan14daysago > 0 } {
+						puts $fp "$adderror21ccc since .PCSQA_STATUS of $morethan14daysago"
+						## add error, the 2.1ccc waive will subtract an error		
+		    				incr errors 1
+					}
+				}
+			} 
+		}
+		if { $waiveline != "" } {
+		    ## prevent more than one addition of waiveline with site name 'all'
+		    if { [lsearch -exact $waivelines $waiveline] == -1 } {
+		    	lappend waivelines $waiveline		
+
+			if { [string compare -length [string length $protectederror] $protectederror $waiveline] != 0 } {
+				## check correct waive syntax
+		       		if { [ string match {*;WAIVE;*;REVERT-rel[0-9].[0-9]}  "$waiveline" ] || [ string match {*;WAIVE;*;KEEP} "$waiveline" ] } {			       
+		               		incr errors -1
+		       		} else {
+		               		sproc_msg -warning "The following waive line in ${tgtpcsqastatus} has not required syntax"
+		               		sproc_msg -warning "<Error Type>;<Error details>;WAIVE;<Waive reason>;<REVERT-rel<digit>.<digit>|KEEP>"
+		               		sproc_msg -warning "$waiveline"
+		       		}
+		       		puts $fp "$waiveline"
+			} else {
+				sproc_msg -error "It is not allowed to waive violation on rule $protectederror)"
+				puts $fp "$orgnoerrorline"		
+			}
+		    } else {
+		    	incr errors -1
+		    }	       
+		} else {
+			puts $fp "$orgnoerrorline"		
+		}
+	}
+}
+close $fp
+## restore chksum violations from actualstatus after waiving
+catch { exec $SEV(exec_cmd) -c "cat chksumviolations >> newviolations" } dummy		
+
+## automatic upload of new .PCSQA_STATUS
+set statusupload 0
+set p4_pcsqa_status_file $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/.PCSQA_STATUS
+set p4_pcsqa_status_target_file $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/cad/${tgtpcsqastatus}
+if { $errors >= 1 && $tgtpcsqastatus == ".PCSQA_STATUS" && [file exists $p4_pcsqa_status_target_file] == 0 && $::env(PCSQA_PROJ_ROOT) == $ude3proj } {
+	catch { exec $SEV(exec_cmd) -c "grep \"No cad/.PCSQA_STATUS file available in p4\" newviolations | wc -l" } errorpresent
+	if { $errorpresent > 0 } {
+		## no .PCSQA_STATUS available
+		## STAR 9000876209
+		if { $errors == [expr $nrchksumerrors + 1] } {
+			## only checksum errors and no .PCSQA_STATUS available
+			set statusupload 1
+			set errors 0
+			catch { exec $SEV(exec_cmd) -c "rm -f newviolations && touch newviolations" } dummy
+		}
+	}
+} else {
+	if { $errors == 0 && $::env(USER) != "ahogenhu" } {
+		set statusupload 1
+	}
+	if { $errors > 0 && [file exists $p4_pcsqa_status_file] && $::env(PCSQA_PROJ_ROOT) == $ude3proj } {
+		## STAR 9000876209
+		if { $errors == $nrchksumerrors } {
+			## only checksum errors
+			set statusupload 1
+			set errors 0
+			catch { exec $SEV(exec_cmd) -c "grep -v \"$chksumerror\" newviolations > newviolations2" } dummy 
+			catch { exec $SEV(exec_cmd) -c "mv newviolations2 newviolations" } dummy
+		}
+	} else {
+		if { $errors == 0 && [file exists $p4_pcsqa_status_target_file] && $::env(PCSQA_PROJ_ROOT) == $ude3proj } {
+			catch { exec $SEV(exec_cmd) -c "grep \"PCSQA STATUS:\" $p4_pcsqa_status_target_file | sed -e 's/:/ /g' | awk '{ print \$3 }'" } p4_pcsqa_status
+			if { $p4_pcsqa_status == "FAIL" } {
+				## previous status was FAIL and now PASS
+				set statusupload 1
+			}
+		}
+		if { $errors == 0 && [file exists $p4_pcsqa_status_target_file] } {
+			set projectname ""
+			set projectrelease ""
+			catch { exec $SEV(exec_cmd) -c "grep \"PCSQA Project Name:\" $p4_pcsqa_status_target_file | wc -l" } projectnameavail
+			if { $projectnameavail > 0 } {
+				catch { exec $SEV(exec_cmd) -c "grep \"PCSQA Project Name:\" $p4_pcsqa_status_target_file | sed -e 's/:/ /g' | awk '{ print \$4}'" } projectname
+			}
+			catch { exec $SEV(exec_cmd) -c "grep \"PCSQA Project Release:\" $p4_pcsqa_status_target_file | wc -l" } projectreleaseavail
+			if { $projectreleaseavail > 0 } {
+				catch { exec $SEV(exec_cmd) -c "grep \"PCSQA Project Release:\" $p4_pcsqa_status_target_file | sed -e 's/:/ /g' | awk '{ print \$4}'" } projectrelease
+			}
+			if { $projectname != "" && $projectrelease != "" } {
+				if { $projectname != "$SVAR(pcs_name)" || $projectrelease != "$SVAR(pcs_version)" } {
+					## no errors, but existing .PCSQA_STATUS has wrong project name or release number
+					set statusupload 1				
+				}						
+			}
+		}
+	}
+}
+
+if { [file size newviolations] > 0 } {
+	set statusfp [open $pcsstatus r]
+	set file_data [read $statusfp]
+	close $statusfp
+	set statusdata [split $file_data "\n"]
+	set newviolationsfp [open newviolations r]
+	set file_data [read $newviolationsfp]
+	close $newviolationsfp
+	set newviolationsdata [split $file_data "\n"]
+	
+	foreach statusline $statusdata {
+		if { [string first WAIVE $statusline] != -1 } {
+			## remove spaces around keywords in waive lines from PCSQA_STATUS file
+			## to ensure simple parsing but extended syntax acceptation
+			set statusline [escapechars $statusline]
+			catch { exec $SEV(exec_cmd) -c "echo \"$statusline\" | \
+			                                sed -e 's/;\\s*WAIVE\\s*;/;WAIVE;/g' \
+							    -e 's/;\\s*KEEP\\s*$/;KEEP/g' \
+							    -e 's/;\\s*REVERT/;REVERT/g' \
+							    -e 's/\\s*$//g' " } statusline			
+
+			set statuslinefound 0
+			foreach newviolationline $newviolationsdata {
+				if { [string compare $statusline $newviolationline] == 0 } {
+					set statuslinefound 1
+					break
+				} else {
+					if { [string first "PCSQA-2.1ss" $newviolationline] != -1 &&
+					     [string first "PCSQA-2.1ss" $statusline] != -1 } {
+						## ensure waiving lines for Rule 2.1ss are backwards compatible
+						## independent of column alignment, which is 
+						## dependent of version names lengths since msip_ccs/2020.03.
+						## Therefore, remove at waive and actual line all spaces and tabs at comparison.
+						catch { exec $SEV(exec_cmd) -c "echo \"$newviolationline\" | sed -e 's/\\s//g'" } newviolationlinenospace
+						catch { exec $SEV(exec_cmd) -c "echo \"$statusline\" | sed -e 's/\\s//g'" } statuslinenospace
+						if { [string compare -length [string length $newviolationlinenospace] $newviolationlinenospace $statuslinenospace] == 0 } {
+							set statuslinefound 1
+							break
+						}						
+					}
+				}
+			}
+			if { $statuslinefound == 0 && [string compare -length [string length $protectederror] $protectederror $statusline] != 0 } {
+				sproc_msg -warning "Waive line in ${tgtpcsqastatus} is no longer required (remove by store new ${tgtpcsqastatus} in p4): $statusline"
+			}
+		}
+	}
+
+
+	## report a violation which occurs at all sites only once with 'all' in error prefix
+
+	## Create newviolations file newviolationsref in which each site name in error prefix is replace by 'all'
+	## This file can be used to check the amount of overall occurences of a violation
+	catch { exec $SEV(exec_cmd) -c "cat newviolations | grep -v WAIVE | sed $allsitereplace > newviolationsref" } dummy
+
+	set newviolationsallfp [open newviolationsall w]
+	set newviolationlinealllist [list]
+	catch { exec $SEV(exec_cmd) -c "cat newviolations | grep '$no_site_execution_error' | wc -l" } nocheckedsites
+	set sitechecks [expr [llength $sites] - $nocheckedsites]
+	## subtract the number of sites at which PCS QA is not applicable; design directory is no link
+	if { [file exists $SEV(step_dir)/logs] } {
+		set sitelogs "$SEV(step_dir)/logs/2_check_pcs_sites_*/*.log"
+	} else {
+		set sitelogs "$SEV(step_dir)/2_check_pcs_sites_*/logs/*.log"
+	}
+	catch { exec $SEV(exec_cmd) -c "grep \"PCSQA is not applicable for site\" $sitelogs | wc -l" } notapplicablesites
+	set sitechecks [expr $sitechecks - $notapplicablesites]
+	foreach newviolationline $newviolationsdata {
+	     if { $newviolationline != "" } {
+		if { [string first "WAIVE" $newviolationline] == -1 } {
+			set newviolationlinenovar [escapechars $newviolationline]
+			catch { exec $SEV(exec_cmd) -c "echo \"$newviolationlinenovar\" | sed $sitereplace" } newviolationlineall
+			set newviolationlineallnovar [escapechars $newviolationlineall]
+			catch { exec $SEV(exec_cmd) -c "grep \"$newviolationlineallnovar\$\" newviolationsref | wc -l" } occurences
+			if { $occurences == $sitechecks } {
+				## violation at all sites
+				## add only once to newviolationsall
+				if { [lsearch -exact $newviolationlinealllist $newviolationlineall] == -1 } {
+					puts $newviolationsallfp $newviolationlineall
+					lappend newviolationlinealllist $newviolationlineall 
+				}			
+			} else {
+				## violation not at all sites
+				puts $newviolationsallfp $newviolationline
+			}
+		} else {
+			## WAIVE line
+			puts $newviolationsallfp $newviolationline
+		}
+	     }
+	}
+	close $newviolationsallfp	
+	catch { exec $SEV(exec_cmd) -c "mv newviolationsall newviolations; rm -f newviolationsref" } dummy
+}
+
+set status "PASS"
+if { $errors > 0 } {
+	set status "FAIL"
+}	
+
+set score [expr $warnings + [expr $errors * 5 ]]
+
+
+cd [file dirname $SEV(block_dir)]
+set script_file [file normalize $SEV(script_file)]
+cd $run_dir
+catch { exec $SEV(exec_cmd) -c "basename \$(dirname \$(dirname \$(dirname $script_file)))" } version
+if { $version == "main" } {
+	set version "development version"
+}
+set version "PCS QA $version"
+
+set sites ""
+if { [llength $p4checklog] > 0 } {
+	set sites "${thissite}(p4)"	
+}
+foreach checklog $checklogs {
+	catch { exec $SEV(exec_cmd) -c "basename $checklog | sed -e 's/log\.//g'" } site
+	set sites "$sites $site"	
+}
+
+catch { exec $SEV(exec_cmd) -c "date" } date
+
+set pcs $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+if { [file isdirectory $pcs] == 0 } {
+	set pcs $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+}
+set chksum ""
+catch { exec $SEV(exec_cmd) -c "rm -f $run_dir/chksum && touch $run_dir/chksum" } dummy
+if { [file isdirectory $pcs/cad] } {
+	cd $pcs/cad
+	## catch { exec $SEV(exec_cmd) -c "find . -type f -or -type l -and -not -type d -not -name '.PCSQA_STATUS' -not -name '.PCSQA_STATUS_beta' -not -name '.whoami' -exec md5sum {} \\; | awk '{print \$1}' | sort | md5sum | awk '{print \$1}'" } chksum
+	catch { exec $SEV(exec_cmd) -c "find . -type f -not -name '.PCSQA_STATUS' -not -name '.PCSQA_STATUS_beta' -not -name '.whoami' -exec md5sum {} \\; | awk '{print \$2\";\"\$1}' | sed -e 's#\\./##g' > $run_dir/chksum" } dummy
+	catch { exec $SEV(exec_cmd) -c "find . -type l -exec md5sum {} \\; | awk '{print \$2\";\"\$1}' | sed -e 's#\\./##g' >> $run_dir/chksum" } dummy
+	catch { exec $SEV(exec_cmd) -c "cat $run_dir/chksum | sed -e 's#;# #g' | awk '{print \$2}' | sort | md5sum | awk '{print \$1}'" } chksum
+	cd $run_dir
+}
+
+set hipreversion ""
+set msip_deliveries_std_pv_types_path $::env(udecadrep)/msip/ude_conf/MSIP_Deliveries_Std/pv_types
+set hiprepvtypesversion $msip_deliveries_std_pv_types_path/Latest/pv_types.txt
+if { [file exists $hiprepvtypesversion] == 0 } {
+	set hiprepvtypesversions [glob $msip_deliveries_std_pv_types_path/*/pv_types.txt]
+	set hiprepvtypesversion  [lindex [lsort $hiprepvtypesversions] end]
+}
+if { [file exists $hiprepvtypesversion] } {
+	set hiprepvtypesversion [file dirname $hiprepvtypesversion]
+	if { [file type $hiprepvtypesversion] == "link" } {
+		set hipreversion [file readlink $hiprepvtypesversion]
+	} else {
+		set hipreversion [file tail $hiprepvtypesversion]
+	}
+}
+
+## add new header
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA STATUS:$status\" > header" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Project Name:$SVAR(pcs_name)\" >> header" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Project Release:$SVAR(pcs_version)\" >> header" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Score:$score\" >> header" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Execution details:$version;$::env(USER);$sites;$date\" >> header" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA CHKSUM:$chksum\" >> header" } dummy
+if { $hipreversion != "" } {
+	catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Hipre Version:$hipreversion\" >> header" } dummy
+}
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Violations list:\" >> header" } dummy
+if { [file exists $SEV(step_dir)/logs] } {
+	set sitelogs [glob -nocomplain $SEV(step_dir)/logs/2_check_pcs_sites_*/*.log]
+} else {
+	set sitelogs [glob -nocomplain $SEV(step_dir)/2_check_pcs_sites_*/logs/*.log]
+}
+if { [expr [llength $sitelogs] - [llength $p4checklog]] < $msipsites } {
+	catch { exec $SEV(exec_cmd) -c "echo \"(PCSQA-REMOTECHECK) Usage of -sites option or PCSQA_PROJ_ROOT with non-default value, can result in limited results; PCS has not been validated at all (applicable) MSIP sites.\" >> header" } dummy
+}
+catch { exec $SEV(exec_cmd) -c "cat header newviolations > $pcsstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"\" >> $pcsstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "echo \"PCSQA Automation fields: DO NOT MAKE MANUAL CHANGES BELOW THIS LINE\" >> $pcsstatus" } dummy
+catch { exec $SEV(exec_cmd) -c "cat $pcsstatus chksum > ${pcsstatus}2 && mv ${pcsstatus}2 $pcsstatus" } dummy
+
+if { [file exists ${tgtpcsqastatus}_old] } {
+	puts "Contents of previous ${tgtpcsqastatus}_old (available at $run_dir/${tgtpcsqastatus}_old):"
+	sproc_cat_file -file ${tgtpcsqastatus}_old
+}
+
+puts "Contents of current ${tgtpcsqastatus} (available at $run_dir/${tgtpcsqastatus}):"
+sproc_cat_file -file $pcsstatus
+
+if { $statusupload == 1 } {
+	if { [file isdirectory $p4pcscad] } {
+		cd $p4root
+		if { [file exists msip_pcsqa_template] } {
+			catch { exec $SEV(exec_cmd) -c "grep \"^Client\" msip_pcsqa_template | awk '{ print \$2 }'" } clientname
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -i < msip_pcsqa_template" } dummy 
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && export P4CONFIG=\".p4config\" && $p4 sync -f $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/..." } p4message 
+			if { $p4message == "$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/... - protected namespace - access denied." } {			
+				## get p4 content via account csadmin to bypass restricted access
+				catch { exec $SEV(exec_cmd) -c "chmod -R 777 $SVAR(product_name)" } dummy
+				set SSH "export PASSWORD=$::env(PCSQA_PASSWORD); $SEV(gscript_dir)/qa_scripts/sshaskpass ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no csadmin@$::env(HOST)"
+				catch { exec bash -c "$SSH \"cd $p4root && export P4CONFIG=.p4config && /usr/local/bin/p4 sync -f $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/...\"" } dummy
+			}
+			
+			## check if all cad files in .PCSQA_STATUS with chksum are stored in p4
+			catch { exec $SEV(exec_cmd) -c "cat $run_dir/${tgtpcsqastatus} | sed -e 's/;/ /g' | awk '{ print \$1 }'" } cadfiles
+			set cadfiles [split $cadfiles "\n"]
+			foreach cadfile $cadfiles {
+				if { [file exists $pcs/cad/$cadfile] && [file exists $p4pcscad/$cadfile] == 0 } {
+					sproc_msg -error "File $pcs/cad/$cadfile has not been stored in perforce, automatic upload of ${tgtpcsqastatus} to p4 is skipped"
+					set statusupload 0
+					break
+				}
+			}
+				 
+			if { $statusupload == 1 } {
+			cd $p4pcscad
+			puts "Automatic upload of ${tgtpcsqastatus} to p4:"
+			if { $p4message == "$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/... - protected namespace - access denied." } {
+				## upload PCSQA_STATUS via account csadmin to bypass restricted access
+				set SSH "export PASSWORD=$::env(PCSQA_PASSWORD); $SEV(gscript_dir)/qa_scripts/sshaskpass ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no csadmin@$::env(HOST)"
+				if { [file exists $p4pcscad/${tgtpcsqastatus}] } {
+					catch { exec $SEV(exec_cmd) -c "$SSH \"cd $p4pcscad && export P4CONFIG=.p4config && /usr/local/bin/p4 edit ${tgtpcsqastatus}\"" } p4log
+					catch { exec $SEV(exec_cmd) -c "cp $run_dir/${tgtpcsqastatus} $p4pcscad" } dummy
+					catch { exec $SEV(exec_cmd) -c "$SSH \"cd $p4pcscad && export P4CONFIG=.p4config && /usr/local/bin/p4 submit -d 'PCS QA: automatic upload of ${tgtpcsqastatus}' ${tgtpcsqastatus}\"" } p4log
+				} else {
+					catch { exec $SEV(exec_cmd) -c "cp $run_dir/${tgtpcsqastatus} $p4pcscad" } dummy
+					catch { exec $SEV(exec_cmd) -c "$SSH \"cd $p4pcscad && export P4CONFIG=.p4config && /usr/local/bin/p4 add ${tgtpcsqastatus} && /usr/local/bin/p4 submit -d 'PCS QA: automatic upload of ${tgtpcsqastatus}' ${tgtpcsqastatus}\"" } p4log
+				}
+				catch { exec $SEV(exec_cmd) -c "cd $p4root && chmod -R 755 $SVAR(product_name)" } dummy
+			} else {			
+				if { [file exists $p4pcscad/${tgtpcsqastatus}] } {
+					catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && export P4CONFIG=\".p4config\" && $p4 edit ${tgtpcsqastatus}" } p4log
+					catch { exec $SEV(exec_cmd) -c "cp $run_dir/${tgtpcsqastatus} $p4pcscad" } dummy
+					catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && export P4CONFIG=\".p4config\" && $p4 submit -d \"PCS QA: automatic upload of ${tgtpcsqastatus}\" ${tgtpcsqastatus}" } p4log
+				} else {
+					catch { exec $SEV(exec_cmd) -c "cp $run_dir/${tgtpcsqastatus} $p4pcscad" } dummy
+					catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && export P4CONFIG=\".p4config\" && $p4 add ${tgtpcsqastatus} && $p4 submit -d \"PCS QA: automatic upload of ${tgtpcsqastatus}\" ${tgtpcsqastatus}" } p4log
+				}
+			}
+			puts $p4log
+			} 
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -d $clientname" } dummy 
+		} else {
+			sproc_msg -error "Can not upload ${tgtpcsqastatus} to p4"
+		}
+		cd $run_dir
+	} else {
+		sproc_msg -error "Can not upload ${tgtpcsqastatus} to p4"
+	}	
+}
+
+if { $errors > 0 } {
+	sproc_msg -error "Checking PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) has been failed with $errors errors"
+}	
+if { $warnings > 0 } {
+	sproc_msg -warning "Checking PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) gives $warnings warnings"
+}
+
+set upcs  [string map { - _ . _ } [string toupper $SVAR(product_name)_$SVAR(pcs_name)_$SVAR(pcs_version)]]
+sproc_msg -info "METRIC | INTEGER PCSQA.ERRORS.${upcs} | $errors"
+sproc_msg -info "METRIC | INTEGER PCSQA.WARNINGS.${upcs} | $warnings"
+sproc_msg -info "METRIC | INTEGER PCSQA.SCORE.${upcs} | $score"
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

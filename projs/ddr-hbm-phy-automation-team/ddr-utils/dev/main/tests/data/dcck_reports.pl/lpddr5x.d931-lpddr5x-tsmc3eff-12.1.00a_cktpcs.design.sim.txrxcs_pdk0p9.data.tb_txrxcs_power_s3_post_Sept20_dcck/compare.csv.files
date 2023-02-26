@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# Path to test data directory given as first argument
+TEST_DATA_DIR=$1
+
+#------------------------------------------------
+function check_exit_val () {
+
+echo $1
+$1
+
+if [[ $? -eq 0 ]]
+then
+  echo "  --> Match!"
+else
+  echo "FAILED!"
+  exit -1
+fi
+}
+#------------------------------------------------
+origin=$PWD
+
+script_path="$TEST_DATA_DIR/dcck_reports.pl/lpddr5x.d931-lpddr5x-tsmc3eff-12.1.00a_cktpcs.design.sim.txrxcs_pdk0p9.data.tb_txrxcs_power_s3_post_Sept20_dcck"
+pushd $script_path
+
+echo "PWD $PWD"
+
+echo "--------------------------------------------------------------------------------"
+echo "  Running diff commands from directory: '$script_path'  " 
+echo "--------------------------------------------------------------------------------"
+
+cmd="diff tb_txrxcs_power_s3_post.chkdcpath_0.csv kgr.output/tb_txrxcs_power_s3_post.chkdcpath_0.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkdcpath_1.csv kgr.output/tb_txrxcs_power_s3_post.chkdcpath_1.csv"
+check_exit_val "$cmd" 
+cmd="diff tb_txrxcs_power_s3_post.chkdcpath_2.csv kgr.output/tb_txrxcs_power_s3_post.chkdcpath_2.csv"
+check_exit_val "$cmd" 
+cmd="diff tb_txrxcs_power_s3_post.chkdcpath_3.csv kgr.output/tb_txrxcs_power_s3_post.chkdcpath_3.csv"
+check_exit_val "$cmd" 
+
+cmd="diff tb_txrxcs_power_s3_post.chkdevop_0.csv  kgr.output/tb_txrxcs_power_s3_post.chkdevop_0.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkdevop_1.csv  kgr.output/tb_txrxcs_power_s3_post.chkdevop_1.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkdevop_2.csv  kgr.output/tb_txrxcs_power_s3_post.chkdevop_2.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkdevop_3.csv  kgr.output/tb_txrxcs_power_s3_post.chkdevop_3.csv"
+check_exit_val "$cmd"
+
+cmd="diff tb_txrxcs_power_s3_post.chkznode_0.csv  kgr.output/tb_txrxcs_power_s3_post.chkznode_0.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkznode_1.csv  kgr.output/tb_txrxcs_power_s3_post.chkznode_1.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkznode_2.csv  kgr.output/tb_txrxcs_power_s3_post.chkznode_2.csv"
+check_exit_val "$cmd"
+cmd="diff tb_txrxcs_power_s3_post.chkznode_3.csv  kgr.output/tb_txrxcs_power_s3_post.chkznode_3.csv"
+check_exit_val "$cmd"
+
+popd $origin
+
+

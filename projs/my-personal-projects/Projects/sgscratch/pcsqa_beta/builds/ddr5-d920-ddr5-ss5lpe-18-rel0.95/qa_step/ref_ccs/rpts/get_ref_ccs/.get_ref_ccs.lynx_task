@@ -1,0 +1,13 @@
+flow_order|2000000
+Host|us01msemt1923
+Tool|tcl
+Version|8.6.6
+Cores|1
+Wall Time|33
+CPU Time|NA
+CPU Efficiency|NA
+Mem|NA
+User|alvaro
+Logfile|/slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/ddr5-d920-ddr5-ss5lpe-18-rel0.95/qa_step/ref_ccs/logs/get_ref_ccs.log
+Stop Time|1658175322
+License|LicenseDataUnavailable

@@ -1,0 +1,9 @@
+name,direction,pin_type,related_clock_pin,related_ground_pin,related_power_pin,derating_factor,desc,donot_repeat,is_bus,is_true_core_ground,lsb,max_capacitive_load,max_voltage,min_capacitive_load,msb,nominal_voltage,package_pin,related_select_pin,synlibchecker_waive,cellname,cell_x_dim_um,cell_y_dim_um
+BP_AC0,IO,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+BP_AC1,IO,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+PclkIn,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+VDD,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+VDDQ,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+VIO_PwrOk,I,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+VIO_RxAcVref,I,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36
+VSS,I,primary_ground,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphycover_acx2_top_ew,164.256,74.36

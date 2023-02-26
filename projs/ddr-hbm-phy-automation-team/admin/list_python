@@ -1,0 +1,69 @@
+#!/depot/perl-5.14.2/bin/perl
+#
+# This script is meant to be run in whatever your current working directory is.
+# It will look in your current directory and all directories below it to try
+# and find python scripts.
+#
+# Usage:
+#     list_python
+#     list_python with utils__script_usage
+#     list_python without utils__script_usage
+#     
+
+use File::Find;
+
+my @python_files;
+my $SKIP_SYMLINKS = 1;
+my $DEBUG = 1;
+
+sub process_file {
+    my $fname = $_;
+    my $ispython = 0;
+
+    return if (-d $fname); # Skip directories
+    return if (! $fname ) ;
+    return if ( $fname =~ m/^-/ ); # linux allows filenames to begin with '-'
+
+    my $pathname = $File::Find::name;
+
+    if ( $pathname =~ m/\.git/ ) {
+        return;
+    }
+    if ($SKIP_SYMLINKS and ( -l $pathanme) ){
+        return;
+    }
+    
+    $ispython = 1  if ( $fname =~ m/py$/ ) ;
+    if ( ! $ispython ) {
+        if ( $fname  ne "") {
+            my $r = `file -L "$_"`;
+            $ispython = 1 if ( $r =~ m/Python/ );
+        }
+    }
+
+    push(@python_files, $pathname) if ( $ispython );
+}
+    
+my $action = shift @ARGV;
+my $search = shift @ARGV;
+
+my @DIRLIST = ( '.' );
+
+find(\&process_file, @DIRLIST);
+
+foreach my $py_file ( @python_files) {
+    if ( $action eq "without" ){
+        my $r = `grep $search $py_file`;
+        if ( $r eq '' ) {
+            print("$py_file\n");
+        }
+    } elsif ( $action eq "with" ){
+        my $r = `grep $search $py_file`;
+        if ( $r ne '' ) {
+            print("$py_file\n");
+        }
+    }else{
+        print("$py_file\n");
+    }
+}
+

@@ -1,0 +1,2 @@
+AP_28K_THICKNESS ON []  
+FHDMIM OFF []  

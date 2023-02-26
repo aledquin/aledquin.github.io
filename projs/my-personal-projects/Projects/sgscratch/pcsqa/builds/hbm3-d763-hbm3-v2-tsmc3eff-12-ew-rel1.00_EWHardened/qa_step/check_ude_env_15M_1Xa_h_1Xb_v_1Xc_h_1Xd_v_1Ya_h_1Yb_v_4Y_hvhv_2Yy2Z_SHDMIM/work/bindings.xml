@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- created by Custom Compiler, build#  on Tue Jul 19 12:12:20 2022
+-->
+<file-format version="1" name="synopsysBindings">
+        <bindings>
+                <binding event="Shift-j" command="msip::CDtools::adhoc::le::createPinCombo" windowType="leLayout" userCreated="true"/>
+                <binding event="Shift-Up" command="layoutUtils::incrStopView" windowType="leLayout" userCreated="true"/>
+                <binding event="Shift-Down" command="layoutUtils::decrStopView" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-Space" command="layoutUtils::createFP" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-p" command="layoutUtils::bringPinsUp" windowType="leLayout" userCreated="true"/>
+                <binding event="Alt-Shift-p" command="layoutUtils::placePinGui" windowType="leLayout" userCreated="true"/>
+                <binding event="Shift-Plus" command="layoutUtils::drawPRBoundary" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-l" command="layoutUtils::generateLabelsForLVS" windowType="leLayout" userCreated="true"/>
+        </bindings>
+</file-format>

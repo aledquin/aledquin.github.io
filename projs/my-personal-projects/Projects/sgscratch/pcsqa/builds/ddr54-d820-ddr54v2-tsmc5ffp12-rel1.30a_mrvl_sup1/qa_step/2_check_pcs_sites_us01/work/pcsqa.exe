@@ -1,0 +1,6 @@
+bash  -c \
+"source /global/etc/modules/3.1.6/init/bash; source $udecadrep/etc/.bashrc; export PCSQA_PROJ_ROOT=/remote/cad-rep/projects; export MSIP_PROJ_ROOT=/remote/proj; export MSIP_LYNX_PCSQA=/remote/cad-rep/msip/tools/Lynxtools/pcsqa/2022.04; \
+module use --append /global/etc/modulefiles/freeware/opensource; \
+module load activetcl/8.5.12; \
+cd $udescratch/alvaro/pcsqa/tmp; \
+tclsh alvaro_nolynx_check_pcs_ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1.tcl > alvaro_ddr54_d820-ddr54v2-tsmc5ffp12_rel1.30a_mrvl_sup1_log.us01"

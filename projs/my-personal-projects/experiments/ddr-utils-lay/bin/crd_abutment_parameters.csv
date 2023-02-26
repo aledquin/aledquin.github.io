@@ -1,0 +1,190 @@
+# UDE parameters
+project_type,
+project_name,
+release_name,
+metal_stack,
+
+# Process parameters
+boundary_layer,
+dbu,
+icc2_gds_layer_map,
+icc2_techfile,
+tap_distance,
+
+# Abutment parameters
+generate_boundary,0
+generated_boundary_upsize_b,0
+generated_boundary_upsize_l,0
+generated_boundary_upsize_r,0
+generated_boundary_upsize_t,0
+
+# Text parameters
+covercell_text_layers,
+macro_text_layers,
+
+# Macro CDL parameters
+# Format: cdl_<macro name>,<path to CDL>
+
+# Macro DEF parameters
+# Format: def_<macro name>,<path to DEF>
+
+# Macro GDS parameters
+# Format: gds_<macro name>,<path to GDS>
+
+# Macro LEF parameters
+# Format: lef_<macro name>,<path to LEF>
+
+# Covercell GDS parameters
+# Format: gds_dwc_ddrphycover_<macro name>,<path to GDS>
+
+# Standard cell parameters
+boundary_bottom,
+boundary_bottom_left_inside_corner,
+boundary_bottom_left_inside_horizontal_abutment,
+boundary_bottom_left_outside_corner,
+boundary_bottom_right_inside_corner,
+boundary_bottom_right_inside_horizontal_abutment,
+boundary_bottom_right_outside_corner,
+boundary_left,
+boundary_right,
+boundary_top,
+boundary_top_left_inside_corner,
+boundary_top_left_outside_corner,
+boundary_top_right_inside_corner,
+boundary_top_right_outside_corner,
+stdcell_drive_strength,
+stdcell_gds,
+stdcell_inner_kpt_b,
+stdcell_inner_kpt_l,
+stdcell_inner_kpt_r,
+stdcell_inner_kpt_t,
+stdcell_kpt_b,
+stdcell_kpt_l,
+stdcell_kpt_r,
+stdcell_kpt_t,
+stdcell_manual_kpt_<macro/testcase>,
+stdcell_ndm,
+stdcell_tap,
+stdcell_tap_boundary_wall_cell_n_fill_wall,
+stdcell_tap_boundary_wall_cell_n_fill_wall_replacement,
+stdcell_tap_boundary_wall_cell_n_inner_corner_boundary,
+stdcell_tap_boundary_wall_cell_n_left_tap,
+stdcell_tap_boundary_wall_cell_n_right_tap,
+stdcell_tap_boundary_wall_cell_n_ntap_inner_corner_boundary,
+stdcell_tap_boundary_wall_cell_n_ptap_inner_corner_boundary,
+stdcell_tap_boundary_wall_cell_n_tap,
+stdcell_tap_boundary_wall_cell_n_tap_wall,
+stdcell_tap_boundary_wall_cell_n_tb_boundary,
+stdcell_tap_boundary_wall_cell_n_tb_corner_boundary,
+stdcell_tap_boundary_wall_cell_n_tb_corner_tap,
+stdcell_tap_boundary_wall_cell_n_tb_tap,
+stdcell_tap_boundary_wall_cell_n_tb_tap_wall,
+stdcell_tap_boundary_wall_cell_n_tb_wall,
+stdcell_tap_boundary_wall_cell_p_fill_wall,
+stdcell_tap_boundary_wall_cell_p_fill_wall_replacement,
+stdcell_tap_boundary_wall_cell_p_inner_corner_boundary,
+stdcell_tap_boundary_wall_cell_p_left_tap,
+stdcell_tap_boundary_wall_cell_p_right_tap,
+stdcell_tap_boundary_wall_cell_p_ntap_inner_corner_boundary,
+stdcell_tap_boundary_wall_cell_p_ptap_inner_corner_boundary,
+stdcell_tap_boundary_wall_cell_p_tap,
+stdcell_tap_boundary_wall_cell_p_tap_wall,
+stdcell_tap_boundary_wall_cell_p_tb_boundary,
+stdcell_tap_boundary_wall_cell_p_tb_corner_boundary,
+stdcell_tap_boundary_wall_cell_p_tb_corner_tap,
+stdcell_tap_boundary_wall_cell_p_tb_tap,
+stdcell_tap_boundary_wall_cell_p_tb_tap_wall,
+stdcell_tap_boundary_wall_cell_p_tb_wall,
+
+# Testcase parameters
+testcases_abutment,
+testcases_abutment_stdcell,
+testcases_abutment_wrapper,
+testcases_pv_only,
+testcases_stdcell,
+testcases_stdcell_fill,
+testcases_utility_1,
+testcases_wrapper,
+
+# Testing control parameters
+generate_cdl,0
+generate_lef,0
+output_layout_format,GDS
+test_covercells,0
+test_macros,1
+uniquify_input_cdl,0
+uniquify_input_cdl_filter_file,
+uniquify_input_gds,0
+uniquify_signal_pins,0
+
+# PV parameters
+msip_cd_pv_version,
+grid,1
+virtual_connect_icv,
+virtual_connect_calibre,
+
+# DRC parameters
+drc_icv,0
+drc_calibre,0
+drc_icv_grid_processes,8
+drc_icv_options_file,
+drc_icv_runset,
+drc_icv_unselect_rule_names,
+drc_calex_extra_arguments,
+drc_prefix,DRC
+drc_feol_fill,0
+drc_beol_fill,0
+drc_error_limit,
+
+# LVS parameters
+lvs_icv,0
+lvs_calibre,0
+lvs_icv_grid_processes,4
+lvs_calex_extra_arguments,
+lvs_prefix,LVS
+
+# PERCCNOD parameters
+perccnod_icv,0
+perccnod_calibre,0
+perccnod_icv_grid_processes,4
+perccnod_calex_extra_arguments,
+perccnod_prefix,PERCCNOD
+
+# PERCCD parameters
+perccd_icv,0
+perccd_calibre,0
+perccd_icv_grid_hosts,4
+perccd_icv_grid_cores_per_host,4
+perccd_icv_grid_h_vmem,1000G
+perccd_calex_extra_arguments,--long
+perccd_prefix,PERCCD
+
+# PERCLDL parameters
+percldl_icv,0
+percldl_calibre,0
+percldl_icv_grid_processes,4
+percldl_calex_extra_arguments,
+percldl_prefix,PERCLDL
+
+# PERCP2P parameters
+percp2p_icv,0
+percp2p_calibre,0
+percp2p_icv_grid_hosts,4
+percp2p_icv_grid_cores_per_host,4
+percp2p_icv_grid_h_vmem,1000G
+percp2p_calex_extra_arguments,--long
+percp2p_prefix,PERCP2P
+
+# PERCTOPO parameters
+perctopo_icv,0
+perctopo_calibre,0
+perctopo_icv_grid_processes,4
+perctopo_calex_extra_arguments,
+perctopo_prefix,PERCTOPO
+
+# PERCTOPOLA parameters
+perctopola_icv,0
+perctopola_calibre,0
+perctopola_icv_grid_processes,4
+perctopola_calex_extra_arguments,
+perctopola_prefix,PERCTOPOLA

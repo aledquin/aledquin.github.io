@@ -1,0 +1,53 @@
+## list of settings for present release
+set rel "1.30a_ew"
+set vcrel "1.30a_ew"
+set layout_tag "STANDARD PRODUCT Final Release"
+set p4_release_root "products/lpddr54/project/d850-lpddr54-tsmc5ffp12"
+set releaseBranch "rel1.30_ew_1.30a_ew_rel_"
+set process "tsmc5ffp12"
+set metal_stack "15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2R"
+set metal_stack_ip "8M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_2Y"
+## legal pin layers
+set layers "M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP"
+## legal supply pin layers
+set supply_pins "M8"
+set supply_pins_override(dwc_ddrphy_lcdl_ew) "M4"
+set supply_pins_override(dwc_ddrphy_pclk_rx_ew) "M6"
+set supply_pins_override(dwc_ddrphy_techrevision_ew) "M6"
+set supply_pins_override(dwc_ddrphy_utility_blocks) "M14 M15 MTOP MTOP-1"
+set supply_pins_override(dwc_ddrphy_repeater_blocks) "M14 M15 MTOP MTOP-1"
+set timing_libs {lvf}
+## reference GDS files for DI
+#set reference_gds(dwc_ddrphy_sec_io) {dwc_ddrphy_sec_io_IntLoadFill.gds.gz dwc_ddrphy_sec_io_InternalLoad.gds.gz}
+## days since release files were created, for pin check/timing collateral validation
+set reference_date_time "14 days ago"
+## release GDS/CDL, default 'calibre'
+##   allows using 'icv' GDS/CDL files for release, **only** applies to TSMC N7 where Calibre is waived
+##   allows using 'HIPRE' GDS/CDL files from GenHiprePkg
+set release_gds_cdl "icv"
+## release GDS of shim macros, default 'drcint'
+#set release_gds_shim "drcint"
+## version for LEF comparison
+#set lef_diff_rel "1.00a_pre1"
+## cells to prune from CDL
+set cdl_prune_cells "cvcp* cvpp* vflag*"
+## macros that are PHYV only and can have autogen Verilog/LIB files
+#set releasePhyvMacro {dwc_ddrphy_decapvddq_ew dwc_ddrphy_decapvddq_ns dwc_ddrphy_decapvaa dwc_ddrphy_decapvaa_tile dwc_ddrphy_vddqclamp_ns maesdclamp18 dwc_ddrphy_vddclamp}
+## macros that are only shims, only LEF/GDS
+#set releaseShimMacro {dwc_ddrphy_pllshim dwc_ddrphy_memresetshim_ns}
+## macros to ignore for CKT release to DI
+set releaseIgnoreMacro {dwc_ddrphy_utility_blocks}
+## name of UTILITY library macro for CKT release to customer, defaults to dwc_ddrphy_utility_cells
+set utility_name {dwc_ddrphy_utility_blocks}
+set repeater_name "dwc_ddrphy_repeater_blocks"
+set releaseRepeaterMacro {dwc_ddrphy_rpt1ch_ew dwc_ddrphy_rpt2ch_ew}
+## contents of UTILITY library macro for CKT release to customer
+set releaseUtilityMacro {dwc_ddrphy_endcell_ew dwc_ddrphy_decapvdd_4x1_ew dwc_ddrphy_decapvdd_1x1_ew dwc_ddrphy_decapvdd_1by4x1_ew dwc_ddrphy_decapvddq_4x1_ew dwc_ddrphy_decapvddq_1x1_ew dwc_ddrphy_decapvddq_1by4x1_ew dwc_ddrphy_decapvddhd_4x1_ew dwc_ddrphy_decapvddhd_1x1_ew dwc_ddrphy_decapvddhd_1by4x1_ew dwc_ddrphy_decapvddqhd_4x1_ew dwc_ddrphy_decapvddqhd_1x1_ew dwc_ddrphy_decapvddqhd_1by4x1_ew dwc_ddrphy_clamp_dbyte13_ew dwc_ddrphy_clamp_dbyte12_ew dwc_ddrphy_clamp_dbyte11_ew dwc_ddrphy_clamp_dbyte10_ew dwc_ddrphy_clamp_ac2r_ew dwc_ddrphy_clamp_ac1r_ew dwc_ddrphy_clamp_master_ew dwc_ddrphy_vaaclamp_master_ew dwc_ddrphy_decap_ac2r_ew dwc_ddrphy_decap_ac1r_ew dwc_ddrphy_decap_master_ew}
+## layers to tag in UTILITY library macro for CKT release to customer
+##   Note -tsmc read from 'process' variable, so not necessary for TSMC processes unless needing extra layers
+set utility_tag_layers "63:63 6:0"
+## email list for CKT release to DI
+set releaseMailDist "mladd,jmangatt,deepakgs,jayarama,vilas,ddr_di@synopsys.com,aparik,vkadeto,dpatil,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-d850-lpddr5-t5-ckt@synopsys.com"
+## email list for CKT release of HSPICE, IBIS, and UTILITY release
+set releasePmMailDist "mladd,jmangatt,deepakgs,jayarama,vilas,ddr_di@synopsys.com,aparik,vkadeto,dpatil,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-d850-lpddr5-t5-ckt@synopsys.com"
+set calibre_verifs "true"

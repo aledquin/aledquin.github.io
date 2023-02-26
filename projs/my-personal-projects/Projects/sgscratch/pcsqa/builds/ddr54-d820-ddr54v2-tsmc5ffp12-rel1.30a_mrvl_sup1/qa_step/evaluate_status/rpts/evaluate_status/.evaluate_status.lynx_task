@@ -1,0 +1,13 @@
+flow_order|8000000
+Host|us01msemt1477
+Tool|tcl
+Version|8.6.6
+Cores|1
+Wall Time|12
+CPU Time|NA
+CPU Efficiency|NA
+Mem|NA
+User|alvaro
+Logfile|/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/evaluate_status/logs/evaluate_status.log
+Stop Time|1658519171
+License|LicenseDataUnavailable

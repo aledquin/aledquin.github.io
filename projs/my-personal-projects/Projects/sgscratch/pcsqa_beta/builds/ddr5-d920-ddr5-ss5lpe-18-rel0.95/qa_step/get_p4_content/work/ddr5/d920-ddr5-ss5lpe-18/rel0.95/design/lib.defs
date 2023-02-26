@@ -1,0 +1,27 @@
+### Include CAD defined lib.defs
+INCLUDE ${PROJ_HOME}/cad/lib.defs
+
+#INCLUDE ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PARENT_PCS_PRODUCT_NAME}/${MSIP_PARENT_PCS_PROJ_NAME}/${MSIP_PARENT_PCS_REL_NAME}/pcs/design/lib.defs
+
+### Design team defined libraries
+###
+#DEFINE libA ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/libA
+#DEFINE libB ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/${METAL_STACK}/libB
+
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/${METAL_STACK}/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}ec/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PARENT_PCS_PRODUCT_NAME}/${MSIP_PARENT_PCS_PROJ_NAME}/${MSIP_PARENT_PCS_REL_NAME}/lib/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PARENT_PCS_PRODUCT_NAME}ec/${MSIP_PARENT_PCS_PROJ_NAME}/${MSIP_PARENT_PCS_REL_NAME}/lib/lib.defs
+
+### For ongoing projects for products c10, ssp, usb2, usb3, hsic
+#DEFINE libA ${MSIP_PROJ_P4WS_ROOT}/common_libs/sc/<technology+note>/latest/lib/libA
+#DEFINE libB ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/libB
+
+### For released projects for products c10, ssp, usb2, usb3, hsic
+#DEFINE libA ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/releases/lib/libA
+#DEFINE libB ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/releases/lib/libB
+
+### OPTIONAL INCLUDE FILE IF THE PROJECT HAS THAT REQUIREMENT
+### USER SITE-SPECIFIC libraries
+#INCLUDE ${PROJ_HOME}/design/lib_${siteid}.defs

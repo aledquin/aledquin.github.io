@@ -1,0 +1,7 @@
+In this folder is a hidden file named .version
+
+This holds a version string.
+
+It's used by the unit test for get_release_version()
+
+

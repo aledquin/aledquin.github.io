@@ -1,0 +1,5 @@
+tsmc6ff-18_10M_1X_h_1Xa_v_1Ya_h_4Y_vhvh_2Z /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMz_DRC/ICVN6FF_10M_1X1Xa1Ya4Y2Z_001.10_1a.encrypt
+tsmc6ff-18_11M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Z /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMz_DRC/ICVN6FF_11M_1X1Xa1Ya5Y2Z_001.10_1a.encrypt
+tsmc6ff-18_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMr_DRC/ICVN6FF_13M_1X1Xa1Ya5Y2Yy2R_001.10_1a.encrypt
+tsmc6ff-18_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMz_DRC/ICVN6FF_13M_1X1Xa1Ya5Y2Yy2Z_001.10_1a.encrypt
+tsmc6ff-18_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMz_DRC/ICVN6FF_13M_1X1Xa1Ya5Y2Yy2Z_001.10_1a.encrypt

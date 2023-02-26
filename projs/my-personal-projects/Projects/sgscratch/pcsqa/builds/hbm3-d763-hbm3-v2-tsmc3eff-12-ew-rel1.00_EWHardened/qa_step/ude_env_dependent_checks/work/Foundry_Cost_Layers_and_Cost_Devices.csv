@@ -1,0 +1,17 @@
+Feature,"Foundry Layer names","Extra (Cost) Layer","CDL Device names","Hspice Model Device names","Allowed in Design"
+CPP51,CPP51,17;92,,,No
+Deepnwell,DNW,1;0,nch_lvtll_dnw_mac,nch_lvtll_mac,No
+Deepnwell,DNW,1;0,nch_elvt_dnw_mac,nch_elvt_mac,No
+Deepnwell,DNW,1;0,nch_lvt_dnw_mac,nch_lvt_mac,No
+Deepnwell,DNW,1;0,nch_svt_dnw_mac,nch_svt_mac,No
+Deepnwell,DNW,1;0,nch_12_dnw_mac,nch_12_mac,No
+Deepnwell,DNW,1;0,pnp_p1_mac,pnp_p1_mac,No
+Deepnwell,DNW,1;0,nch_ulvt_dnw_mac,nch_ulvt_mac,No
+Deepnwell,DNW,1;0,dnwpsub,dnwpsub,No
+Deepnwell,DNW,1;0,nch_ulvtll_dnw_mac,nch_ulvtll_mac,No
+Deepnwell,DNW,1;0,nch_12od15_dnw_mac,nch_12od15_mac,No
+Deepnwell,DNW,1;0,pwdnw,pwdnw,No
+SHDMIM,MPC,261;0,mimcap_sin_shd_3t,mimcap_sin_shd_3t,No
+SHDMIM,BPC,262;0,mimcap_sin_shd_3t,mimcap_sin_shd_3t,No
+SHDMIM,TPC,260;0,mimcap_sin_shd_3t,mimcap_sin_shd_3t,No
+"High Resistance",RH_TN,117;6,rhim,rhim,Yes

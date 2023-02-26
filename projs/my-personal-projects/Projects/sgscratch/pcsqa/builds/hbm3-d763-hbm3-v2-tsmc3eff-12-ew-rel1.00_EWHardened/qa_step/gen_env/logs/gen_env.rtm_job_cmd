@@ -1,0 +1,49 @@
+#!/bin/sh
+##
+## rtm_job_cmd -aro_enable 0 -job_enable 1 -job_queue "" -job_options "" -job_resources "arch=glinux" -job_misc1 "misc1" -job_misc2 "misc2" -job_misc3 "misc3" -job_misc4 "mt" -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/gen_env/logs/gen_env.log -tool tcl
+##
+
+echo "Information: Process ID for rtm_job_cmd : $$"
+
+LYNX_SESSION_ID=us01msemt228.internal.synopsys.com/29528/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/1
+export LYNX_SESSION_ID
+
+LYNX_VARFILE_SEV=../logs/gen_env.sev.varfile
+export LYNX_VARFILE_SEV
+
+LYNX_VARFILE_TEV=../logs/gen_env.tev.varfile
+export LYNX_VARFILE_TEV
+
+LYNX_SOCKET_HOST=us01msemt228.internal.synopsys.com
+export LYNX_SOCKET_HOST
+
+LYNX_SOCKET_PORT=33799
+export LYNX_SOCKET_PORT
+
+SYNOPSYS_RTM=/global/apps/lynx_2020.09/rtm_shell/lynx_rtm_2020.09
+export SYNOPSYS_RTM
+
+unset TCL_LIBRARY
+TCLLIBPATH=/global/freeware/Linux/2.X/activetcl-8.5.12/deps/tcllib-1.20/lib/tcllib1.20 /global/freeware/Linux/2.X/activetcl-8.5.12/deps/tcllib-1.10/lib/tcllib1.10:/remote/cad-rep/msip/tools/SharedLib/2022.04/tcl/sha1
+export TCLLIBPATH
+
+FM_WAIT_LICENSE=1
+export FM_WAIT_LICENSE
+HERCULES_LICENSE_WAIT=1
+export HERCULES_LICENSE_WAIT
+ICV_LICENSE_WAIT=1
+export ICV_LICENSE_WAIT
+SNPSLMD_QUEUE=true
+export SNPSLMD_QUEUE
+SNPS_MAX_QUEUETIME=60
+export SNPS_MAX_QUEUETIME
+SNPS_MAX_WAITTIME=600
+export SNPS_MAX_WAITTIME
+STARRC_LICENSE_WAIT=yes
+export STARRC_LICENSE_WAIT
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/gen_env/logs/gen_env.rtm_sh_cmd > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/gen_env/logs/.gen_env.job.log 2>&1 &
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_wait_for_task_start.tcl /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/gen_env/logs/.gen_env.touch_start /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/gen_env/logs/.gen_env.touch_error
+
+## End of File

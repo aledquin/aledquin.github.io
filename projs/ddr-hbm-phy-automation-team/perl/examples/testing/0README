@@ -1,0 +1,26 @@
+This folder was created to demonstrate how we can do unit testing.
+Using the 'Test2::Bundle::More' package.
+
+A test script typically ends with the .t extension.
+
+The tests can be run individually or via the provided Makefile
+
+To run the tests using the Makefile:
+
+   $ make test
+
+The unit_test.t script then gets run and writes stdout to unit_test.log
+This is compared against a unit_test.au; which is the last known good run.
+
+If you don't have a unit_test.au file, you simply create one by taking the
+unit_test.log and copy it to unit_test.au ; please be sure that this log
+represents passing unit tests.
+
+I would then change the permissions of this golden file, unit_test.au so 
+you can not easily overwrite it by mistake.
+
+   $ chmod 440 unit_test.au
+
+NOTE: Over time this example will be improved to include a test harness.
+      Also, documentation will continue to improve.
+

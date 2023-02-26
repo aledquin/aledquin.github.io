@@ -1,0 +1,40 @@
+---
+calibre_verifs: true
+releasePhyvMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_decapvdd_ew
+    - dwc_ddrphy_decapvdd_ns
+    - dwc_ddrphy_vddqclamp_ns
+    - dwc_ddrphy_vddclamp
+    - dwc_ddrphy_vaaclamp
+    - dwc_ddrphy_decapvaa_tile
+    - dwc_ddrphy_decapvdd_tile
+releaseShimMacro: 
+    - dwc_ddrphy_gradient
+    - dwc_ddrphy_gradient_wide
+    - dwc_ddrphy_pllshim
+    - HDBLVT20_CAPTB17_CA_BREAKER
+    - HDBLVT20_CAPLR6_CA_BREAKER
+    - HDBLVT20_FILL3_CA_BREAKER
+supply_pins_override: 
+    sg_fdprbsbqb_right: D3 M6
+    sg_fdprbsbqb_left: D3 M6
+    sg_fdprbsbqb: D3 M6
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: D5 M8
+releaseMailDist: 
+    jfisher,guttman,davies,sg-d54-s10-ckt@synopsys.com,d803-ddr54-ss10lpp18@synopsys.com,sg-ddr-ckt-release@synopsys.com,d803_tc-impl@synopsys.com
+metal_stack: 12M_3Mx_6Dx_1Gx_2Iz_LB
+metal_stack_ip: 8M_3Mx_5Dx
+layers: M1 M2 M3 D1 D2 D3 D4 D5 OVERLAP
+release_gds_cdl: icv
+layout_tag: D803 Final.1 DRC/LVS-clean TC release
+reference_date_time: 56 days ago
+rel: 1.00a_v1.2.3dk
+vcrel: 0.90a_tc
+p4_release_root: 
+    - products/ddr54/project/d803-ddr54-ss10lpp18
+    - products/ddr43_lpddr4_v2/project/d523-ddr43-ss10lpp18
+process: ss10lpp-18
+

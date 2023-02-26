@@ -1,0 +1,10 @@
+tdata Folder:  t=test  data=files needed by the tests in t/
+
+This /tdata/ folder was created to hold various files in order for the
+tests to be truely tested. For example, any of the subroutines that need
+to read an XSLX spreadsheet would require a spreadsheet to work on. So, you
+would place your test .xslx file in this /tdata/ folder.
+
+For example:
+
+/tdata/test01_4cols_2rows.xlsx

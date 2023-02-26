@@ -1,0 +1,7 @@
+Information: Process ID for rtm_job_cmd : 41842
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_lvs_LVS_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/LVS_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.rtm_job_cmd: line 30: /global/freeware/Linux/2.X/activetcl-8.5.12/deps/tcllib-1.10/lib/tcllib1.10:/remote/cad-rep/msip/tools/SharedLib/2022.04/tcl/sha1: No such file or directory
+Start /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_job.tcl @ Tue Jul 19 12:13:27 EDT 2022; PID = 41906
+End /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_job.tcl @ Tue Jul 19 12:13:27 EDT 2022
+Start /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_wait_for_task_start.tcl @ Tue Jul 19 12:13:27 EDT 2022; PID = 41911
+Information: Found touch_start_file
+End /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_wait_for_task_start.tcl @ Tue Jul 19 12:13:38 EDT 2022

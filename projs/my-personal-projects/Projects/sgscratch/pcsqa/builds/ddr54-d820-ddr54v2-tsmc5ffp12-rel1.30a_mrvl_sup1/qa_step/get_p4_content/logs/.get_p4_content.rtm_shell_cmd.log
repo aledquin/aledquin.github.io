@@ -1,0 +1,74 @@
+Information: Process ID for rtm_sh_cmd : 32353
+Information: Start rtm_touch.tcl @ Fri Jul 22 15:38:56 EDT 2022
+Information: Touched file via socket connection to RTM
+Information: File : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/.get_p4_content.touch_start
+rtm_touch: OK.
+Information: Stop rtm_touch.tcl @ Fri Jul 22 15:38:56 EDT 2022
+Information: Sockets OK
+Information: Process ID for rtm_shell_cmd : 32387
+Start /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_heartbeat.tcl @ Fri Jul 22 15:38:56 EDT 2022; PID = 32388
+task_pid             : 32387
+socket_host          : us01msemt228.internal.synopsys.com
+socket_port          : 44449
+touch_heartbeat_file : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/.get_p4_content.heartbeat
+Currently Loaded Modulefiles:
+  1) msip_shared_lib/2022.04
+  2) embedit/2022.03-SP1-T-20220601
+  3) msip_lynx_hipre/latest
+  4) msip_shell_cadinf_utils/2021.07
+  5) msip_shell_storage_utils/2022.05
+  6) msip_shell_lay_utils/2022.06
+  7) msip_shell_msem_utils/2021.10
+  8) cad_lookup/2022.03
+  9) msip_shell_uge_utils/2022.05
+ 10) msip_hipre_lib_utils/2022.05
+ 11) git/2.30.0
+ 12) vim/8.0
+ 13) tar/1.32
+ 14) msip_hipre_gds_utils/2022.05
+ 15) msip_hipre_sim_utils/2022.03
+ 16) msip_hipre_lef_utils/2022.05
+ 17) msip_hipre_netlist_utils/2020.11
+ 18) msip_hipre_hspiceibiswaveform_utils/2021.09
+ 19) msip_hipre_pkg_utils/2022.05
+ 20) msip_hipre_verilog_utils/2022.05
+ 21) msip_hipre/2022.05
+ 22) syn/2022.03-SP2
+ 23) msip_shell_pcs_manager/2022.06
+ 24) msip_shell_cad_utils/2022.05
+ 25) firefox/98.0.1
+ 26) ume/2021.01
+ 27) python/3.7.0
+ 28) no_module_env/2018.10
+ 29) msip_shell_calex/2022.07
+ 30) msip_lynx_pcsqa/2022.04
+ 31) lynx/2020.09
+ 32) activetcl/8.5.12
+ 33) msip_ccs/2022.03
+ 34) msip_lynx_shared/2022.03
+ 35) perforce/2014.2
+ 36) tcl/8.6.6
+PID(32387) check at Fri Jul 22 15:39:06 EDT 2022
+  PID TTY      STAT   TIME COMMAND
+32387 ?        S      0:00 /bin/sh /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/get_p4_content.rtm_shell_cmd
+PID(32387) check at Fri Jul 22 15:39:16 EDT 2022
+  PID TTY      STAT   TIME COMMAND
+32387 ?        S      0:00 /bin/sh /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/get_p4_content.rtm_shell_cmd
+PID(32387) check at Fri Jul 22 15:39:26 EDT 2022
+  PID TTY      STAT   TIME COMMAND
+32387 ?        S      0:00 /bin/sh /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/get_p4_content.rtm_shell_cmd
+PID(32387) check at Fri Jul 22 15:39:36 EDT 2022
+  PID TTY      STAT   TIME COMMAND
+32387 ?        S      0:00 /bin/sh /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/get_p4_content.rtm_shell_cmd
+Information: End rtm_shell_cmd
+PID(32387) check at Fri Jul 22 15:39:46 EDT 2022
+  PID TTY      STAT   TIME COMMAND
+child process exited abnormally
+PID(32387) absent at Fri Jul 22 15:39:46 EDT 2022
+End /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_heartbeat.tcl @ Fri Jul 22 15:39:46 EDT 2022
+Information: Start rtm_touch.tcl @ Fri Jul 22 15:39:46 EDT 2022
+Information: Touched file via socket connection to RTM
+Information: File : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/.get_p4_content.touch_stop
+rtm_touch: OK.
+Information: Stop rtm_touch.tcl @ Fri Jul 22 15:39:46 EDT 2022
+Information: End rtm_sh_cmd

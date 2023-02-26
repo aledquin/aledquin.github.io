@@ -1,0 +1,170 @@
+z3641-adc-sar-12b5m-gf14lpp-18.txt
+INFO: gf14lpp 18 rel3.7.0
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+z00000-adc-sar-12b5m-gf14lpp-18.txt
+INFO: gf14lpp 18 rel3.7.0
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+y030-alpha-tdiode-gf14lpp18.txt
+INFO: common common "c124-gf14lpp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n102-c10-gf14lpp-18-ns.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n102-amd-gf14lpp-18-ns.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u103-cmnblks-gf14lpp-18.txt
+INFO: ss14lpp 18 rel3.2
+ERROR: IcvRunDRC not defined.
+ss14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.2/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+l005-scl-gf14lpp-18.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-dac-vdac-10b400m-gf14lpp-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d626-ddr4m-gf14lpp18.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e502-hdmi-mhl-rxphy-gf14lpp-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d508-lpddr4m-gf14lpp18.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g123-dphy-gf14lpp-18.txt
+INFO: common common c124-gf14lpp-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g214-mphy-gf14lpp-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x644-ssp-gf14lpp-18-ns.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x644-pcie-gf14lpp-18-ns.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l124-std-gf14lpp-1.8v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-tchip-tdcs328-gf14lpp-18.txt
+INFO: gf14lpp 18 rel3.7.0
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.7.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+x034-up16-gf14lpp-18.txt
+INFO: up16 tsmc28hpm 2013/02/25
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x029-up16-gf14lpp-18.txt
+INFO: CCS CCS to
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x029-pcie3-gf14lpp-18.txt
+INFO: CCS CCS to
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x644-usb2-gf14lpp-18-ns.txt
+INFO: gf14lpp 18 rel2.6.2
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel2.6.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+x644-usb3-gf14lpp-18-ns.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d514-ddr43-gf14lpp18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x034-e16-gf14lpp-18.txt
+INFO: up16 tsmc28hpm 2013/02/25
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d534-lpddr4mv2-gf14lpp18.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d533-lpddr4mv2-gf14lpp18.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t000-udeqa-gf14lpp-18.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t017-pqv-gf14lpp-1.8v.txt
+INFO: CCS CCS "c124-gf14lpp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l009-tio-gf14lpp-1.8v.txt
+INFO: gf14lpp 18" "rel3.3"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y231-emmc-gf14lpp-1.8v.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x083-e25-gf14lpp-18-ns.txt
+INFO: gf14lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x088-e25-gf14lpp-18-ns.txt
+INFO: gf14lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d808-ddr54-gf14lpp18.txt
+INFO: gf14lpp 18" "rel3.6.0"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d808-ddr45-lite-gf14lpp18.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d565-lpddr4xm-gf14lpp18.txt
+INFO: gf14lpp 18" "rel3.7.0"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w310-nvm-otp-xs-gf14lpp-1.8v.txt
+INFO: gf14lpp 18 rel3.8.2
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf14lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl

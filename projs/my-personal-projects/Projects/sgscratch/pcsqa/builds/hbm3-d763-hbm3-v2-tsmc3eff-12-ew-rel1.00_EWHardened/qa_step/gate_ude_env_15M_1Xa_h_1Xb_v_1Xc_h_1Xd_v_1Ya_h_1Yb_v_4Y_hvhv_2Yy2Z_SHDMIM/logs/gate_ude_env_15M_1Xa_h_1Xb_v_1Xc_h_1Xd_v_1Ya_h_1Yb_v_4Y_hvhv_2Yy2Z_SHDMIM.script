@@ -1,0 +1,78 @@
+source ../../../../../scripts_global/conf/header_start.tcl
+
+## NAME: TEV(metalstack)
+## TYPE: string
+## INFO:
+## * Metal stack
+set TEV(metalstack) ""
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set touchcauses [list \
+  "version of CD tool doesn't exist" \
+  "Error: Incomplete installation. OpenAccess is missing or improperly installed." \
+  "QWidget: Must construct a QApplication before a QPaintDevice" \
+]
+
+set udedumpdir [getWorkDir check_ude_env_$TEV(metalstack)] 
+if { [file exists $udedumpdir] } {
+	set udedump $udedumpdir/$TEV(metalstack).env
+	if { [file exists $udedump] == 0 &&
+	     [file exists $udedumpdir/udelog] } {
+	     foreach touchcause $touchcauses {
+	     	catch { exec $SEV(exec_cmd) -c "grep \"$touchcause\" $udedumpdir/udelog | wc -l" } causepresent
+		if { $causepresent > 0 } {
+			catch { exec $SEV(exec_cmd) -c "touch $udedump" } dummy
+			sproc_msg -error "Creation of empty ude $TEV(metalstack).env dump of task check_ude_env_$TEV(metalstack) due to ude error:"
+			sproc_msg -error "$touchcause"
+			break
+		}
+	     }
+	}	
+	set completedump 1
+	if { [file exists $udedump] && [file size $udedump] > 0 } {
+		catch { exec $SEV(exec_cmd) -c "grep ValidPrefixList $udedump | wc -l" } completedump
+		if { $completedump == 0 } {
+			catch { exec $SEV(exec_cmd) -c "echo \"\" >> $udedump && echo \"ValidPrefixList\" >> $udedump" } dummy
+			sproc_msg -warning "Made incomplete ude $TEV(metalstack).env dump complete by addition of empty ValidPrefixList statement"
+		}
+	}
+	if { [file exists $udedump] == 0 } {
+		sproc_msg -fatal "No ude $TEV(metalstack).env dump of task check_ude_env_$TEV(metalstack)"
+		if { [file exists $udedumpdir/udelog] } {
+			catch { exec $SEV(exec_cmd) -c "grep -i error $udedumpdir/udelog | wc -l" } errors
+			if { $errors > 0 } {
+				catch { exec $SEV(exec_cmd) -c "grep -i error $udedumpdir/udelog" } errors
+				puts "Ude errors output:"
+				puts "$errors"				
+			} else {
+				puts "Ude output:"
+				sproc_cat_file -file $udedumpdir/udelog
+			}	
+		}
+		puts "Try to re-execute task check_ude_env_$TEV(metalstack) until ude $TEV(metalstack).env dump is created."
+		puts "(without hard runtime constraint at Job Resources in Job Controls tab: h_rt=00:10:00)"
+		puts "Escape alternative, if needed:"
+		puts "touch $udedump"
+		puts "This will limit PCS QA functionality!"	
+	} else {
+		puts "Ude $TEV(metalstack).env dump of task check_ude_env_$TEV(metalstack) is available"
+		if { [file size $udedump] == 0 } {
+			sproc_msg -warning "Empty ude env dump file $udedump"
+			sproc_msg -warning "This will limit PCS QA functionality!"
+		}
+	}	
+} else {
+	sproc_msg -fatal "Task check_ude_env_$TEV(metalstack) has not been executed yet"
+}
+
+sproc_script_stop

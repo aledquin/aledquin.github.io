@@ -1,0 +1,1722 @@
+#!/depot/perl-5.14.2/bin/perl -w
+##
+## Created by John Sheridan Fisher, 2015-11-20
+## Maintained by jsf, 2017-08-01
+## Refactored by Patrick Juliano , 2021-11-01
+##
+
+## PERL libs
+use strict;
+use warnings;
+
+use Getopt::Long;
+use File::Copy;
+use File::Basename qw(dirname basename);
+use File::Path;
+use Cwd;
+use Cwd qw(abs_path);
+
+use Data::Dumper;
+$Data::Dumper::Sortkeys = sub { [sort {$b cmp $a} keys %{$_[0]}] };
+use Date::Parse; 
+use Date::Manip;
+use List::MoreUtils 'firstidx'; 
+use POSIX qw(strftime);
+use Term::ANSIColor;
+use Clone 'clone';
+use Capture::Tiny qw/capture/;
+use Carp; 
+use FindBin qw($RealBin $RealScript);
+
+use lib "$RealBin/../lib/perl/";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+use Util::P4;
+use alphaHLDepotRelease;
+
+#----------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $TESTMODE     = undef;
+our $PROGRAM_NAME = $RealScript;
+our $LOGFILENAME  = getcwd() . "/$PROGRAM_NAME.log";
+our $VERSION      = get_release_version();
+#----------------------------------#
+
+#------------------------------------------------------------------------------
+# Global Vars
+#------------------------------------------------------------------------------
+my $username             = get_username();
+my $p4LogFile            = "$PROGRAM_NAME.p4";
+my $relPathBase          = "/u/$username/p4_ws";
+my $date                 = strftime "%a %b %e %H:%M:%S %Y", localtime;
+my $utilityMacroDefault  = 'dwc_ddrphy_utility_cells';
+my $repeaterMacroDefault = 'dwc_ddrphy_repeater_cells';
+
+BEGIN { 
+    our $PROGRAM_NAME = $RealScript; 
+    our $AUTHOR='bchalla, jfisher, juliano, ljames'; 
+    #$STDOUT_LOG=undef;        # Log msg to var => OFF
+    $STDOUT_LOG   = EMPTY_STR; # Log msg to var => ON
+    header(); 
+}
+&Main();
+END { 
+    local $?;   ## adding this will pass the status of failure if the script
+                ## does not compile; otherwise this will always return 0
+    footer();
+    write_stdout_log("$LOGFILENAME");
+}
+
+#------------------------------------------------------------------------------
+sub Main {
+   my ( $streamLayerMapFile, $relPathAbs );
+   my ( $relLibPath, $relLibPGPath, $pininfoFile, $pininfoHeader, %cellPins, %cellSupplies );
+   my ( $relLibFile, $relLibPGFile, $relLibFileGz, $relLibPGFileGz, $macroLibFile, $macroLibPGFile, $projLibFile, $projLibPGFile );
+   my ( %pincheckLogFiles, %pincheckShellFiles, %pincheckFiles, $pincheckCmd );
+   my ( %corners_ckt_params, %corners_params );
+   my ( $macroLibPath, $macroLibPGPath, $projLibPath, $projLibPGPath, $libLibrary, $libFileName, $libPGFileName, $libHeader );
+   my ( @metalStacks,@metalStacksIp);
+   my ( $srcPath, $srcPathAbs );
+   my ( %libCompileErrors, %pincheckDirtys, %pincheckWarnings );
+   my $username = get_username();
+
+   my @orig_argv = @ARGV; # copy @ARGV because 'process_cmd_line_args' modifies @ARGV
+   #  '$debug' -> legacy option which avoid writing into P4
+   #  '$DEBUG' -> use cmd line switch '-info', used for new subs from utilities.pm
+   my ( $opt_projSPEC, $opt_macros, $opt_nousage, $opt_p4ws, $opt_rel ) 
+                = process_cmd_line_args();
+
+   if( defined $opt_p4ws ){
+
+      $relPathBase = "/u/${username}/$opt_p4ws";
+   }
+
+   if( !-e $relPathBase ){
+      my( $output, $retval ) = run_system_cmd( "mkdir -p $relPathBase", MEDIUM );
+      if( $retval ){
+         fatal_error( "P4 path '$relPathBase' does not exist. Could not create it.\n" .
+            "\t Please ensure that there is a symbolic link to the P4 workspace.\n", 1 );
+      }
+   }
+
+   unless(  $DEBUG || $opt_nousage ){
+     viprint(LOW, "Calling utils__script_usage_statistics\n");
+     utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@orig_argv ); 
+   }
+
+   my $logFile = "$PROGRAM_NAME.log";
+   # Print all the user msgs to log file.
+   iprint( "Attempting to copy timing files from the p4 latest design area".
+           " to the project disk for all macros in the $opt_projSPEC project\n" );
+   iprint( "Writing log file: '$logFile'\n" );
+
+   my ($projType, $proj, $pcsRel) =  parse_project_spec( $opt_projSPEC, \&usage );
+   my $projPathAbs   = "/remote/cad-rep/projects/$projType/$proj/$pcsRel";
+   my ( $projMacroFile, 
+        $projNtFile,
+        $projRelFile,
+        $projVerifFile ) = get_project_files_path( $projPathAbs, $projType, $proj, $pcsRel );
+ 
+   my $projEnv       = "$projPathAbs/cad/project.env";
+   my ( $cadproj, $cadrel, $cadhome ) = getCadHome( $projEnv );
+
+   ## setup p4 log file
+   iprint( "Setup log file to capture perforce commands issued during this run: '$p4LogFile'\n" );
+   my $cmd  = "echo '##output of p4 commands' > $p4LogFile";
+   run_system_cmd( $cmd, $VERBOSITY );
+
+   my %legalMacros = readTopCells( $projMacroFile );
+
+   my ( @corners_ckt );
+   {
+      my ($aref, $href);
+      ($aref, $href ) = readNtFile( $projNtFile );
+      @corners_ckt = @$aref;
+      %corners_ckt_params = %$href;
+   }
+       
+         
+    ##################################
+    # Parse Legal Release File
+    ##################################
+    my ( $rel, $p4ReleaseRoot, $referenceDateTime,
+         $process, $metalStack, $metalStackIp, $metalStackCover,
+         $href_stackHash, $layers, $href_layersOverrides, $supplyPins,
+         $href_supplyPinsOverrides, $href_areaOverrides, $href_bndLayer,
+         $releaseShimMacro, $releasePhyvMacro, $releaseUtilityMacro,
+         $releaseRepeaterMacro, $projDiskArchiveLibFiles,
+         $coverStackExists, $releaseDefMacro, $autoMatch, $href_shimMacros, $href_phyvMacros,
+         $href_releaseMacro, $href_repeaterSubMacros , $aref_timingLibs, 
+         $href_referenceGdses, $aref_utilityMacro,
+         $aref_ctlMacs, $aref_repeaterMacro,
+         $aref_allowedTiming
+     ) = readLegalRelease( $projRelFile);
+
+   my %releaseMacro;
+   if( defined $href_releaseMacro ){
+       %releaseMacro = %$href_releaseMacro;
+   }
+
+   my %phyvMacros;
+   if( defined $href_phyvMacros ){
+      %phyvMacros = %$href_phyvMacros;  # PJ while debugging 9/29
+   }
+   my %shimMacros;
+   if( defined $href_shimMacros ){
+      %shimMacros = %$href_shimMacros;  # PJ while debugging 9/29;
+   }
+   my %repeaterSubMacros = %$href_repeaterSubMacros;
+
+   ## setup path: RELASE
+   my $p4client = $ENV{P4CLIENT};
+   my $msg = "\t Please check that this work space 'p4 client' contains ...\n" .
+             "\t    //depot/$p4ReleaseRoot/... //$p4client/$p4ReleaseRoot/...\n" .
+             "\t and this path is sync'd out.\n";
+   $relPathAbs = must_have_path( $msg, "$relPathBase/$p4ReleaseRoot/ckt/rel" );
+   $relPathAbs = abs_path( $relPathAbs );
+
+   ## setup path: SOURCE
+      $msg = "\t Please check that this work space 'p4 client' contains ...\n" .
+             "\t    //wwcad/msip/projects/$projType/$proj/... //$p4client/projects/$projType/$proj/... \n" .
+             "\t and this path is sync'd out. Otherwise, won't be able to access alphaNt.config file.\n" ;
+   $srcPathAbs = must_have_path( $msg, "$relPathBase/projects/$projType/$proj/latest/design/timing" ); 
+   $srcPathAbs = abs_path( $srcPathAbs );
+
+   dprint(LOW, "(\$projType, \$proj, \$pcsRel)  => ($projType, $proj, $pcsRel)\n" ); 
+   dprint(LOW, "(\$projPathAbs)                 => ($projPathAbs) \n" );
+   dprint(LOW, "(\$p4ReleaseRoot)               => ($p4ReleaseRoot) \n" );
+   dprint(LOW, "(\$cadproj, \$cadrel, \$cadhome)=> ($cadproj, $cadrel, $cadhome)\n" ); 
+   dprint(LOW, "(\$projMacroFile, \$projNtFile, \$projRelFile, \$projEnv) => (\n\t $projMacroFile,\n\t $projNtFile,\n\t $projRelFile,\n\t $projEnv)\n" ); 
+   dprint_dumper(LOW, "(\%legalMacros)        => " ,  \%legalMacros) ;
+   dprint_dumper(LOW, "(\@corners_ckt)        => " ,  \@corners_ckt) ;
+   dprint_dumper(HIGH, "(\%corners_ckt_params) => " , \%corners_ckt_params);
+   dprint(LOW, "(\$relPathAbs) => ($relPathAbs)\n" );
+   dprint(LOW, "(\$srcPathAbs) => ($srcPathAbs)\n" );
+   dprint_dumper(LOW, "(\@timingLibs => (", $aref_timingLibs);
+   prompt_before_continue(SUPER);
+   #------------------------------------------------------------------------
+   if( !defined $releaseShimMacro ){
+      wprint( "Failed to find 'releaseShimMacro' shim macro list in project release file:\n\t'$projRelFile'\n" );
+   }else{
+      my @fields = split(' ', $releaseShimMacro);
+      foreach my $field ( @fields ){
+         $shimMacros{$field} = [$field];
+         $legalMacros{$field}++;
+         dprint(LOW, "(\$releaseShimMacro)        => $releaseShimMacro\n" );
+         dprint(LOW, "(\$field)        => $field\n" );
+         dprint_dumper(LOW, "(\%legalMacros)  => " , \%legalMacros);
+         prompt_before_continue(SUPER);
+      }
+   }
+
+   my @macros = check_if_macros_are_legal( \%legalMacros, $opt_macros );
+
+   # Rel version override if $opt_rel provided. Jira P10020416-39944
+   if( defined $opt_rel){
+       $rel = verifyRelVersion($p4ReleaseRoot, $rel, $opt_rel, \@macros); 
+   }
+
+     #-----------------------------------------------------------------------
+     ## Process Metal Stacks
+     @metalStacks   = split(/\s+/, $metalStack   );
+     @metalStacksIp = split(/\s+/, $metalStackIp );
+#     if( $autoMatch ){
+#        stackMatch( \@metalStacks, \@metalStacksIp, $href_stackHash );
+#     }
+     my ( @allStacks, @metalStacksCover );
+     push(@allStacks, @metalStacks);
+   
+    if( defined $metalStackCover ){   
+        @metalStacksCover = split(/\s+/,$metalStackCover);
+        coverStackCheck( \@metalStacksCover, \@allStacks );
+    }else{ 
+        @metalStacksCover = @{clone(\@metalStacks)}; 
+    }
+
+   ## check required files from other scripts
+   ## set stream layer map
+   foreach my $metalStack ( @metalStacks ){
+      my @layermapFiles;
+      push(@layermapFiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.$metalStack.stream.layermap") if ( defined $ENV{'DDR_DA_MAIN'});
+      push(@layermapFiles, "$projPathAbs/cad/$metalStack/stream/stream.layermap");
+      push(@layermapFiles, "$cadhome/$metalStack/stream/stream.layermap");
+      push(@layermapFiles, "$cadhome/$metalStack/stream/STD/stream.layermap");
+      $streamLayerMapFile = firstAvailableFile(@layermapFiles);
+      if( !-e $streamLayerMapFile ){ 
+         fatal_error( "Cannot find $streamLayerMapFile stream layer map file for $metalStack\n", 1 );
+      }
+   }
+   #-----------------------------------------------------------------------
+   ## set datestamp
+   my $datePincheck = UnixDate($referenceDateTime, "%Y-%m-%d %H:%M:%S");
+
+   #----------------------------------------------------------------------
+   # Dump State of Variables at this point in execution
+   #----------------------------------------------------------------------
+   if( $DEBUG >= HIGH ){
+      dprint(HIGH, "\$ \n" );
+      dprint(HIGH, "\$ \n" );
+      dprint(HIGH, "\$ \n" );
+      dprint(HIGH, "\$ \n" );
+      dprint(HIGH, "\@macros               =>@macros\n" );
+      dprint_dumper(HIGH, "\%releaseMacro         =>", \%releaseMacro);
+      dprint_dumper(HIGH, "\%legalMacros          =>", \%legalMacros);
+      dprint_dumper(HIGH, "\%shimMacros           =>", \%shimMacros);
+     prompt_before_continue(SUPER);
+      dprint(HIGH, "\$releasePhyvMacro     =>$releasePhyvMacro\n" );
+      dprint(HIGH, "\$releaseShimMacro     =>$releaseShimMacro\n" ) if( defined $releaseShimMacro );
+      dprint(HIGH, "\$releaseUtilityMacro  =>$releaseUtilityMacro\n" ) if( defined $releaseUtilityMacro );
+      dprint(HIGH, "\@utilityMacro         =>@$aref_utilityMacro\n" );
+      dprint(HIGH, "\@repeaterMacro        =>@$aref_repeaterMacro\n" );
+      dprint(HIGH, "\$releaseRepeaterMacro =>$releaseRepeaterMacro\n" ) if( defined $releaseRepeaterMacro );
+      dprint(HIGH, "\%phyvMacros           =>". scalar(Dumper \%phyvMacros) ."\n" );
+      dprint(HIGH, "\%repeaterSubMacros    =>". scalar(Dumper \%repeaterSubMacros) ."\n" );
+     prompt_before_continue(SUPER);
+      dprint(HIGH, "\@metalStacks       =>@metalStacks \n" );
+      dprint(HIGH, "\@metalStacksIp     =>@metalStacksIp \n" );
+      dprint(HIGH, "\%stackhash         =>". scalar(Dumper $href_stackHash) ."\n" );
+      dprint(HIGH, "\@allStacks         =>". scalar(Dumper \@allStacks) ."\n" );
+     prompt_before_continue(SUPER);
+      dprint(HIGH, "\$autoMatch          =>$autoMatch \n" );
+      dprint(HIGH, "\$metalStackCover   =>$metalStackCover \n" );
+      dprint(HIGH, "\$projPathAbs       =>$projPathAbs  \n" );
+      dprint(HIGH, "\$cadhome           =>$cadhome\n" );
+      dprint(HIGH, "\$metalStack        =>$metalStack\n" );
+      dprint(HIGH, "\$metalStackIp      =>$metalStackIp\n" );
+      dprint(HIGH, "\$streamLayerMapFile=>$streamLayerMapFile\n" );
+      dprint(HIGH, "\$datePincheck      =>$datePincheck\n" );
+     prompt_before_continue(SUPER);
+   }
+   #----------------------------------------------------------------------
+   #  foreach @$aref_timingLib -> timing case (i.e. ndlm, lvf, etc)
+   #     foreach macro to release  
+   #        setup views to feed pinCheck (tailored to each macro type)
+   #        foreach metal stack
+   #           setup paths for:  (1) source area (2) release area
+   #           if( macro in phyvMacro), process pin_info_file
+   #           foreach corner 
+   #----------------------------------------------------------------------
+   my ( @corners, @missingFiles );
+   my $libcounter = 0;
+   foreach my $timing_case ( @$aref_timingLibs ){
+      dprint(HIGH, "foreach timing Lib: $timing_case\n" );
+      my $addon = "_$timing_case";
+      if( $timing_case eq "nldm" ){
+         $addon = "";
+      }
+      ## loop through macros
+      foreach my $macro ( sort @macros ){
+         my @dirStacks;
+         dprint(HIGH, "\tforeach macro     : $macro\n" );
+         my $pincheckFlowCheck = checkPinCheckExist("//depot/$p4ReleaseRoot/ckt/rel/$macro/$rel/macro/...");
+         if ($pincheckFlowCheck == FALSE){
+            wprint("No files in pincheck directory found, defaulting to old flow\n");
+         } elsif ($pincheckFlowCheck == TRUE) {
+            wprint("Pincheck folder files found, defaulting to new flow\n");
+            my ($stdout, $run_status) = run_system_cmd("p4 sync -f //depot/$p4ReleaseRoot/ckt/rel/$macro/$rel/macro/pincheck/...");
+            dprint(HIGH, "P4 sync command return: $stdout");
+            if ($stdout !~ m/refreshing/ && $stdout !~ m/up-to-date/ && $stdout !~ m/added/ || $run_status){
+                  fprint("P4 reported the following error: $stdout");
+            }
+            @dirStacks = da_findSubdirs("$relPathAbs/$macro/$rel/macro/pincheck/");
+            dprint_dumper(HIGH, "this is the REAL dirstacks:", \@dirStacks);
+         } else {
+            fatal_error("Missing argument in checkPinCheckExist!");
+         }
+         ## pin check files
+         ## shim macros only have LEF/GDS files
+         foreach my $theStack ( @allStacks ){
+            dprint(HIGH, "\t\tforeach mstack    : $theStack\n" );
+            prompt_before_continue(SUPER);
+            my %cellVins;
+            my $tempStack = $theStack;
+            my $pincheckStack;
+            my $matchedStack;
+            if ($pincheckFlowCheck == TRUE){
+               ($tempStack, $pincheckStack) = lookForBoth($theStack,\@dirStacks);
+               fatal_error("Problem with /pincheck/ directory") unless ($pincheckStack ne FALSE);
+            } else {
+               $tempStack = $theStack;
+            }            
+            if( $tempStack =~ /(.*)_both/ ){
+               $matchedStack = $1;
+               if( $macro =~ /cover/ || $macro =~ /_blocks/ || $macro =~ /_tcoil_replica/){
+                  # P10020416-38355: use full metal stack for tcoil_replica
+                  $metalStack   = $matchedStack;
+                  $metalStackIp = $metalStack;
+               }else{           
+                  $metalStack   = $matchedStack;
+                  $metalStackIp = $href_stackHash->{$metalStack};
+               }
+            }elsif( $tempStack =~ /(.*)_cover/ ){
+                $metalStack   = $1;
+                $metalStackIp = $metalStack;      
+                if( $macro !~ /cover/ && $macro !~ /_blocks/ && $macro !~ /_tcoil_replica/){
+                   # P10020416-38355: use full metal stack for tcoil_replica
+                   hprint( "SKIPPING...metal stack has '_cover' in the name: '$tempStack'\n" );
+                   prompt_before_continue(SUPER); next;
+                }
+            }else{
+                if( ($macro =~ /cover/ || $macro =~ /_blocks/ || $macro =~ /_tcoil_replica/ ) && $coverStackExists ){
+                   hprint( "SKIPPING...macro '$macro' has 'cover', '_blocks' or '_tcoil_replica' in covercell metal stack defined in legalRelease file.\n");
+                   # P10020416-38355: use full metal stack for tcoil_replica
+                   prompt_before_continue(SUPER); next;
+                }elsif( $macro =~ /cover/ || $macro =~ /_blocks/ || $macro =~ /_tcoil_replica/){
+                   # P10020416-38355: use full metal stack for tcoil_replica
+                   $metalStack   = $theStack;
+                   $metalStackIp = $theStack;
+                }else{           
+                   $metalStack   = $theStack;
+                   $metalStackIp = $href_stackHash->{$metalStack};
+                }
+            }
+            if ( $main::DEBUG >= HIGH ) {
+                my $show_timingLib    = $timing_case  || "No_timingLib";
+                my $show_macro        = $macro        || "No_macro";
+                my $show_theStack     = $theStack     || "No_theStack";
+                my $show_tempStack    = $tempStack    || "No_tempStack";
+                my $show_matchedStack = $matchedStack || "No_matchedStack";
+
+                dprint(HIGH, '($timing_case, $macro, $theStack)($tempStack,$matchedStack)'."=>($show_timingLib, $show_macro, $show_theStack)($show_tempStack,$show_matchedStack)\n" );
+                prompt_before_continue(SUPER);
+            }
+            if( !$libcounter ){
+               if( !defined $shimMacros{$macro} ){
+                  if( grep{ /$macro/ } @$aref_utilityMacro  ||
+                      grep{ /$macro/ } @$aref_repeaterMacro  ){
+                     ## utility macros need to use project disk pininfo files because not all cells in utility macro will be released
+                     $pincheckFiles{$macro}->{"${projPathAbs}/design/pininfo/${rel}/${macro}.csv"} = 'pinCSV';
+                  }else{
+                     $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/pininfo/${macro}.csv"} = 'pinCSV';
+                  }
+                  ## utility and shim macros only have LEF/GDS files
+                  if( !grep{ /$macro/ } @$aref_utilityMacro  &&
+                      !grep{ /$macro/ } @$aref_repeaterMacro  ){
+                     $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/cosim/${macro}.sp"} = 'cdl';
+                  }
+                  $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/behavior/${macro}.v"}            = 'verilog';
+                  $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/interface/${macro}_interface.v"} = 'verilog';
+               }
+               $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/netlist/${metalStackIp}/${macro}.cdl"}    = 'cdl';
+               $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/gds/${metalStackIp}/${macro}.gds.gz"}     = 'gds';
+               $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/lef/${metalStackIp}/${macro}.lef"}        = 'lef';
+               $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/lef/${metalStackIp}/${macro}_merged.lef"} = 'lef';
+               $pincheckFiles{$macro}->{$streamLayerMapFile} = 'streamLayermap';
+
+               ##determine if macro has layers override
+               my $layersMacro = $layers;
+               if( exists $href_layersOverrides->{$macro} ){
+                  $layersMacro = $href_layersOverrides->{$macro};
+               }
+
+               ## determine if macro has an override supply pin
+               my $supplyPinsMacro = $supplyPins;
+               if( exists $href_supplyPinsOverrides->{$macro} ){
+                  $supplyPinsMacro = $href_supplyPinsOverrides->{$macro};
+               }
+
+               ## seed pincheck run
+               ##  in debug mode the source file will have non-orientation specific RTL
+               $pincheckCmd = "$RealBin/alphaPinCheck.pl \\\n  -macro $macro -tech  ${process} " .
+                              "-lefObsLayers '$layersMacro' -lefPinLayers '$layersMacro' -PGlayers '$supplyPinsMacro' " .
+                              " -since '$datePincheck' -dateRef CDATE -bracket square ";
+            }
+            ##-------------------------------------------------------------
+            ## Define path to the SOURCE lib/lib_pg files
+            my $phyvCopy = 0; ## allow copying of libs for phyv macros; Jira P10020416-34115
+            if( -e "$srcPathAbs/nt/$macro/lib_pg${addon}" ){
+                # set $macroLibPath for NT LIB files
+                $macroLibPath   = "$srcPathAbs/nt/$macro/lib${addon}";
+                $macroLibPGPath = "$srcPathAbs/nt/$macro/lib_pg${addon}";
+                if (defined $phyvMacros{$macro}){
+                    $phyvCopy = 1;
+                }
+                if ( !$libcounter && $pincheckFlowCheck == FALSE ){
+                    ## pin check files
+                    $pincheckShellFiles{$macro} = "$relPathAbs/$macro/$rel/macro/alphaPinCheck.${macro}";
+                    $pincheckLogFiles{$macro}   = "$relPathAbs/$macro/$rel/macro/${macro}.pincheck";
+                } else {
+                    $pincheckShellFiles{$macro} = "$relPathAbs/$macro/$rel/macro/pincheck/$pincheckStack/alphaPinCheck.${macro}";
+                    $pincheckLogFiles{$macro}   = "$relPathAbs/$macro/$rel/macro/pincheck/$pincheckStack/${macro}.pincheck";
+                }
+                iprint("  For macro '$macro', copying '$timing_case' LIB files  from LIB path '$macroLibPGPath'...\n");
+            }
+            elsif( -e "$srcPathAbs/sis/$macro/lib_pg${addon}" ){
+                ## set $macroLibPath for SiS LIB files
+                $macroLibPath   = "$srcPathAbs/sis/$macro/lib${addon}";
+                $macroLibPGPath = "$srcPathAbs/sis/$macro/lib_pg${addon}";
+                if (defined $phyvMacros{$macro}){
+                   $phyvCopy = 1;
+                }
+                if ( !$libcounter && $pincheckFlowCheck == FALSE ){
+                    ## pin check files
+                    $pincheckShellFiles{$macro} = "$relPathAbs/$macro/$rel/macro/alphaPinCheck.${macro}";
+                    $pincheckLogFiles{$macro}   = "$relPathAbs/$macro/$rel/macro/${macro}.pincheck";
+                } else {
+                    $pincheckShellFiles{$macro} = "$relPathAbs/$macro/$rel/macro/pincheck/$pincheckStack/alphaPinCheck.${macro}";
+                    $pincheckLogFiles{$macro}   = "$relPathAbs/$macro/$rel/macro/pincheck/$pincheckStack/${macro}.pincheck";
+                }
+                iprint("  For macro '$macro', copying '$timing_case' LIB files from LIB path '$macroLibPGPath'...\n");
+            
+            }
+            ## Create libs for PHYV macros if unable to copy
+            elsif( (defined $phyvMacros{$macro} && ($phyvCopy == 0)) || (defined $shimMacros{$macro}) ){
+                ## effectivly undefine (avoid pincheck weirdness)
+                $macroLibPath   = "/tmp/lib${addon}";
+                $macroLibPGPath = "/tmp/lib_pg${addon}";
+                if ( !$libcounter && $pincheckFlowCheck == FALSE ){
+                    ## pin check files
+                    $pincheckShellFiles{$macro} = "$relPathAbs/$macro/$rel/macro/alphaPinCheck.${macro}";
+                    $pincheckLogFiles{$macro}   = "$relPathAbs/$macro/$rel/macro/${macro}.pincheck";
+                } else {
+                    $pincheckShellFiles{$macro} = "$relPathAbs/$macro/$rel/macro/pincheck/$pincheckStack/alphaPinCheck.${macro}";
+                    $pincheckLogFiles{$macro}   = "$relPathAbs/$macro/$rel/macro/pincheck/$pincheckStack/${macro}.pincheck";
+                }
+                hprint("  Creating LIB files for $macro PHYV-only macro from pininfo files...\n");
+            }
+            else{
+                ## skip missing macro, which are not PHYV only
+                eprint( "SKIPPING...Macro '$macro' not listed as PHYV, and cannot "
+                       ."find valid source path:\n\t '$srcPathAbs'\n\t ".
+                        "w/'$timing_case' LIB files.\n" );
+                prompt_before_continue(SUPER);
+                next;
+            }
+
+            $pincheckCmd .= "-log $pincheckLogFiles{$macro} \\\n";
+            ##-------------------------------------------------------------
+   
+            ##-------------------------------------------------------------
+            ## set project path  (i.e. /remote/cad-rep/projects/...)
+            if( defined $projDiskArchiveLibFiles ){
+               my $base  = "$projPathAbs/design/$metalStack/timing/$rel/$macro";
+               my $base2 = "$projPathAbs/design_unrestricted/$metalStack/timing/$rel/$macro";
+               $projLibPath   = firstAvailableDir( "$base/lib${addon}"   , "$base2/lib${addon}" );
+               $projLibPGPath = firstAvailableDir( "$base/lib_pg${addon}", "$base2/lib_pg${addon}" );
+               if( !-e $projLibPath ){
+                   mkpath($projLibPath) || 
+                       confess "\nFailed to mkpath '$projLibPath'. Skipping...\n\n";
+               }
+               if( !-e $projLibPGPath ){
+                   mkpath($projLibPGPath) ||
+                        confess "\nFailed to mkpath '$projLibPGPath'. Skipping...\n\n";
+               }
+            }
+   
+            ##-------------------------------------------------------------
+            ## set release path (i.e.  //depot in user work space)
+            $relLibPath   = "$relPathAbs/$macro/$rel/macro/timing/${metalStackIp}/lib${addon}";
+            $relLibPGPath = "$relPathAbs/$macro/$rel/macro/timing/${metalStackIp}/lib_pg${addon}";
+            ##--------------------------------------------------
+            ## set macro corners
+            if( !$libcounter ){
+               ##   use default timing corners for all but utility cells library macro
+               if( !(grep{ /$macro/ } @$aref_utilityMacro ) && 
+                   !(grep{ /$macro/ } @$aref_repeaterMacro)     ){
+                  @corners        = @corners_ckt;
+                  %corners_params = %corners_ckt_params;  # from alphaNTfile
+               }else{
+                  ##   use copy of VC page corners for utility cells library macro
+                  my @cornersFiles;
+                  push(@cornersFiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.legalVcCorners.csv") if ( defined $ENV{'DDR_DA_MAIN'});
+                  push(@cornersFiles, "$projPathAbs/design/legalVcCorners.csv");
+                  push(@cornersFiles, "$projPathAbs/design_unrestricted/legalVcCorners.csv");
+                  my $relCornersFile = firstAvailableFile(@cornersFiles);
+
+                  my $relCornersHeaderBase = "Corner Type\tCase\tCore Voltage (V)"
+                             ."\tPLL Voltage (V)\tIO Voltage (V)\tTemperature (C)"
+                             ."\tExtraction Corner";
+                  @corners = process_corners_file( $relCornersHeaderBase,
+                                            $relCornersFile, \%corners_params );
+                  ## print timing corners
+                  myviprint(LOW, "      Found VC timing corners: " . join ', ', @corners ."\n" );
+               } ## end  else if( $macro ne $aref_utilityMacro)
+
+               ## for SHIM macros, 
+               if( defined $shimMacros{$macro} ){
+                  goto PINCHECK_SCRIPT;
+               }elsif( defined $phyvMacros{$macro} && ($phyvCopy == 0)){
+                  ## for PHYV macros, read pininfo files
+                  ## reset cell pin list
+                  undef %cellPins;
+                  undef %cellVins;
+                  undef %cellSupplies;
+                  ## identify pins for the macro (or for each cell in the utility library)
+                  foreach my $cell ( @{$phyvMacros{$macro}} ){
+                     prompt_before_continue(SUPER); next if( $cell eq "");
+                     ## set pininfo file
+                     my @csvFiles;
+                     push(@csvFiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.pininfo.$cell.csv")
+                         if ( defined $ENV{'DDR_DA_MAIN'});
+                     push(@csvFiles, "$projPathAbs/design/pininfo/$rel/${cell}.csv");
+                     push(@csvFiles, "$projPathAbs/design_unrestricted/pininfo/$rel/${cell}.csv");
+                     $pininfoFile = firstAvailableFile(@csvFiles);
+
+                     unless( -e $pininfoFile ){
+                        eprint( "Pin info file missing for macro $cell: '$pininfoFile'\n" );
+                        prompt_before_continue(SUPER);
+                        next;
+                     }
+                     {
+                     my ($href_cv, $href_cp, $href_s) = 
+                            process_pin_info_file( $pininfoFile, $cell,
+                                                   \%cellVins, \%cellPins,
+                                                   \%cellSupplies );
+                     %cellVins = %$href_cv;
+                     %cellPins = %$href_cp;
+                     %cellSupplies = %$href_s;
+                     }
+
+                     ## If area override exists (e.g. OVERLAP), take area from LEF file instead of pininfo file
+                     if (defined $href_areaOverrides->{$cell}){
+                        my $depotLefFile = "//depot/${p4ReleaseRoot}/ckt/rel/${macro}/${rel}/macro/lef/${metalStackIp}/${macro}.lef";
+                        my $tmpLefFile = "/tmp/${macro}.lef";
+                        my ($output, $exit_val) = run_system_cmd("p4 sizes $depotLefFile", $VERBOSITY);
+                        if( grep{ /no such file/i } $output ||
+                            grep{ /0 bytes/i      } $output ){
+                            fatal_error( "$depotLefFile\n\t is empty or does not exist. Failed to get area for $cell\n");
+                        }
+                        my ($stdout, $exitCode) = run_system_cmd("p4 print -o $tmpLefFile $depotLefFile", $VERBOSITY);
+                        if ($exitCode != 0){
+                           fatal_error("P4 print command failed: output from command is $stdout");
+                        }
+                        $cellPins{$cell}->{'area'} = getAreaFromLef($cell, $href_areaOverrides->{$cell}, $tmpLefFile);
+                     }
+                  } ## end  foreach $cell (@{$phyvMacros{$macro}})
+                  write_file( [scalar(Dumper \%cellPins), "\n" ], "hash--cellPins.$macro.txt" )
+                           if( defined $DEBUG && $DEBUG >= HIGH);
+                  write_file( [scalar(Dumper \%cellSupplies), "\n" ], "hash--cellSupplies.$macro.txt" )
+                           if( defined $DEBUG && $DEBUG >= HIGH);
+               } ## end  if( defined $phyvMacros{$macro})
+            } #end libcounter
+
+            my $seen = FALSE;
+            unless( $seen == TRUE ){
+                dprint_dumper(CRAZY, "Macro List:\n", \@macros);
+                dprint_dumper(CRAZY, "Utility Macro List:\n", \@$aref_utilityMacro );
+                dprint_dumper(CRAZY, "Repeater Macro List:\n", \@$aref_repeaterMacro );
+                $seen = TRUE;
+                prompt_before_continue(CRAZY);
+            }
+            #---------------------- START CORNER LOOP --------------------------
+            #  Going to get LIB files to the rel area 
+            my $macro_seen = 0;
+            foreach my $corner ( @corners ){
+               ## set LIB/LIBPG file names
+               ##   utility cells are not allowed to have metal stack
+               my $macro_in_list = grep{ /$macro/} (@$aref_utilityMacro,@$aref_repeaterMacro);
+               dprint(CRAZY, "macro in list?? => $macro_in_list\n" );
+               if( $macro_in_list ){
+                  $libLibrary = "${macro}_${corner}";
+               }else{      ##   all other cells are allowed
+                  $libLibrary = "${macro}_${metalStack}_${corner}";
+               }
+               dprint(CRAZY, "Lib Name for macro $macro ->  $libLibrary\n" );
+               #----------------------
+               # Setup full filenames for .lib + .pg_lib
+               $libFileName    = "${libLibrary}.lib";
+               $libPGFileName  = "${libLibrary}_pg.lib";
+               $macroLibFile   = "$macroLibPath/$libFileName";
+               $macroLibPGFile = "$macroLibPGPath/$libPGFileName";
+               $relLibFile     = "$relLibPath/$libFileName";
+               $relLibPGFile   = "$relLibPGPath/$libPGFileName";
+               $relLibFileGz   = "$relLibPath/$libFileName.gz";
+               $relLibPGFileGz = "$relLibPGPath/$libPGFileName.gz";
+               if( defined $projDiskArchiveLibFiles ){
+                  $projLibFile   = "$projLibPath/$libFileName";
+                  $projLibPGFile = "$projLibPGPath/$libPGFileName";
+               }
+               #----------------------
+
+               my $libHeader;
+               ## for PHYV macros, we will create blank LIB files
+               if( defined $phyvMacros{$macro} && ($phyvCopy == 0)){
+                  my $isa_utility_macro = FALSE;
+                     $isa_utility_macro = TRUE if( grep{ /$macro/ } @$aref_utilityMacro );
+                  $libHeader = generate_lib_header( \%cellVins, \%corners_params, $libLibrary, $date,
+                                                    $corners_params{$corner}->{'temp'},
+                                                    $corners_params{$corner}->{'VDD'},
+                                                    $corner, $isa_utility_macro );
+     
+               } ## end  if( defined $phyvMacros{$macro})
+  
+               dprint_dumper(FUNCTIONS, '$phyvMacros data struct=>', $phyvMacros{$macro} );
+               dprint(SUPER, "\$macroLibFile => $macroLibFile\n" );
+               dprint(SUPER, "\$relLibFile   => $relLibFile\n" );
+               dprint(SUPER, "\$relLibFileGz => $relLibFileGz\n" );
+               ##----------------------------------------------------------
+               ## COPY the LIB files to the DEST area (user's //depot)
+               ## Check if the LIB file in the SRC (//wwcad) exists and it's equiv (or gz)
+               ##      exists in the DEST (//depot).
+               ## For phyvMacros -> generate LIB files from scratch if not copying
+               if( (defined $phyvMacros{$macro}    || -e $macroLibFile )       && 
+                   (    -e $relLibFileGz           || -e $relLibFile   )       &&
+                   (    da_p4_is_in_perforce($relLibFileGz) || da_p4_is_in_perforce($relLibFile)  )   ){
+                  my $fname = $relLibFile;
+
+                  if( da_p4_is_in_perforce($relLibFileGz) ){
+                     $fname = $relLibFileGz;  # newer projects gzip files, legacy don't
+                  }      
+                  ## p4 check out rel file
+                  myviprint(LOW, "    Check-out $fname P4 file\n" );
+                  $cmd = "p4 edit $fname |& cat >> $p4LogFile";
+                  myviprint(LOW, "    \$ $cmd\n" );
+         
+                  if( !defined $TESTMODE ){
+                     run_system_cmd( $cmd, $VERBOSITY );
+                  }else{
+                     myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode" );
+                  }
+                  ## for PHYV macros, we will create blank LIB files if not copying
+                  if( defined $phyvMacros{$macro} && ($phyvCopy == 0)){
+                     if( !defined $TESTMODE ){
+                        if ( $main::DEBUG >= HIGH ){
+                            dprint(HIGH, "\$macro      --->$macro\n".
+                                         "\$libHeader  --->$libHeader\n".
+                                         "\$relLibFile --->$relLibFile\n".
+                                         "\$phyvMacros{\$macro}--->\n". scalar(Dumper \%phyvMacros) .
+                                         "\$phyvMacros{$macro}--->\n". scalar(Dumper $phyvMacros{$macro}) .
+                                         "\%cellPins--->\n". scalar(Dumper \%cellPins) .
+                                         "\n" );
+                            prompt_before_continue(SUPER);
+                        }
+                        write_lib_file( $macro, $libHeader, $relLibFile, $phyvMacros{$macro}, \%cellPins );
+                     }else{
+                        myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode" );
+                     };
+                  }else{ ## copy NT/SiS LIB files
+                     ## copy LIB file to release depot
+                     myviprint(MEDIUM, "    Copying $macroLibFile \nto\n\t $relLibFile\n" );
+                     if( !defined $TESTMODE){
+                        da_copy($macroLibFile,$relLibFile) || confess("\nERROR: Failed to copy $macroLibFile, $relLibFile: $!\n");
+                     }else{
+                        myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode" );
+                     }
+                  }
+                  ## check for zero size files
+                  if( -z $relLibFile && !defined $TESTMODE ){
+                     wprint( "After copy, zero file size for release file $relLibFile\n" );
+                  }
+                  ## copy LFH file to project disk
+                  if( defined $projDiskArchiveLibFiles ){
+                     myviprint(MEDIUM, "    Copying $relLibFile \nto\n\t$projLibFile\n" );
+                     if( !defined $TESTMODE ){
+                        da_copy($relLibFile,$projLibFile) || confess("\nERROR: Failed to copy $relLibFile, $projLibFile: $!\n");
+                     }else{
+                        myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+                     }
+                  }
+               ## end  if( (defined $phyvMacros{$macro} || (-e $macroLibFile)) && (-e $relLibFile) )
+               }elsif( !-e $relLibFileGz && !-e $relLibFile ){
+                   eprint( "Release files\n\t'$relLibFileGz' or \n\t".
+                           "'$relLibFile'\n\t" .
+                           "\t don't exist (must seed in p4 depot first), so skipping copy...\n" );
+               }else{
+                   if( !defined $phyvMacros{$macro} && !$macro_seen ){
+                       eprint( "Not a PHYV macro. Skipping...'$macro'\n");
+                   }
+                   if ( ! -e $macroLibFile  && !defined $phyvMacros{$macro} ){
+                       eprint( "Macro LIB file doesn't exist: '$macroLibFile' \n" );
+                   }
+                   if( !da_p4_is_in_perforce($relLibFileGz) && !da_p4_is_in_perforce($relLibFile)  ){
+                       if( $macro_seen ){
+                          eprint( "LIB file(s) aren't in p4 depot: \n\t'". basename($relLibFile) ."'\n or \n\t ". basename($relLibFileGz) ."\n" );
+                       }else{
+                          eprint( "LIB file(s) aren't in p4 depot: \n\t'". $relLibFile ."'\n or \n\t ". $relLibFileGz ."\n" );
+                       }
+                   }
+                   $macro_seen = 1;
+ 
+                   #eprint( "Missing LIB file and not PHYV macro. Skipping...'$macroLibFile'\n");
+                   push @missingFiles, $macroLibFile;
+               }
+  
+               ##----------------------------------------------------------
+               ## Get the LIB PG files to the DEST area (user's //depot)
+               ## copy LIB PG files, or warn if does not exist
+               ## For phyvMacros -> generate LIB files from scratch if not copying
+               if( (defined $phyvMacros{$macro} || (-e $macroLibPGFile)) &&
+                   (    (-e $relLibPGFileGz)    || (-e $relLibPGFile))      ){
+                   ## p4 check out rel file   
+                  my $fname = $relLibPGFile;
+                  if( da_p4_is_in_perforce($relLibPGFileGz) ){
+                     $fname = $relLibPGFileGz;
+                  }      
+                  myviprint(LOW, "    Check-out $fname P4 file\n" );
+                  $cmd = "p4 edit $fname |& cat >> $p4LogFile";
+                  myviprint(LOW, "    \$ $cmd\n" );
+                  #-----------------
+                  if( !defined $TESTMODE ){
+                     run_system_cmd( $cmd, $VERBOSITY );
+                  }else{
+                     myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode" );
+                  }
+                  ## for PHYV macros, we will create blank LIB files
+                  if( defined $phyvMacros{$macro} && ($phyvCopy == 0)){
+                     if( !defined $TESTMODE ){
+                        write_libpg_file( $macro, $libHeader, $relLibPGFile, \%cellSupplies, $corners_params{$corner}, \%cellPins,
+                                          $phyvMacros{$macro} );
+                      }else{
+                         myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode" );
+                      };
+                      ## end  if( defined $phyvMacros{$macro})
+                   }else{
+                      ## copy LIB file to release depot
+                      myviprint(MEDIUM, "    Copying $macroLibPGFile \nto\n\t $relLibPGFile\n" );
+                      if( !defined $TESTMODE ){
+                         da_copy($macroLibPGFile,$relLibPGFile) ||
+                             confess("\nERROR: Failed to copy $macroLibPGFile, $relLibPGFile: $!\n");
+                      }
+                   } ## end  else if( defined $phyvMacros{$macro})
+                   ## check for zero size files
+                   if( -z $relLibPGFile && !defined $TESTMODE ){
+                      wprint( "After copy, zero file size for release file $relLibPGFile\n" );
+                   }
+                   ## copy LIB file to project disk
+                   if( $projDiskArchiveLibFiles ){
+                      myviprint(MEDIUM, "    Copying $macroLibPGFile \nto\n\t $projLibPGFile\n" );
+                      if( !defined $TESTMODE ){
+                         da_copy($macroLibPGFile,$projLibPGFile) ||
+                             confess("\nERROR: Failed to copy $macroLibPGFile, $projLibPGFile: $!\n");
+                      }else{
+                         myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+                      }
+                   }
+                   ## in debug mode, use original source files (if they exits)
+                   if( defined $TESTMODE && (-e $macroLibPGFile) ){
+                      $pincheckCmd .= "  -liberty $macroLibPGFile -libertynopg $macroLibFile \\\n";
+                   ## in debug mode, skip PHYV lib files that have not been created
+                   }elsif( defined $TESTMODE && defined $phyvMacros{$macro} ){
+                      myviprint(LOW, "    Note: Skipping pin checking LIB files for $macro PHYV macro in debug mode, since we have not made them yet...\n" );
+                   }else{       ## otherwise check actual LIB files
+                      $pincheckCmd .= "  -liberty $relLibPGFile -libertynopg $relLibFile \\\n";
+                   }
+               ## end  if( (defined $phyvMacros{$macro} || (-e $macroLibPGFile)) && (-e $relLibPGFile) )
+               ##----------------------------------------------------------
+               }elsif( !-e $relLibPGFile && !-e $relLibPGFileGz ){
+                   wprint( "Release file '$relLibPGFileGz'\n" .
+                           "                      '$relLibPGFile'\n".
+                           "\t    does not exist (must be seeded in p4 depot first), so skipping copy...\n" );
+               }else{
+                   wprint( "missing $macroLibPGFile LIB PG file, and not PHYV macro. Skipping...\n" );
+                   push @missingFiles, $macroLibPGFile;
+               }
+            } ## end foreach $corner (@corners)
+            #---------------------- END CORNER LOOP --------------------------
+
+            #-----------------------------------------------------------------
+            ## compile LIB files
+            myviprint(LOW, "    Compiling LIB files for $macro macro... \n" );
+            ## make dummy/existing db files editable
+            $cmd = "p4 edit $relLibPath/... |& cat >> $p4LogFile";
+            myviprint(LOW, "    \$ $cmd\n" );
+            if( !defined $TESTMODE){
+               run_system_cmd( $cmd, $VERBOSITY );
+            }else{
+               myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+            }
+            ## run compile step
+            if( $timing_case =~ /lvf/ ){
+               $cmd = "cd $relLibPath; $RealBin/alphaCompileLibs.pl -lvf";
+            }else{
+               $cmd = "cd $relLibPath; $RealBin/alphaCompileLibs.pl"; 
+            }
+            myviprint(LOW, "    \$ $cmd\n" );
+            if( defined $TESTMODE ){
+               myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+            }elsif( !-e $relLibPath ){
+               wprint( "The release LIB path does not exist to compile LIB files:\n\t '$relLibPath'\n" ); 
+            }else{
+               my ($output, $retval) = run_system_cmd( $cmd, $VERBOSITY );
+               iprint( "$output" );
+               ## interrogate lib compile log for ERRORs
+               iprint( "Checking compile log for errors:\n\t'$relLibPath/compile.log'\n" );
+               my @contents = read_file("$relLibPath/compile.log" );
+               foreach my $line (@contents){
+                  if( $line =~ m/error/i ){
+                     $libCompileErrors{$relLibPath}++;
+                  }
+               }
+            }
+            #-----------------------------------------------------------------
+            ## compile LIB PG files
+            myviprint(LOW, "    Compiling LIB PG files for $macro macro... \n" );
+            ## make dummy/existing db files editable
+            $cmd = "p4 edit $relLibPGPath/... |& cat >> $p4LogFile";
+            myviprint(LOW, "    \$ $cmd\n" );
+            if( !defined $TESTMODE){ 
+               run_system_cmd( $cmd, $VERBOSITY );
+            }else{
+               myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+            }
+            ## run compile step
+            $cmd = "cd $relLibPGPath; $RealBin/alphaCompileLibs.pl";
+            if( $timing_case =~ /lvf/ ){
+               $cmd .= " -lvf";
+            }
+            myviprint(LOW, "    \$ $cmd\n" );
+            if( defined $TESTMODE ){
+                myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+            }elsif( !-e $relLibPGPath ){
+               wprint( "The release LIBPG path does not exist to compile LIB files:\n\t '$relLibPGPath'\n" ); 
+            }else{
+               run_system_cmd( $cmd, $VERBOSITY );
+               ## interrogate lib compile log for ERRORs
+               iprint( "Checking compile log for errors:\n\t'$relLibPGPath/compile.log'\n" );
+               my @contents = read_file("$relLibPGPath/compile.log" );
+               foreach my $line (@contents){
+                  if($line =~ m/error/i ){
+                     $libCompileErrors{$relLibPath}++;
+                  }
+               }
+            }
+            #-----------------------------------------------------------------
+            ## check for zero size files
+            if( !defined $TESTMODE){
+               foreach my $file ( glob("$relLibPath/*.db $relLibPGPath/*.db") ){
+                  if( -z $file ){
+                     wprint( "After compile, zero file size for lib file: '$file'\n" );
+                     $libCompileErrors{$file}++;
+                  }
+               }
+            }else{
+               myviprint(LOW, "    DEBUG: No p4 changes or file conversion steps occur in DEBUG mode\n" );
+            }
+            #-----------------------------------------------------------------
+
+   PINCHECK_SCRIPT:
+            ## finalize pincheck run cmd : include views that were found & non-zero length
+            ## files (pininfo,cosim,behavior,interface,netlist,gds,lef,streamLayerMap)
+            foreach my $file ( keys %{$pincheckFiles{$macro}} ){
+               if( !-e $file){
+                  wprint( "Can't find file $pincheckFiles{$macro}->{$file}\n\t'$file'\n\tso skipping for pin check comparison...\n");
+                  push @missingFiles, $file;
+               }elsif( -z $file ){
+                  wprint( "Zero size for $file $pincheckFiles{$macro}->{$file} file, so skipping for pin check comparison...\n");
+                  push @missingFiles, $file;
+               }else{
+                  $pincheckCmd .= "  -$pincheckFiles{$macro}->{$file} $file \\\n";
+                  myviprint(LOW, "    Found $file $pincheckFiles{$macro}->{$file} file for pin check comparison\n" );
+               }
+            }
+            #$pincheckCmd .= "  |& cat >> $pincheckLogFiles{$macro}\n";
+            ## change pin check paths to user home paths
+            if (defined $opt_p4ws){
+                $pincheckCmd =~ s/ \S+\/$opt_p4ws/ \/u\/$username\/$opt_p4ws/g;
+            }
+            else{
+                $pincheckCmd =~ s/ \S+\/p4_ws/ \/u\/$username\/p4_ws/g;
+            }
+            ## write pincheck shell
+            hprint( "Writing and executing pin check shell script:\n\t'$pincheckShellFiles{$macro}'\n" );
+            # Need to make the pin-check script executable!
+            $cmd = "chmod ug+rwx $pincheckShellFiles{$macro}";
+            run_system_cmd( $cmd, NONE );
+            ## remove pincheck log file, so we can append it, for utility macro cells
+            ##    this log file gets sync'd (sometimes) from P4, and is read only. So,
+            ##    must add '-f' (force) to the rm cmd to ensure no STTY input needed,
+            ##    and log can be removed.
+            my(@lines_pinchk);
+            push(@lines_pinchk, "rm -f $pincheckLogFiles{$macro}\n" );
+            ## Need to check subcells for utility macros for all families, repeater macros if they have subcells
+            if( grep{ /$macro/} @$aref_utilityMacro ){
+               ## we need to check each level 1 cell, instead of level 0 (top level)
+               foreach my $cell ( @{$phyvMacros{$macro}} ){
+                  ## so swap cell for macro
+                  $cmd = $pincheckCmd;
+                  ## changes pin check macro name
+                  $cmd =~ s/\-macro $macro\b/\-macro $cell/;
+                  ## changes pin check vmodule name for debug
+                  $cmd =~ s/\-vmodule $macro\b/\-vmodule $cell/;
+                  ## changes pin check CSV file to be used to cell version
+                  $cmd =~ s/$macro\.csv\b/$cell.csv/;
+                  push(@lines_pinchk, $cmd );
+               }
+               push(@lines_pinchk, "echo |& cat >> $pincheckLogFiles{$macro}\n" );
+            }
+            elsif( grep{ /$macro/ } @$aref_repeaterMacro &&
+                   defined $releaseMacro{$macro} ){
+                foreach my $cell ( @{$repeaterSubMacros{$macro}} ){
+                    ## so swap cell for macro
+                    $cmd = $pincheckCmd;
+                    ## changes pin check macro name
+                    $cmd =~ s/\-macro $macro\b/\-macro $cell/;
+                    ## changes pin check vmodule name for debug
+                    $cmd =~ s/\-vmodule $macro\b/\-vmodule $cell/;
+                    ## changes pin check CSV file to be used to cell version
+                    $cmd =~ s/$macro\.csv\b/$cell.csv/;
+                    push(@lines_pinchk, $cmd );
+                }
+                push(@lines_pinchk, "echo |& cat >> $pincheckLogFiles{$macro}\n" );
+            }else{     ## for all other macros, just dump the pin check command
+               push(@lines_pinchk, $pincheckCmd );
+            }
+            write_file( \@lines_pinchk, $pincheckShellFiles{$macro} );
+           
+            # Need to make the pin-check script executable!
+            $cmd = "chmod ug+rwx $pincheckShellFiles{$macro}";
+            run_system_cmd( $cmd, NONE );
+
+            ## run pincheck script
+            $cmd = "$pincheckShellFiles{$macro}";
+            myviprint(LOW, ("    \$ $cmd\n") );
+            if( defined $TESTMODE ){ iprint( "DEBUG: In DEBUG mode, pincheck compares source files, not released files\n" ); }
+            ##   output to log file
+            run_system_cmd( $cmd, $VERBOSITY );
+            ## interrogate pincheck file for DIRTY checks
+            my ($cnt_d, $cnt_w) = countDirtysAndWarnings( $pincheckLogFiles{$macro} );
+            $pincheckDirtys{$macro}   = $cnt_d;
+            $pincheckWarnings{$macro} = $cnt_w;
+
+            ## p4 opened file
+            myviprint(LOW, "  List opened P4 files\n" );
+            $cmd = "p4 opened ${relPathAbs}/${macro}/${rel}/macro/... |& cat >> $p4LogFile";
+            myviprint(LOW, "    \$ $cmd\n" );
+            run_system_cmd( $cmd, $VERBOSITY );
+       
+            ## if the seeded file is a gzip, gzip again
+            my $isGz   = da_p4_is_in_perforce( $relLibFileGz );
+            my $isGzPG = da_p4_is_in_perforce( $relLibPGFileGz );
+            
+            viprint( LOW, "da_p4_is_in_perforce( $relLibFileGz ) => '$isGz'\n" );
+            if( $isGz   ){ gzip($relLibPath);   }
+            if( $isGzPG ){ gzip($relLibPGPath); }       
+         } ## end  foreach metal stack
+      } ## end  foreach $macro (@macros)
+      $libcounter++;
+   } ## end  foreach timing case
+
+   p4submit( $rel, $relPathAbs, \@macros, \@missingFiles, 
+             \%pincheckDirtys, \%pincheckWarnings, \%pincheckLogFiles, \%libCompileErrors );
+   
+   ## Write all the user messages to log file.
+   write_file( $STDOUT_LOG, $logFile );
+      
+   ## All done
+   iprint("All done.\n\n");
+   exit(0);
+}
+###########   END Main    ###########
+
+## ------------------------- Functions -----------------------------
+
+#-------------------------------------------------------------------------------
+#  gzip lib files if seeded file is .gz
+#-------------------------------------------------------------------------------
+sub gzip($){
+    print_function_header();
+    my $path = shift;
+
+    iprint("Compressing lib files in $path/...\n");
+    my $cmd = "gzip -f $path/\*.lib";
+    my($output, $exit_val) = run_system_cmd( $cmd, $VERBOSITY );
+    if( $exit_val ){ eprint( "Error while trying to gzip '.lib' files in path:\n\t'$path'\n"   ); }
+       $cmd = "rm -f $path/\*.lib";
+      ($output, $exit_val) = run_system_cmd( $cmd, $VERBOSITY );
+    if( $exit_val ){ eprint( "Error while trying to remove '.lib' files in path:\n\t'$path'\n" ); }
+}
+
+#-------------------------------------------------------------------------------
+#  Automatically try to match metal_stack and metal_stack_ip
+#     Example Call:    p4submit( \@macros, \%pincheckDirtys, \%pincheckWarnings );
+#-------------------------------------------------------------------------------
+sub p4submit($$$$$$){
+    print_function_header();
+    my $release      = shift;
+    my $relPathAbs   = shift;
+    my @macros       = @{ $_[0] };
+    my @missingFiles = @{ $_[1] };
+    my %checkDirtys        = %{ $_[2] };
+    my %checkWarnings      = %{ $_[3] };
+    my %checkLogFiles      = %{ $_[4] };
+    my %lib_compile_errors = %{ $_[5] };
+    
+    ## p4 submit command
+    if( defined $TESTMODE ){
+       iprint( "DEBUG: No p4 files to submit\n" );
+    }else{
+       hprint( "To complete release deliverables submission to the depot:\n\t");
+       foreach my $macro ( @macros ){
+          p4print( "p4 submit -d 'Release $release of macro $macro timing views' ${relPathAbs}/${macro}/${release}/...\n" );
+       }
+       hprint( "  or\n\t" );
+       foreach my $macro ( @macros ){
+          p4print( "p4 submit -d 'Release $release of macro $macro timing views, updated to fix XYZ' ${relPathAbs}/${macro}/${release}/...\n" );
+       }
+    }
+
+    ## warn about any pincheck warning
+    foreach my $macro ( @macros ){
+       if( exists $checkWarnings{$macro} && $checkWarnings{$macro} > 0 ){
+          nprint   "\n";
+          wprint( "There were ".$checkWarnings{$macro}." checks that were 'Warning' in the $macro macro pincheck run.\n"
+                  ."  The warnings are listed in the pin check log file:\n    $checkLogFiles{$macro} \n" 
+                  ."  These items may be acceptable, but please review them.\n\n" );
+       }    
+    }
+
+    ## warn about any pincheck dirty/error
+    foreach my $macro ( @macros ){
+       if( exists $checkDirtys{$macro} && $checkDirtys{$macro} > 0 ){
+          nprint   "\n";
+          wprint( "There were $checkDirtys{$macro} checks that were 'DIRTY/Error' in the $macro macro pincheck run.\n"
+                 ."  The failed checks are listed in the pin check log file:\n    $checkLogFiles{$macro} \n"
+                 ."  Please fix all DIRTY checks, or get waivers from the CKT lead.\n\n" );
+       }    
+    }
+
+    ## warn about any missing files
+    if( $#missingFiles > 0 ){
+        wprint( "During call to pincheck script, there were missing source files:\n"
+               ."    " .join "\n    ",@missingFiles,"\n"
+               ."  Please create the missing source files, or get waivers from the CKT lead.\n\n");
+    }
+
+    ## warn about lib compile errors
+    foreach my $relLibPath ( sort keys %lib_compile_errors ){
+       if( exists $lib_compile_errors{$relLibPath} ){
+          wprint( "There were $lib_compile_errors{$relLibPath} errors in the $relLibPath LIB compile.\n" 
+                . "  Please fix all ERRORS, or get waivers from the CKT lead.\n\n" );
+       }
+    }
+} # end p4submit
+
+#-------------------------------------------------------------------------------
+# process the command line arguments
+#     set the values for DEBUG and VERBOSITY
+#-------------------------------------------------------------------------------
+sub process_cmd_line_args(){
+    print_function_header();
+    my ( $opt_projSPEC, $opt_macros,  $opt_dryrun,  $opt_verbosity,
+         $opt_debug,    $opt_help,    $opt_nousage, $opt_p4ws, 
+         $opt_rel );
+
+    my $success = GetOptions(
+          "p=s"          => \$opt_projSPEC,
+          "macros=s"     => \$opt_macros,
+          "dryrun!"      => \$opt_dryrun,
+          "verbosity=i"  => \$opt_verbosity,
+          "debug=i"      => \$opt_debug,
+          "help"         => \$opt_help, 
+          "nousage"      => \$opt_nousage,
+          "p4ws=s"       => \$opt_p4ws,
+          "rel=s"        => \$opt_rel,
+    );
+
+    $main::VERBOSITY = $opt_verbosity if( defined $opt_verbosity );
+    $main::DEBUG     = $opt_debug     if( defined $opt_debug     );
+    $main::TESTMODE  = 1              if( defined $opt_dryrun  && $opt_dryrun == 1 );
+
+    ## quit with usage message, if usage not satisfied
+    &usage(0) if $opt_help;
+    &usage(1) unless( $success );
+    &usage(1) unless( defined $opt_projSPEC );
+    &usage(1) if ( defined $opt_rel && !defined $opt_macros ); 
+
+    return( $opt_projSPEC, $opt_macros, $opt_nousage, $opt_p4ws, $opt_rel );
+}
+
+#-------------------------------------------------------------------------------
+#  script usage message
+#-------------------------------------------------------------------------------
+sub usage($){
+    my $exit_status = shift;
+    my $username = get_username();
+    print << "EOP" ;
+
+USAGE : $PROGRAM_NAME [options] -p <projSPEC>
+
+------------------------------------
+Required Args:
+------------------------------------
+-p  <projSPEC>    project SPEC (i.e. <project_type>/<project>/<CD_rel> )
+
+
+------------------------------------
+Optional Args:
+------------------------------------
+-help              print this screen
+-macros     <arg>  macros to release, space or comma-separated 
+-p4ws       <arg>  Overrides path to your personal Perforce work area (default: \$HOME/p4_ws)
+-rel        <arg>  Overrides the release version for older instances (must be used in conjuction with '-macros')
+-dryrun            do not execute p4 commands (other than status/opened)
+-nousage           do not report the usage of this script
+-verbosity  <#>    print additional messages ... includes details of system calls etc. 
+                   Must provide integer argument -> higher values increases verbosity.
+-debug      <#>    print additional diagnostic messagess to debug script
+
+
+Assumptions:
+- Requires that the depot has been seeded (with blank or old files), so that all files exist
+
+Description
+  A script to copy LIB files for release from the p4 latest design area
+    /u/${username}/\$p4ws/projects/<project_type>/<project>/latest/design/timing/nt|sis/<macro>/lib/<macro>_<metal_statck>_<corner>.lib 
+    /u/${username}/\$p4ws/projects/<project_type>/<project>/latest/design/timing/nt|sis/<macro>/lib_pg/<macro>_<metal_statck>_<corner>_pg.lib
+  and the corners in the project NT timing file:
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design/timing/nt/ntFiles/alphaNT.config
+  For the $utilityMacroDefault utility macro library, the VC corner files
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design[_unrestricted]/legalVcCorners.csv
+  To the depot release path, defined from variables in the project release file:
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design[_unrestricted]/legalRelease.yaml or
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design[_unrestricted]/legalRelease.txt
+  And to the project disk
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design/<metal_stack>/timing/<rel>/<macro>/lib/<macro>_<metal_statck>_<corner>.lib 
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design/<metal_stack>/timing/<rel>/<macro>/lib_pg/<macro>_<metal_statck>_<corner>_pg.lib 
+  For the macros in the project macro file:
+    /remote/cad-rep/projects/<project_type>/<project>/<CD_rel>/design[_unrestricted]/topcells.txt
+
+EOP
+
+    exit($exit_status);
+}
+
+#------------------------------------------------------------------------
+sub firstAvailableDir {
+   my @inFiles = @_;
+   foreach my $inf ( @inFiles ){
+      if( -d $inf ){
+         return $inf;
+      }
+   }
+   wprint( "None of these directories exist: \n\t". join("\n\t",@inFiles) ."\n" );
+   return "";
+}
+ 
+
+#------------------------------------------------------------------------
+sub must_have_path{
+    print_function_header();
+   my $msg  = shift;
+   my $path = shift;
+
+   my $prefix = "Path '$path' does not exist.\n";
+   if( !-e $path ){
+      my( $output, $retval ) = run_system_cmd( "mkdir -p $path", MEDIUM );
+      if( $retval ){
+          fatal_error( $prefix.$msg , 1);
+      }
+   }
+   return( $path );
+}
+
+#------------------------------------------------------------------------
+# SUB 'process_pin_info_file' : 
+#    For each macro, extract the pin info:
+#    1. pin name
+#    2. pin direction (i.e. 'I', 'O', 'IO' => input, input, inout)
+#    3. pin power rail (i.e. 'VDD', 'GND', 'IO' => input, input, inout)
+#    4. Area
+#    %cellPins = {
+#          'dwc_ddrphy_vaaclamp_master_ns' => {
+#                'area'   => '4727.808',
+#                'ground' => {
+#                       'VSS' => 1
+#                },
+#                'power' => {
+#                       'VAA_VDD2H' => 1,
+#                       'VDD' => 1
+#                }
+#          },
+#          'dwc_ddrphy_decapvdd_1by4x1_ns' => {
+#                'area'   => '295.488',
+#                'ground' => {
+#                       'VSS' => 1
+#                },
+#                'power' => {
+#                       'VDD' => 1,
+#                       'VDDQ' => 1
+#                }
+#          },
+#          'dwc_ddrphy_decapvdd_1x1_ns' => {
+#                'area'   => '1181.952',
+#                'ground' => {
+#                       'VSS' => 1
+#                },
+#                'power' => {
+#                       'VDD' => 1,
+#                       'VDDQ' => 1
+#                },
+#          }, ...
+#    
+#------------------------------------------------------------------------
+sub process_pin_info_file($$$$$){
+   print_function_header();
+   my $fname_pin_info = shift;
+   my $cell           = shift;
+   my %my_cellVins    = %{$_[0]};
+   my %my_cellPins    = %{$_[1]};
+   my %my_cellSupplies= %{$_[2]};
+
+   my @lines = read_file( $fname_pin_info );
+   iprint( "Reading project pininfo file (since not all cells in utility macro".
+               " may be released)...\n\t'$fname_pin_info'\n" );
+
+   ## grab header and check it is expected
+   my $pininfoHeader = shift( @lines );
+   chomp( $pininfoHeader );
+   $pininfoHeader =~ s/\#.*//;
+   ## if first header is comment or empty, grab next line
+   while( $pininfoHeader =~ /^\s*$/ ){
+      $pininfoHeader = shift( @lines );
+      chomp( $pininfoHeader );
+      $pininfoHeader =~ s/\#.*//;
+   }
+   ## now that comment and empty lines are gone, should have the real header
+   if( !$pininfoHeader =~ /^name\,.*\,cell_x_dim_um\,cell_y_dim_um$/i ){
+      fatal_error( "pininfo file header is not as expected, which must begin" .
+              " with 'name,' and end with ',cell_x_dim_um\,cell_y_dim_um'\n".
+              "  Found: '$pininfoHeader'\n", 1 );
+      ### support random header order
+   }
+   ## loop through pininfo pins
+   ## Column Headers
+   ##  [ 'name', 'direction', 'related_power', 'related_ground', 'pin_type', 'clock', 'cell_x_dim_um', 'cell_y_dim_um' ] 
+   my $lineNumber=0;
+   foreach ( @lines ){
+      $lineNumber++;
+      dprint(SUPER, "Line=>$_" );
+      prompt_before_continue(CRAZY);
+      ## eliminate comments
+      s/^\#.*//;
+      ## find power pins
+      if( /^([^\,]+)\,.*power/i ){
+         $my_cellPins{$cell}->{'power'}->{$1}++;
+         $my_cellSupplies{'power'}->{$1}++;
+      }elsif( /^([^\,]+)\,.*ground,.*\,([\d\.]+),([\d\.]+)/i ){
+         ## find ground pins
+         $my_cellPins{$cell}->{'ground'}->{$1}++;
+         $my_cellSupplies{'ground'}->{$1}++;
+         ## calculate VSS pin area
+         if( $1 eq 'VSS'){
+            $my_cellPins{$cell}->{'area'} = $2 * $3;
+         }
+      }elsif( /^([\w\_]+)\,([IO]+)\,general_signal\,/i ){
+         ## find signal pins ### BOZO: make this hack more general to handle busses
+         my ($pin, $cap, $min_cap, $max_cap, $max_tran, $direction );
+         $pin = $1;
+         ## error trap pin direction
+         if(     $2 eq 'I' ){ $direction = 'input';  
+         }elsif( $2 eq 'O' ){ $direction = 'input';  
+         }elsif( $2 eq 'IO'){ $direction = 'inout';  
+         }else{
+            fatal_error( "PHYV-only macro pin directions I, O, and IO, but '$fname_pin_info' pininfo file contained an unsupported direction $2 in line $lineNumber:\n$_\n", 1 );
+         }
+         my $power  = 'VDDQ'; ### BOZO: read pininfo file for this data
+         my $ground = 'VSS'; ### BOZO: read pininfo file for this data
+         if( $pin =~/^BP_/ ){ ### BOZO: read pininfo file for this data
+            $cap = '0.2';
+         }else{
+            $cap = '40';
+         }
+         $min_cap  = '0.001'; ### BOZO: read pininfo file for this data
+         $max_cap  = '1000'; ### BOZO: read pininfo file for this data
+         $max_tran = '10000';  ### BOZO: read pininfo file for this data
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'direction'} = $direction;
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'cap'}       = $cap;
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'min_cap'}   = $min_cap;
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'max_cap'}   = $max_cap;
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'max_tran'}  = $max_tran;
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'power'}     = $power;
+         $my_cellPins{$cell}->{'signal'}->{$pin}->{'ground'}    = $ground;
+         $my_cellVins{"${power}_${ground}"}->{'power'}          = $power;
+         $my_cellVins{"${power}_${ground}"}->{'ground'}         = $ground;
+      }elsif( /^\s*$/) {   ## find blank lines
+         ## do nothing
+      }else{               ## flag other pins
+         fatal_error( "PHYV-only macro can only contain power pins" .
+                 " (i.e. <pinName>,primary_power,...)\n  or ground pins" .
+                 " (i.e. <pinName>,primary_power,...) but '$fname_pin_info'" .
+                 " pininfo file contained an unsupported line $lineNumber:\n$_", 1 );
+      }
+   } ## end foreach( @lines )
+   dprint_dumper(SUPER, "\%my_cellPins     => ", \%my_cellPins );
+   dprint_dumper(SUPER, "\%my_cellSupplies => ", \%my_cellSupplies );
+   prompt_before_continue(SUPER);
+
+   ## ensure VSS exists
+   if( !defined $my_cellPins{$cell}->{'ground'}->{'VSS'} ){
+      fatal_error( "PHYV-only macros are expected to have VSS ground pin," .
+              "but was not found in '$fname_pin_info' pininfo file\n", 1 );
+   }
+
+   return( \%my_cellVins , \%my_cellPins , \%my_cellSupplies );
+}
+#------------------------------------------------------------------------
+# END SUB for processing PFH
+#------------------------------------------------------------------------
+
+#------------------------------------------------------------------------
+#  Generate the string for the LIBERTY file header
+#  Ex invocation:
+#          $libHeader = generate_lib_header( \%cellVins, \%corners_params,
+#                      $libLibrary, $date, $temp, $vdd, $corner, $isa_utility_macro );
+#------------------------------------------------------------------------
+sub generate_lib_header{
+   print_function_header();
+   my $href_cellVins       = shift;
+   my $href_corners_params = shift;
+   my $libLibrary          = shift;
+   my $date                = shift;
+   my $temp                = shift;
+   my $vdd                 = shift;
+   my $corner              = shift;
+   my $isa_utility_macro   = shift;
+
+   my ( $time_cap, $def_cap_tran );
+   if( $isa_utility_macro ){
+      $time_cap     = "time_unit : 1ns ;\n  capacitive_load_unit(1, pf)";
+      $def_cap_tran = "default_max_capacitance : 6;\n  default_max_transition : 1";
+   }else{
+      $time_cap     = "time_unit : 1ps ;\n  capacitive_load_unit(1, ff)";
+      $def_cap_tran = "default_max_capacitance : 6000;\n  default_max_transition : 1000";
+   }
+#------------------------------------------------------------------------
+   my $libHeader = qq{/******************************************************************************/
+/** PHYV macro timing file                                                   **/
+/******************************************************************************/
+
+library($libLibrary) \{
+  delay_model : table_lookup ;
+  date : "$date" ;
+  library_features(report_delay_calculation);
+  voltage_unit : 1V ;
+  current_unit : 1mA ;
+  $time_cap ;
+  pulling_resistance_unit : 1ohm ;
+  leakage_power_unit : 1uW ;
+  input_threshold_pct_fall : 50 ;
+  input_threshold_pct_rise : 50 ;
+  output_threshold_pct_fall : 50 ;
+  output_threshold_pct_rise : 50 ;
+  slew_derate_from_library : 1 ;
+  slew_lower_threshold_pct_fall : 20 ;
+  slew_lower_threshold_pct_rise : 20 ;
+  slew_upper_threshold_pct_fall : 80 ;
+  slew_upper_threshold_pct_rise : 80 ;
+  nom_process : 1 ;
+  nom_temperature : $temp ;
+  nom_voltage : $vdd ;
+  default_cell_leakage_power : 0 ;
+  default_fanout_load : 0 ;
+  default_inout_pin_cap : 0 ;
+  default_input_pin_cap : 0 ;
+  default_leakage_power_density : 0 ;
+  default_output_pin_cap : 0 ;
+  $def_cap_tran;
+  operating_conditions($corner) \{
+    process : 1 ;
+    temperature : $temp ;
+    voltage : $vdd ;
+    tree_type : "balanced_tree";
+  \}  
+}; ## end of header
+
+   foreach my $vin ( sort keys %$href_cellVins ){
+      my $power  = $href_cellVins->{$vin}{'power'};
+      my $ground = $href_cellVins->{$vin}{'ground'};
+      my $vmax   = $href_corners_params->{$corner}{$power};
+      my $vmin   = $href_corners_params->{$corner}{$ground};
+      $libHeader .= qq{  input_voltage(default_$vin ){ 
+    vil : $vmin ; 
+    vih : $vmax; 
+    vimin : $vmin ; 
+    vimax : $vmax ; 
+  }
+}; ## end of header input voltage map
+   }
+   return( $libHeader );
+}
+#------------------------------------------------------------------------
+
+#------------------------------------------------------------------------
+#  Write out the PG LIBERTY for each of the PhyV Macros. Psuedo-code:
+#     write header
+#     add voltag map: pwr pins
+#     add voltag map: gnd pins
+#     foreach cell
+#        foreach pwr pin
+#        foreach gnd pin
+#        foreach signal pin
+#     write footer
+#------------------------------------------------------------------------
+sub write_libpg_file($$$$$$$){
+   print_function_header();
+   my $macro               = shift;
+   my $libHeader           = shift;
+   my $relLibPGFile        = shift;
+   my $href_cellSupplies   = shift;
+   my $href_corner         = shift;
+   my $href_cellPins       = shift;
+   my $aref_phyvMacros     = shift;
+   
+   ## open LIB file
+   if( $VERBOSITY == NONE ){
+      iprint("Generating LIB PG file...none exists:\t".basename($relLibPGFile)."\n" );
+   }
+   viprint(LOW, "Generating LIB PG file because none exists:\n\t$relLibPGFile\n" );
+
+   ## write LIB file
+   my @libpg;
+   push(@libpg, $libHeader );
+
+   ## write voltage map
+   ##   supplies first
+   foreach my $pin (sort keys %{$href_cellSupplies->{'power'}}){
+      if( defined $href_corner->{$pin}){
+         push(@libpg, "  voltage_map($pin, $href_corner->{$pin});\n" );
+      }else{
+         push(@libpg, "  voltage_map($pin, 0);\n" );
+      }
+   }
+   
+   ##   grounds last
+   foreach my $pin (sort keys %{$href_cellSupplies->{'ground'}}){
+      if( defined $href_corner->{$pin}){
+         push(@libpg, "  voltage_map($pin, $href_corner->{$pin});\n" );
+      }else{
+         push(@libpg, "  voltage_map($pin, 0);\n" );
+      }
+   }
+
+   ## print each cell
+   my $libBody;
+   foreach my $cell ( @{$aref_phyvMacros} ){
+      my $href_pins = $href_cellPins->{$cell};
+      my $area = $href_pins->{'area'};
+      $libBody = qq{  cell($cell) \{
+        area : $area ;
+        dont_touch : true ;
+        dont_use : true ;
+        interface_timing : true ;
+    }; ## end of macro body
+      push(@libpg, $libBody );
+
+      foreach my $pin (sort keys %{$href_pins->{'power'}} ){
+         push(@libpg, "    pg_pin($pin) \{\n" );
+         push(@libpg, "      voltage_name : $pin ;\n" );
+         push(@libpg, "      pg_type : primary_power ;\n" );
+         push(@libpg, "    \} /* end of pin $pin */\n" );
+      }
+
+      foreach my $pin (sort keys %{$href_pins->{'ground'}} ){
+         push(@libpg, "    pg_pin($pin) \{\n" );
+         push(@libpg, "      voltage_name : $pin ;\n" );
+         push(@libpg, "      pg_type : primary_ground ;\n" );
+         push(@libpg, "    \} /* end of pin $pin */\n" );
+      }
+                
+      foreach my $pin (sort keys %{$href_pins->{'signal'}} ){
+         my $direction = $href_pins->{'signal'}{$pin}{'direction'};
+         my $cap       = $href_pins->{'signal'}{$pin}{'cap'};
+         my $min_cap   = $href_pins->{'signal'}{$pin}{'min_cap'};
+         my $max_cap   = $href_pins->{'signal'}{$pin}{'max_cap'};
+         my $max_tran  = $href_pins->{'signal'}{$pin}{'max_tran'};
+         my $power     = $href_pins->{'signal'}{$pin}{'power'};
+         my $ground    = $href_pins->{'signal'}{$pin}{'ground'};
+         push(@libpg, "    pin($pin) \{\n" );
+         push(@libpg, "      direction : $direction ;\n" );
+         if( $direction ne 'output'){
+                   push(@libpg, "      capacitance : $cap ;\n" );
+         }
+         if( $direction ne 'input'){
+            push(@libpg, "      min_capacitance : $min_cap ;\n" );
+            push(@libpg, "      max_capacitance : $max_cap ;\n" );
+         }
+         push(@libpg, "      input_voltage : default_${power}_${ground} ;\n" );
+         push(@libpg, "      max_transition : $max_tran ;\n" );
+         push(@libpg, "      related_ground_pin : $ground ;\n" );
+         push(@libpg, "      related_power_pin : $power ;\n" );
+         push(@libpg, "    \} /* end of pin $pin */\n" );
+      }
+                
+      ## write end of cell
+      push(@libpg, "  \} /* end of cell $cell */\n" );
+   } ## end foreach $cell ( @{$phyvMacros{$cell}} )
+
+   ## write end of library
+   push(@libpg, "\} /* end of library $macro */\n" );
+   ## close LIB files
+   write_file( \@libpg, $relLibPGFile );
+   if ( ! -e $relLibPGFile ){
+       eprint("${PROGRAM_NAME}/write_libpg_file failed to write '$relLibPGFile'\n");
+   }else{
+      if( $VERBOSITY == NONE ){
+          iprint("Generated LIB PG file:\n\t".basename($relLibPGFile)."" );
+          my $fsize = -s $relLibPGFile;
+          if ( $fsize ) {
+            iprint(" and filesize is ${fsize} bytes.\n");
+          }else{
+              iprint(" and filesize is 0 bytes. It's empty.\n");
+          }
+      }
+}
+
+
+
+   return( );
+} # write_libpg_file
+
+#------------------------------------------------------------------------
+#  Write out the LIBERTY for each of the PhyV Macros. Psuedo-code:
+#     write header
+#     foreach cell
+#        foreach pwr pin
+#        foreach gnd pin
+#        foreach signal pin
+#     write footer
+#------------------------------------------------------------------------
+sub write_lib_file($$$$$){
+   print_function_header();
+   my $macro           = shift;
+   my $libHeader       = shift;
+   my $relLibFile      = shift;
+   my $aref_phyvMacros = shift;
+   my %cellPins        = %{$_[0]};
+   
+   ## open LIB file
+   if( $VERBOSITY == NONE ){
+      iprint("Generating LIB file...none exists   :\t".basename($relLibFile)."\n" );
+   }
+   viprint(LOW, "Generating LIB file because none exists   :\n\t$relLibFile\n" );
+
+   ## write LIB file
+   my @lib;
+   push(@lib, $libHeader );
+   
+   ## print each cell
+   foreach my $cell ( @{$aref_phyvMacros} ){
+      my $area    = $cellPins{$cell}->{'area'};
+      my $libBody = qq{  cell($cell) \{
+    area : $area ;
+    dont_touch : true ;
+    dont_use : true ;
+    interface_timing : true ;
+}; ## end of macro body
+      push(@lib, $libBody );
+      ## print each power pin of each cell
+      foreach my $pin ( sort keys %{$cellPins{$cell}->{'power'}} ){
+         push(@lib, "    pin($pin) \{\n" );
+         push(@lib, "      direction : input ;\n" );
+         push(@lib, "    \} /* end of pin $pin */\n" );
+      }
+
+      ## print each ground pin of each cell
+      foreach my $pin (sort keys %{$cellPins{$cell}->{'ground'}}){
+         push(@lib, "    pin($pin) \{\n" );
+         push(@lib, "      direction : input ;\n" );
+         push(@lib, "    \} /* end of pin $pin */\n" );
+      }
+
+      ## print each signal pin of each cell
+      foreach my $pin (sort keys %{$cellPins{$cell}->{'signal'}}){
+         my $direction = $cellPins{$cell}->{'signal'}->{$pin}->{'direction'};
+         my $cap       = $cellPins{$cell}->{'signal'}->{$pin}->{'cap'};
+         my $min_cap   = $cellPins{$cell}->{'signal'}->{$pin}->{'min_cap'};
+         my $max_cap   = $cellPins{$cell}->{'signal'}->{$pin}->{'max_cap'};
+         my $max_tran  = $cellPins{$cell}->{'signal'}->{$pin}->{'max_tran'};
+         my $power     = $cellPins{$cell}->{'signal'}->{$pin}->{'power'};
+         my $ground    = $cellPins{$cell}->{'signal'}->{$pin}->{'ground'};
+         push(@lib, "    pin($pin) \{\n" );
+         push(@lib, "      direction : $direction ;\n" );
+         if( $direction ne 'output'){
+            push(@lib, "      capacitance : $cap ;\n" );
+         }
+         if( $direction ne 'input'){
+            push(@lib, "      min_capacitance : $min_cap ;\n" );
+            push(@lib, "      max_capacitance : $max_cap ;\n" );
+         }
+         push(@lib, "      input_voltage : default_${power}_${ground} ;\n" );
+         push(@lib, "      max_transition : $max_tran ;\n" );
+         push(@lib, "    \} /* end of pin $pin */\n" );
+      }
+
+      ## write end of cell
+      push(@lib, "  \} /* end of cell $cell */\n" );
+   } ## end foreach $cell ( @{$aref_phyvMacros} )
+
+   ## write end of library
+   push(@lib, "\} /* end of library $macro */\n" );
+   ## close $LIB files
+   write_file( \@lib, $relLibFile );
+
+   return();
+}
+
+#------------------------------------------------------------------------
+#  Get area value from LEF file
+#------------------------------------------------------------------------
+sub getAreaFromLef($$$){
+    print_function_header();
+    my $cell         = shift;
+    my $areaOverride = shift;
+    my $lefFile      = shift;
+
+    my @lefCell;
+    my $index;
+    my @coordinates;
+    my $area = 0;
+    #
+    ## open LEF file
+    my @contents = read_file($lefFile);
+    foreach my $line ( @contents) {
+        ## Store contents of LEF for $cell only, for easier debug
+        #if ($line =~ /MACRO\s+\Q$cell\E/../END\s+\Q$cell\E/){
+        if ($line =~ /MACRO\s+\Q$cell\E/ .. $line =~ /END\s+\Q$cell\E/){
+            push (@lefCell, $line);
+        }
+    }
+    
+    ## Get index of where $areaOverride (e.g. OVERLAP) is
+    $index = firstidx{/\Q$areaOverride\E/} @lefCell;
+    ## Coordinates of polygon should be the line following $areaOverride in LEF
+    ## Capture into array where coordinates = [x1, y1, x2, y2, ...]
+    @coordinates = ($lefCell[$index+1] =~ /\d+[\.]\d*|\d+/g);
+    my @xPoints;
+    my @yPoints;
+    for (my $i=0; $i < $#coordinates; $i += 2){
+        push @xPoints, $coordinates[$i];
+        push @yPoints, $coordinates[$i+1];
+    }
+    
+    ## Algorithm to calculate area of polygon from coordinates
+    my $numPoints = (scalar @coordinates)/2;
+    my $j = $numPoints-1;
+    for (my $i = 0; $i < $numPoints; $i++){
+        $area += ($xPoints[$j]+$xPoints[$i]) * ($yPoints[$j]-$yPoints[$i]);
+        $j = $i;
+    }
+    $area = abs($area)/2;
+
+    return($area); 
+}
+
+#------------------------------------------------------------------------
+#  Green colored print - for user reporting of the 'p4 submit' cmds 
+#------------------------------------------------------------------------
+sub  myviprint { my $threshold=shift; my $msg="-I- ".shift; if($main::VERBOSITY>=$threshold){ print "$msg"; } logger($msg);  }
+
+#------------------------------------------------------------------------
+#  looks for _both and sets the pincheck metal stack equal to it 
+#------------------------------------------------------------------------
+sub lookForBoth($$){
+    print_function_header();
+   my $theStack = shift;
+   my $aref_dirStacks = shift;
+   my @dirStacks = @{$aref_dirStacks};
+   my $stackCheck;
+   my $arrSize = @dirStacks;
+   dprint(HIGH, "$arrSize");
+   foreach my $stack (@dirStacks){
+      dprint_dumper(HIGH, "This is dirstacks: ", \@dirStacks);
+      dprint(HIGH, "This is the stack $stack\n");
+      dprint(HIGH, "This is theStack: $theStack\n");
+      if ($theStack =~ /$stack/ || $arrSize < 2){
+         return $theStack, $stack;
+      }
+   }
+   return $theStack, FALSE
+}

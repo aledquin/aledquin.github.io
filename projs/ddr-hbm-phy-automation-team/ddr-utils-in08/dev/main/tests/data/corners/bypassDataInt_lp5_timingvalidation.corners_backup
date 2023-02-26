@@ -1,0 +1,104 @@
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/mos.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/mos_ulvt.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/mos_hv.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/mos_lvt.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/res.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/diode.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/moscap_hv.lib
+tsmc5ff12 LIB /remote/proj/lpddr5x/d930-lpddr5x-tsmc5ff12/rel1.00_cktpcs/cad/models/hspice/cap.lib
+
+tsmc5ff12 TEMP													
+tsmc5ff12 PARAM vddqval 
+tsmc5ff12 PARAM vdd_core 
+tsmc5ff12 PARAM freq	
+tsmc5ff12 PARAM mode_d5_lp5													
+tsmc5ff12 PARAM VSH_MC 													
+tsmc5ff12 PARAM vdd_boost
+tsmc5ff12 PARAM bypassCfg	
+tsmc5ff12 PARAM input_transition_TxBypassDataInt
+tsmc5ff12 PARAM output_load_VIO_PAD
+tsmc5ff12 PARAM input_transition_TxClk				
+tsmc5ff12 PARAM output_load_TxOEEven
+tsmc5ff12 PARAM input_transition_RxClk
+tsmc5ff12 PARAM output_load_RxClk
+
+## VSH_MC=0 no Vsh_offset, 1-> VSH_offset plus 3 sigma -1-> VSH_offset_minus 3 sigma
+
+
+
+tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_s  nmoscaphv_s  cap_s  0 0.5  0.675  1067Meg 1  0  0 1 12.5p 200f
+tsmc5ff12 CORNER  mos_tt  mosulvt_tt  moshv_tt  moslvt_tt  res_t  dio_t  nmoscaphv_t  cap_t  25 0.5  0.75  1067Meg 1  0  0 1 12.5p 200f
+
+
+
+
+
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ff  mosulvt_ff  moshv_ff  moslvt_ff  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_fs  mosulvt_fs  moshv_fs  moslvt_fs  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_sf  mosulvt_sf  moshv_sf  moslvt_sf  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_f  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t 125 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t 125 0.57 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t -40 0.45 0.825 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.675 1067Meg 1  0  0 1
+#tsmc5ff12 CORNER  mos_ss  mosulvt_ss  moshv_ss  moslvt_ss  res_s  dio_t  nmoscaphv_t  cap_t -40 0.57 0.825 1067Meg 1  0  0 1
+
+

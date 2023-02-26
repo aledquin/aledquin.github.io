@@ -1,0 +1,13 @@
+flow_order|1000000
+Host|us01msem-32cx360g-1268-009
+Tool|tcl
+Version|8.6.6
+Cores|1
+Wall Time|69
+CPU Time|NA
+CPU Efficiency|NA
+Mem|NA
+User|alvaro
+Logfile|/slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/ddr54-d810-ddr54-tsmc5ff12-rel2.70_17M-2R_sup1/qa_step/get_p4_content/logs/get_p4_content.log
+Stop Time|1658175306
+License|LicenseDataUnavailable

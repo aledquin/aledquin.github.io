@@ -1,0 +1,2 @@
+tsmc5ff-12_amd_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF_AMD/common/rules/common/icv/drc/ver1.2b/orig/LOGIC_TopMz_DRC/ICVN5LO_15M_1X1Xb1Xe1Ya1Yb5Y2Yy2Z_019.12b.encrypt
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z /remote/cad-rep/fab/f101-tsmc/5nm/logic/FF_AMD/common/rules/common/icv/drc/ver1.2b/orig/LOGIC_TopMz_DRC/ICVN5LO_17M_1X1Xb1Xe1Ya1Yb5Y4Yy2Z_019.12b.encrypt

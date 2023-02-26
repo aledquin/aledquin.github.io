@@ -1,0 +1,1 @@
+bin/da_is_script_in_list_of_obsolete_versions.pl

@@ -1,0 +1,17 @@
+gf22fdsoi : rel4.5.0 : 18 : l128-std-gf22fdsoi-1.8v
+gf22fdsoi : rel4.4.1 : 18 : w258-nvm-otp-shfg2-gf22fdsoi-1.8v
+gf22fdsoi : rel4.4.1 : 18 : w009-nvm-otp-commonLibs-gf22fdsoi-1.8v
+gf22fdsoi : rel4.3.4 : 18 : z19607-pll-gf22fdsoi-18
+gf22fdsoi : rel4.3.4 : 18 : d584-lpddr4mv2-gf22fdsoi-1.8v
+gf22fdsoi : rel4.3.3 : 18 : n607-dpalt-gf22fdsoi-18
+gf22fdsoi : rel4.3.3 : 18 : n207-c10-gf22fdsoi-18
+gf22fdsoi : rel4.3.2 : 18 : z34891-adc-iq-12b80m-gf22fdsoi-18
+gf22fdsoi : rel4.3.1 : 18 : z8631-dac-12b20m-gf22fdsoi-18
+gf22fdsoi : rel4.3.1 : 18 : x677-usb2-gf22fdsoi-18-ns
+gf22fdsoi : rel4.0.0 : 18 : t128-esdgoldicv-gf22fdsoi-1.8v
+gf22fdsoi : rel3.0.0 : 18 : e318-hdmi-txphy-gf22fdsoi-18
+gf22fdsoiext : rel2.9.0 : 18 : z34991-adc-iq-12b160m-gf22fdsoi-18
+gf22fdsoiext : rel2.9.0 : 18 : z00000-adc-sar-gen4p5-gf22fdsoi-18
+gf22fdsoiext : rel1.5.1 : 18 : z3643-adc-sar-14b2m-gf22fdsoi-18
+gf22fdsoiext : rel1.5.1 : 18 : z3638-adc-sar-12b2m-gr1-gf22fdsoi-33
+gf22fdsoiext : rel1.5.1 : 18 : z00000-tchip-tdcs32B-gf22fdsoi-18

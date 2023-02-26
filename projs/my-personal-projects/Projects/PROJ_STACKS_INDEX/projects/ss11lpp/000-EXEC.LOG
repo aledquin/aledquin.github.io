@@ -1,0 +1,56 @@
+n111-c10-ss11lpp-18-ns.txt
+INFO: common common c10
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n511-dpalt-c10-ss11lpp-18-ns.txt
+INFO: common common "c135-ss11lpp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0125-mem-ss11lpp-sa11nlg42p11sacul256s.txt
+INFO: ss11lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0125-mem-ss11lpp-sa11nlg41p11sasrl256s.txt
+INFO: "em" "em" "m0125-mem-ss11lpp-sa11nlg42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0125-mem-ss11lpp-schematic.txt
+INFO: ss11lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x688-ssp-ss11lpp-18-ns.txt
+INFO: ss11lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x688-usb2-ss11lpp-18-ns.txt
+INFO: ss11lpp 18 rel1.4.0
+ERROR: IcvRunDRC not defined.
+ss11lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c135-ss11lpp-1.8v/rel1.4.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss11lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c135-ss11lpp-1.8v/rel1.4.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss11lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c135-ss11lpp-1.8v/rel1.4.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+x705-usb2-ss11lpp-18-ns.txt
+INFO: ss11lpp 18_SJ0 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x688-usb3-ss11lpp-18-ns.txt
+INFO: ss11lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d528-ddr43-ss11lpp18.txt
+INFO: ss11lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x053-e16-ss11lpp-18-ns.txt
+INFO: ss11lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y233-emmc-ss11lpp-1.8v.txt
+INFO: ss11lpp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d568-lpddr4xm-ss11lpp18.txt
+INFO: common common "c135-ss11lpp-1.8v_SQ0"
+INFO: SKIPPED. NOT RELEASE VESION.
+

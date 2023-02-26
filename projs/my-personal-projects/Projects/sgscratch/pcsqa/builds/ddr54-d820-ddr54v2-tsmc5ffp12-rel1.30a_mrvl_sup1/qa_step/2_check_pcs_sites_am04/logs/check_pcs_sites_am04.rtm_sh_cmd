@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo "Information: Process ID for rtm_sh_cmd : $$" > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_touch.tcl us01msemt228.internal.synopsys.com 44449 /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.touch_start >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+
+if [[ $? -eq 0 ]]
+  then
+    echo "Information: Sockets OK" >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+  else
+    echo "Error: Sockets not OK" >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+    touch /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.touch_error
+    exit 1
+fi
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/check_pcs_sites_am04.rtm_shell_cmd >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1 &
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_heartbeat.tcl $! us01msemt228.internal.synopsys.com 44449 /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.heartbeat >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_touch.tcl us01msemt228.internal.synopsys.com 44449 /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.touch_stop >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+
+echo "Information: End rtm_sh_cmd" >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_am04/logs/.check_pcs_sites_am04.rtm_shell_cmd.log 2>&1
+
+## End of File

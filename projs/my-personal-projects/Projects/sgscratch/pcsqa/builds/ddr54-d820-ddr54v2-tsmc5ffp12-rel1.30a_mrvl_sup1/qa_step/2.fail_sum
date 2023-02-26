@@ -1,0 +1,32 @@
+2_check_pcs_sites_am04/logs/check_pcs_sites_am04.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_am04/logs/check_pcs_sites_am04.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK am04) Failing connection with site am04
+2_check_pcs_sites_ca06/logs/check_pcs_sites_ca06.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_ca06/logs/check_pcs_sites_ca06.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK ca06) Failing connection with site ca06
+2_check_pcs_sites_ca09/logs/check_pcs_sites_ca09.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_ca09/logs/check_pcs_sites_ca09.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK ca09) Failing connection with site ca09
+2_check_pcs_sites_cn58/logs/check_pcs_sites_cn58.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_cn58/logs/check_pcs_sites_cn58.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK cn58) Failing connection with site cn58
+2_check_pcs_sites_de02/logs/check_pcs_sites_de02.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_de02/logs/check_pcs_sites_de02.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK de02) Failing connection with site de02
+2_check_pcs_sites_in01/logs/check_pcs_sites_in01.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_in01/logs/check_pcs_sites_in01.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK in01) Failing connection with site in01
+2_check_pcs_sites_in19/logs/check_pcs_sites_in19.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_in19/logs/check_pcs_sites_in19.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK in19) Failing connection with site in19
+2_check_pcs_sites_pl01/logs/check_pcs_sites_pl01.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_pl01/logs/check_pcs_sites_pl01.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK pl01) Failing connection with site pl01
+2_check_pcs_sites_pt02/logs/check_pcs_sites_pt02.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_pt02/logs/check_pcs_sites_pt02.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK pt02) Failing connection with site pt02
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) Combined chksum of PCS files (excluding .PCSQA_STATUS) (=39ba7008ebc1c8558c277b031446c8ce) is not the same as the one inside .PCSQA_STATUS file, PCSQA CHKSUM entry (=)
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/env.tcl
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/she.info
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path lib.defs
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path project.env
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path shared/env/env_common.tcl
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_RA.tcl
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_totem.cfg
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/map_ba_terminal_icv.sp
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path usage.txt
+2_check_pcs_sites_us01/logs/check_pcs_sites_us01.fail_sum:SNPS_ERROR  : Checking PCS ddr54/d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 at site us01, host us01msemt228, has been failed with 11 errors
+2_check_pcs_sites_us03/logs/check_pcs_sites_us03.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+2_check_pcs_sites_us03/logs/check_pcs_sites_us03.fail_sum:SNPS_ERROR  : (PCSQA-REMOTECHECK us03) Failing connection with site us03

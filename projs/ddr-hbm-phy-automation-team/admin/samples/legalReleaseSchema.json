@@ -1,0 +1,154 @@
+{
+    "title": "LegalRelease",
+    "type": "object",
+    "properties": {
+      "rel": {
+        "type": "string",
+        "description": "Release number. Example: 2.30a"
+      },
+      "vcrel": {
+        "type": "string",
+        "description": "TODO"
+      },
+      "ferel": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "layout_tag": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "p4_release_root": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "releaseBranch": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "process": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "metal_stack": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "metal_stack_ip": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "metal_stack_cover": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "layers": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "supply_pins": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "supply_pins_override": {
+        "description": "TODO",
+        "type": "object",
+        "patternProperties": {
+            "^.*$": {
+                "description": "TODO",
+                "type": "string"
+            }
+          }
+      },
+      "layers_override": {
+        "description": "TODO",
+        "type": "object",
+        "patternProperties": {
+            "^.*$": {
+                "description": "TODO",
+                "type": "string"
+            }
+          }
+      },
+      "reference_date_time": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "releaseCtlMacro": {
+        "description": "TODO",
+        "type": "array",
+        "items": {
+            "type": "string"
+        }
+      },
+      "timing_libs": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "release_gds_cdl": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "lef_diff_rel": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "cdl_prune_cells": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "releasePhyvMacro": {
+        "description": "TODO",
+        "type": "array",
+        "items": {
+            "type": "string"
+        }
+      },
+      "releaseShimMacro": {
+        "description": "TODO",
+        "type": "array",
+        "items": {
+            "type": "string"
+        }
+      },
+      "utility_name": {
+        "description": "TODO",
+        "type": "array",
+        "items": {
+            "type": "string"
+        }
+      },
+      "releaseRepeaterMacro": {
+        "description": "TODO",
+        "type": "array",
+        "items": {
+            "type": "string"
+        }
+      },
+      "releaseMacro": {
+        "description": "TODO",
+        "type": "object",
+        "patternProperties": {
+            "^.*$": {
+                "description": "TODO",
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+          }
+      },
+      "releaseMailDist": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "releasePmMailDist": {
+        "description": "TODO",
+        "type": "string"
+      },
+      "calibre_verifs": {
+        "description": "TODO",
+        "type": "string"
+      }
+    }
+  }

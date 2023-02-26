@@ -1,0 +1,71 @@
+proc utils__script_usage_statistics {toolname version} {
+    set prefix "ddr-da-"
+    set reporter "/remote/cad-rep/msip/tools/bin/msip_get_usage_info"
+    set cmd ""
+    set script_dirname [file dirname [file normalize [info script]]]
+    append cmd "$reporter --tool_name  \"${prefix}${toolname}\" "
+    append cmd "--stage main --category ude_ext_1 "
+    append cmd "--tool_path \"$script_dirname\" --tool_version \"$version\""
+
+    exec sh -c $cmd
+}
+
+set script_name [file tail [file rootname [file normalize [info script]]]]
+utils__script_usage_statistics $script_name "2022ww16"
+
+#!/depot/tcl8.6.1/bin/tclsh8.6
+#module load lc/2015.12-SP3
+set lc_advanced_tcl_mode true
+proc FindNonMonotonicConstraints { LIB LOGFILE } {
+          #    close [open $LOGFILE "w"]
+    read_lib $LIB
+    set out [open $LOGFILE "w"]
+#    puts $out "$LOGFILE\n"
+#    set cell {}
+    foreach_in_coll cell [get_lib_cells */*] {
+
+        set timing_constr [get_timing_arcs -of $cell -arc_type "constraint_arc" ]
+        if { [sizeof_collection $timing_constr] != 0} {
+            puts $out "Cell [get_object_name $cell]"
+            foreach_in_coll arc $timing_constr { 
+                set type [get_attribute $arc timing_type]
+                if {[regexp {.*_falling$} $type]||[regexp {.*_rising$} $type]} {
+                    puts $out "Arc : $type" 
+                    puts $out "pin :[get_object_name [get_objects -parent -of_object $arc]]"
+                    puts $out "rel_pin : [get_attribute $arc related_pin]"
+                    foreach constr [list "rise_constraint" "fall_constraint"] { 
+                           set lut [get_lookup_table -of_objects $arc $constr]
+#                           puts $out "\$lut : $lut"
+                          if { [is_null_object $lut]==0 } {
+                              puts $out "Constraint: $constr"
+#                              puts "[lookup_table template_name $lut]"
+                            set var(0) [lindex [lookup_table variables $lut] 0] 
+                              set var(1) [lindex [lookup_table variables $lut] 1]
+                              foreach i { 0 1 } { 
+#                                set i 0
+                                  set index [lindex [lookup_table index $lut] $i]
+#                                puts $out "$index"
+                                  for { set j 0 }  { $j < [llength $index] } { incr j } {
+#                                    puts $out "j is $j"
+                                    set slice [lookup_table slice $lut -index [list $var($i) [lindex $index $j] ] ]
+                                    set trend [analyze_trend $slice]
+#                                   set trend [analyze_trend $slice -absolute_tolerance 10]
+                                    if { ($trend != "\/") && ($trend != "\\" ) && ($trend != "\-")} {
+                                           puts $out "Non monotonic : $trend" 
+                                           puts $out "variable: $var($i), index=$i, value=[lindex $index $j]"
+                                           puts $out "values: $slice"
+                                    } else {
+                                        #puts $out "$trend"
+                                  }
+#                            }
+                         }
+                       }
+                }
+                puts $out "======================================================================================"
+                }
+               }
+        }
+            }
+            close $out
+        }
+

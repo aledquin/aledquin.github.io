@@ -1,0 +1,11 @@
+ude_env_dependent_checks
+CHECK PASSED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:43:50 2022
+Execution time: 00:00:00:00
+
+Information: Process ID for tool: 39956
+PV prefix 'ANT' mapped to hipre pv type 'ant' appears in: /remote/cad-rep/msip/ude_conf/MSIP_Deliveries_Std/pv_types/Latest/pv_types.txt
+PV prefix 'DRC' mapped to hipre pv type 'drc' appears in: /remote/cad-rep/msip/ude_conf/MSIP_Deliveries_Std/pv_types/Latest/pv_types.txt
+PV prefix 'LVS' mapped to hipre pv type 'lvs' appears in: /remote/cad-rep/msip/ude_conf/MSIP_Deliveries_Std/pv_types/Latest/pv_types.txt

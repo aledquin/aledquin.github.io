@@ -1,0 +1,1 @@
+tsmc7ff-18_graphcore_14M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy3R /remote/cad-rep/fab/f101-tsmc/7nm/logic/FF/common/rules/common/icv/drc/ver0.1_2a_customized_only/orig/LOGIC_TopMr_DRC/ICVN7FF_14M_1X1Xa1Ya5Y2Yy3R_053.01_2a.encrypt

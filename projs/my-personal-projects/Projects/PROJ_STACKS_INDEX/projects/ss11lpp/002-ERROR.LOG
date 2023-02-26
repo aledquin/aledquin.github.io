@@ -1,0 +1,4 @@
+c135-ss11lpp-1.8v : /remote/cad-rep/projects/usb2/x688-usb2-ss11lpp-18-ns/rel7.00_rel_/cad/project.env
+ss11lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c135-ss11lpp-1.8v/rel1.4.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ss11lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c135-ss11lpp-1.8v/rel1.4.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ss11lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c135-ss11lpp-1.8v/rel1.4.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl

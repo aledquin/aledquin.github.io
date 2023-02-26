@@ -1,0 +1,17 @@
+tsmc28hpcp-18_10M_5X2Y2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMr_DRC/ICVN28HP_10M_5X2Y2R_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_10M_5X2Y2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_10M_5X2Y2Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_10M_7X2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMr_DRC/ICVN28HP_10M_7X2R_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_6M_4X1Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_6M_4X1Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_7M_4X1Z1U /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz+Mu_DRC/ICVN28HP_7M_4X1Z1U_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_7M_4X2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_7M_4X2Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_7M_5X1Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_7M_5X1Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_8M_5X1Z1U /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz+Mu_DRC/ICVN28HP_8M_5X1Z1U_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_8M_5X2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMr_DRC/ICVN28HP_8M_5X2R_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_8M_5X2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_8M_5X2Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_8M_6X1Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_8M_6X1Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_9M_4X2Y2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMr_DRC/ICVN28HP_9M_4X2Y2R_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_9M_4X2Y2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_9M_4X2Y2Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_9M_5X3Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_9M_5X3Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_9M_6X1Z1U /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz+Mu_DRC/ICVN28HP_9M_6X1Z1U_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_9M_6X2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMr_DRC/ICVN28HP_9M_6X2R_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a
+tsmc28hpcp-18_9M_6X2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.8a_wi_patch_ver1.7a/orig/LOGIC_TopMz_DRC/ICVN28HP_9M_6X2Z_002.18a.encrypt+ICVN28ULP_AVT_070_PATCH.17a

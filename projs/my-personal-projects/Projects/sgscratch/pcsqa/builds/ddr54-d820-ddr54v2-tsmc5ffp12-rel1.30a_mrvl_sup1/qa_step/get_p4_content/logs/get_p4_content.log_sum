@@ -1,0 +1,10 @@
+get_p4_content
+CHECK PASSED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:38:58 2022
+Execution time: 00:00:00:25
+
+Information: Process ID for tool: 32496
+Project p4 contents has been stored at /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/work/ddr54/d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1
+Number of executed checks: 3

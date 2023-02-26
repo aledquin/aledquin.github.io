@@ -1,0 +1,28 @@
+(PCSQA-VC-1);No VC project releases of project d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 (VC PCS (prefix) version 1.30a_mrvl_sup1)
+(PCSQA-REMOTECHECK all);Failing connection with site ca06
+(PCSQA-REMOTECHECK all);Failing connection with site pt02
+(PCSQA-REMOTECHECK all);Failing connection with site in19
+(PCSQA-REMOTECHECK all);Failing connection with site ca09
+(PCSQA-REMOTECHECK all);Failing connection with site de02
+(PCSQA-REMOTECHECK all);Failing connection with site am04
+(PCSQA-REMOTECHECK all);Failing connection with site pl01
+(PCSQA-REMOTECHECK all);Failing connection with site cn58
+(PCSQA-REMOTECHECK all);Failing connection with site in01
+(PCSQA-REMOTECHECK all);Failing connection with site us03
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC calibre' or 'iDRC Interoperable') is defined for DRC_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC ANT calibre' or 'iDRC Interoperable') is defined for ANT_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC icv' or 'iDRC Interoperable') is defined for DRC_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC ANT icv' or 'iDRC Interoperable') is defined for ANT_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'LVS calibre' or 'iLVS Interoperable') is defined for LVS_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'LVS icv' or 'iLVS Interoperable') is defined for LVS_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1t all);Combined chksum of PCS files (excluding .PCSQA_STATUS) (=39ba7008ebc1c8558c277b031446c8ce) is not the same as the one inside .PCSQA_STATUS file, PCSQA CHKSUM entry (=)
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/env.tcl
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/she.info
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path lib.defs
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path project.env
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path shared/env/env_common.tcl
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_RA.tcl
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_totem.cfg
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/map_ba_terminal_icv.sp
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path usage.txt

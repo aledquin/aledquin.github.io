@@ -1,0 +1,11 @@
+# Python coverage configuration
+
+[paths]
+source =
+    ./
+    /opt/gitlab-runner/workdir/builds/*/*/ddr-hbm/ddr-hbm-phy-automation-team/
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:

@@ -1,0 +1,130 @@
+## lpddr5xm.d901-lpddr5xm-tsmc5ff-12.rel1.00_cktpcs_prerel_final.design.legalRelease.txt
+
+## list of settings for present release
+rel               : 2.30a
+vcrel             : 2.00a
+ferel             : fe_weekly
+layout_tag        : D901 Final.2 Release
+p4_release_root   : products/lpddr5x_mphy/project/d901-lpddr5xm-tsmc5ff12
+releaseBranch     : rel1.00_cktpcs_prerel_final
+process           : tsmc5ff-12
+metal_stack       : 17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z
+metal_stack_ip    : 8M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_2Y_vh
+metal_stack_cover : 17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z
+layers            : M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP
+supply_pins       : M8
+
+## this is a dictionary 
+supply_pins_override:
+    dwc_lpddr5xmphy_lcdl:               M4
+    dwc_lpddr5xmphy_techrevision:       M5
+    dwc_lpddr5xmphy_tcoil_ew:           M14 M15 M16 MTOP MTOP-1
+    dwc_lpddr5xmphy_zcalio_ew:          M8 M11 M12
+    dwc_lpddr5xmphy_txrxac_ew:          M8 M11 M12
+    dwc_lpddr5xmphy_txrxdq_ew:          M8 M11 M12
+    dwc_lpddr5xmphy_txrxdqs_ew:         M8 M11 M12
+    dwc_lpddr5xmphy_por_ew:             M6 M8
+    dwc_lpddr5xmphycover_acx2_top_ew:   M8 M11 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_ckx2_top_ew:   M8 M11 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_cmosx2_top_ew: M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_dx4_top_ew:    M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_dx5_top_ew:    M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_master_top_ew: M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_zcal_top_ew:   M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphy_utility_blocks:     M8 M14 M15 M16 M17 MTOP MTOP-1
+    
+## this is a dictionary of lists
+layers_override:
+    dwc_lpddr5xmphy_txrxac_ew: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11
+    dwc_lpddr5xmphy_txrxdq_ew: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11
+    dwc_lpddr5xmphy_txrxdqs_ew: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11
+    dwc_lpddr5xmphy_zcalio_ew: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11
+    dwc_lpddr5xmphycover_acx2_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_ckx2_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_cmosx2_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_dx4_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_dx5_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_master_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphycover_zcal_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_lpddr5xmphy_utility_blocks: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 M15 M16 M17 MTOP MTOP-1
+
+reference_date_time: 21 days ago
+# this is a list
+releaseCtlMacro:
+    - dwc_lpddr5xmphy_lcdl 
+    - dwc_lpddr5xmphy_lstx_acx2_ew 
+    - dwc_lpddr5xmphy_lstx_dx4_ew 
+    - dwc_lpddr5xmphy_lstx_dx5_ew 
+    - dwc_lpddr5xmphy_lstx_zcal_ew 
+    - dwc_lpddr5xmphy_pclk_master 
+    - dwc_lpddr5xmphy_pclk_rxdca 
+    - dwc_lpddr5xmphy_rxreplica_ew 
+    - dwc_lpddr5xmphy_txrxac_ew 
+    - dwc_lpddr5xmphy_txrxdq_ew 
+    - dwc_lpddr5xmphy_txrxdqs_ew 
+    - dwc_lpddr5xmphy_vregdac_ew
+
+timing_libs: lvf
+
+release_gds_cdl: HIPRE
+lef_diff_rel   : 2.30a
+cdl_prune_cells: cvcp* cvpp* vflag* vsync
+
+releasePhyvMacro:
+    - dwc_lpddr5xmphy_vddqclamp_x3_ew
+    - dwc_lpddr5xmphy_vddqclamp_x2_ew 
+    - dwc_lpddr5xmphy_vddqclamp_acx2_ew 
+    - dwc_lpddr5xmphy_decapvaa_tile
+
+releaseShimMacro: 
+    - dwc_lpddr5xmphycmosx2_top_ew_Shim
+
+utility_name: 
+    - dwc_lpddr5xmphy_utility_cells 
+    - dwc_lpddr5xmphy_utility_blocks
+
+releaseRepeaterMacro:
+    - dwc_lpddr5xmphy_pclk_rpt
+
+# this is a dictionary and each key's value is a list
+releaseMacro:
+    dwc_lpddr5xmphy_utility_cells:
+        - dwc_lpddr5xmphy_decapvdd2h_ew
+        - dwc_lpddr5xmphy_decapvdd2h_ld_ew
+        - dwc_lpddr5xmphy_decapvdd2h_ns
+        - dwc_lpddr5xmphy_decapvdd2h_ld_ns
+        - dwc_lpddr5xmphy_decapvddq_ew
+        - dwc_lpddr5xmphy_decapvddq_ns
+        - dwc_lpddr5xmphy_decapvddq_ld_ew
+        - dwc_lpddr5xmphy_decapvddq_ld_ns
+        - dwc_lpddr5xmphy_vdd2hclamp_ew
+        - dwc_lpddr5xmphy_vddqclamp_ew
+
+    dwc_lpddr5xmphy_utility_blocks:
+        - dwc_lpddr5xmphy_vaaclamp_ew
+        - dwc_lpddr5xmphy_decapvdd2h_cmosx2_ew
+        - dwc_lpddr5xmphy_decapvdd2h_ld_cmosx2_ew
+        - dwc_lpddr5xmphy_decapvdd2h_ld_master_ew
+        - dwc_lpddr5xmphy_decapvdd2h_master_ew
+        - dwc_lpddr5xmphy_decapvddq_acx2_ew
+        - dwc_lpddr5xmphy_decapvddq_dx4_ew
+        - dwc_lpddr5xmphy_decapvddq_dx5_ew
+        - dwc_lpddr5xmphy_decapvddq_ld_acx2_ew
+        - dwc_lpddr5xmphy_decapvddq_ld_dx4_ew
+        - dwc_lpddr5xmphy_decapvddq_ld_dx5_ew
+        - dwc_lpddr5xmphy_decapvddq_ld_zcal_ew
+        - dwc_lpddr5xmphy_decapvddq_zcal_ew
+        - dwc_lpddr5xmphy_decapvsh_acx2_ew
+        - dwc_lpddr5xmphy_decapvsh_dx4_ew
+        - dwc_lpddr5xmphy_decapvsh_dx5_ew
+        - dwc_lpddr5xmphy_decapvsh_ld_acx2_ew
+        - dwc_lpddr5xmphy_decapvsh_ld_dx4_ew
+        - dwc_lpddr5xmphy_decapvsh_ld_dx5_ew
+        - dwc_lpddr5xmphy_decapvsh_ld_zcal_ew
+        - dwc_lpddr5xmphy_decapvsh_zcal_ew
+
+releaseMailDist: "sg-ckt-d900-leads@synopsys.com, ddr_di@synopsys.com, sg-ddr-ckt-release@synopsys.com"
+
+releasePmMailDist: "guttman,jfisher,vthareja"
+calibre_verifs   : "true"
+

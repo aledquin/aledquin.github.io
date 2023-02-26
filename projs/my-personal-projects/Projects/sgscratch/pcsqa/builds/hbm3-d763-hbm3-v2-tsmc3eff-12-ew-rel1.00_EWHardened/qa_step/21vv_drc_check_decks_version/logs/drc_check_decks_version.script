@@ -1,0 +1,160 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/iprel/scripts_global/bob/multi_something.tcl#2 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This is the standard decision script for data management.
+## * The decision being made is promote vs restore.
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+## NAME: TEV(pvtype)
+## TYPE: oos
+## OOS_LIST: drc lvs pad
+## INFO:
+## * Used to generate pv tasks for pvtype only.
+set TEV(pvtype) ""
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+## -----------------------------------------------------------------------------
+## Code for creating some generated tasks.
+## -----------------------------------------------------------------------------
+
+## A gen_task must create an XML flow file using the
+## filename specified by the SEV(gen_file) variable.
+
+set fid_subflow [open $SEV(gen_file) w]
+puts $fid_subflow "<file type=\"gen_group\">\n  <attribute name=\"flow_name\" value=\"gen_flow\"/>\n  <package type=\"tasks\">"
+puts $fid_subflow ""
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/get_menu_files.tcl
+if { [llength $menufiles] > 0 } {
+
+if { [info exists default_select_tapeout_menu_lines] } {
+	set select_tapeout_menu_lines $default_select_tapeout_menu_lines
+} else {
+	set select_tapeout_menu_lines "| grep -e \"Tapeout\" -e \"Pad\""
+}
+
+catch { exec $SEV(exec_cmd) -c "grep -h extraCascade $menufiles $select_tapeout_menu_lines | grep -v ^# > env_menu_tapeout.tcl" } dummy
+set menufile env_menu_tapeout.tcl
+sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/create_menu_hash.tcl
+
+## only metal stack options of PCS
+set stackuppaths [glob -nocomplain $pcs/cad/*/env.tcl]
+if { [llength $stackuppaths] == 0 } {
+	sproc_msg -error "No metal stack options found at $pcs/cad"
+} else {
+
+set stackuppaths [glob -nocomplain $pcs/cad/*]
+
+## rule numbers in checklist per pv type
+set pvruleprefix(drc)  "21vv"
+set pvruleprefix(lvs)  "21vv"
+set pvruleprefix(pad)  "21vv"
+
+set pvtools [list "icv" "hercules" "calibre"]
+
+foreach name $names {
+  
+  if { $nametype($name) == $TEV(pvtype)} {
+    foreach stackuppath $stackuppaths {
+	if [file exists $stackuppath/env.tcl ] {
+
+	  catch { exec $SEV(exec_cmd) -c "basename $stackuppath" } stackup
+	  set debug 0
+  	  foreach tool $pvtools {
+	    set prefix $nameprefix($name)
+	    
+	    ## Temporary fix so only porting spec for verifications with prefix = {DRC ,LVS , ANT}
+	    ## is checked against VC. To be fixed once it's specified how all the verification specific options
+	    ## are introduced 
+	    ## if { $prefix != "DRC" && $prefix != "ANT" && $prefix != "LVS" } {
+	    ##    break;
+	    ## }
+
+	    set deckavailable 1
+	    set udedump [getWorkDir check_ude_env_$stackup]/$stackup.env
+	    if { [file exists $udedump] } {
+	    	catch { exec $SEV(exec_cmd) -c "grep ^${prefix}RunsetFile $udedump | grep \[\[:blank:\]\]$tool\[\[:blank:\]\] | wc -l" } deckavailable
+		if { $deckavailable == 0 } {
+			continue
+		}
+	    }
+	    	    
+	    set type $nametype($name)
+	    source $::env(MSIP_CCS_UTILS)/tcl/get_check_options.tcl
+	    if { [file exists $options] == 0 && $sharedpath != $pcs } {
+	    	set stackuppath $sharedpath/cad/$stackup
+	    	source $::env(MSIP_CCS_UTILS)/tcl/get_check_options.tcl
+	    }
+	    
+	    if { [file exists $options] } {
+
+		if { [info exists taskexists($nametype($name)$nameprefix($name)$tool$stackup)] == 0 } {
+
+		set taskexists($nametype($name)$nameprefix($name)$tool$stackup) 1
+		
+		set pvrule "$pvruleprefix($nametype($name))_$nametype($name)"
+
+		set namenospace [string map { " " _ / _ , _} ${name}]
+
+    		puts $fid_subflow "  <package type=\"tool_task\">"
+    		puts $fid_subflow "      <attribute name=\"name\" value=\"${namenospace}_${tool}_${stackup}\"/>"
+    		puts $fid_subflow "      <attribute name=\"tool\" value=\"tcl_job\"/>"
+    		puts $fid_subflow "      <attribute name=\"script_file\" value=\"$::env(MSIP_CCS_UTILS)/tcl/check_switches_run.tcl\"/>"
+    		puts $fid_subflow "      <attribute name=\"step\" value=\"$SEV(step)\"/>"
+    		puts $fid_subflow "      <attribute name=\"src\" value=\"$SEV(src)\"/>"
+    		puts $fid_subflow "      <attribute name=\"dst\" value=\"${pvrule}_${namenospace}_${tool}_${stackup}\"/>"
+
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(type)|$nametype($name)\"/>"
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(prefix)|$nameprefix($name)\"/>"
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(name)|$name\"/>"
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(ver_tool)|$tool\"/>"
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(metal_stack_option)|$stackup\"/>"
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(qaapp)|pcsqa\"/>"
+    		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(check_switches)|0\"/>"
+   		puts $fid_subflow "      <attribute name=\"pass_control\" value=\"no_fatal\"/>"
+		puts $fid_subflow "      <attribute name=\"job_enable\" value=\"1\"/>"
+
+    		puts $fid_subflow "  </package>"
+    		puts $fid_subflow ""
+		
+		}
+
+	    }
+	  }
+	  
+	}
+    }
+  }
+}
+
+}
+
+}
+
+puts $fid_subflow "  </package>\n</file>"
+close $fid_subflow
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

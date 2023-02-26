@@ -1,0 +1,3 @@
+P4CLIENT=msip_pcsqa_alvaro_us01_ddr54_d810_ddr54_tsmc5ff12_rel2_70_17M_2R_sup1_1_beta
+P4CONFIG=.p4config
+P4PORT=1999

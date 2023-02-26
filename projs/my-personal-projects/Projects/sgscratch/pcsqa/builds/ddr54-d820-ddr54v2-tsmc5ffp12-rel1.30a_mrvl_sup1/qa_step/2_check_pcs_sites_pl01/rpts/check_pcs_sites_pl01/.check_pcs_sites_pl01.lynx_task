@@ -1,0 +1,13 @@
+flow_order|5010001
+Host|us01msem-intel-38cx740g-2932-017
+Tool|tcl
+Version|8.6.6
+Cores|1
+Wall Time|3
+CPU Time|NA
+CPU Efficiency|NA
+Mem|NA
+User|alvaro
+Logfile|/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_pl01/logs/check_pcs_sites_pl01.log
+Stop Time|1658519074
+License|LicenseDataUnavailable

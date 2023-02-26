@@ -1,0 +1,152 @@
+n233-c10-tsmc4ffp-12-ns.txt
+INFO: program program p274-program-oscar_redondo-tsmc4ffp-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u149-cmnblks-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.0.0
+INFO: DONE
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms.txt
+INFO: tsmc4ffp 12 rel1.0.0
+INFO: DONE
+
+m0155-mem-tsmc4ffp-layout.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p10asdvd01ms.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sacrl256s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sacul256s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sadcl02ms.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sarel128s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sagrl256s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sassl01ms.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g42p11sacrl128s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g42p11sacul256s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g42p11sarel128s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g42p11sasul01ms.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g42p22sadsl512s.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11sadul02mi.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0155-mem-tsmc4ffp-ts04n0g41p11cpgrlhpcs.txt
+INFO: em em m0155-mem-tsmc4ffp-ts04n0g41p11sadul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g316-dphy-cphy-tsmc4ffp-12.txt
+INFO: program program p274-program-oscar_redondo-tsmc4ffp-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l274-std-tsmc4ffp-1.2v.txt
+INFO: tsmc4ff 12 rel1.1.0
+INFO: DONE
+
+x349-e32-tsmc4ffp-12-ns.txt
+INFO: tsmc4ffp 12 rel1.0.0
+INFO: DONE
+
+v021-eusb2-tsmc4ffp-12-ns.txt
+INFO: program program p274-program-oscar_redondo-tsmc4ffp-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x589-e112-tsmc4ffp-12-ns.txt
+INFO: tsmc4ffp 12 rel1.1.0
+INFO: DONE
+
+n418-c20-tsmc4ffp-12-ns.txt
+INFO: program program p274-program-oscar_redondo-tsmc4ffp-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d932-lpddr5x-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.2.0
+INFO: DONE
+
+d934-lpddr5x-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.2.0
+INFO: DONE
+
+f518-gpio-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.2.0
+INFO: DONE
+
+x572-pcie6-tsmc4ffp-12-ns.txt
+INFO: tsmc4ffp 12 rel1.1.0
+INFO: DONE
+
+s001-pms-5190ts-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5195vm-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5192dts-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5193cat-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5194dts2-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5191pd-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5189td-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+s001-pms-5198tchip-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.3.0
+INFO: DONE
+
+p274-program-oscar_redondo-tsmc4ffp-12.txt
+INFO: tsmc4ffp 12 rel1.1.0
+INFO: DONE
+
+v101-vsr-tsmc4ffp-12-ns.txt
+INFO: tsmc4ffp 12 rel1.1.0
+INFO: DONE
+

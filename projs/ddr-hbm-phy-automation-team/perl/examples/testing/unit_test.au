@@ -1,0 +1,15 @@
+-PERL- Loading Package: MyPackage::Math
+-PERL- Loading Package: MyPackage::Other
+-PERL- Loading Package: MyPackage::Print
+-PERL- Loading Package: MyPackage::Graphics
+1..3
+--header-----------------------------------
+-I- draw_add_two called
+-I- iprint called DEBUG
+ok 1 - Main->draw_add_two
+ok 2 - Main->addition
+ok 3 - Main->subtraction
+Draw picture...
+-I- draw_add_two called
+-I- iprint called DEBUG
+--footer-----------------------------------

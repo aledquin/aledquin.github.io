@@ -1,0 +1,13 @@
+tsmc12ffcll : rel6.0.0 : 18 : x322-e32-tsmc12ffcll-18-ns
+tsmc12ffcll : rel6.0.0 : 18 : x222-xsr-tsmc12ffcll-18-ns
+tsmc12ffcll : rel6.0.0 : 18 : n550-dptx-c10-tsmc12ffcll-18-ns
+tsmc12ffcll : rel6.0.0 : 18 : n509-dpalt-c10-tsmc12ffcll-18-ns
+tsmc12ffcll : rel6.0.0 : 18 : n412-c20-tsmc12ffcll-18-ns
+tsmc12ffcll : rel6.0.0 : 18 : n109-c10-tsmc12ffcll-18-ns
+tsmc12ffcll : rel6.0.0 : 18 : g242-mphy-tsmc12ffcll-18
+tsmc12ffcll : rel5.9.0 : 18 : l243-std-tsmc12ffcll-1.8v
+tsmc12ffcll : rel5.4.0 : 18 : w169-nvm-otp-sxg2-tsmc12ffcll-1.8v
+tsmc12ffcll : rel5.4.0 : 18 : d526-ddr43-tsmc12ffcll18
+tsmc12ffcll : rel5.2.0 : 18 : o109-diffbuf-tsmc12ffcll-18-ns
+tsmc12ffcll : rel5.13.1 : 18 : x670-ssp-tsmc12ffcll-18-ns
+tsmc12ffcll : rel5.12.0 : 18 : u143-cmnblks-tsmc12ffcll-18

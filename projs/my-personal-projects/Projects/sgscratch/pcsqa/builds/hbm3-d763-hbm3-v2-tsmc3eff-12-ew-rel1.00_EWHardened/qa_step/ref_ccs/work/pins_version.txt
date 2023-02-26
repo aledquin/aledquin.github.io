@@ -1,0 +1,2 @@
+Pin product: hbm3
+Pin product version: ver6.02

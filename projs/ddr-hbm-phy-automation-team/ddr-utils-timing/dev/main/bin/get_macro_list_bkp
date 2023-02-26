@@ -1,0 +1,391 @@
+#!/usr/local/bin/tclsh 
+source ../sowmya.config
+
+proc getport_list {netlist} {
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0} {
+if {[regexp -nocase {(subckt)(.*)} $line pins matchresult]} {
+lappend pin_list $pins
+
+}
+}
+close $RDnetlist
+return $pin_list
+}
+
+
+proc getinstance_array {netlist CellName bbox_list} {
+set i 0
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp "subckt $CellName " $line pins matchresult]}]} {}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "ends $CellName" $line matchresult pins]}]} {
+	if {[regexp {(^X)(.*) (.*)} $line aa X pins instance]} {
+		set instance_array($i)  $instance
+		set i [expr $i+1]
+	}
+}	
+
+close $RDnetlist
+ set instance_list [list]
+    foreach key [lsort -integer [array names instance_array]] {
+foreach skip $bbox_list {
+if {$skip == $instance_array($key)} {set instance_array($key) ""}
+}
+if {$instance_array($key) != ""} {
+	lappend instance_list $instance_array($key)
+	foreach mem [getinstance_array $netlist $instance_array($key) $bbox_list] {
+	lappend instance_list $mem
+	}
+	}
+    }
+    return $instance_list
+}
+
+
+proc postprocess_netlist {netlist netlist_write} {
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+if  [catch {set WRnetlist [open $netlist_write "w"]}] {puts "Error:  Cannot write $netlist_write\n"}
+set lines [split [read $RDnetlist] "\n"]
+close $RDnetlist
+set lines1 ""
+foreach line $lines {
+if {[regexp -nocase {(^\+)(.*)} $line a pins matchresult]} {
+puts -nonewline $WRnetlist " $matchresult"
+} else {
+puts -nonewline  $WRnetlist "\n$line"
+}
+}
+close $WRnetlist
+
+
+}
+
+
+
+
+proc check_instance {netlist CellName} {
+set i 0
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "subckt $CellName " $line pins matchresult]}]} {}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "ends $CellName" $line matchresult pins]}]} {
+	if {[regexp -nocase {(^xm)(.*) (.*)} $line aa X pins instance]} {return "true"}
+	}
+close $RDnetlist
+return "false"
+}
+proc get_direction {netlist CellName Supplypins} {
+set i 0
+global input output inout
+set input [list]
+set output [list]
+set inout [list]
+
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "subckt $CellName " $line pins matchresult]}]} {}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "PININFO" $line pins matchresult]}] && ![expr {[regexp -nocase "ends $CellName" $line pins matchresult]}]} {}
+set pins [split $line " "]
+foreach pin $pins {
+	if {[regexp -nocase "(.*):" $pin match]} {
+	
+		set flag ""
+			foreach supply $Supplypins {
+				if {$supply == [lindex [split $match ":"] 0]} {
+				set flag "matched"
+				}
+				}
+			if {$flag == ""} {
+				if {[regexp -nocase "(.*):I" $pin match]} {
+				lappend input [lindex [split $match ":"] 0]
+				} elseif {[regexp -nocase "(.*):O" $pin match]} {
+				lappend output [lindex [split $match ":"] 0]
+				} elseif {[regexp -nocase "(.*):B" $pin match]} {
+				lappend inout [lindex [split $match ":"] 0]
+				}
+				}
+		}
+	}
+
+}
+
+proc get_ports {netlist CellName} {
+global direction
+global pin_type
+set i 0
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "(subckt $CellName) (.*)" $line matched all pins_list]}]} {}
+close $RDnetlist
+return $pins_list
+}
+proc match_port_list {LIST1 LIST2 MAP} {
+##not used
+puts "$LIST1 =$LIST2---$MAP--------------------"
+set i 0
+foreach pin $LIST1 {
+set pinList1($i) $pin
+set i [expr $i+1]
+}
+set i 0
+foreach pin $LIST2 {
+set pinList2($i) $pin
+set i [expr $i+1]
+}
+set i 0
+foreach pin $MAP {
+set pinList3($i) $pin
+set i [expr $i+1]
+}
+
+for {set i 0} {$i < [llength $LIST2]} {incr i} {
+for {set j 0} {$j < [llength $MAP]} {incr j} {
+if {$pinList2($i) == $pinList3($j)} {
+set pinList3($j) $pinList1($i)
+
+}
+}
+}
+for {set i 0} {$i < [llength $MAP]} {incr i} {
+lappend portedList $pinList3($i)
+}
+return $portedList
+}
+
+proc probe_port_list {LIST1 LIST2 probe} {
+set i 0
+foreach pin $LIST1 {
+set pinList1($i) $pin
+set i [expr $i+1]
+}
+set i 0
+foreach pin $LIST2 {
+set pinList2($i) $pin
+set i [expr $i+1]
+}
+
+for {set i 0} {$i < [llength $LIST1]} {incr i} {
+if {$pinList1($i) == $probe} {
+return $pinList2($i)
+}
+}
+}
+
+proc port_pins_instance {netlist CellName main_instance_pins supply} {
+##not used
+global direction
+global pin_type
+global input output inout
+set i 0
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "(subckt $CellName) (.*)" $line matched all pins_list]}]} {}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "ends $CellName" $line matchresult pins]}]} {
+if {[regexp "(^X.*) (.*)" $line all match instance]} {
+	if {[regexp "( .*)" $match all]} {
+		set pin_order($i) $all
+		
+				set subckt_pin_order [get_ports $netlist $instance]
+				set port_list($instance) [match_port_list [split $main_instance_pins " "] [split $pin_order($i) " "] [split $subckt_pin_order " "]]
+				
+				port_pins_instance $netlist $instance $pin_order($i) $supply
+
+	set i [expr $i+1]
+	}
+}	
+
+}
+close $RDnetlist
+return "check VDD"
+}
+
+proc get_supply_pins_instance {netlist CellName instance supply} {
+
+##not used
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "(subckt $CellName) (.*)" $line matched all pins_list]}]} {}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "ends $CellName" $line matchresult pins]}]} {
+if {[regexp "(^X.*) (.*)" $line all match instance]} {
+	if {[regexp "( .*)" $match pins]} {
+		set supply [port_pins_instance $netlist $instance $pins $supply]
+		set subckt_pin_order [get_ports $netlist $instance]
+		set port_list($instance) [match_port_list [split $pins " "] [split $subckt_pin_order " "] [split $subckt_pin_order " "]]
+	
+		}
+		}
+}
+}
+proc probe_pin {netlist CellName testcell supply} {
+puts "nested proc"
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "(subckt $CellName) (.*)" $line matched all pins_list]}]} {}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "ends $CellName" $line matchresult pins]}]} {
+if {[regexp "(^X.*) (.*)" $line all match instance]} {
+	if {[regexp "( )(.*)" $match all space pins]} {
+		set subckt_pin_order [get_ports $netlist $instance]
+		set supplynew [probe_port_list [split $pins " "] [split $subckt_pin_order " "] $supply]
+		if {$instance == $testcell} {
+		
+		return $supplynew
+		}
+
+		set supplynew [probe_pin $netlist $instance $testcell $supplynew]
+		}
+		}
+		
+}
+}
+
+proc print_instance {netlist CellName} {
+global length
+set transistor [list]
+if  [catch {set RDnetlist [open $netlist "r"]}] {puts "Error:  Cannot open $netlist for read\n"}
+if  [catch {set WRnetlist [open "$CellName.sp" "w"]}] {puts "Error:  Cannot open $newnetlist for write\n"}
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "subckt $CellName " $line pins matchresult]}]} {}
+puts $WRnetlist "$line"
+while {[gets $RDnetlist line] >= 0 && ![expr {[regexp -nocase "ends $CellName" $line matchresult pins]}]} {
+	if {[regexp -nocase {(^xm.*?\s+.*?\s+.*?\s+.*?\s+.*?)\s+(.*?)\s+(.*?)} $line int pins tx_type]} {
+		if {[regexp -nocase {(l=.*?)\s+} $line match length ]} {
+			set length [lindex [split $length "="] 1]
+			if {[regexp -nocase {(.*)(n)} $length match length ]} {
+			set length [expr {$length * 1.0 / 1000}]
+			}
+			
+			}
+			regsub -all {\mnf\=.*?\M} $line "nf=1" line
+			regsub -all {\mnfin=.*?\M} $line "nfin=1" line
+			regsub -all {\mmulti=.*?\M} $line "multi=1" line
+			regsub -all {$} $line " dfm_flag=1" line
+
+			foreach ele $transistor {
+				if {$ele == $tx_type} {set tx_type  ""}
+			}
+				if {$tx_type != ""} {lappend transistor $tx_type}
+			}
+	puts $WRnetlist "$line"
+	}
+puts $WRnetlist "$line"
+close $RDnetlist
+close $WRnetlist
+return $transistor
+}
+
+#set netlist [lindex $argv 0]
+#set cellName [lindex $argv 1]
+#set equiv [lindex $argv 2]
+#set cdl [lindex $argv 3]
+
+postprocess_netlist $netlist tmp.sp
+postprocess_netlist $cdl tmp.cdl
+set netlist tmp.sp
+set cdl tmp.cdl
+
+global direction
+global pin_type
+global length
+lappend vddSupply VDD
+lappend vddSupply VDDQ
+lappend vddSupply VDDQLP
+lappend vddSupply VAA
+lappend gndSupply VSS
+
+set GND_supply [list]
+set VDD_supply [list]
+#set pin_type($cellName)($pin) ""
+#set direction($cellName)($pin) ""
+
+if  [catch {set skipcells [open $equiv "r"]}] {puts "Error:  Cannot open equiv $equiv for read\n"}
+set lines [split [read $skipcells] "\n"]
+foreach line $lines {
+foreach bbox [split $line "\s+"] {
+if {$bbox != ""} {
+lappend bbox_list $bbox
+}
+}
+}
+
+
+
+set instance_list [getinstance_array $netlist $cellName $bbox_list]
+    set sort_list [list]
+    foreach inst1 $instance_list {
+    set flag ""
+    foreach inst2 $sort_list {
+    if {$inst1 == $inst2} {
+    set flag "matched"
+    }
+    }
+    if {$flag == ""} {
+    lappend sort_list $inst1
+    }
+    }
+set instance_list $sort_list
+puts "instance list :"
+puts $instance_list
+
+set port_list [getport_list $netlist]
+
+foreach instance $instance_list {
+if {[check_instance $netlist $instance] == "true" } {
+	foreach pin $vddSupply {
+	set pinNames [probe_pin $netlist $cellName $instance $pin]
+	if {$pinNames != ""} {
+	lappend VDD_supply $pinNames
+	}
+	}
+	foreach pin $gndSupply {
+	set pinNames [probe_pin $netlist $cellName $instance $pin]
+	if {$pinNames != ""} {
+	lappend GND_supply $pinNames
+	}
+	}
+	set transistor [print_instance $netlist $instance]
+	foreach tx $transistor {
+	if {[regexp -nocase "n" $tx match]} {
+	lappend ntransistor $tx
+	lappend ntransistorlength $length
+	
+	} else {
+	lappend ptransistor $tx
+	lappend ptransistorlength $length
+	}
+	}
+	
+	
+	
+	lappend supply $GND_supply
+	lappend supply $VDD_supply
+	get_direction $cdl $instance $supply
+	puts $transistor
+source ../../timing/Run_$cornerval$k/pvt_setup.tcl
+puts "update pvt_setup.tcl path "
+
+
+if  [catch {set command [open set_var.tcl "w"]}] {puts "Error:  Cannot write set_var.tcl\n"}
+puts $command "set __cell \"$instance\"
+set __spice_cells_file  \"./$instance.sp\" 
+set __spice_model_file \"./nt_tech.sp\" 
+set __hspice_path \"/global/apps5/hspice_2016.06-SP2/hspice/bin/\"
+set __submit \"qsub -P bnormal -cwd -b y \"
+set __output \"$output\" 
+set __input \"$input\" 
+set __sensitization \"\" 
+set __vdd \"$VDD_supply\" 
+set __gnd \"$GND_supply\" 
+set __vdd_voltage \"$VDD_val\"
+set __pmos_type \"$ptransistor\"
+set __nmos_type \"$ntransistor\"
+set __nmos_length \"$ntransistorlength\"
+set __pmos_length \"$ptransistorlength\"
+set __nmos_nfin \"1\"
+set __pmos_nfin \"1\"
+set __max_fanout_cap \"3.0\"
+set __max_fanin_trans \"50\"
+"
+
+	}
+}
+
+close $command
+puts "
+test required:
+ptype & n type recognition
+supply pin from equiv file
+if more than one supply the script wont work, need to modify the netlist as point 7
+"

@@ -1,0 +1,3 @@
+setenv MSIP_CAD_PROJ_NAME c239-tsmc7ff-1.8v_st 
+setenv MSIP_CAD_REL_NAME  rel1.1.0
+

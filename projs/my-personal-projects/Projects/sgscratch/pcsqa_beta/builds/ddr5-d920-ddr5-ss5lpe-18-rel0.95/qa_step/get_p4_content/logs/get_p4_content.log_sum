@@ -1,0 +1,10 @@
+get_p4_content
+CHECK PASSED
+PCSQA/module version: 2022.06-beta
+User: alvaro
+Run time: Mon Jul 18 16:13:58 2022
+Execution time: 00:00:00:27
+
+Information: Process ID for tool: 71804
+Project p4 contents has been stored at /slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/ddr5-d920-ddr5-ss5lpe-18-rel0.95/qa_step/get_p4_content/work/ddr5/d920-ddr5-ss5lpe-18/rel0.95
+Number of executed checks: 3

@@ -1,0 +1,56 @@
+---
+calibre_verifs: true
+lef_diff_rel: 1.00a
+releasePhyvMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_decapvaa
+    - dwc_ddrphy_decapvaa_tile
+    - dwc_ddrphy_vddqclamp_ew
+    - maesdclamp18
+    - dwc_ddrphy_vddclamp
+    - dwc_ddrphy_lstx_vddqdecap_ew
+    - dwc_ddrphymaster_decapvddq_ew
+    - dwc_ddrphy_decapvddq_v2_ew
+releaseShimMacro: 
+    - dwc_ddrphy_pllshim
+    - dwc_ddrphy_memresetshim_ew
+    - stdcell_density_gradient
+    - stdcell_density_gradient_wide
+reference_gds: 
+    dwc_ddrphy_txrxdqs_ew: dwc_ddrphydbyte_lcdlroutes_ew.gds.gz
+    dwc_ddrphy_txrxac_ew: dwc_ddrphy_txrxac_ew_IntLoadFill.gds.gz dwc_ddrphy_txrxac_ew_InternalLoad.gds.gz dwc_ddrphy_txrxac_ew_LUPblock.gds.gz
+releasePmMailDist: jfisher,thomasr,sg-d54-t7-ckt@synopsys.com,sg-ddr-ckt-release@synopsys.com
+supply_pins_override: 
+    dwc_ddrphy_bdl: M4
+    dwc_ddrphy_techrevision: M4
+    dwc_ddrphy_lcdl: M6
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: M8
+releaseUtilityMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+releaseIgnoreMacro: 
+    - dwc_ddrphymaster_decapvddq_ew
+    - dwc_ddrphy_decapvddq_v2_ew
+    - dwc_ddrphy_rxac_ew
+    - dwc_ddrphy_rxdq_ew
+    - dwc_ddrphy_rxdqs_ew
+    - dwc_ddrphy_txfe_ew
+    - dwc_ddrphy_txfedqs_ew
+    - dwc_ddrphy_txbe_ew
+    - dwc_ddrphy_bdl
+    - dwc_ddrphy_dqsenreplica_ew
+releaseMailDist: 
+    jfisher,ujjal,sg-d54-t7-ckt@synopsys.com,d589-ddr45-lite-tsmc7ff18@synopsys.com,sg-ddr-ckt-release@synopsys.com
+release_gds_cdl: icv
+metal_stack: 15M_2X_hv_1Ya_h_5Y_vhvhv_2Yy2Yx2R
+metal_stack_ip: 8M_2X_hv_1Ya_h_4Y_vhvh
+layers: M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP
+layout_tag: Final.3 LVS/DRC clean release
+reference_date_time: 14 days ago
+rel: 1.10a
+vcrel: 0.90a_qcom
+p4_release_root: products/ddr45-lite/project/d589-ddr45-lite-tsmc7ff18
+process: tsmc7ff-18_qcom
+

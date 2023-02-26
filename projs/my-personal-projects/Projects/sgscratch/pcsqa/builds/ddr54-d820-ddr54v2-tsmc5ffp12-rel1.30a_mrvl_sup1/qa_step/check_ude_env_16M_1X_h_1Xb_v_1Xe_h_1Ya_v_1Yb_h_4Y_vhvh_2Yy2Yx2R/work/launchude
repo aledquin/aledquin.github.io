@@ -1,0 +1,12 @@
+#!/bin/csh
+ source /remote/cad-rep/etc/.cshrc 
+ module purge 
+ module load ude-wrapper
+ setenv MSIP_PROJ_ROOT /remote/cad-rep/projects 
+ setenv MSIP_UDE_PROJ_ROOT /remote/cad-rep/projects 
+ setenv UDE_HOME /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_ude_env_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/work
+ unsetenv PASSWORD
+ unsetenv CCSQA_PASSWORD
+ cd /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_ude_env_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/work
+ ude3 --projectType ddr54 --projectName d820-ddr54v2-tsmc5ffp12 --releaseName rel1.30a_mrvl_sup1 --metalStack 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R --nogui --no-dos --sourceShellFile /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_ude_env_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/work/sourceude --command "source /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_ude_env_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/work/exit_force.tcl" >& udelog &
+ echo $! > pid.file

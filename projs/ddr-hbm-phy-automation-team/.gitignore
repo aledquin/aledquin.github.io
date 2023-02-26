@@ -1,0 +1,37 @@
+# Logs and artifacts
+*.log
+*.LOG
+*.old
+*.swn
+*.swo
+*.swp
+*.tdy
+
+# Coverage
+*cover_db/
+.coverage
+.coverage/*
+.coverage.*
+htmlcov*/
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# Python byte-compiled / optimized / DLL files
+__pycache__/
+.pytest_cache
+*.py[cod]
+*$py.class
+
+# Misc
+.nfs*
+*.orig
+Nt_testcase/
+compileCheck.csh
+ddr-hbm-phy-automation-team.iml
+tags
+tcl/tests
+today/
+users/alvaro/bin/check_differences_between_versions.csh

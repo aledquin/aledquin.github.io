@@ -1,0 +1,122 @@
+proc write_message { message } {
+  if { [catch { open "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/.check_pcs_sites.rtm_shell_cmd.tcl_out" "w" } FH] } {
+    puts stderr "Failed to open /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/.check_pcs_sites.rtm_shell_cmd.tcl_out"
+    puts stderr "Error: $FH"
+    exit 1
+  }
+  puts $FH $message
+  close $FH
+  catch { exec rmdir [file dirname [file normalize "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/.check_pcs_sites.rtm_shell_cmd.tcl_out"]] }
+}
+
+puts stderr "Running TCL Version $tcl_patchLevel."
+
+set SEV(techlib_name) ""
+set SEV(tscript_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_tech"
+set SEV(techlib_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa"
+set SEV(workarea_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa"
+set SEV(gscript_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global"
+set SEV(pscript_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_project"
+set SEV(build_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1"
+set SEV(bscript_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/scripts_build"
+
+set r [catch { source /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/conf/sev_values.tcl } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tsource /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/conf/sev_values.tcl"
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { source /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/scripts_build/conf/sev_values.tcl } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tsource /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/scripts_build/conf/sev_values.tcl"
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { source /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init.tcl } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tsource /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init.tcl"
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { source /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/check_pcs_sites.sev.varfile } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tsource /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/check_pcs_sites.sev.varfile"
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { set SEV(workarea_dir) "/slowfs/dcopt103/alvaro/sgscratch/pcsqa" } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tset SEV(workarea_dir) \"/slowfs/dcopt103/alvaro/sgscratch/pcsqa\""
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { set env(LYNX_SOCKET_HOST) "us01msemt228.internal.synopsys.com" } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tset env(LYNX_SOCKET_HOST) \"us01msemt228.internal.synopsys.com\""
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { set env(LYNX_SOCKET_PORT) 44449 } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\tset env(LYNX_SOCKET_PORT) 44449"
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+}
+
+set r [catch { rtm_shell_cmd -tool tcl -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/check_pcs_sites.log } result]
+
+if { $r } {
+  puts stderr ""
+  puts stderr "Fatal: Failed to run the command:"
+  puts stderr "\trtm_shell_cmd -tool tcl -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/check_pcs_sites/logs/check_pcs_sites.log"
+  puts stderr "due to the following error:\n"
+  puts stderr $result
+  write_message "##RTM_FATAL_MSG##"
+  exit $r
+} else {
+  write_message $result
+  puts stderr "rtm_shell_cmd command ran succesfully."
+}
+
+exit $r

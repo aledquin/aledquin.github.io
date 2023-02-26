@@ -1,0 +1,11 @@
+## list of tape-out ICV/Calibre verification runs to release
+icv/drc
+icv/lvs
+icv/erc
+icv/ant
+icv/drcdfm
+calibre/lvs
+calibre/drc
+calibre/erc
+calibre/ant
+calibre/drcdfm

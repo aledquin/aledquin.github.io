@@ -1,0 +1,61 @@
+evaluate_status
+CHECK FAILED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:45:59 2022
+Execution time: 00:00:00:12
+
+Information: Process ID for tool: 25722
+Contents of previous .PCSQA_STATUS_old (available at /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/evaluate_status/work/.PCSQA_STATUS_old):
+Dummy .PCSQA File
+Contents of current .PCSQA_STATUS (available at /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/evaluate_status/work/.PCSQA_STATUS):
+PCSQA STATUS:FAIL
+PCSQA Project Name:d820-ddr54v2-tsmc5ffp12
+PCSQA Project Release:rel1.30a_mrvl_sup1
+PCSQA Score:106
+PCSQA Execution details:PCS QA 2022.04;alvaro;us01(p4) us01;Fri Jul 22 15:46:11 EDT 2022
+PCSQA CHKSUM:39ba7008ebc1c8558c277b031446c8ce
+PCSQA Hipre Version:v7.6.0
+PCSQA Violations list:
+(PCSQA-VC-1);No VC project releases of project d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 (VC PCS (prefix) version 1.30a_mrvl_sup1)
+(PCSQA-REMOTECHECK all);Failing connection with site ca06
+(PCSQA-REMOTECHECK all);Failing connection with site pt02
+(PCSQA-REMOTECHECK all);Failing connection with site in19
+(PCSQA-REMOTECHECK all);Failing connection with site ca09
+(PCSQA-REMOTECHECK all);Failing connection with site de02
+(PCSQA-REMOTECHECK all);Failing connection with site am04
+(PCSQA-REMOTECHECK all);Failing connection with site pl01
+(PCSQA-REMOTECHECK all);Failing connection with site cn58
+(PCSQA-REMOTECHECK all);Failing connection with site in01
+(PCSQA-REMOTECHECK all);Failing connection with site us03
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC calibre' or 'iDRC Interoperable') is defined for DRC_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC ANT calibre' or 'iDRC Interoperable') is defined for ANT_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC icv' or 'iDRC Interoperable') is defined for DRC_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC ANT icv' or 'iDRC Interoperable') is defined for ANT_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'LVS calibre' or 'iLVS Interoperable') is defined for LVS_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1vv);No deck Revision (for VC Component Name 'LVS icv' or 'iLVS Interoperable') is defined for LVS_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+(PCSQA-2.1t all);Combined chksum of PCS files (excluding .PCSQA_STATUS) (=39ba7008ebc1c8558c277b031446c8ce) is not the same as the one inside .PCSQA_STATUS file, PCSQA CHKSUM entry (=)
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/env.tcl
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/she.info
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path lib.defs
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path project.env
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path shared/env/env_common.tcl
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_RA.tcl
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_totem.cfg
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path emir/map_ba_terminal_icv.sp
+(PCSQA-2.1t all);No chksum entry in cad/.PCSQA_STATUS for file path usage.txt
+
+PCSQA Automation fields: DO NOT MAKE MANUAL CHANGES BELOW THIS LINE
+16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/env.tcl;6bbfea274b42b7c4c1346daa61ca8f52
+16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs;df4bf299a0ee69a5ea15ef600b694024
+emir/she.info;c76ee730408f4f07d48db404393b1aec
+lib.defs;8d479e6d1e17c84391d822aeedf802f9
+project.env;01b7e737e87a3d38e39edd52aebb478e
+shared/env/env_common.tcl;16565fa2c31e42f42afda994e3a5403f
+emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_RA.tcl;28cd79bb34bc542910ad56ddbe91bd0d
+emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_totem.cfg;25a57014245a6102159a710ce6c0dcd4
+emir/map_ba_terminal_icv.sp;39b8dbaa2bfe08c6bd87557481a9bb59
+usage.txt;a8bba9bda210c747a0a8627e66c35f27
+SNPS_ERROR  : Checking PCS ddr54/d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 has been failed with 18 errors
+SNPS_WARNING: Checking PCS ddr54/d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 gives 16 warnings

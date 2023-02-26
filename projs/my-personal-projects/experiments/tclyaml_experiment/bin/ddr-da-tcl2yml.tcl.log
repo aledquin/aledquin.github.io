@@ -1,0 +1,27 @@
+-E- couldn't execute "/slowfs/dcopt103/alvaro/GitLab/my-personal-projects/experiments/tclyaml_experiment/bin/da_get_release_version.pl": no such file or directory 
+
+
+####################################################### 
+###  Date , Time     : Tue Feb 14 19:15:55 EST 2023 
+###  Script Name     : ddr-da-tcl2yml.tcl 
+###  Command         : /slowfs/dcopt103/alvaro/GitLab/my-personal-projects/experiments/tclyaml_experiment/bin/ddr-da-tcl2yml.tcl -i ../inputs/sample.tcl 
+###  Author          : Alvaro Quintana Carvacho 
+###  Release Version :  
+###  User            : alvaro 
+#######################################################
+ 
+
+
+####################################################### 
+###  Goodbye World 
+###  Date, Time (START): Tue Feb 14 19:15:55 EST 2023 
+###  Date, Time (END)  : Tue Feb 14 19:15:56 EST 2023 
+###  Runtime           : 00:00:01 
+###  Script Name       : ddr-da-tcl2yml.tcl 
+###  Script Path       : /slowfs/dcopt103/alvaro/GitLab/my-personal-projects/experiments/tclyaml_experiment/bin 
+###  Author            : Alvaro Quintana Carvacho 
+###  Release Version   :  
+#######################################################
+ 
+-I- Writing log file: '/slowfs/dcopt103/alvaro/GitLab/my-personal-projects/experiments/tclyaml_experiment/bin/ddr-da-tcl2yml.tcl.log' 
+

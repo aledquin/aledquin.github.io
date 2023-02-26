@@ -1,0 +1,5 @@
+Information: Process ID for rtm_job_cmd : 12354
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/gen_env/logs/gen_env.rtm_job_cmd: line 27: /global/freeware/Linux/2.X/activetcl-8.5.12/deps/tcllib-1.10/lib/tcllib1.10:/remote/cad-rep/msip/tools/SharedLib/2022.04/tcl/sha1: No such file or directory
+Start /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_wait_for_task_start.tcl @ Fri Jul 22 15:40:43 EDT 2022; PID = 12359
+Information: Found touch_start_file
+End /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_wait_for_task_start.tcl @ Fri Jul 22 15:40:44 EDT 2022

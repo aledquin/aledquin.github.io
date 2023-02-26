@@ -1,0 +1,23 @@
+/* XPM */
+static char *arrow_r_u_icon[]={
+"40 15 4 1",
+"a c #0000FF",
+"b c #FFFFFF",
+"c c #ff0000",
+"d c #000000",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbcbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbcccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bcccccbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabb",
+"bbcccbbbbbdbbbdbbbdbbbbdbbbdbbbbbbaaabbb",
+"bbbcbbbbbbdbbbdbbbdbbbbdbbbdbbbbbaaabbbb",
+"bbbbbbbbbbdbbbdbbbdbbbbdbbbdbbbbbaabbbbb",
+"bbbdbbbbbbdbbbdbbbddddddbbbdbbbbaabbbbbb",
+"bbbdbbbbbbdbbbdddddbbbbdbbbdbbbbabbbbbbb",
+"bbbddddddddbbbdbbbbbbbbdbbbdbbbbbbbbbbbb",
+"bbbbbbbbbbdbbbdbbbbbbbbdddddbbbbbbbbbbbb",
+"bbbbbbbbbbdddddbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"};
+

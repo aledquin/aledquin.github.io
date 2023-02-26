@@ -1,0 +1,70 @@
+#!/depot/perl-5.14.2/bin/perl
+#
+# This script is meant to be run in whatever your current working directory is.
+# It will look in your current directory and all directories below it to try
+# and find perl scripts.
+#
+# Usage:
+#     list_perl
+#     list_perl with utils__script_usage
+#     list_perl without utils__script_usage
+#     
+
+use File::Find;
+
+my @perl_files;
+my $SKIP_SYMLINKS = 1;
+my $DEBUG = 1;
+
+sub process_file {
+    my $fname = $_;
+    my $isperl = 0;
+
+    return if (-d $fname); # Skip directories
+    return if (! $fname ) ;
+    return if ( $fname =~ m/^-/ ); # linux allows filenames to begin with '-'
+
+    my $pathname = $File::Find::name;
+
+    if ( $pathname =~ m/\.git/ ) {
+        return;
+    }
+    if ($SKIP_SYMLINKS and ( -l $pathanme) ){
+        return;
+    }
+    my $opt = "-L";
+    
+    $isperl = 1  if ( $fname =~ m/pl$|pm$/ ) ;
+    if ( ! $isperl ) {
+        if ( $fname  ne "") {
+            my $r = `file $opt "$_"`;
+            $isperl = 1 if ( $r =~ m/Perl/ );
+        }
+    }
+
+    push(@perl_files, $pathname) if ( $isperl );
+}
+    
+my $action = shift @ARGV;
+my $search = shift @ARGV;
+
+my @DIRLIST = ( '.' );
+
+find(\&process_file, @DIRLIST);
+
+foreach my $perl_file ( @perl_files) {
+    if ( $action eq "without" ){
+        my $r = `grep $search $perl_file`;
+        if ( $r eq '' ) {
+            print("$perl_file\n");
+        }
+    } elsif ( $action eq "with" ){
+        my $r = `grep $search $perl_file`;
+        if ( $r ne '' ) {
+            print("$perl_file\n");
+        }
+    }else{
+        print("$perl_file\n");
+    }
+}
+

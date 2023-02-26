@@ -1,0 +1,1 @@
+../../../../admin/bin/da_get_release_version.pl

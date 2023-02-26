@@ -1,0 +1,26 @@
+
+Runset Warning List:
+
+Warning: NA runset for calibre SRAMDRC doesn't exist 
+Warning: NA runset for icv SRAMDRC doesn't exist 
+Warning: NA runset for calibre SRAMDRC doesn't exist 
+Warning: NA runset for icv SRAMDRC doesn't exist 
+
+
+
+### SUMMARY START ###
+
+# Date: Jul. 22, 2022 03:43:02 PM
+
+# Map of consolidated return statuses
+
+# 0 - clean
+
+# 1 - error
+
+# 2 - warning
+
+# Return status = 2
+
+### SUMMARY END  ###
+

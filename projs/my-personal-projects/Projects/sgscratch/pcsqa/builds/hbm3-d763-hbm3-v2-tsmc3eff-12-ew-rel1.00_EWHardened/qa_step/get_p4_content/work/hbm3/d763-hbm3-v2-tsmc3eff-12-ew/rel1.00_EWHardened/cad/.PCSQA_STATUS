@@ -1,0 +1,23 @@
+PCSQA STATUS:PASS
+PCSQA Project Name:d763-hbm3-v2-tsmc3eff-12-ew
+PCSQA Project Release:rel1.00_EWHardened
+PCSQA Score:34
+PCSQA Execution details:PCS QA 2022.04;ahogenhu;de02(p4) us03 ca06 pt02 in19 ca09 de02 am04 us01 pl01 cn58;Sat Jul  2 09:33:03 CEST 2022
+PCSQA CHKSUM:1d3bf29d924cf67b1480869a93636f81
+PCSQA Hipre Version:v7.6.0
+PCSQA Violations list:
+(PCSQA-REMOTECHECK in01);Failing scp to site in01, host in01ctxsub2.internal.synopsys.com
+
+PCSQA Automation fields: DO NOT MAKE MANUAL CHANGES BELOW THIS LINE
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/env.tcl;6bbfea274b42b7c4c1346daa61ca8f52
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/lib.defs;df4bf299a0ee69a5ea15ef600b694024
+emir/she.info;c76ee730408f4f07d48db404393b1aec
+lib.defs;8d479e6d1e17c84391d822aeedf802f9
+project.env;0b7add17405223f8ce540dd84760f327
+shared/env/env_common.tcl;16565fa2c31e42f42afda994e3a5403f
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_RA.tcl;e147bd92a49d7a9eb94ab7a4966a3363
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_RAESD.tcl;d1b0d14de20124c51723006f4fd0298c
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_totem.cfg;0c237e85bff20611bf35b943a5640248
+emir/map_ba_terminal_calibre.sp;3a5a20d32571f6625cf41a473e09a87d
+emir/map_ba_terminal_icv.sp;27aee4eacfc0e019b346ed0948f70f41
+usage.txt;a5f8bf52589c8ce751d9a27f74979974

@@ -1,0 +1,11 @@
+drc_check_decks_version
+CHECK PASSED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:43:51 2022
+Execution time: 00:00:00:00
+
+Information: Process ID for tool: 40535
+/remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/cad/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/icv/ANT/ANT_options
+/remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/cad/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/calibre/ANT/ANT_options
+Not_Defined

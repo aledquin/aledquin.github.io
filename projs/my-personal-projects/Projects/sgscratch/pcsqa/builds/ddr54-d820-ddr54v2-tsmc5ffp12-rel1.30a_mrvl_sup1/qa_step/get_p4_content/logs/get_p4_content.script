@@ -1,0 +1,193 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/iprel/scripts_global/bob/multi_something.tcl#2 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This is the standard decision script for data management.
+## * The decision being made is promote vs restore.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## HISTORY
+##
+## 06/29/2015, ahogenhu
+##             Fall back on /usr/local/bin/p4,
+##             if module load p4 or perforce does not exist anymore (CCT 2000739921)
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+sproc_source -file $SEV(gscript_dir)/qa_scripts/check_rule_applicable.tcl
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set checks 0
+
+if { [file isdirectory $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)] } {
+	catch { exec $SEV(exec_cmd) -c "find $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) -type f | wc -l" } pcsfiles
+	if { $pcsfiles > 0 } {
+		puts "Project p4 contents exists at $run_dir/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)"
+		sproc_script_stop -exit
+	}
+}
+
+set perforceapps [list "p4" "perforce"]
+set perforce ""
+foreach perforceapp $perforceapps {
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module avail $perforceapp > p4avail 2>&1" } dummy
+	if { [file exists p4avail] == 0 || [file size p4avail] == 0 } {
+		continue
+	} else {
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash && module load $perforceapp > p4load 2>&1" } dummy
+		catch { exec $SEV(exec_cmd) -c "grep -e \"There is an installation issue for\" -e \"Unable to locate a modulefile for\" p4load | wc -l" } issues
+		if { $issues > 0 } {
+			continue
+		} else {
+			set perforce $perforceapp
+			break
+		}
+	}
+}
+catch { exec $SEV(exec_cmd) -c "rm -f p4avail p4load" } dummy
+if { $perforce != "" } {
+	set p4 "p4"
+	set moduleloadperforce "&& module load $perforce"
+} else {
+	set p4 "/usr/local/bin/p4"
+	set moduleloadperforce ""
+}
+
+
+catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 clients" } p4output
+if { $p4output == "Perforce password (P4PASSWD) invalid or unset." } {
+	sproc_msg -error "Perforce not functional: Perforce password (P4PASSWD) invalid or unset." 
+	sproc_msg -error "Quit Lynx and execute:"
+	if { $moduleloadperforce != "" } {
+		sproc_msg -error "module load $perforce"
+	}
+	sproc_msg -error "p4 login -a"
+	sproc_msg -error "and restart pcsqa."
+	sproc_script_stop -exit
+}
+
+catch { exec $SEV(exec_cmd) -c "/usr/local/bin/siteid" } site
+
+set pcsclientprefix msip_projects_
+
+## sync PCS p4 content
+
+## search client with PCS mapping
+catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 clients | grep $pcsclientprefix | awk '{print \$2}'" } msip_pcs_clients
+set msip_pcs_clients [split $msip_pcs_clients \n]
+set pcsfoundp4 0
+set client_template ""
+foreach msip_pcs_client $msip_pcs_clients {
+	if { [string compare -length [string length "$pcsclientprefix"] "$pcsclientprefix" $msip_pcs_client] == 0 } {
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -o $msip_pcs_client > ${msip_pcs_client}_template" } dummy
+		catch { exec $SEV(exec_cmd) -c "grep \"/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/\" ${msip_pcs_client}_template | wc -l" } pcslines
+		if { $pcslines > 0 } {
+			catch { exec $SEV(exec_cmd) -c "grep \"/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/\" ${msip_pcs_client}_template | head -1" } pcsline
+			set p4mapping "	//wwcad/msip/projects/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/pcs/... //${msip_pcs_client}/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/..."
+			incr checks
+			if { $pcsline != $p4mapping } {
+				ruleErrorApplicable "(PCSQA-2.1g) p4 mapping is not equal to: $p4mapping"
+				if { [ruleApplicable "2.1g"] } {		
+					sproc_msg -error "             p4 mapping is equal to: $pcsline"
+				}	
+				catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+			}
+			set pcsfoundp4 1
+			set client_template ${msip_pcs_client}_template
+			break
+		} else {
+			catch { exec $SEV(exec_cmd) -c "rm -f ${msip_pcs_client}_template" } dummy
+		}		
+	}
+}
+
+incr checks
+if { $pcsfoundp4 == 0 } {
+	ruleWarningApplicable "(PCSQA-2.1g) PCS not found at a p4 ${pcsclientprefix}<site> client"		
+
+	## make client template based on default PCS p4 path instead of mapping
+	## Use case: initial PCS QA of a PCS under development, stored in p4, without mapping at a p4 $pcsclientprefix* client  
+	set msip_pcs_client $pcsclientprefix$site
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -o $msip_pcs_client > ${msip_pcs_client}_template" } dummy
+	catch { exec $SEV(exec_cmd) -c "echo \"	//wwcad/msip/projects/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/pcs/... //${msip_pcs_client}/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/...\" >> ${msip_pcs_client}_template" } dummy
+	set pcsfoundp4 1
+	set client_template ${msip_pcs_client}_template			
+}
+
+if { $pcsfoundp4 == 1 } {
+	## make new unique temporary pcs qa client
+	set pcsqabeta ""
+	if { [info exists ::env(MSIP_LYNX_PCSQA)] &&
+             [string first "beta" [file tail $::env(MSIP_LYNX_PCSQA)]] != -1 } {
+		set pcsqabeta "_beta"	     
+	}
+	set blockname  [string map { - _ . _ } $SVAR(product_name)_$SVAR(pcs_name)_$SVAR(pcs_version)]
+	set clientnr 1
+	set clientname msip_pcsqa_$::env(USER)_${site}_${blockname}_${clientnr}$pcsqabeta
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 clients | grep $clientname | wc -l" } clientexists
+	while { $clientexists > 0 } {
+		incr clientnr
+		set clientname msip_pcsqa_$::env(USER)_${site}_${blockname}_${clientnr}$pcsqabeta
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 clients | grep $clientname | wc -l" } clientexists
+	}
+	
+	catch { exec $SEV(exec_cmd) -c "sed -e 's#^Root:\\s*\\S*#Root:\\t$run_dir#g' -e 's#${msip_pcs_client}#$clientname#g' -e 's#\\slocked\\s# #g' $client_template > msip_pcsqa_template" } dummy
+
+	## leave only PCS mapping in client template to prevent overruling
+	catch { exec $SEV(exec_cmd) -c "grep \"/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/\" msip_pcsqa_template > pcs_entry" } dummy
+	catch { exec $SEV(exec_cmd) -c "grep -v \"//wwcad/msip/projects\" msip_pcsqa_template > msip_pcsqa_template_nomapping" } dummy
+	catch { exec $SEV(exec_cmd) -c "cat msip_pcsqa_template_nomapping pcs_entry > msip_pcsqa_template && rm -f msip_pcsqa_template_nomapping pcs_entry" } dummy
+
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -i < msip_pcsqa_template" } dummy 
+
+	catch { exec $SEV(exec_cmd) -c "echo \"P4CLIENT=$clientname\" > .p4config && echo \"P4CONFIG=.p4config\" >> .p4config && echo \"P4PORT=p4p-$site:1999\" >> .p4config" } dummy
+
+	catch { exec $SEV(exec_cmd) -c "mkdir -p $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)" } dummy
+	
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && export P4CONFIG=\".p4config\" && $p4 sync -f $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/..." } p4message
+	if { $p4message == "$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/... - protected namespace - access denied." } {			
+		## get p4 content via account csadmin to bypass restricted access
+		catch { exec $SEV(exec_cmd) -c "chmod -R 777 $SVAR(product_name)" } dummy
+		set SSH "export PASSWORD=$::env(PCSQA_PASSWORD); $SEV(gscript_dir)/qa_scripts/sshaskpass ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no csadmin@$::env(HOST)"
+		catch { exec bash -c "$SSH \"cd $run_dir && export P4CONFIG=.p4config && /usr/local/bin/p4 sync -f $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/...\"" } p4message
+		catch { exec $SEV(exec_cmd) -c "chmod -R 755 $SVAR(product_name)" } dummy
+	}	 
+
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/bash $moduleloadperforce && $p4 client -d $clientname" } dummy 
+}
+
+catch { exec $SEV(exec_cmd) -c "find $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) -type f | wc -l" } pcsfiles
+incr checks
+if { $pcsfiles > 0 } {
+	puts "Project p4 contents has been stored at $run_dir/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)"
+} else {
+catch { exec $SEV(exec_cmd) -c "find $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) -type l | wc -l" } pcsfiles
+if { $pcsfiles > 0 } {
+	puts "Project p4 contents has been stored at $run_dir/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)"
+} else {
+	ruleErrorApplicable "(PCSQA-2.1g) PCS not found in p4"		
+	catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+}
+}
+
+puts "Number of executed checks: $checks"		
+
+sproc_script_stop

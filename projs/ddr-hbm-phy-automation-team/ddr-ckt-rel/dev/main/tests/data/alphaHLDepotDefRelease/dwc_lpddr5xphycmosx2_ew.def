@@ -1,0 +1,21 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+
+DESIGN dwc_lpddr5xphycmosx2_ew ;
+
+UNITS DISTANCE MICRONS 2000 ;
+DIEAREA ( 0 0 ) ( 328512 148720 ) ;
+
+COMPONENTS 4 ;
+- u_PWROK dwc_lpddr5xphy_por_ew + PLACED ( 27456 0 ) N
+  + SOURCE DIST ;
+- u_RXACVREF dwc_lpddr5xphy_rxacvref_ew + PLACED ( 111072 74360 ) N
+  + SOURCE DIST ;
+- u_MEMRESET_L dwc_lpddr5xphy_txrxcmos_ew + PLACED ( 153120 74360 ) N
+  + SOURCE DIST ;
+- VDD2h_clamp_cmosx2 dwc_lpddr5xphy_vdd2hclamp_x2_ew + PLACED ( 276384 0 ) N
+  + SOURCE DIST ;
+END COMPONENTS
+
+END DESIGN

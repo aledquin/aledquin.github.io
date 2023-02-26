@@ -1,0 +1,10 @@
+check_pcs_sites_ca06
+CHECK FAILED
+PCSQA/module version: 2021.09-SP1-1
+User: alvaro
+Run time: Tue Jul 19 12:13:53 2022
+Execution time: 00:00:00:01
+
+Information: Process ID for tool: 82676
+SNPS_ERROR  : (PCSQA-VC-1 ca06) design directory in PCS is a link in site ca06, but CA06 is no design site in VC
+Give task check_pcs_sites_ca06 Pass Status value 'Waived' to ensure reaching task evaluate_status

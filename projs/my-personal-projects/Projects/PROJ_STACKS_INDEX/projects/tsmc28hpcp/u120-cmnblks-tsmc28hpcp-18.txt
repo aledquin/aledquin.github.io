@@ -1,0 +1,4 @@
+tsmc28hpcp-18_10M_5X2Y2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.9a/orig/LOGIC_TopMr_DRC/ICVN28HP_10M_5X2Y2R_002.19a.encrypt
+tsmc28hpcp-18_10M_7X2R /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.9a/orig/LOGIC_TopMr_DRC/ICVN28HP_10M_7X2R_002.19a.encrypt
+tsmc28hpcp-18_10M_7X2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.9a/orig//LOGIC_TopMz_DRC/ICVN28HP_10M_7X2Z_002.19a.encrypt
+tsmc28hpcp-18_8M_6X1Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/common/icv/drc/ver1.9a/orig/LOGIC_TopMz_DRC/ICVN28HP_8M_6X1Z_002.19a.encrypt

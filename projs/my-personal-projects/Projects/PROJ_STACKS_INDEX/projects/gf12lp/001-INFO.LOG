@@ -1,0 +1,13 @@
+gf12lp : rel1.9.0 : 18 : w300-nvm-otp-shfg2-gf12lp-1.8v
+gf12lp : rel1.8.0 : 18 : f521-gpio-inv-gf12lp-1.8v
+gf12lp : rel1.7.1 : 18 : x329-e32-gf12lp-18-ns
+gf12lp : rel1.7.1 : 18 : t124-training-gf12lp-18-ns
+gf12lp : rel1.6.0 : 18 : y230-emmc-gf12lp-1.8v
+gf12lp : rel1.6.0 : 18 : x690-usb3-gf12lp-18-ns
+gf12lp : rel1.6.0 : 18 : x690-ssp-gf12lp-18-ns
+gf12lp : rel1.6.0 : 18 : g148-dphy-gf12lp-18
+gf12lp : rel1.6.0 : 18 : e320-hdmi-txphy-gf12lp-18
+gf12lp : rel1.4.0 : 18 : w269-nvm-otp-ops-gf12lp-1.8v
+gf12lp : rel1.4.0 : 18 : w186-nvm-otp-shfg2-gf12lp-1.8v
+gf12lp : rel1.4.0 : 18 : l139-std-gf12lp-1.8v
+gf12lp : rel1.2.0 : 18 : z00000-tchip-tdcs328-gf12lp-18

@@ -1,0 +1,23 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+
+DESIGN dwc_lpddr5xphy_dqx1_ew ;
+
+UNITS DISTANCE MICRONS 2000 ;
+DIEAREA ( 0 0 ) ( 378816 74360 ) ;
+
+COMPONENTS 5 ;
+- lcdl_tx dwc_lpddr5xphy_lcdl + PLACED ( 39168 52728 ) FN
+  + SOURCE DIST ;
+- lcdl_rxclk_t dwc_lpddr5xphy_lcdl + PLACED ( 108960 52728 ) N
+  + SOURCE DIST ;
+- lcdl_rxclk_c dwc_lpddr5xphy_lcdl + PLACED ( 108960 0 ) FS
+  + SOURCE DIST ;
+- pclkrcv dwc_lpddr5xphy_pclk_rxdca + PLACED ( 75168 8112 ) N
+  + SOURCE DIST ;
+- SE_IO dwc_lpddr5xphy_txrxdq_ew + PLACED ( 185568 0 ) N
+  + SOURCE DIST ;
+END COMPONENTS
+
+END DESIGN

@@ -1,0 +1,108 @@
+##################################################################
+##  Created by: Design Compiler (R) NXT (Topographical)
+##  Version: P-2019.03-SP1-VAL
+##  Design: casez_rom
+##  Date: Fri May 17 12:31:28 2019
+##  Command: write_floorplan
+##################################################################
+set _dirName__0 [file dirname [file normalize [info script]]]
+/slowfs/dcopt105/alvaro/DCG_congestion/test1/SRMui_spg_test/dcg30_czr/pv_export/dcg_lWoOAh_22524/data/des.fp.tcl
+################################################################################
+# Read DEF
+################################################################################
+read_def -allow_cell_creation ${_dirName__0}/floorplan.def
+Using libraries: icc2_voZKET ngk_im1_memorylvt012v_C1V12S4_MAX ngk_im1_stdlvt7g_C1V12S4_MAX ngk_im1_stdmvt7g_C1V12S4_MAX ngk_im1_stdslvt7g_C1V12S4_MAX
+Linking block icc2_voZKET:casez_rom.design
+Information: User units loaded from library 'ngk_im1_memorylvt012v_C1V12S4_MAX' (LNK-040)
+Design 'casez_rom' was successfully linked.
+Information: Loading DEF file '/slowfs/dcopt105/alvaro/DCG_congestion/test1/SRMui_spg_test/dcg30_czr/pv_export/dcg_lWoOAh_22524/data/des.fp.tcl/floorplan.def' (FILE-007)
+Information: Reading 'VERSION' statement. (DEFR-016)
+Information: Reading 'DIVIDERCHAR' statement. (DEFR-016)
+Information: Reading 'BUSBITCHARS' statement. (DEFR-016)
+Information: Reading 'DESIGN' statement. (DEFR-016)
+Information: Reading 'TECHNOLOGY' statement. (DEFR-016)
+Information: Reading 'UNITS' statement. (DEFR-016)
+Information: Reading 'DIEAREA' statement. (DEFR-016)
+Begin building search trees for block icc2_voZKET:casez_rom.design
+Done building search trees for block icc2_voZKET:casez_rom.design (time 0s)
+Information: Reading 'ROW' statements. (DEFR-016)
+Information: Reading 'TRACKS' statements. (DEFR-016)
+Information: Reading 'COMPONENTS' section. (DEFR-016)
+Information: Reading 'PINS' section. (DEFR-016)
+---------------------------------------
+Number of Processed/Read DEF Constructs
+---------------------------------------
+VERSION                        : 1/1
+DIVIDERCHAR                    : 1/1
+BUSBITCHARS                    : 1/1
+DESIGN                         : 1/1
+TECHNOLOGY                     : 1/1
+UNITS                          : 1/1
+DIEAREA                        : 1/1
+ROW                            : 63/63
+TRACKS                         : 18/18
+COMPONENTS                     : 3349/3349
+PINS                           : 186/186
+1
+################################################################################
+# Bounds
+################################################################################
+################################################################################
+# Route guides
+################################################################################
+################################################################################
+# Blockages
+################################################################################
+################################################################################
+# Voltage areas
+################################################################################
+################################################################################
+# RP groups
+################################################################################
+if {[file exists ${_dirName__0}/rp.tcl]} {
+source ${_dirName__0}/rp.tcl
+}
+################################################################################
+# User Shapes
+################################################################################
+################################################################################
+# Routing directions
+################################################################################
+set_ignored_layers -rc_congestion_ignored_layers {M1 MB ZA } -min_routing_layer {M1} -max_routing_layer {ZA} -verbose
+Information: Update of ignored layers for design icc2_voZKET:casez_rom.design succeeded.. (NDMUI-034)
+1
+set_attribute [get_layer M1] routing_direction horizontal
+Information: The design specific attribute override for layer 'M1' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{M1}
+set_attribute [get_layer M2] routing_direction vertical
+Information: The design specific attribute override for layer 'M2' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{M2}
+set_attribute [get_layer M3] routing_direction horizontal
+Information: The design specific attribute override for layer 'M3' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{M3}
+set_attribute [get_layer M4] routing_direction vertical
+Information: The design specific attribute override for layer 'M4' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{M4}
+set_attribute [get_layer M5] routing_direction horizontal
+Information: The design specific attribute override for layer 'M5' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{M5}
+set_attribute [get_layer M7] routing_direction vertical
+Information: The design specific attribute override for layer 'M7' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{M7}
+set_attribute [get_layer MB] routing_direction horizontal
+Information: The design specific attribute override for layer 'MB' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{MB}
+set_attribute [get_layer MC] routing_direction vertical
+Information: The design specific attribute override for layer 'MC' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{MC}
+set_attribute [get_layer ZA] routing_direction horizontal
+Information: The design specific attribute override for layer 'ZA' is set in the current block 'casez_rom', because the actual library setting may not be overwritten. (ATTR-12)
+{ZA}
+################################################################################
+# Routing Rules
+################################################################################
+# option added by compile_layer_aware_optimization edit if necessary
+source ${_dirName__0}/routing_rule.lao.tcl
+source ${_dirName__0}/routing_rule.tcl
+source ${_dirName__0}/routing_rule.net.tcl
+source ${_dirName__0}/routing_rule.layer.tcl

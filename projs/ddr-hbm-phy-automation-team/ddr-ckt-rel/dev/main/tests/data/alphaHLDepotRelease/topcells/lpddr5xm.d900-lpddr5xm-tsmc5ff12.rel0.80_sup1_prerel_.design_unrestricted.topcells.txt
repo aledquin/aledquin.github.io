@@ -1,0 +1,5 @@
+## list of legal macros for final design delivery
+#
+[LAY]pro_hard_macro/d900esd_tc_top/layout
+[SCH]pro_hard_macro/d900esd_tc_top/schematic
+#

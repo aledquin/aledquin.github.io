@@ -1,0 +1,4 @@
+Corner Type	Case	Core Voltage (V)	PLL Voltage (V)	IO Voltage (V)	Temperature (C)	Extraction Corner
+Standard Product	FF	0.825	1.21	0.44 	-40/0/125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	SS	0.675	0.99	0.36 	-40/0/125	cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+Standard Product	TT	0.75	1.1	0.4 	25	typical

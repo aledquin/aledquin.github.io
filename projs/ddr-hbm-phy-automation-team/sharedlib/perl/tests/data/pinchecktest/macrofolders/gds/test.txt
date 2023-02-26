@@ -1,0 +1,6 @@
+## list of settings for present release
+set rel "1.00a"
+set vcrel "1.00a"
+set ferel "0.75b"
+set layout_tag "Final Release (both ew and ns)"
+set p4_release_root "products/lpddr54/project/d890-lpddr54-tsmc5ff12"

@@ -1,0 +1,188 @@
+u146-cmnblks-tsmc3eff-heraklion-12.txt
+INFO: tsmc3eff 12_heraklion rel3.0.0
+INFO: DONE
+
+u145-cmnblks-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+m0144-mem-tsmc3eff-ts03nxg41p11sasrl288s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg42p11sasrl128s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg42p11sacul256s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg42p11sasul640s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg41p11sacrl256s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg41p11sadul1m2s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg41p11sacul256s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg41p10assvd640s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg41p11sassl640s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg42p22sadsl640s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-ts03nxg41p11sahtc160s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-layout.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0144-mem-tsmc3eff-layout_ts03nxg4_1p11sassl512s_2p11sasul512s.txt
+INFO: em em m0144-mem-tsmc3eff-ts03nxg41p11sadcl1m2s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g168-dphy-tsmc3eff-12.txt
+INFO: tsmc3eff 12_heraklion rel3.0.0
+INFO: DONE
+
+g317-dphy-cphy-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+g320-dphy-cphy-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+l269-std-tsmc3eff-1.2v.txt
+INFO: tsmc3eff 12 rel2.1.0
+INFO: DONE
+
+l269-std-tsmc3eff-1.2v_heraklion.txt
+INFO: tsmc3eff 12_heraklion rel3.0.0
+INFO: DONE
+
+v020-eusb2-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12_heraklion rel3.0.0
+INFO: DONE
+
+c269-tsmc3eff-1.2v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x348-e32-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+v020-eusb2-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12_heraklion rel3.0.0
+INFO: DONE
+
+v022-eusb2-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+w312-nvm-otp-tdm-tsmc3eff-1.2v.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+x588-e112-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+n416-c20-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel2.1.0
+INFO: DONE
+
+x226-xsr-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel1.0.0
+INFO: DONE
+
+x227-xsr-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel2.1.0
+INFO: DONE
+
+d763-hbm3-v2-tsmc3eff-12-ew.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+d931-lpddr5x-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+f511-gpio-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+x571-pcie6-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel2.1.0
+INFO: DONE
+
+s001-pms-5188dts2-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+s001-pms-5185vm-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+s001-pms-5184ts-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+s001-pms-5187cat-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+s001-pms-5186pd-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+s001-pms-5183td-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+x811-e224-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+h123-ohbi2-tsmc3eff-12-ns.txt
+INFO: tsmc3eff 12 rel2.1.0
+INFO: DONE
+
+d912-ddr5-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+d911-ddr5-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel2.1.0
+INFO: DONE
+
+p269-program-microsoft_kendall-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+
+h131-ucie-tsmc3eff-12.txt
+INFO: tsmc3eff 12 rel3.0.0
+INFO: DONE
+

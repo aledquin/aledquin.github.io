@@ -1,0 +1,7 @@
+int22ulpc : rel2.0.0 : 18 : x662-usb2-int22ulpc-18-ns
+int22ulpc : rel2.0.0 : 18 : g133-dphy-int22ulpc-18
+int22ulpc : rel1.7.0 : 18 : n602-dpalt-c10-int22ulpc-18-ns
+int22ulpc : rel1.7.0 : 18 : n202-c10-int22ulpc-18-ns
+int22ulpc : rel11.3.0 : 18 : x675-usb2-int22ulpc-18-ns
+int22ulpc : rel11.3.0 : 18 : u110-cmnblks-int22ulpc-18-ns
+int22ulpc : rel11.3.0 : 18 : t321-training-int22ulpc-18-ns

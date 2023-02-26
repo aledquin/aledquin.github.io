@@ -1,0 +1,160 @@
+z00000-adc-sar-12b5m-gf12lp-18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z3639-adc-12b5m-gf12lp-18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n554-dptx-c10-gf12lp-18-ns.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u123-cmnblks-gf12lp-18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0113-mem-gf12lp-gf12npg42p11sacul128s.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0113-mem-gf12lp-invecas.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e705-hdmi21-rxphy-gf12lp-18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e320-hdmi-txphy-gf12lp-18.txt
+INFO: gf12lp 18 rel1.6.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+e409-hdmi-mhl-rxphy-gf12lp-18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g148-dphy-gf12lp-18.txt
+INFO: gf12lp 18 rel1.6.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+z19606-pll-gf12lp-18.txt
+INFO: hdmi hdmi e409-hdmi-mhl-rxphy-gf12lp-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x690-ssp-gf12lp-18-ns.txt
+INFO: gf12lp 18 rel1.6.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+l139-std-gf12lp-1.8v.txt
+INFO: gf12lp 18 rel1.4.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.4.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.4.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+z00000-tchip-tdcs328-gf12lp-18.txt
+INFO: gf12lp 18 rel1.2.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.2.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.2.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+t124-training-gf12lp-18-ns.txt
+INFO: gf12lp 18 rel1.7.1
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.7.1/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.7.1/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.7.1/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+x690-usb2-gf12lp-18-ns.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x690-usb3-gf12lp-18-ns.txt
+INFO: gf12lp 18 rel1.6.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+y230-emmc-gf12lp-1.8v.txt
+INFO: gf12lp 18 rel1.6.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+x091-e25-gf12lp-18-ns.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d566-lpddr4xm-gf12lp18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d576-lpddr4xm-gf12lp18.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x329-e32-gf12lp-18-ns.txt
+INFO: gf12lp 18 rel1.7.1
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.7.1/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.7.1/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.7.1/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+o690-diffbuf-gf12lp-18-ns.txt
+INFO: gf12lp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w186-nvm-otp-shfg2-gf12lp-1.8v.txt
+INFO: gf12lp 18 rel1.4.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.4.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.4.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+w006-nvm-otp-commonLibs-gf12lp-1.8v.txt
+INFO: gf12lp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w269-nvm-otp-ops-gf12lp-1.8v.txt
+INFO: gf12lp 18 rel1.4.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.4.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.4.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+w300-nvm-otp-shfg2-gf12lp-1.8v.txt
+INFO: gf12lp 18 rel1.9.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.9.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.9.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.9.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.9.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+f521-gpio-inv-gf12lp-1.8v.txt
+INFO: gf12lp 18 rel1.8.0
+ERROR: IcvRunDRC not defined.
+gf12lp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.8.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.8.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.8.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c139-gf12lp-1.8v/rel1.8.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl

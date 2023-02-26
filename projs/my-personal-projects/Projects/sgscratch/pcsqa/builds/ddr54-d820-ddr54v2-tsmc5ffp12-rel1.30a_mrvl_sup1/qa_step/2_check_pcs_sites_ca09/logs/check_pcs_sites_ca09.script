@@ -1,0 +1,662 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/ds/scripts_global/demo/demo_script.tcl#50 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This script is used when running the RTM in demo mode.
+## *
+## * The RTM demo mode is enabled by setting the shell variable named
+## * LYNX_DEMO before starting the RTM. The value of LYNX_DEMO does not matter.
+## *
+## * During demo mode, run_flow behavior is adjusted as follows:
+## * - The gen_tasks will run as normal.
+## * - The branch_tasks will run as normal.
+## * - For all other tasks:
+## *   - This script is used instead of the normal script.
+## *   - Tasks not using the tool named 'tcl' will be converted to 'tcl_job'.
+## *     Tasks using the tool named 'tcl' will continue using 'tcl'.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## HISTORY
+##
+## 01/20/2015, ahogenhu
+##             Select execution host with non-disable, non-error state (STAR 9000851168)
+##
+## 04/16/2015, ahogenhu
+##             Execute on behalf of csadmin in site of execution to avoid permission differences 
+##             between user and csadmin (STAR 9000891215). 
+##
+## 05/18/2015, ahogenhu
+##             No auto waving at non-violation errors (STAR 9000901790)
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+## NAME: TEV(site)
+## TYPE: string
+## INFO:
+## * Site to check PCS .
+set TEV(site) ""
+
+## NAME: TEV(host)
+## TYPE: string
+## INFO:
+## * Running host to check PCS .
+set TEV(host) ""
+
+## NAME: TEV(user)
+## TYPE: string
+## INFO:
+## * Running user to check PCS.
+set TEV(user) "csadmin"
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+## set activetclversion [info patchlevel]
+set activetclversion "8.5.12"
+if { $TEV(site) == "sg01gcp" } {
+	set activetclversion "8.5.18"
+}
+
+## sshaskpass has been implemented in bash
+set SEV(exec_cmd) bash
+
+set udeproj   $::env(udeproj)
+set ude3proj  /remote/cad-rep/projects
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+catch { exec $SEV(exec_cmd) -c "/usr/local/bin/siteid" } thissite
+
+catch { exec $SEV(exec_cmd) -c "rm -f log.$TEV(site)" } dummy
+
+set execuser $TEV(user)
+
+set pcs $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+set validatesite 1
+if { $thissite == $TEV(site) && $TEV(site) != "de02" && $TEV(site) != "us01" && $TEV(site) != "in01" } {
+	set pcsdesign $pcs/design
+	if { [file isdirectory $pcsdesign] && [file type $pcsdesign] != "link" } {
+  		catch { exec $SEV(exec_cmd) -c "echo \"SNPS_WARNING: PCSQA is not applicable for site $TEV(site), because design directory in PCS is no link\" >> log.$TEV(site)"} dummy
+		set validatesite 0		
+	}
+} 
+
+set refccswork [getWorkDir ref_ccs]
+if { [file exists $refccswork/porting_spec.xml] && 
+     [file exists $refccswork/PCS_In_progress] == 0 } {
+	set pcsinprogress 0
+} else {
+	set pcsinprogress 1
+}
+
+set remoteqsub 1
+
+set errors 0
+if { $validatesite == 1 } { 
+
+catch { exec $SEV(exec_cmd) -c "echo \$SGE_CELL" } sgecell
+if { $sgecell == "" || [file exists /remote/sge/default/$sgecell] == 0 } {
+	set sgecell "snps"
+}
+
+if { $remoteqsub } {
+	set run_dir "\$udescratch/$::env(USER)/pcsqa/tmp"
+} else {
+	set run_dir /tmp
+}
+set uniqueprefix $::env(USER)_$SVAR(product_name)_$SVAR(pcs_name)_$SVAR(pcs_version)_
+set nolynx_check_pcs_basename "$::env(USER)_nolynx_check_pcs_[file tail $SEV(block_dir)]"
+
+set checkpcssiteswork [getWorkDir check_pcs_sites]
+catch { exec $SEV(exec_cmd) -c "sed -e 's/REMOTESITE/$TEV(site)/g' -e 's/PCSQAUSER/$::env(USER)/g' -e 's/PCSINPROGRESS/$pcsinprogress/g' $checkpcssiteswork/nolynx_check_pcs.tcl > $nolynx_check_pcs_basename.tcl" } dummy
+
+set linuxhost $TEV(host)
+set getp4contentwork [getWorkDir get_p4_content]
+set p4libdefs $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)/design/lib.defs
+set moduleprojectenv $checkpcssiteswork/moduleprojectenv
+set lppsource $checkpcssiteswork/lppsource
+set udeenv $checkpcssiteswork/udeenv
+
+set SSHCOMMAND "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+set SSHSTART "export PASSWORD=$::env(PCSQA_PASSWORD); $SEV(gscript_dir)/qa_scripts/sshaskpass $SSHCOMMAND"
+
+proc checkconnection { host severity } {
+	global SSH
+	global SEV
+	global SVAR
+	global TEV
+
+	catch { exec $SEV(exec_cmd) -c "$SSH /bin/true > ssh.out 2>&1" } connectionerrors
+	if { [file exists ssh.out] } {
+	if { [file size ssh.out] > 0 } {
+	    	catch { exec $SEV(exec_cmd) -c "grep -i -e \"Permission denied\" -e \"Connection timed out\" -e \"Connection closed by remote host\" -e \"Connection closed by\" ssh.out | wc -l" } noconnection
+                if { $noconnection != 0 } {
+			catch { exec $SEV(exec_cmd) -c "grep -i -e \"Permission denied\" -e \"Connection timed out\" -e \"Connection closed by remote host\" -e \"Connection closed by\" ssh.out" } noconnection
+			if { $severity == "fatal" } {
+				sproc_msg -error "(PCSQA-REMOTECHECK-2) $noconnection"
+				## sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+				sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) Failing connection with site $TEV(site)"
+				sproc_script_stop -exit
+			} else {
+				return 1
+			}
+		}
+	    	catch { exec $SEV(exec_cmd) -c "grep -i \"Offending key\" ssh.out | wc -l" } offendingkey
+		if { $offendingkey != 0 } {
+			## It is possible that the RSA host key has just been changed.
+			## Remove host key in /u/$::env(USER)/.ssh/known_hosts to get rid of this message.
+			set tmpknown_hosts "/u/$::env(USER)/.ssh/known_hosts$TEV(site)"
+			while { [file exists $tmpknown_hosts] } {
+				 exec $SEV(exec_cmd) -c "sleep 1"
+			}			
+
+			## remove .internal.synopsys.com to ensure removal of both
+			## $host[.internal.synopsys.com] in /u/$::env(USER)/.ssh/known_hosts
+			set hostnointernal $host
+			if { [string first "." $host] != -1 } {
+				set hostnointernal [string range $host 0 [expr [string first "." $host] - 1]]
+			}			
+			catch { exec $SEV(exec_cmd) -c "grep -v $hostnointernal /u/$::env(USER)/.ssh/known_hosts > $tmpknown_hosts" } dummy
+			catch { exec $SEV(exec_cmd) -c "mv $tmpknown_hosts /u/$::env(USER)/.ssh/known_hosts" } dummy
+		}
+		return 0
+	} else {
+		return 0
+	}
+	} else {
+		if { $severity == "fatal" } {
+			sproc_msg -error "(PCSQA-REMOTECHECK-2) No connection with site $TEV(site), host $host"
+			puts $connectionerrors
+			## sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+			sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) Failing connection with site $TEV(site)"
+			sproc_script_stop -exit
+		} else {
+			return 1
+		}	
+	}
+}
+
+
+	set noshellrc ""
+	if { $TEV(site) != $thissite || $execuser == "csadmin" } {
+		if { $execuser != "csadmin" } {
+			set noshellrc "--noprofile --norc"
+		}
+		set SSH "$SSHSTART $execuser@$TEV(host)"
+	} else {
+		catch { exec $SEV(exec_cmd) -c "rm -f log_$execuser.$TEV(site)" } dummy
+		## execute on the host on which PCS QA is started
+		set linuxhost $::env(HOST)
+		set SSH "bash -c"
+	}
+
+	if { $TEV(site) != $thissite || $execuser == "csadmin" } {
+		## check pre-condition:
+		## - connection
+		checkconnection $TEV(host) "fatal"
+	}
+
+	if { $TEV(site) != "de02" && $TEV(site) != "us01" && $TEV(site) != "in01" } {
+
+		set pcsdesign $pcs/design
+		set linkcheckcommand "bash $noshellrc -c \\\"if \[ -L $pcsdesign \]; then echo link; else echo nolink; fi;\\\""
+		catch { exec $SEV(exec_cmd) -c "$SSH \"$linkcheckcommand\"" } link
+		## support of (unexpected) lines as
+		## Warning: Permanently added '<host>' (RSA) to the list of known hosts.
+		catch { exec $SEV(exec_cmd) -c "echo \"$link\" | grep \"^nolink$\" | wc -l " } nolink
+		if { $nolink > 0 } {
+  			catch { exec $SEV(exec_cmd) -c "echo \"SNPS_WARNING: PCSQA is not applicable for site $TEV(site), because design directory in PCS is no link\" >> log.$TEV(site)"} dummy
+			set validatesite 0		
+		}
+
+		if { $validatesite == 1 && $TEV(site) != "ipala01" } { 
+			## cross-check with VC
+			set site_locations $refccswork/site_locations.txt
+			if { [file exists $site_locations] } {
+				set usite [string toupper $TEV(site)]
+				catch { exec $SEV(exec_cmd) -c "grep \"^$usite$\" $site_locations | wc -l" } designsite
+				if { $designsite == 0 } {
+					sproc_msg -error "(PCSQA-VC-1 $TEV(site)) design directory in PCS is a link in site $TEV(site), but $usite is no design site in VC"
+					set errors 1
+					set validatesite 0		
+				}		
+			}
+		}
+	} 
+
+	if { $TEV(site) != $thissite || $execuser == "csadmin" } {
+
+	if { $validatesite == 1 } { 
+
+	## select linux host if needed
+	## pre-condition for activetcl
+	catch { exec $SEV(exec_cmd) -c "$SSH uname > os.txt" } dummy
+	catch { exec $SEV(exec_cmd) -c "cat os.txt | tail -1 | awk '{ print \$1}'" } os
+	set setsge ""
+	if { $noshellrc == "" } {
+		set setsge "source $::env(MODULESHOME)/init/bash; source /remote/sge/default/$sgecell/common/settings.sh;"	
+	}
+	## Prevent error
+	## bash: /global/freeware/Linux/2.X/activetcl-8.5.12/bin/tclsh: /lib/ld-linux.so.2: bad ELF interpreter: No such file or directory
+	## on CS7.*
+	set attempt 1
+	catch { exec $SEV(exec_cmd) -c "$SSH \"$setsge qhost -l 'arch=glinux,os=\\!CS7.*' -q\" | \
+	                                               sed -e 's/^\\(\\S\\S*\\)\\./ \\1./g' | tr -d '\\n' | sed -e 's/\\(\\S\\S*\\)\\.internal/\\n\\1.internal/g' -e 's/\\(\\S\\S*\\)\\.$TEV(site)/\\n\\1.$TEV(site)/g' | \
+						       awk '{print \$1,\$NF}' | grep -v -e \"HOSTNAME\" -e \"--\" > qhosts 2>&1" } dummy
+	if { [file size qhosts] == 0 } {
+		## take CS7.* hosts with  activetcl/8.4.13	
+		catch { exec $SEV(exec_cmd) -c "$SSH \"$setsge qhost -l 'arch=glinux' -q\" | \
+	                                               sed -e 's/^\\(\\S\\S*\\)\\./ \\1./g' | tr -d '\\n' | sed -e 's/\\(\\S\\S*\\)\\.internal/\\n\\1.internal/g' -e 's/\\(\\S\\S*\\)\\.$TEV(site)/\\n\\1.$TEV(site)/g' | \
+						       awk '{print \$1,\$NF}' | grep -v -e \"HOSTNAME\" -e \"--\" > qhosts 2>&1" } dummy
+		set activetclversion "8.4.13"
+		set attempt 2
+	}
+	## puts "activetcl version: $activetclversion"
+	## puts "Selected hosts on site $TEV(site):"
+        ## sproc_cat_file -file qhosts
+	## select only hosts from qhosts at which the user has access without d(efect) or e(rror) status
+	catch { exec $SEV(exec_cmd) -c "$SSH qaccess -u $::env(USER) 2> /dev/null | sed -e 's/h\\@\\S\\S*//g' -e 's/\\S\\S*\\@\\(\\S\\S*\\)/\\1/g' -e 's/\[+()\]//g' -e 's/\\s\\s*/ /g' | grep -v ^\[\[:blank:\]\]*$" } qhostsaccesses
+	set qhostsaccesses [lsort -unique [split $qhostsaccesses " "]]
+	if { [llength $qhostsaccesses] == 0 || 
+	     [string index $qhostsaccesses 0] == "" } {
+		sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) User $::env(USER) has no access to hosts in site $TEV(site)"
+		sproc_script_stop -exit
+	}
+	## puts "Accessible hosts on site $TEV(site) for user $::env(USER):"
+	## puts $qhostsaccesses
+	while { $attempt <= 2 } {
+		set fp [open qhosts2 w]
+		set n 1
+		foreach qhostsaccess $qhostsaccesses {
+			if { $qhostsaccess != "" } {
+				catch { exec $SEV(exec_cmd) -c "grep ^$qhostsaccess qhosts | wc -l" } qhost
+				if { $qhost == 1 } {
+					catch { exec $SEV(exec_cmd) -c "grep ^$qhostsaccess qhosts | awk '{print \$NF}'" } hoststate
+				  	if { [string first d $hoststate] == -1 &&
+					     [string first D $hoststate] == -1 &&
+				  	     [string first e $hoststate] == -1 &&
+					     [string first E $hoststate] == -1 } {
+						catch { exec $SEV(exec_cmd) -c "grep ^$qhostsaccess qhosts | awk '{print \$1}'" } hostname
+						puts $fp "$hostname"
+						if { $n == 20 } {
+							break
+						}
+						incr n
+					}
+				}
+			}
+		}
+		close $fp
+		set accessibletxt ""
+		if { [file size qhosts2] > 0 } {
+			catch { exec $SEV(exec_cmd) -c "mv qhosts2 qhosts" } dummy
+			set accessibletxt "accessible "
+			set attempt 2
+		} else {
+			if { $attempt == 2 } {
+				catch { exec $SEV(exec_cmd) -c "rm -f qhosts && touch qhosts" } dummy
+				break
+			}
+		
+			catch { exec $SEV(exec_cmd) -c "rm -f qhosts2" } dummy
+			## take CS7.* hosts with  activetcl/8.4.13	
+			catch { exec $SEV(exec_cmd) -c "$SSH \"$setsge qhost -l 'arch=glinux' -q\" | \
+		                                               sed -e 's/^\\(\\S\\S*\\)\\./ \\1./g' | tr -d '\\n' | sed -e 's/\\(\\S\\S*\\)\\.internal/\\n\\1.internal/g' -e 's/\\(\\S\\S*\\)\\.$TEV(site)/\\n\\1.$TEV(site)/g' | \
+							       awk '{print \$1,\$NF}' | grep -v -e \"HOSTNAME\" -e \"--\" > qhosts 2>&1" } dummy
+			set activetclversion "8.4.13"
+		}
+		incr attempt
+		## puts "Resulting hosts on site $TEV(site) for user $::env(USER):"	
+        	## sproc_cat_file -file qhosts
+	}
+
+	## store SSH of original msip host to check state of linuxhost candidate
+	set MSIPSSH $SSH
+	catch { exec $SEV(exec_cmd) -c "grep ^$TEV(host) qhosts | wc -l" } hostinlinuxfarm
+	if { $remoteqsub == 0 && ( $os != "Linux" || $hostinlinuxfarm == 0 ) } {
+		catch { exec $SEV(exec_cmd) -c "date +%s" } datesecbegin
+		## check if $TEV(host) is a submit host
+		catch { exec $SEV(exec_cmd) -c "grep \"is neither submit nor admin host\" qhosts | wc -l" } nosubmithost
+		if { $nosubmithost > 0 } {
+			sproc_msg -error "(PCSQA-REMOTECHECK-3) Fail to search for Linux host on site $TEV(site), due to non-submit host $TEV(host)"
+			## sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+			sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) Fail to search for Linux host on site $TEV(site), due to non-submit host $TEV(host)"
+			sproc_script_stop -exit
+		} else {
+			catch { exec $SEV(exec_cmd) -c "cat qhosts | wc -l" } linuxhosts
+			if { $linuxhosts > 20 } {
+				set linuxhosts 20
+			}
+			catch { exec $SEV(exec_cmd) -c "cat qhosts | tail -1" } linuxhostline
+			catch { exec $SEV(exec_cmd) -c "echo \"$linuxhostline\" | awk '{print \$1}' | tail -1" } linuxhost
+			catch { exec $SEV(exec_cmd) -c "/bin/ping -c 2 $linuxhost 2>&1 | head -2 | grep -e \"Destination Host Unreachable\" -e \"unknown host\" | wc -l" } unreachable
+			catch { exec $SEV(exec_cmd) -c "$MSIPSSH qhost -h $linuxhost -q 2> /dev/null | tr -d '\\n' | awk '{print \$NF}'" } hoststate
+			if { $TEV(site) == "ipala01" } {
+				set SSH "$MSIPSSH $SSHCOMMAND $execuser@$linuxhost"
+			} else {
+				set SSH "$SSHSTART $execuser@$linuxhost"
+			}
+			if {  $unreachable == 0 } {
+				set unreachable [checkconnection $linuxhost "nofatal"]
+			}
+
+			## the hoststate may not contain d(isable) and e(rror) (case-insensitive)
+			set n 1
+			while { $n <= $linuxhosts && 
+			        ( $unreachable == 1 ||
+				  [string first d $hoststate] != -1 || [string first D $hoststate] != -1 ||
+				  [string first e $hoststate] != -1 || [string first E $hoststate] != -1 ) } {
+				sproc_msg -info "Host $n:$linuxhost, Unreachable:$unreachable, HostState:$hoststate"  
+				incr n
+				catch { exec $SEV(exec_cmd) -c "cat qhosts | tail -$n | head -1" } linuxhostline
+				catch { exec $SEV(exec_cmd) -c "echo \"$linuxhostline\" | awk '{print \$1}' | tail -1" } linuxhost
+				catch { exec $SEV(exec_cmd) -c "/bin/ping -c 2 $linuxhost 2>&1 | head -2 | grep -e \"Destination Host Unreachable\" -e \"unknown host\" | wc -l" } unreachable
+				catch { exec $SEV(exec_cmd) -c "$MSIPSSH qhost -h $linuxhost -q 2> /dev/null | tr -d '\\n' | awk '{print \$NF}'" } hoststate
+				if { $TEV(site) == "ipala01" } {
+					set SSH "$MSIPSSH $SSHCOMMAND $execuser@$linuxhost"
+				} else {
+					set SSH "$SSHSTART $execuser@$linuxhost"
+				}
+				if {  $unreachable == 0 } {
+					set unreachable [checkconnection $linuxhost "nofatal"]
+				}
+			}
+		}
+		if { $n > $linuxhosts } {
+			sproc_msg -error "(PCSQA-REMOTECHECK-5) Fail to search for Linux host on site $TEV(site)"
+			if { [file size qhosts] == 0 } {
+				sproc_msg -warning "No accessible Linux host without status d(efect) is available in site $TEV(site)"
+			} else {
+        			sproc_cat_file -file qhosts
+			}
+			## sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+			sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) Fail to search for Linux host on site $TEV(site)"
+			sproc_script_stop -exit
+		}
+		## catch { exec $SEV(exec_cmd) -c "rm -f qhosts" } dummy
+		sproc_msg -info "Linux ${accessibletxt}host $linuxhost instead of non-Linux host $TEV(host) is used on site $TEV(site)"
+		## checkconnection $linuxhost
+
+		catch { exec $SEV(exec_cmd) -c "date +%s" } datesecnow
+		set hostsearchtimeunit "seconds"
+		set hostsearchtime [expr $datesecnow - $datesecbegin]
+		if { $hostsearchtime > 60 } {
+			set hostsearchtimeunit "minutes"
+			set hostsearchtime [expr double($hostsearchtime) / 60.0]
+		}
+		sproc_msg -info "METRIC    | STRING INFO.HOST_SEARCH_TIME | $hostsearchtime $hostsearchtimeunit"
+	} 
+
+	## check if module load of activetcl on the linux host is possible
+	set ignoresourceerror ""
+	if { $noshellrc != "" } {
+		## without source ~/.bash.<account> !
+		set sourcemodulebash "source /global/etc/modules/default/init/bash"
+
+		## prevent harmless error in modulecheck.$TEV(site):
+		## 	/global/etc/modules/3.1.6/init/bash: line 0: source: filename argument required
+		## 	source: usage: source filename [arguments]
+		set ignoresourceerror "| grep -v -e \"filename argument required\" -e \"source: usage: source filename\""	
+	} else {
+		set sourcemodulebash "source $::env(MODULESHOME)/init/bash"
+	}
+        catch { exec $SEV(exec_cmd) -c "$SSH \"$sourcemodulebash; module use --append /global/etc/modulefiles/freeware/opensource ; module load activetcl/$activetclversion\" $ignoresourceerror > modulecheck.$TEV(site) 2>&1" } dummy
+        catch { exec $SEV(exec_cmd) -c "cat modulecheck.$TEV(site) | grep -v -e 'Warning: Permanently added' -e 'ERROR:105' > modulecheck.$TEV(site)2 && mv modulecheck.$TEV(site)2 modulecheck.$TEV(site)" } dummy
+	if { [file size modulecheck.$TEV(site)] > 0 } {
+	    	sproc_msg -error "(PCSQA-REMOTECHECK-6) No module load setting of activetcl/$activetclversion is possible at site $TEV(site), host $linuxhost"
+        	sproc_cat_file -file modulecheck.$TEV(site)
+		## sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+		sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No module load setting of activetcl/$activetclversion is possible at site $TEV(site), host $linuxhost"
+		sproc_script_stop -exit
+	}	
+
+	}
+	## $validatesite?
+
+	}
+	## $TEV(site) != $thissite || $execuser == "csadmin"
+	
+
+	if { $validatesite == 1 } { 
+
+	set mkdirrundir ""
+	if { $TEV(site) != $thissite || $execuser == "csadmin" } {
+		set userhost $execuser@$linuxhost:
+		if { $TEV(site) == "ipala01" } {
+			set SCP "$MSIPSSH scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+		} else {
+			set SCP "export PASSWORD=$::env(PCSQA_PASSWORD); $SEV(gscript_dir)/qa_scripts/sshaskpass scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+		}
+		if { $remoteqsub } {
+			set run_dir [string map {$ \\$} $run_dir]
+			set mkdirrundir "$MSIPSSH mkdir -p $run_dir;"
+		}		
+	} else {
+		set userhost ""
+		set SCP "cp"
+		if { $remoteqsub } {
+			set mkdirrundir "mkdir -p $run_dir;"		
+		}		
+	}
+	if { $mkdirrundir != "" } {
+		catch { exec $SEV(exec_cmd) -c "$mkdirrundir" } dummy
+		## check if run_dir has been created;
+		## default udescratch can point to area at which USER is not permitted to write
+		## REQ000001647175
+		set rundircheckcommand "bash $noshellrc -c \\\"if \[ -d $run_dir \]; then echo rundir; else echo norundir; fi;\\\""
+		catch { exec $SEV(exec_cmd) -c "$MSIPSSH \"$rundircheckcommand\"" } rundir
+		## support of (unexpected) lines as
+		## Warning: Permanently added '<host>' (RSA) to the list of known hosts.
+		catch { exec $SEV(exec_cmd) -c "echo \"$rundir\" | grep \"^norundir$\" | wc -l " } norundir
+		if { $norundir > 0 } {
+			## fall back /u/$::env(USER)/pcsqa/tmp
+			set run_dir "/u/$::env(USER)/pcsqa/tmp"
+			set mkdirrundir "$MSIPSSH mkdir -p $run_dir;"
+			catch { exec $SEV(exec_cmd) -c "$mkdirrundir" } dummy
+		}
+	}
+        catch { exec $SEV(exec_cmd) -c "$SCP $nolynx_check_pcs_basename.tcl $userhost$run_dir/$nolynx_check_pcs_basename.tcl > scp.out 2>&1 && echo \$?" } returnresult
+        if { $returnresult != 0 } {
+		sproc_msg -error "(PCSQA-REMOTECHECK-4) Failing scp to site $TEV(site), host $linuxhost:"
+        	sproc_cat_file -file scp.out
+		## sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+		sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) Failing scp to site $TEV(site), host $linuxhost"
+		sproc_script_stop -exit
+        }
+
+	if { [file exists $p4libdefs] } {
+        	catch { exec $SEV(exec_cmd) -c "$SCP $p4libdefs $userhost$run_dir/${uniqueprefix}lib.defs" } dummy
+	}
+	if { [file exists $moduleprojectenv] } {
+        	catch { exec $SEV(exec_cmd) -c "$SCP $moduleprojectenv $userhost$run_dir/${uniqueprefix}moduleprojectenv" } dummy
+	}
+	if { [file exists $lppsource] } {
+        	catch { exec $SEV(exec_cmd) -c "$SCP $lppsource $userhost$run_dir/${uniqueprefix}lppsource" } dummy
+	}
+	if { [file exists $udeenv] } {
+        	catch { exec $SEV(exec_cmd) -c "$SCP $udeenv $userhost$run_dir/${uniqueprefix}udeenv" } dummy
+	}
+	if { $TEV(site) == $thissite } {
+		if { [file isdirectory $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)] } {
+			set pcsqa_proj_root $::env(PCSQA_PROJ_ROOT)
+		} else {
+			## set pcsqa_proj_root $::env(udeproj)
+			set pcsqa_proj_root $ude3proj
+		}
+		set projrootvars "export PCSQA_PROJ_ROOT=$pcsqa_proj_root; export MSIP_PROJ_ROOT=$::env(MSIP_PROJ_ROOT); export MSIP_LYNX_PCSQA=$::env(MSIP_LYNX_PCSQA)"
+	} else {
+		## postpone the expansion of value at remote site
+		## set projrootvars "export PCSQA_PROJ_ROOT=\$udeproj; export MSIP_PROJ_ROOT=\$udeproj"
+		set projrootvars "export PCSQA_PROJ_ROOT=$ude3proj; export MSIP_PROJ_ROOT=\$udeproj; export MSIP_LYNX_PCSQA=$::env(MSIP_LYNX_PCSQA)"
+	}
+
+	if { $noshellrc != "" } {
+		## without source ~/.bash.<account> !
+		set sourcemodulebash "source $::env(MODULESHOME)/init/bash;"
+	} else {
+		set sourcemodulebash "source $::env(MODULESHOME)/init/bash; source \$udecadrep/etc/.bashrc;"
+	}
+	set jobcmd ""
+	if { $remoteqsub && $TEV(site) != $thissite } {
+		source $SEV(gscript_dir)/rtm_shell/rtm_init_js.tcl
+		set jobcmd [rtm_job_cmd \
+            		    -job_enable 1 \
+	    		    -job_options "$SEV(job,options)" \
+	    		    -job_resources $SEV(job,resources) \
+	    		    -log_file $SEV(dst_dir)/$SEV(task).log \
+	    		    -js_only 1 ]
+    		if { $TEV(site) != "us01" && $TEV(site) != "de02" } {
+			set jobcmd [string map {" -A quick" ""} $jobcmd]
+		}
+		## remove $SEV(dst_dir)/$SEV(task).rtm_sh_cmd > $SEV(dst_dir)/.$SEV(task).job.log 2>&1
+		catch { exec $SEV(exec_cmd) -c "echo \"$jobcmd\" | sed -e 's#$SEV(dst_dir)\.*$##g'" } jobcmd
+
+		set jobcmd "$sourcemodulebash source /remote/sge/default/$sgecell/common/settings.sh; module load grd/$sgecell; $jobcmd"	
+	}
+	if { $remoteqsub } {
+		set fp [open pcsqa.exe w]
+		puts $fp "bash $noshellrc -c \\"
+		puts $fp "\"$sourcemodulebash $projrootvars; \\"
+		puts $fp "module use --append /global/etc/modulefiles/freeware/opensource; \\"
+		puts $fp "module load activetcl/$activetclversion; \\"
+		puts $fp "cd $run_dir; \\"
+		puts $fp "tclsh $nolynx_check_pcs_basename.tcl > ${uniqueprefix}log.$TEV(site)\""
+		close $fp
+        	catch { exec $SEV(exec_cmd) -c "$SCP pcsqa.exe $userhost$run_dir/${uniqueprefix}pcsqa.exe" } dummy
+		if { $jobcmd != "" } {
+        		catch { exec $SEV(exec_cmd) -c "$SCP $SEV(gscript_dir)/qa_scripts/wait_on_job.sh $userhost$run_dir/${uniqueprefix}wait_on_job.sh" } dummy
+		}
+		## puts "$SSH \"bash $noshellrc -c \\\"cd $run_dir; chmod u+x ${uniqueprefix}pcsqa.exe; $jobcmd ${uniqueprefix}pcsqa.exe > job.log 2>&1\\\"\""
+        	catch { exec $SEV(exec_cmd) -c "$SSH \"bash $noshellrc -c \\\"cd $run_dir; chmod u+x ${uniqueprefix}pcsqa.exe; $jobcmd ${uniqueprefix}pcsqa.exe > ${uniqueprefix}job.log 2>&1\\\"\"" } dummy
+		if { $jobcmd != "" } {
+       			catch { exec $SEV(exec_cmd) -c "$SSH \"cd $run_dir; chmod u+x ${uniqueprefix}wait_on_job.sh; ${uniqueprefix}wait_on_job.sh ${uniqueprefix}job.log ${uniqueprefix}log.$TEV(site) $sgecell\"" } dummy
+		}
+        	catch { exec $SEV(exec_cmd) -c "$SSH \"cd $run_dir; cat ${uniqueprefix}log.$TEV(site)\" > log.$TEV(site)" } dummy
+	} else {
+        	## puts "$SSH \"bash $noshellrc -c \\\"$sourcemodulebash $projrootvars; module use --append /global/etc/modulefiles/freeware/opensource; module load activetcl/$activetclversion; cd $run_dir; tclsh $nolynx_check_pcs_basename.tcl\\\"\" > log.$TEV(site)"
+        	catch { exec $SEV(exec_cmd) -c "$SSH \"bash $noshellrc -c \\\"$sourcemodulebash $projrootvars; module use --append /global/etc/modulefiles/freeware/opensource; module load activetcl/$activetclversion; cd $run_dir; tclsh $nolynx_check_pcs_basename.tcl\\\"\" > log.$TEV(site)" } dummy
+		## puts $dummy
+	}
+        catch { exec $SEV(exec_cmd) -c "$SSH \"cd $run_dir; /bin/rm -f $nolynx_check_pcs_basename.tcl ${uniqueprefix}* \"" } dummy 
+
+	}
+	## $validatesite?
+
+}
+## $validatesite?
+
+set warnings 0
+set pcsqanotapplicable 0
+if { [file exists log.$TEV(site)] } {
+  catch { exec $SEV(exec_cmd) -c "grep \"SNPS_WARNING: PCSQA is not applicable for site\" log.$TEV(site) | wc -l" } pcsqanotapplicable
+  if { $pcsqanotapplicable == 0 } {
+
+    catch { exec $SEV(exec_cmd) -c "grep \"Number of executed checks\" log.$TEV(site) | wc -l"} executedchecks 
+    if { [file size log.$TEV(site)] > 0 && $executedchecks > 0 } {
+	sproc_cat_file -file log.$TEV(site)
+	catch { exec $SEV(exec_cmd) -c "grep SNPS_ERROR   log.$TEV(site) | wc -l" } errors
+	catch { exec $SEV(exec_cmd) -c "grep SNPS_WARNING log.$TEV(site) | wc -l" } warnings
+	if { $errors > 0 } {
+		sproc_msg -error "Checking PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site), host $linuxhost, has been failed with $errors errors"
+	}	
+	if { $warnings > 0 } {
+		sproc_msg -warning "Checking PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site), host $linuxhost, gives $warnings warnings"
+	}
+	if { $errors == 0 && $warnings == 0 } {
+    		## Only
+		## Number of executed checks: <value>
+    		puts "Checking PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site), host $linuxhost, has been succeeded"
+	}
+	if { [string compare $SEV(task) "check_pcs_sites_$::env(USER)_$TEV(site)"] == 0 &&
+	     $TEV(site) == $thissite && $execuser == $::env(USER) } {
+		## Create log_$USER.$TEV(site) at the site of execution in case of non-csadmin user,
+		## to be used in evaluate_status to automatic waive errors found by csadmin
+		## at remote sites and not found by the user at this site.
+		## This prevents errors caused by restricted nodes at which csadmin is no member. 
+		catch { exec $SEV(exec_cmd) -c "mv log.$TEV(site) log_$execuser.$TEV(site)" } dummy
+	}
+    } else {
+	if { [file size log.$TEV(site)] == 0 } {
+		sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+		sproc_msg -error "Log file log.$TEV(site) is empty at $run_dir"
+	} else {
+		sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) PCSQA of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) did not end properly"
+		sproc_cat_file -file log.$TEV(site)
+		sproc_msg -error "PCSQA should end with 'Number of executed checks'"		
+	}
+	set errors 1
+    }
+
+	## cross-check with VC
+	set site_locations $refccswork/site_locations.txt
+	if { [file exists $site_locations] } {
+		set usite [string toupper $TEV(site)]
+		catch { exec $SEV(exec_cmd) -c "grep \"^$usite$\" $site_locations | wc -l" } designsite
+		if { $TEV(site) != "de02" &&
+	     	     $TEV(site) != "us01" &&
+	             $TEV(site) != "in01"  } {
+			if { $designsite == 0 } {
+				sproc_msg -warning "(PCSQA-VC-1 $TEV(site)) design directory in PCS is a link in site $TEV(site), but $usite is no design site in VC"
+			}		
+		} else {
+  			catch { exec $SEV(exec_cmd) -c "grep \"SNPS_WARNING: design directory in PCS for site $TEV(site) is no link\" log.$TEV(site) | wc -l" } designnolink
+			if { $designnolink > 0 && $designsite > 0 } {
+				sproc_msg -error "(PCSQA-VC-1 $TEV(site)) design directory in PCS is no link in site $TEV(site), but $usite is design site in VC"
+				catch { exec $SEV(exec_cmd) -c "echo \"SNPS_ERROR  : (PCSQA-VC-1 $TEV(site)) design directory in PCS is no link in site $TEV(site), but $usite is design site in VC\" >> log.$TEV(site)" } dummy
+			}		
+		}
+	}
+
+  } else {
+  	## show WARNING about PCSQA is not applicable
+	sproc_cat_file -file log.$TEV(site)
+	
+	## cross-check with VC
+	set site_locations $refccswork/site_locations.txt
+	if { [file exists $site_locations] } {
+		set usite [string toupper $TEV(site)]
+		catch { exec $SEV(exec_cmd) -c "grep \"^$usite$\" $site_locations | wc -l" } designsite
+		if { $designsite > 0 } {
+			sproc_msg -error "(PCSQA-VC-1 $TEV(site)) design directory in PCS is no link in site $TEV(site), but $usite is design site in VC"
+			catch { exec $SEV(exec_cmd) -c "echo \"SNPS_ERROR  : (PCSQA-VC-1 $TEV(site)) design directory in PCS is no link in site $TEV(site), but $usite is design site in VC\" >> log.$TEV(site)" } dummy
+		}		
+	}
+  }	
+} else {
+	if { $validatesite == 1 } { 
+		sproc_msg -error "(PCSQA-REMOTECHECK $TEV(site)) No checking of PCS $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) at site $TEV(site) has been executed"
+		sproc_msg -error "No log file log.$TEV(site) can be found at $run_dir"
+	}
+}
+if { $TEV(site) == $thissite && $execuser == $::env(USER) } {
+	## This preserves the availability of log_$USER.$TEV(site) for evaluate_status.
+	## Also an empty one in case $SEV(task) != "check_pcs_sites_$USER_$TEV(site)"
+	## (= remote validation by non-csadmin user)
+	catch { exec $SEV(exec_cmd) -c "touch log_$execuser.$TEV(site)" } dummy
+}
+
+if { $pcsqanotapplicable == 0 } {
+if { $errors > 0 } {
+	puts "Give task $SEV(task) Pass Status value 'Waived' to ensure reaching task evaluate_status"
+	catch { exec $SEV(exec_cmd) -c "touch $SEV(log_dir)/$SEV(task).pass" } dummy
+}
+set upcs  [string map { - _ . _ } [string toupper $SVAR(product_name)_$SVAR(pcs_name)_$SVAR(pcs_version)]]
+set usite [string toupper $TEV(site)]
+sproc_msg -info "METRIC | INTEGER PCSQA.ERRORS.${upcs}_$usite | $errors"
+sproc_msg -info "METRIC | INTEGER PCSQA.WARNINGS.${upcs}_$usite | $warnings"
+set score [expr $warnings + [expr $errors * 5 ]]
+sproc_msg -info "METRIC | INTEGER PCSQA.SCORE.${upcs}_$usite | $score"
+}
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

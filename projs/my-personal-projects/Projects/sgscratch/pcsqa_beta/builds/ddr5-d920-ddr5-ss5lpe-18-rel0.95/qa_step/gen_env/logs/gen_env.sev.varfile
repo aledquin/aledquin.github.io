@@ -1,0 +1,19 @@
+
+## -----------------------------------------------------------------------------
+## START - RTM Generated Code: SEV Variable Definitions                         
+## -----------------------------------------------------------------------------
+
+set SEV(task)          "gen_env"
+set SEV(src_name)      "ref_ccs"
+set SEV(dst_name)      "gen_env"
+set SEV(tmp_dir)       "/slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/ddr5-d920-ddr5-ss5lpe-18-rel0.95/qa_step/gen_env/tmp"
+set SEV(script_file) "scripts_global/qa_scripts/gen_env.tcl"
+set SEV(flow_name)     "tf_pcs_qa"
+set SEV(flow_order)    3010000
+
+set SEV(gen_file)    "../logs/gen_env.gen"
+
+## -----------------------------------------------------------------------------
+## STOP - RTM Generated Code: SEV Variable Definitions                          
+## -----------------------------------------------------------------------------
+

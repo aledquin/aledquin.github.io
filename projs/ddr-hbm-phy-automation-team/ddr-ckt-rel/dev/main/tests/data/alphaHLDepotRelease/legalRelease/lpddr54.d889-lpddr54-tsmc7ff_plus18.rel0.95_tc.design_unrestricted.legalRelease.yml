@@ -1,0 +1,36 @@
+---
+calibre_verifs: true
+releasePmMailDist: deepakgs,dpatil,bapna,pagarwal,murari
+supply_pins_override: 
+    dwc_ddrphy_lcdl: M4
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: M6
+releaseUtilityMacro: 
+    - dwc_ddrphy_vddqclamp_4x1_ns
+    - dwc_ddrphy_vddqclamp_2x2_ns
+    - dwc_ddrphy_vdd2clamp_4x1_ns
+    - dwc_ddrphy_vdd2clamp_2x2_ns
+    - dwc_ddrphy_endcell_ns
+    - dwc_ddrphy_decapvdd_4x1_ns
+    - dwc_ddrphy_decapvdd_1x1_ns
+    - dwc_ddrphy_decapvdd_1by4x1_ns
+    - dwc_ddrphy_decapvddq_4x1_ns
+    - dwc_ddrphy_decapvddq_1x1_ns
+    - dwc_ddrphy_decapvddq_1by4x1_ns
+    - dwc_ddrphy_decapvdd2_4x1_ns
+    - dwc_ddrphy_decapvdd2_1x1_ns
+    - dwc_ddrphy_decapvdd2_1by4x1_ns
+releaseMailDist: deepakgs,dpatil,bapna,pagarwal,murari
+metal_stack: 15M_1Xs_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Yx2R
+metal_stack_ip: 8M_1Xs_h_1Xa_v_1Ya_h_4Y_vhvh
+layers: M0 M1 M2 M3 M4 M5 M6 OVERLAP
+release_gds_cdl: icv
+layout_tag: Final Release
+reference_date_time: 14 days ago
+rel: 0.95a_tc
+utility_name: dwc_ddrphy_utility_cells
+vcrel: 0.95a_tc
+utility_tag_layers: 63:63 60:63
+p4_release_root: products/lpddr54/project/d889-lpddr54-tsmc7ff_plus18
+process: tsmc7ff_plus18
+

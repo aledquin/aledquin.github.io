@@ -1,0 +1,18 @@
+
+## -----------------------------------------------------------------------------
+## START - RTM Generated Code: SEV Variable Definitions                         
+## -----------------------------------------------------------------------------
+
+set SEV(task)          "get_p4_content"
+set SEV(src_name)      "NULL"
+set SEV(dst_name)      "get_p4_content"
+set SEV(tmp_dir)       "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/tmp"
+set SEV(script_file) "scripts_global/qa_scripts/get_p4_content.tcl"
+set SEV(flow_name)     "tf_pcs_qa"
+set SEV(flow_order)    1000000
+
+
+## -----------------------------------------------------------------------------
+## STOP - RTM Generated Code: SEV Variable Definitions                          
+## -----------------------------------------------------------------------------
+

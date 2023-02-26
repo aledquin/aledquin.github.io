@@ -1,0 +1,5 @@
+c134-ss7lpp-1.8v_S00 : /remote/cad-rep/projects/ddr54/d822-ddr54-ss7hpp-18/rel1.00_cktpcs_eval/cad/project.env
+ss7lpp-18_S00_13M_4Mx_7Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c134-ss7lpp-1.8v_S00/rel4.4.0/cad/13M_4Mx_7Dx_1Gx_1Iz_LB/env.tcl
+ss7lpp-18_S00_13M_4Mx_7Dx_2Iz_LB : /remote/cad-rep/proj/c134-ss7lpp-1.8v_S00/rel4.4.0/cad/13M_4Mx_7Dx_2Iz_LB/env.tcl
+ss7lpp-18_S00_14M_4Mx_8Dx_2Iz_LB : /remote/cad-rep/proj/c134-ss7lpp-1.8v_S00/rel4.4.0/cad/14M_4Mx_8Dx_2Iz_LB/env.tcl
+ss7hpp-18_SV0_18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB : /remote/cad-rep/proj/c144-ss7hpp-1.8v_SV0/rel1.8.0/cad/18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB/env.tcl

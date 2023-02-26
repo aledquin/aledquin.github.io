@@ -1,0 +1,5 @@
+Subject: PCS: Updating d820-ddr54v2-tsmc5ffp12 rel1.20_intcA3 : PASS
+FROM: alvaro
+To: alvaro@synopsys.com,alvaro@synopsys.com
+Content-Type: text/html; charset=us-ascii
+

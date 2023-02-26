@@ -1,0 +1,71 @@
+#!/depot/tcl8.6.6/bin/tclsh
+#nolint Main
+#nolint utils__script_usage_statistics
+
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+
+package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "Alvaro Quintana Carvacho"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+
+# Declare cmdline opt vars here, so they are global
+set opt_fast ""
+set opt_test ""
+set opt_help ""
+set opt_project ""
+
+#lappend auto_path "$RealBin/../bin"
+lappend auto_path "$RealBin/../../lib"
+
+package require Messaging 1.0
+namespace import ::Messaging::*
+
+package require Misc 1.0
+namespace import ::Misc::*
+
+::tcltest::verbose bpste
+
+header 
+
+test get_min_val_test_01 {get_min_val unit test} {
+    get_min_val 1 2
+} 1
+
+test get_min_val_test_02 {get_min_val unit test} {
+    get_min_val 6 4
+} 4
+
+test get_min_val_test_03 {get_min_val unit test} {
+    get_min_val 7
+} 7
+
+test get_min_val_test_04 {get_min_val unit test} {
+    get_min_val "ROCK"
+} ""
+
+test get_min_val_test_05 {get_min_val unit test} {
+    get_min_val 
+} ""
+
+test get_min_val_test_06 {get_min_val unit test} {
+    get_min_val 4 "ROCK"
+} 4
+
+test get_min_val_test_07 {get_min_val unit test} {
+    get_min_val "ROCK" 14
+} 14
+
+# Next up:  pattern-matching on results.
+
+
+# To see test statistics (Total/Passed/Skipped/Failed), best put this line in the end:
+cleanupTests

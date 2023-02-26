@@ -1,0 +1,4 @@
+c243-tsmc12ffcll-1.8v : /remote/cad-rep/projects/ddr43/d526-ddr43-tsmc12ffcll18/rel2.80_rel_/cad/project.env
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF : /remote/cad-rep/proj/c243-tsmc12ffcll-1.8v/rel5.4.0/cad/11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF/env.tcl
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF : /remote/cad-rep/proj/c243-tsmc12ffcll-1.8v/rel5.2.0/cad/11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF/env.tcl
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF : /remote/cad-rep/proj/c243-tsmc12ffcll-1.8v/rel5.4.0/cad/11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF/env.tcl

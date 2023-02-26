@@ -1,0 +1,1207 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/ds/scripts_global/demo/demo_script.tcl#50 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This script is used when running the RTM in demo mode.
+## *
+## * The RTM demo mode is enabled by setting the shell variable named
+## * LYNX_DEMO before starting the RTM. The value of LYNX_DEMO does not matter.
+## *
+## * During demo mode, run_flow behavior is adjusted as follows:
+## * - The gen_tasks will run as normal.
+## * - The branch_tasks will run as normal.
+## * - For all other tasks:
+## *   - This script is used instead of the normal script.
+## *   - Tasks not using the tool named 'tcl' will be converted to 'tcl_job'.
+## *     Tasks using the tool named 'tcl' will continue using 'tcl'.
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+## NAME: TEV(type)
+## TYPE: string
+## INFO:
+## * ude pv type
+set TEV(type) ""
+
+## NAME: TEV(prefix)
+## TYPE: string
+## INFO:
+## * ude pv prefix
+set TEV(prefix) ""
+
+## NAME: TEV(name)
+## TYPE: string
+## INFO:
+## * ude pv name
+set TEV(name) ""
+
+## NAME: TEV(ver_tool)
+## TYPE: oos
+## OOS_LIST: calibre icv hercules
+## INFO:
+## * Used to set the used verification tool.
+set TEV(ver_tool) ""
+
+## NAME: TEV(metal_stack_option)
+## TYPE: string
+## INFO:
+## * Blah
+set TEV(metal_stack_option) ""
+
+## NAME: TEV(qaapp)
+## TYPE: oos
+## OOS_LIST: ccsqa pcsqa
+## INFO:
+## * Used to set the used verification tool.
+set TEV(qaapp) "ccsqa"
+
+## NAME: TEV(check_switches)
+## TYPE: oos
+## OOS_LIST: 0 1
+## INFO:
+## * Used to select check_switches and/or check deck version.
+## * 0 = only check deck version
+## * 1 = only check_switches 
+set TEV(check_switches) "1"
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+switch $TEV(qaapp) {
+	ccsqa {
+		for {set i 2} {$i <= 7} {incr i} {
+			set errorprefix($i) "SW-$i"
+		}
+	}
+	pcsqa {
+		for {set i 2} {$i <= 5} {incr i} {
+			set errorprefix($i) "PCSQA-2.1o"
+		}
+		## Error prefixes for check deck version
+		## PCS QA specification 18.1
+		set errorprefix(6) "PCSQA-2.1vv"
+		set errorprefix(7) "PCSQA-2.1vv"
+	}
+}
+
+set msip_cad_proj_name ""
+set msip_cad_rel_name ""
+switch $TEV(qaapp) {
+	ccsqa {
+		set cspath     $::env(CCSQA_PROJ_ROOT)/cad/$SVAR(ccs_name)/$SVAR(ccs_version)
+		set cswork     $::env(CCSQA_WORK_DIR)
+		set sharedpath $cspath
+		set msip_cad_proj_name $SVAR(ccs_name)
+		set msip_cad_rel_name  $SVAR(ccs_version)
+		set csname "CCS"
+	}
+	pcsqa {
+		set cspath     $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+		set cswork     $::env(PCSQA_WORK_DIR)
+		set sharedpath $cspath
+		if { [file exists $SEV(step_dir)/work] } {
+			## until Lynx 2018.06-SP1
+			set refccswork $SEV(step_dir)/work/ref_ccs
+		} else {
+			## since Lynx 2018.06-SP1
+			set refccswork $SEV(step_dir)/ref_ccs/work
+		}
+		if { [file exists $refccswork/ref_ccs.txt] } {
+    		       catch { exec $SEV(exec_cmd) -c "cat $refccswork/ref_ccs.txt | head -1" } refccs
+		       if { [file exists $sharedpath/cad/shared] == 0 } {
+		               set sharedpath $refccs
+		       }	       
+		       catch { exec $SEV(exec_cmd) -c "basename \$(dirname $refccs)" } msip_cad_proj_name 
+		       catch { exec $SEV(exec_cmd) -c "basename $refccs" } msip_cad_rel_name
+		}
+		
+		set csname "PCS"
+	}
+}
+
+set pvtaskev $SEV(task).ev
+
+set utype [string toupper $TEV(type)] 
+
+## introduce pvprefix, which ensures compatibility with other
+## check switches implementations
+set pvprefix $TEV(prefix)
+
+## get switches waive file
+set waivefileoption ""
+set waivefile "$sharedpath/cad/shared/vc/switches.waive"
+## Syntax:
+## # waiving violations at switch names for each pv-prefix
+## <switch name>
+## START <pv-prefix>
+## 	# waiving violations at switch names ONLY applicable for pv-prefix mentioned at START line until END line
+## 	<switch name>
+## END <pv-prefix>
+## START <pv-prefix>
+## 	# waiving violations at ALL switch names ONLY applicable for pv-prefix mentioned at START line until END line
+## 	ALL_SWITCHES (to be implemented)
+## END <pv-prefix>
+if { $TEV(check_switches) == "1" && [file exists $waivefile] } {
+	puts "Waive file: $waivefile"
+	catch { exec $SEV(exec_cmd) -c "grep \"^\[\[:blank:\]\]*START\[\[:blank:\]\]\" $waivefile | awk '{ print \$2 }'" } prefixes
+	if { $prefixes != "" } {
+		## create TEV(prefix) specific waiving file
+		## with switch names only to be waived at TEV(prefix)
+		set localwaivefile switches_$TEV(prefix).waive
+		catch { exec $SEV(exec_cmd) -c "rm -f $localwaivefile" } dummy
+		
+		## switch names applicable for ALL prefixes
+		## sections between END (or begin of file) 
+		## and START (or end of file) statements
+		set prefixes [split $prefixes "\n"]
+		set endline 1
+		set errorswaivefile 0
+		foreach prefix $prefixes {
+			catch { exec $SEV(exec_cmd) -c "grep -n \"^\[\[:blank:\]\]*START\[\[:blank:\]\]\[\[:blank:\]\]*$prefix\[\[:blank:\]\]*$\" $waivefile | sed -e 's/:/ /g' | awk '{ print \$1 }'" } startline
+			if { [regexp {^(\d+)$} $startline] && [regexp {^(\d+)$} $endline] && $startline > $endline } {
+				set sectionlines [expr $startline - $endline]
+				catch { exec $SEV(exec_cmd) -c "grep -B $sectionlines \"^\[\[:blank:\]\]*START\[\[:blank:\]\]\[\[:blank:\]\]*$prefix\[\[:blank:\]\]*$\" $waivefile | grep -v -e START -e END | sed -e 's/^\\s*//g' >> $localwaivefile" } dummy
+			}		
+			catch { exec $SEV(exec_cmd) -c "grep -n \"^\[\[:blank:\]\]*END\[\[:blank:\]\]\[\[:blank:\]\]*$prefix\[\[:blank:\]\]*$\"   $waivefile | sed -e 's/:/ /g' | awk '{ print \$1 }'" } endline
+			if { [regexp {^(\d+)$} $endline] == 0 } {
+				sproc_msg -error "($errorprefix(2)) Prefix $prefix has no END statement in waive file: $waivefile"	
+				incr errorswaivefile
+			}			
+		}
+		if { $errorswaivefile > 0 } {
+			sproc_script_stop -exit				
+		}
+		catch { exec $SEV(exec_cmd) -c "cat $waivefile | wc -l" } startline
+		if { [regexp {^(\d+)$} $startline] && [regexp {^(\d+)$} $endline] && $startline > $endline } {
+			set sectionlines [expr $startline - $endline]
+			catch { exec $SEV(exec_cmd) -c "grep -A $sectionlines \"^\[\[:blank:\]\]*END\[\[:blank:\]\]\[\[:blank:\]\]*$prefix\[\[:blank:\]\]*$\" $waivefile | grep -v -e START -e END | sed -e 's/^\\s*//g' >> $localwaivefile" } dummy
+		}		
+
+		catch { exec $SEV(exec_cmd) -c "grep -n \"^\[\[:blank:\]\]*START\[\[:blank:\]\]\[\[:blank:\]\]*$TEV(prefix)\[\[:blank:\]\]*$\" $waivefile | sed -e 's/:/ /g' | awk '{ print \$1 }'" } startline
+		catch { exec $SEV(exec_cmd) -c "grep -n \"^\[\[:blank:\]\]*END\[\[:blank:\]\]\[\[:blank:\]\]*$TEV(prefix)\[\[:blank:\]\]*$\"   $waivefile | sed -e 's/:/ /g' | awk '{ print \$1 }'" } endline
+		if { [regexp {^(\d+)$} $startline] && [regexp {^(\d+)$} $endline] && $endline > $startline } {
+			set sectionlines [expr $endline - $startline]
+			## switch names applicable for only TEV(prefix)	
+			catch { exec $SEV(exec_cmd) -c "grep -A $sectionlines \"^\[\[:blank:\]\]*START\[\[:blank:\]\]\[\[:blank:\]\]*$TEV(prefix)\[\[:blank:\]\]*$\" $waivefile | grep -v -e START -e END | sed -e 's/^\\s*//g' >> $localwaivefile" } dummy
+		}		
+		if { [file exists $localwaivefile] } {
+			puts "$TEV(prefix) specific waive file: $run_dir/$localwaivefile"
+			set waivefileoption "-waive_file $run_dir/$localwaivefile"
+		}
+	} else {
+		set waivefileoption "-waive_file $waivefile"	
+	}
+}
+
+## get pvprefix to VC component name mapping from mapping file
+set pvprefixvcmapping 0
+set pvprefixvcmapfilename "pv-prefix-vc_mapping.conf"
+set pvprefixvcmapfilepath "cad/shared/vc/$pvprefixvcmapfilename"
+set pvprefixvcmapfile $cspath/$pvprefixvcmapfilepath
+if { $TEV(qaapp) == "pcsqa" } {
+	if { [file exists $pvprefixvcmapfile] && [info exists refccs] && [file exists $refccs/$pvprefixvcmapfilepath] } {
+		## create local incremental mapping file
+		catch { exec $SEV(exec_cmd) -c "cat $pvprefixvcmapfile $refccs/$pvprefixvcmapfilepath > PCS-CCS-$pvprefixvcmapfilename" } dummy
+		catch { exec $SEV(exec_cmd) -c "cat PCS-CCS-$pvprefixvcmapfilename | grep -v -e ^# -e include | awk '{ print \$1 }' | sort -u" } pvprefixes
+		catch { exec $SEV(exec_cmd) -c "grep include PCS-CCS-$pvprefixvcmapfilename > PCS-CCS-$pvprefixvcmapfilename.new" } dummy
+		set pvprefixes [split $pvprefixes "\n"]
+		foreach pvprfx $pvprefixes {
+			## add each first (of PCS) mapping of pvprfx to resulting PCS-CCS-$pvprefixvcmapfilename
+			catch { exec $SEV(exec_cmd) -c "grep ^\[\[:blank:\]\]*$pvprfx\[\[:blank:\]\] PCS-CCS-$pvprefixvcmapfilename | head -1 >> PCS-CCS-$pvprefixvcmapfilename.new" } dummy 
+		}
+		catch { exec $SEV(exec_cmd) -c "mv PCS-CCS-$pvprefixvcmapfilename.new PCS-CCS-$pvprefixvcmapfilename" } dummy
+		set pvprefixvcmapfile $run_dir/PCS-CCS-$pvprefixvcmapfilename
+	} else {
+		if { [file exists $pvprefixvcmapfile] == 0 && [info exists refccs] } {
+			set pvprefixvcmapfile $refccs/$pvprefixvcmapfilepath
+		}
+	}
+	
+}
+if { [file exists $pvprefixvcmapfile] == 0 } {
+	set pvprefixvcmapfile $sharedpath/$pvprefixvcmapfilepath
+}
+if { [file exists $pvprefixvcmapfile] == 0 } {
+	set pvprefixvcmapfile $::env(udecadrep)/msip/ude_conf/$pvprefixvcmapfilename
+}
+if { [file exists $pvprefixvcmapfile] == 0 } {
+	set pvprefixvcmapfile $cswork/$pvprefixvcmapfilename
+}
+if { [file exists $pvprefixvcmapfile] } {
+	## support of include statements
+	## remove comments starting with # to avoid disturbing pre-processor cpp recognizes them as directives
+	catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/sh && module purge && module use --append /global/etc/modulefiles/freeware/opensource && module load gcc/2.95.3 && sed -e 's/^\\s*#.*$//g' $pvprefixvcmapfile > ${pvprefixvcmapfilename}2 && cpp -E -o $pvprefixvcmapfilename ${pvprefixvcmapfilename}2 && rm -f ${pvprefixvcmapfilename}2" } dummy
+	if { [file exists $pvprefixvcmapfilename] == 0 || [file exists ${pvprefixvcmapfilename}2] } {
+		## failing cpp with gcc/2.95.3, use default cpp
+		catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/sh && module purge && sed -e 's/^\\s*#.*$//g' $pvprefixvcmapfile > ${pvprefixvcmapfilename}2 && /depot/gcc/bin/cpp -E -o $pvprefixvcmapfilename ${pvprefixvcmapfilename}2 && rm -f ${pvprefixvcmapfilename}2" } dummy
+		if { [file exists $pvprefixvcmapfilename] == 0 || [file exists ${pvprefixvcmapfilename}2] } {
+			## failing first default cpp, use 2nd default cpp
+			catch { exec $SEV(exec_cmd) -c ". $::env(MODULESHOME)/init/sh && module purge && sed -e 's/^\\s*#.*$//g' $pvprefixvcmapfile > ${pvprefixvcmapfilename}2 && /usr/local/bin/cpp -E -o $pvprefixvcmapfilename ${pvprefixvcmapfilename}2 && rm -f ${pvprefixvcmapfilename}2" } dummy
+			if { [file exists $pvprefixvcmapfilename] == 0 || [file exists ${pvprefixvcmapfilename}2] } {
+				## fall back
+				catch { exec $SEV(exec_cmd) -c "cp -f $pvprefixvcmapfile $pvprefixvcmapfilename && rm -f ${pvprefixvcmapfilename}2" } dummy
+			}
+		}
+	}
+	catch { exec $SEV(exec_cmd) -c "grep -v \"^#\" $pvprefixvcmapfilename | grep \"^$pvprefix\[\[:blank:\]\]\" | wc -l" } pvprefixvcmapping
+	if { $pvprefixvcmapping > 0 } {
+		catch { exec $SEV(exec_cmd) -c "grep -v \"^#\" $pvprefixvcmapfilename | grep \"^$pvprefix\[\[:blank:\]\]\" | sed -e 's/^$pvprefix\\s*//g'" } vccomponent
+		regsub -all {\s+} $vccomponent { } greptype
+		set greptype [string trimright $greptype]
+		if { $greptype != "" } {		
+			sproc_msg -info "Mapping from pv prefix '$pvprefix' to VC component name '$greptype' found in $pvprefixvcmapfile"
+		} else {
+			set pvprefixvcmapping 0
+		}	
+	}
+}
+
+## Generate switches spec
+set tool $TEV(ver_tool)
+set defaultpvprefixmapping 0
+if { $pvprefixvcmapping == 0 } {
+## apply default pvprefix to VC component name mapping
+if { ${pvprefix} == "PADWB" || [string compare -length 5 [string toupper ${pvprefix}] "PADWB"] == 0 } {
+	set greptype "PAD DRC WIRE BOND"
+} else {
+if { ${pvprefix} == "PADFC" || [string compare -length 7 [string toupper ${pvprefix}] "PADEUFC"] == 0 } {
+	set greptype "PAD DRC FLIP CHIP"
+} else {
+if { [string compare -length 7 [string toupper ${pvprefix}] "PADLFFC"] == 0 } {
+	set greptype "PAD DRC LEAD FREE FLIP CHIP"
+} else {
+if { ${pvprefix} == "LUP" } {
+	set greptype "DRC Latch-up"
+} else {
+if { ${pvprefix} == "DRCDPD" } {
+	set greptype "Dummy OD_PO DRC"
+} else {
+if { ${pvprefix} == "DRCDM" } {
+	set greptype "Dummy Metal DRC"
+} else {
+if { ${pvprefix} == "PM" && $utype == "DRC" } {
+	set greptype "DFM PM"
+} else {
+if { [string compare -length 4 "BOAC" $TEV(name)] == 0 } {
+	set greptype "DRC BOAC"
+} else {
+	if { ${pvprefix} == $utype || ${pvprefix} == "ESD" } {
+		set greptype ${pvprefix}
+	} else {
+		set defaultpvprefixmapping 1
+		set greptype "${pvprefix} $utype"
+	}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+if { $pvprefixvcmapping == 0 } {
+	sproc_msg -info "Default mapping from pv prefix '$pvprefix' to VC component name '$greptype' applied"	
+}
+if { [file exists $SEV(step_dir)/work] } {
+	## until Lynx 2018.06-SP1
+	set srcwork $SEV(step_dir)/work/$SEV(src)
+} else {
+	## since Lynx 2018.06-SP1
+	set srcwork $SEV(step_dir)/$SEV(src)/work
+}
+set textgreptype $greptype
+catch { exec $SEV(exec_cmd) -c "grep \"^${greptype}\[\[:blank:\]\]\[\[:blank:\]\]*${tool}\[\[:blank:\]\]\[\[:blank:\]\]*\" $srcwork/switches_spec.txt | wc -l" } switchlines
+if { $switchlines == 0 } { 
+	set tool Interoperable 
+	set greptype i$utype
+}
+set filegreptype [string map { " " _ ( _ ) _ } $greptype] 
+set switches_spec_file ${filegreptype}_$TEV(ver_tool)_switches_spec.txt
+catch { exec $SEV(exec_cmd) -c "grep \"^${greptype}\[\[:blank:\]\]\[\[:blank:\]\]*${tool}\[\[:blank:\]\]\[\[:blank:\]\]*\" $srcwork/switches_spec.txt | sed -e 's#^${greptype}\\s\\s*${tool}\\s\\s*##g' > $switches_spec_file" } dummy
+if { [file size $switches_spec_file] == 0 } {
+	if { $TEV(check_switches) == "1" } {
+		sproc_msg -warning "($errorprefix(2)) No switches (for VC Component Name '${textgreptype} $TEV(ver_tool)' or 'i${utype} Interoperable') are defined for $SEV(task) in porting spec"	
+	}
+	## sproc_script_stop -exit
+	set greptype $textgreptype
+	set tool $TEV(ver_tool)
+	set filegreptype [string map { " " _ } $greptype] 
+	## create empty VC switches file
+	catch { exec $SEV(exec_cmd) -c "touch $switches_spec_file ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt" } dummy
+} else {
+
+if { $TEV(check_switches) == "1" &&
+     $greptype == "i$utype" &&
+     $tool == "Interoperable" } {
+	sproc_msg -info "Switches for VC Component Name 'i${utype} Interoperable') are found for $SEV(task) in porting spec"	
+}
+
+## filter only the switches lines applicable for $TEV(metal_stack_option)
+set fp [open $switches_spec_file r]
+set file_data [read $fp]
+close $fp
+set fpnew [open ${switches_spec_file}2 w]
+set lines [split $file_data "\n"]
+foreach line $lines {
+	catch { exec $SEV(exec_cmd) -c "echo \"$line\" | awk '{ print \$NF }'" } metaloption
+	if { $metaloption == "\[\]" || $metaloption == $TEV(metal_stack_option) } {
+		puts $fpnew "$line"		
+	}	
+}
+close $fpnew
+catch { exec $SEV(exec_cmd) -c "grep \"\[\[:blank:\]\]$TEV(metal_stack_option)\[\[:blank:\]\]*$\" ${switches_spec_file}2 > ${filegreptype}_$TEV(ver_tool)_switches_spec_$TEV(metal_stack_option).txt" } dummy
+if { [file size ${filegreptype}_$TEV(ver_tool)_switches_spec_$TEV(metal_stack_option).txt] > 0 } {
+	## remove the switches at which a metal stack specific has been defined
+	## in this way the common values are removed, which have to be overruled
+	catch { exec $SEV(exec_cmd) -c "cat ${filegreptype}_$TEV(ver_tool)_switches_spec_$TEV(metal_stack_option).txt | awk '{ print \$1 }'" } metalstack_switches
+	set metalstack_switches [split $metalstack_switches "\n"]
+	foreach metalstack_switch $metalstack_switches {
+		catch { exec $SEV(exec_cmd) -c "grep -v \"^$metalstack_switch\[\[:blank:\]\]\" ${switches_spec_file}2 > ${switches_spec_file}3" } dummy
+		catch { exec $SEV(exec_cmd) -c "mv ${switches_spec_file}3 ${switches_spec_file}2" } dummy
+	}
+
+	## restore the switches with metal stack specific values
+	catch { exec $SEV(exec_cmd) -c "mv  ${switches_spec_file}2 ${switches_spec_file}3" } dummy
+	catch { exec $SEV(exec_cmd) -c "cat ${switches_spec_file}3 ${filegreptype}_$TEV(ver_tool)_switches_spec_$TEV(metal_stack_option).txt > ${switches_spec_file}2" } dummy
+	catch { exec $SEV(exec_cmd) -c "rm -f ${switches_spec_file}3" } dummy
+
+	## remove TEV(metal_stack_option) at the end of line (after [])
+	catch { exec $SEV(exec_cmd) -c "sed -e 's/$TEV(metal_stack_option)\\s*$//g' ${switches_spec_file}2 > $switches_spec_file && rm ${switches_spec_file}2" } dummy
+} else {
+	catch { exec $SEV(exec_cmd) -c "mv -f ${switches_spec_file}2 $switches_spec_file" } dummy
+}
+catch { exec $SEV(exec_cmd) -c "rm -f ${filegreptype}_$TEV(ver_tool)_switches_spec_$TEV(metal_stack_option).txt" } dummy
+
+## convert to ON/OFF switch values
+set fp [open sed.exe w]
+puts $fp "s/\\s\\s*unset\\s\\s*/ OFF /g"
+puts $fp "s/\\s\\s*set\\s\\s*/ ON /g"
+close $fp
+catch { exec $SEV(exec_cmd) -c "sed -f sed.exe $switches_spec_file > ${switches_spec_file}2 && rm -f sed.exe && mv ${switches_spec_file}2 $switches_spec_file" } dummy
+
+catch { exec $SEV(exec_cmd) -c "rm -f ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt && touch ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt" } dummy
+set generate_spec_app [open generate_spec_app w]
+puts $generate_spec_app "while read VAR_LINE ; do"
+## convert dots in switch name to underscores
+puts $generate_spec_app "	switch_name=\$(echo \"\${VAR_LINE}\" | awk '{print \$1}' | sed -e 's/\\./_/g')"
+puts $generate_spec_app "	switch_value=\$(echo \"\${VAR_LINE}\" | awk '{for (i=2; i<=NF-1; i++) printf \$i\",\"}' | sed -e 's/^/\"/' -e 's/,$/\"/g')"
+## remove " around switch value if no comma is present, comma is separation character for list elements surrounded by "
+puts $generate_spec_app "	if \[\[ \$(echo \$switch_value | grep ',' | wc -l) -eq 0 \]\]; then switch_value=\$(echo \$switch_value | sed -e 's/^\"//g' -e 's/\"$//g'); fi"
+puts $generate_spec_app "	case \$switch_value in"
+puts $generate_spec_app "    		\"ON\" | \"OFF\" | \"on\" | \"off\")   VAR_SWITCH_VALUE_TYPE=\"ON_OFF\"; switch_value=\$(echo \$switch_value | tr \"a-z\" \"A-Z\") ;;"
+puts $generate_spec_app "    		\"YES\" | \"NO\" | \"yes\" | \"no\")   VAR_SWITCH_VALUE_TYPE=\"YES_NO\"; switch_value=\$(echo \$switch_value | tr \"a-z\" \"A-Z\") ;;"
+puts $generate_spec_app "    		\"\[\]\")      VAR_SWITCH_VALUE_TYPE=\"EMPTY\" ;;"
+puts $generate_spec_app "    		*) VAR_SWITCH_VALUE_TYPE=\"STRING\" ;;"
+puts $generate_spec_app "	esac"
+puts $generate_spec_app "	echo \"\${VAR_SWITCH_VALUE_TYPE}    \${switch_name}    \$switch_value\" >> ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt"
+puts $generate_spec_app "done < $switches_spec_file"
+close $generate_spec_app
+catch { exec $SEV(exec_cmd) -c "chmod 754 ./generate_spec_app && ./generate_spec_app" } dummy
+
+## <type> <number> -> <type> sw<number>
+catch { exec $SEV(exec_cmd) -c "sed -e 's/^\\(\\S\\S*\\)\\s\\s*\\(\[0-9\]\\)/\\1 sw\\2/g' ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt > ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt2 && mv ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt2 ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt" } dummy 
+
+}
+
+if { [file exists $SEV(step_dir)/work] } {
+	## until Lynx 2018.06-SP1
+	set sdlwork $SEV(step_dir)/work/sdl
+} else {
+	## since Lynx 2018.06-SP1
+	set sdlwork $SEV(step_dir)/sdl/work
+}
+
+## Generation of deck (ev) submission file
+set stackuppath $cspath/cad/$TEV(metal_stack_option)
+set genenv ""
+set sourceme $stackuppath/$TEV(ver_tool)/${pvprefix}/${pvprefix}_sourceme
+if { [file exists $sourceme] == 0 } {
+	set sourceme $stackuppath/$TEV(ver_tool)/${utype}/${pvprefix}_sourceme
+}
+if { [file exists $sourceme] == 0 && $cspath != $sharedpath } {
+	set sourceme $sharedpath/cad/$TEV(metal_stack_option)/$TEV(ver_tool)/${pvprefix}/${pvprefix}_sourceme
+	if { [file exists $sourceme] == 0 } {
+		set sourceme $sharedpath/cad/$TEV(metal_stack_option)/$TEV(ver_tool)/${utype}/${pvprefix}_sourceme
+	}
+}
+if { [file exists $sourceme] == 0 && [file exists $sdlwork/$TEV(metal_stack_option).env] } {
+	set grepreturncode [catch {exec grep  ${pvprefix}SourceFile $sdlwork/$TEV(metal_stack_option).env} grepresult]
+	if {!$grepreturncode} {
+	   set sourcemeList [split $grepresult]   
+	   set sourcemeIndex [lsearch $sourcemeList $TEV(ver_tool)]	   
+	   if {$sourcemeIndex != -1} {
+		set sourceme [lindex $sourcemeList [expr $sourcemeIndex + 1]]
+		puts $sourceme
+	   }
+	}	
+}
+if { [file exists $sourceme] } {
+	set genenv "export MSIP_PROJ_ROOT=$::env(MSIP_PROJ_ROOT) && export MSIP_CAD_PROJ_NAME=$msip_cad_proj_name && export MSIP_CAD_REL_NAME=$msip_cad_rel_name && export METAL_STACK=$TEV(metal_stack_option) && export CAD_METAL_STACK=$TEV(metal_stack_option) && export PROJ_HOME=$cspath && source $sourceme && "
+}
+
+if { [file exists $sdlwork/$TEV(metal_stack_option).env] == 0 } {
+	sproc_msg -warning "($errorprefix(3)) Fall back on limited support of retreival of deck/options file, due to omission of ude env dump for metal stack $TEV(metal_stack_option)"
+}
+
+## Get runset path
+## grepstr used in get_runset.tcl
+## represents the variable name <tool>Run<prefix>,
+## which has as value the runset path
+## Use as global variable
+set grepstr ""
+if { $TEV(qaapp) == "pcsqa" } {
+	## First get runsetpath in PCS
+	set orgsharedpath $sharedpath
+	set sharedpath $cspath
+}
+source $::env(MSIP_CCS_UTILS)/tcl/get_runset.tcl
+if { $TEV(qaapp) == "pcsqa" } {
+	set sharedpath $orgsharedpath	
+}
+if { $TEV(qaapp) == "pcsqa" && ( $runsetpath == "Not_Defined" || $runsetpath == "NA" ) && [info exists refccs] } {
+	## Fall back: get runsetpath in CCS
+	set orgsharedpath $sharedpath
+	set sharedpath $refccs
+	source $::env(MSIP_CCS_UTILS)/tcl/get_runset.tcl
+	set sharedpath $orgsharedpath	
+}
+
+set tool $TEV(ver_tool)
+set prefix ${pvprefix}
+set type $TEV(type)
+source $::env(MSIP_CCS_UTILS)/tcl/get_check_options.tcl
+if { [file exists $options] == 0 && $cspath != $sharedpath } {
+	set orgstackuppath $stackuppath
+	set stackuppath $sharedpath/cad/$TEV(metal_stack_option)
+	source $::env(MSIP_CCS_UTILS)/tcl/get_check_options.tcl
+	set stackuppath $orgstackuppath
+}
+if { $TEV(qaapp) == "pcsqa" && [file exists $options] == 0 && [info exists refccs] } {
+	set orgstackuppath $stackuppath
+	set stackuppath $refccs/cad/$TEV(metal_stack_option)
+	source $::env(MSIP_CCS_UTILS)/tcl/get_check_options.tcl
+	set stackuppath $orgstackuppath
+}
+if { [file exists $options] } {
+	catch { exec $SEV(exec_cmd) -c "grep PARSE_OPTIONS $options | grep fix_snpscheck_layers | wc -l " } stream_map_file
+       	if { $stream_map_file > 0 } {   
+		sproc_msg -warning "($errorprefix(3)) Internal check $TEV(prefix) is skipped, since internal checks have no VC entry"
+		sproc_script_stop -exit
+	}
+}
+
+catch { exec $SEV(exec_cmd) -c "touch ccs_cell.gds ccs_cell.sch.out" } dummy
+set fid [open gen_$TEV(ver_tool)_command_file w]
+if { $TEV(type) == "pad" } {
+	set jobtype drc
+} else {
+	set jobtype $TEV(type)
+}
+
+set cd_pv_version ""
+set pins_version ""
+if { $TEV(qaapp) == "ccsqa" } {
+	set projectenv $cspath/design/project.env
+	set pinsproduct "cad"
+}
+if { $TEV(qaapp) == "pcsqa" } {
+	set projectenv $cspath/cad/project.env
+	set pinsproduct $SVAR(product_name)
+	if { [file exists $projectenv] } {
+		catch { exec $SEV(exec_cmd) -c "grep \"^\[\[:blank:\]\]*setenv\[\[:blank:\]\]\[\[:blank:\]\]*PINS_CUSTOM_PRODUCT\[\[:blank:\]\]\" $projectenv | grep -v ^# | awk '{ print \$3 }' | sed -e 's/\"//g'" } pins_custom_product
+		if { $pins_custom_product != "" } {
+			set pinsproduct $pins_custom_product				
+		}
+	}		
+}
+if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "grep \"^\[\[:blank:\]\]*module\[\[:blank:\]\]\[\[:blank:\]\]*load\[\[:blank:\]\]\[\[:blank:\]\]*msip_cd_pv/\" $projectenv | grep -v ^# | awk '{ print \$3 }'" } cd_pv_version
+	catch { exec $SEV(exec_cmd) -c "grep \"^\[\[:blank:\]\]*setenv\[\[:blank:\]\]\[\[:blank:\]\]*PINS_VERSION\[\[:blank:\]\]\" $projectenv | grep -v ^# | awk '{ print \$3 }' | sed -e 's/\"//g'" } pins_version
+}
+if { $TEV(qaapp) == "pcsqa" && ( $cd_pv_version == "" || $pins_version == "" ) && [info exists refccs] } {
+	set projectenv $refccs/design/project.env
+	if { [file exists $projectenv] } {
+		if { $cd_pv_version == "" } {
+			catch { exec $SEV(exec_cmd) -c "grep \"^\[\[:blank:\]\]*module\[\[:blank:\]\]\[\[:blank:\]\]*load\[\[:blank:\]\]\[\[:blank:\]\]*msip_cd_pv/\" $projectenv | grep -v ^# | awk '{ print \$3 }'" } cd_pv_version
+		}
+		if { $pins_version == "" } {
+			catch { exec $SEV(exec_cmd) -c "grep \"^\[\[:blank:\]\]*setenv\[\[:blank:\]\]\[\[:blank:\]\]*PINS_VERSION\[\[:blank:\]\]\" $projectenv | grep -v ^# | awk '{ print \$3 }' | sed -e 's/\"//g'" } pins_version
+		}
+	}	
+}
+
+if { $TEV(qaapp) == "pcsqa" && $pins_version != "" && [string compare -length 7 "ver999." $pins_version] == 0 } {
+	set pinsproduct "cad"
+}
+
+set genenv "$genenv export PINS_VERSION=$pins_version && export MSIP_PRODUCT_NAME=$pinsproduct && "
+
+if { $TEV(check_switches) == "1" } {
+	## Enable the use of msip_cd_pv version used in CCS by sourcing the project.env from the CCS
+	if { ( $TEV(qaapp) == "ccsqa" && [string toupper $SVAR(ver_pvbatch)] == "CCS" ) || $TEV(qaapp) == "pcsqa" } {
+		if { $cd_pv_version != "" } {
+			set cdpvversion $cd_pv_version
+		} else {
+			set cdpvversion "msip_cd_pv"
+		}
+	} else {
+   		## Use the msip_cd_pv version specified in SVAR(ver_pvbatch)
+   		set cdpvversion $SVAR(ver_pvbatch)
+	}
+	puts $fid ". $::env(MODULESHOME)/init/sh && module purge && module load $cdpvversion && $genenv gen_$TEV(ver_tool).pl --foundry-rule $runsetpath --cell-name ccs_cell --gds-path $run_dir/ccs_cell.gds --sch-path $run_dir/ccs_cell.sch.out --branch-dir $run_dir --job-type $jobtype --options-file $options > ${pvtaskev}"
+} else {
+	if { [file exists $runsetpath] && $runsetpath != "Not_Defined" && $runsetpath != "NA" } {
+		catch { exec $SEV(exec_cmd) -c "dirname $runsetpath" } deckpath
+		## add only deck path to ev file for deck version check
+		if { $TEV(ver_tool) == "calibre" } {
+			puts $fid "echo \"/* Original Path: $deckpath */\" > ${pvtaskev}"
+		} else {
+			puts $fid "echo \"// Original Path: $deckpath\" > ${pvtaskev}"
+		}
+	}
+}
+close $fid
+catch { exec $SEV(exec_cmd) -c "source gen_$TEV(ver_tool)_command_file > gen_$TEV(ver_tool).log 2>&1" } dummy
+################################################################################################################
+
+
+
+catch { exec $SEV(exec_cmd) -c "grep FATAL gen_$TEV(ver_tool).log | wc -l" } genfatals
+
+set errors 0
+if { $genfatals > 0 || [file exists ${pvtaskev}] == 0 || [file size ${pvtaskev}] == 0 } {
+	if { $runsetpath == "Not_Defined" || $runsetpath == "NA" } {
+		sproc_msg -warning "($errorprefix(3)) $runsetpath foundry rule deck is waived."
+		## create empty pass file. Task 'release' will NOT restore actual Pass Status, will remain Waived.
+		catch { exec $SEV(exec_cmd) -c "echo \"AUTOMATIC WAIVED\" > $SEV(log_dir)/$SEV(task).pass" } dummy	
+	} else {
+		if { $TEV(check_switches) == "1" } {
+			sproc_msg -error "($errorprefix(3)) Generation of run deck ${pvtaskev} has been failed"	
+			sproc_cat_file -file gen_$TEV(ver_tool).log
+		} else {
+			if { [file exists $runsetpath] == 0 } {
+				sproc_msg -error "($errorprefix(3)) Deck does not exist: $runsetpath"
+			}
+			sproc_script_stop -exit
+		}
+	}
+	set errors 1
+} else {
+
+if { $TEV(check_switches) == "1" } {
+
+	set techkey TECHDIR
+	if { [file exists $sourceme] } {
+		catch { exec $SEV(exec_cmd) -c "grep $techkey $sourceme | wc -l"} techkeys
+		if { $techkeys == 0 } {
+			set techkey TECH_DIR		
+		}
+	}
+	
+	## Support of INCLUDE files in deck via $techkey from sourceme file
+	catch { exec $SEV(exec_cmd) -c "grep \"^INCLUDE\" ${pvtaskev} | grep $techkey | wc -l"} includefiles
+	if { $includefiles > 0 } {
+		if { [file exists $sourceme] } {
+			catch { exec $SEV(exec_cmd) -c "grep $techkey $sourceme | wc -l"} techdir
+			if { $techdir > 0 } {
+				catch { exec $SEV(exec_cmd) -c "grep $techkey $sourceme | sed -e 's/=/ /g' | awk '{print \$3}'"} techdir
+				if { [file isdirectory $techdir] } {
+					while { $includefiles > 0 } {
+						catch { exec $SEV(exec_cmd) -c "grep ^INCLUDE ${pvtaskev} | grep $techkey | sed -e 's#\[\$\]$techkey#$techdir#g' | awk '{print \$2}'" } includefiles
+						catch { exec $SEV(exec_cmd) -c "sed -e 's#\[\$\]$techkey#$techdir#g' ${pvtaskev} > ${pvtaskev}2 && mv ${pvtaskev}2 ${pvtaskev}" } dummy						
+						set includefiles [split $includefiles \n]
+						foreach includefile $includefiles {
+							if  { [file exists $includefile] } {
+								catch { exec $SEV(exec_cmd) -c "cat ${pvtaskev} $includefile > ${pvtaskev}2 && mv ${pvtaskev}2 ${pvtaskev}" } dummy
+							}
+						}
+						catch { exec $SEV(exec_cmd) -c "grep \"^INCLUDE\" ${pvtaskev} | grep $techkey | wc -l"} includefiles
+					}
+				}
+			}			
+		}
+	}
+
+	## Support of sourceme file
+	if { [file exists $sourceme] } {
+		catch { exec $SEV(exec_cmd) -c "grep \"^source\" $sourceme | wc -l" } sourcelines
+		if { $sourcelines > 0 } {
+			## support of sourceme file in which files are sourced
+			## expand content of all sourced files into input_${pvprefix}_sourceme
+			## use that as starting sourceme file
+			catch { exec $SEV(exec_cmd) -c "sed -e 's/{//g' -e 's/}//g' -e 's/\\$//g' -e 's#MSIP_PROJ_ROOT#$::env(MSIP_PROJ_ROOT)#g' -e 's#MSIP_CAD_PROJ_NAME#$msip_cad_proj_name#g' -e 's#MSIP_CAD_REL_NAME#$msip_cad_rel_name#g' -e 's#METAL_STACK#$TEV(metal_stack_option)#g' -e 's#PROJ_HOME#$cspath#g' $sourceme > input_${pvprefix}_sourceme" } dummy
+			catch { exec $SEV(exec_cmd) -c "grep \"^source\" input_${pvprefix}_sourceme | awk '{ print \$2 }'" } sourcefiles
+			catch { exec $SEV(exec_cmd) -c "rm -f input_${pvprefix}_sourceme_sourcefiles" } dummy
+			set sourcefiles [split $sourcefiles "\n"]
+			foreach sourcefile $sourcefiles {
+				if { [file exists $sourcefile] } {
+					catch { exec $SEV(exec_cmd) -c "cat $sourcefile >> input_${pvprefix}_sourceme_sourcefiles" } dummy
+				}				
+			}
+			catch { exec $SEV(exec_cmd) -c "grep -v \"^source\" input_${pvprefix}_sourceme >> input_${pvprefix}_sourceme_sourcefiles && mv input_${pvprefix}_sourceme_sourcefiles input_${pvprefix}_sourceme" } dummy
+			set sourceme input_${pvprefix}_sourceme
+		}
+	
+		## remove #export <switchname>=<value>
+
+		## #export <switchname>
+		## ->
+		## //#define <switchname> //gen_$TEV(ver_tool)_ev//
+		## #undef <switchname>
+
+		## export <switchname>="<value>"
+		## ->
+		## //#define <switchname> "<value>" //gen_$TEV(ver_tool)_ev//
+		## <switchname> : const string = "<value>"
+
+		## export <switchname>="<value>1 <value>2"
+		## ->
+		## //#define <switchname> "<value>1 <value>2" //gen_$TEV(ver_tool)_ev//
+		## <switchname> : const string = "<value>1 <value>2"
+
+		## export <switchname>=<value>
+		## ->
+		## //#define <switchname> <value> //gen_$TEV(ver_tool)_ev//
+		## #define <switchname> <value>
+
+		## unset <switchname>
+		## ->
+		## //#define <switchname> //gen_$TEV(ver_tool)_ev//
+		## #undef <switchname>
+
+		## unsetenv <switchname>
+		## ->
+		## //#define <switchname> //gen_$TEV(ver_tool)_ev//
+		## #undef <switchname>
+		set fp [open sed.exe w]
+		puts $fp "s/\\s*#\\s.*$//g"
+		puts $fp "s/#export\\s*\\(\[^=\\$\]*\\)\\s*=\\s*\[^=\]*//g"
+		puts $fp "s/#export\\s*\\(\\S\\S*\\)/\\/\\/#define \\1 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#undef \\1/g"
+		puts $fp "s/export\\s*\\(\[^=\\$\]*\\)\\s*=\\s*\"\\(\[^\"\]*\\)\"/\\/\\/#define \\1 \"\\2\" \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n\\1 : const string = \"\\2\"/g"
+		puts $fp "s/export\\s*\\(\[^=\\$\]*\\)\\s*=\\s*\"\\(\\S\\S*\\)\\s\\s*\\(\[^\"\]*\\)\"/\\/\\/#define \\1 \"\\2\" \"\\3\" \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n\\1 : const string = \"\\2\"/g"
+		puts $fp "s/export\\s*\\(\[^=\\$\]*\\)\\s*=\\s*\[\"\]*\\(\[^\\s\\t\#\"\]*\\)\[\"\]*/\\/\\/#define \\1 \\2 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#define \\1 \\2/g"
+		puts $fp "s/^\\s*\\/\\/#define/\\/\\/#define/g"
+		puts $fp "s/unset\\s*\\(\\S\\S*\\)/\\/\\/#define \\1 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#undef \\1/g"
+		puts $fp "s/unsetenv\\s*\\(\\S\\S*\\)/\\/\\/#define \\1 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#undef \\1/g"
+		close $fp
+
+		## statements to remove from sourceme
+		set statementstoremove [list \
+			"$techkey" \
+			"\[\[:blank:\]\]RESULTS\[\[:blank:\]\]" \
+			"SUMMARY_REPORT\[\[:blank:\]\]" \
+			"TOPCELL" \
+			"LAYOUT_PATH" \
+			"BLOCK_NAME" \
+		]
+		set statementstoremovestr ""
+		foreach statementtoremove $statementstoremove {
+			set statementstoremovestr "$statementstoremovestr -e $statementtoremove"
+		}
+		set statementstoremovestr [string map {\[ \\\[ \] \\\]} $statementstoremovestr]
+		catch { exec $SEV(exec_cmd) -c "grep -v $statementstoremovestr $sourceme | perl -p -e 's/\\\\\n/ /' | sed -f sed.exe > ${pvprefix}_sourceme && rm -f sed.exe" } dummy
+		catch { exec $SEV(exec_cmd) -c "cat ${pvprefix}_sourceme ${pvtaskev} > ${pvtaskev}2 && mv ${pvtaskev}2 ${pvtaskev}" } dummy
+	}
+
+	## # set -> //#define
+	## set   -> #define
+	catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -e 's/^\\#\\s*set\\s/\\/\\/\\#define /g' -e 's/^\\s*set\\s/\\#define /g' ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+	## #DEFINE   -> #define as supported by check_ev_switch
+	## #UNDEFINE -> #undef  as supported by check_ev_switch
+	## #IFNDEF   -> #ifndef as supported by check_ev_switch
+	## #IFDEF    -> #ifdef  as supported by check_ev_switch
+	## #ELSE     -> #else   as supported by check_ev_switch
+	## #ENDIF    -> #endif  as supported by check_ev_switch
+	## remove comment to prevent #define <switch> to be considered as enabled by check_ev_switch
+	set fp [open sed.exe w]
+	puts $fp "s/gen_$TEV(ver_tool)_runset/gen_$TEV(ver_tool)_ev/g"
+	puts $fp "s/#DEFINE/#define/g"
+	puts $fp "s/#UNDEFINE/#undef/g"
+	puts $fp "s/#IFNDEF/#ifndef/g"
+	puts $fp "s/#IFDEF/#ifdef/g"
+	puts $fp "s/#ELSE/#else/g"
+	puts $fp "s/#ENDIF/#endif/g"
+	## ////#define -> //#define as supported by check_ev_switch
+	puts $fp "s/^\\/\\/\\/\\/\\s*/\\/\\//g"
+	puts $fp "s#^\\s*///.*##g"
+	## prevent #ifdef and #define in comment, #error and text 
+	## since identifier after it is considered as switch name
+	puts $fp "s/^\\s*\\/\\/\\(.*\\)#ifdef/\\/\\/\\1ifdef/g"
+	puts $fp "s/^\\s*\\/\\*\\(.*\\)#ifdef/\\/\\*\\1ifdef/g"
+	puts $fp "s/^\\s*#error\\(.*\\)#ifdef/#error\\1ifdef/g"
+	puts $fp "s/^\\s*#error\\(.*\\)#define/#error\\1define/g"
+	puts $fp "s/\"\\(.*\\)#ifdef/\"\\1ifdef/g"
+	puts $fp "s/\"\\(.*\\)#define/\"\\1define/g"
+	## Prevent content after #endif and #else, they are considered as code by check_ev_switch
+	puts $fp "s/#endif.*$/#endif/g"
+	puts $fp "s/#else\\s*\\/\\*.*$/#else/g"
+	puts $fp "s/#else\\s*\\/\\/.*$/#else/g"
+	## // #define -> //#define as supported by check_ev_switch
+	puts $fp "s/\\/\\/\\s*#define/\\/\\/#define/g"
+	## /* #define <switchname> */ -> //#define <switchname> as supported by check_ev_switch
+	puts $fp "s/\\/\\*\\s*#define\\s*\\(.*\\)\\s*\\*\\//\\/\\/#define \\1/g"
+	## prevent #define in comment 
+	## since identifier after it is considered as switch name
+	## //<comment>#define -> //<comment>define
+	## <comment> is non-zero characters!
+	puts $fp "s/^\\s*\\/\\/\\(..*\\)#define/\\/\\/\\1define/g"
+	puts $fp "s/^\\s*\\/\\*\\(..*\\)#define/\\/\\*\\1define/g"
+	## //gen_<tool>_ev //#define <switchname> -> //#define <switchname> //gen_<tool>_ev as supported by check_ev_switch
+	puts $fp "s/^\\/\\/gen_$TEV(ver_tool)_ev\\s*\\/\\/#define\\s*\\(\[^\\/\]*\\)/\\/\\/#define \\1 \\/\\/gen_$TEV(ver_tool)_ev/g"
+	close $fp	
+	catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -f sed.exe ${pvtaskev}2 > ${pvtaskev} && rm -f sed.exe" } dummy
+
+	if { $TEV(ver_tool) == "hercules" } {
+	    	## convert the hercules switches syntax in the ev file to icv syntax (supported by check_ev_switch)
+		
+		## /*VARIABLE DOUBLE <switchname> = 1; /* 1 or 0 */ gen_hercules_ev*/
+		## VARIABLE DOUBLE <switchname> = 1;
+		## ->
+		## //#define <switchname> 1; /* 1 or 0 */ gen_hercules_ev*/
+		## <switchname> : const string = 1
+
+		## /*#define PAD_TEXT "*"  /*  pin name of PAD */ gen_hercules_ev*/
+		## #define PAD_TEXT  "*"
+		## -> 
+		## //#define PAD_TEXT "*"  /*  pin name of PAD */ gen_hercules_ev*/
+		## #define PAD_TEXT  "*"  
+		set fp [open sed.exe w]
+		puts $fp "s/,/ , /g' -e 's/(/ ( /g' -e 's/)/ ) /g"
+		puts $fp "s/=/ /g"
+		puts $fp "s/const string\\s*\"/const string = \"/g"
+		puts $fp "s/;/ ;/g"
+		puts $fp "s/;\\s*$//g"
+		puts $fp "s/VARIABLE\\s*DOUBLE/#define/g"
+		puts $fp "s/VARIABLE\\s*double/#define/g"
+		puts $fp "s/VARIABLE\\s*STRING/#define/g"
+		puts $fp "s/VARIABLE\\s*string/#define/g"
+		puts $fp "s/^#define\\s\\s*\\(\\S\\S*\\)\\s\\s*\\(\\S\\S*\\)/\\1 : const string = \\2/g"
+		puts $fp "s/^\\/\\*#define/\\/\\/#define/g"
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -f sed.exe ${pvtaskev}2 > ${pvtaskev} && rm -f sed.exe" } dummy
+	}	
+
+	if { $TEV(ver_tool) == "calibre" } {
+		## add deck path and options file to ev file
+		catch { exec $SEV(exec_cmd) -c "dirname $runsetpath" } deckpath
+		catch { exec $SEV(exec_cmd) -c "echo \"/* Original Path: $deckpath */\" > paths" } dummy
+		catch { exec $SEV(exec_cmd) -c "echo \"/* Option File: $options */\" >> paths" } dummy
+
+		## get default switches, convert to CCS syntax 'after' generation by gen_tool.pl and add them to ev file
+		## convert the switches syntax in the ev file to icv syntax (supported by check_ev_switch)
+
+		## setenv <switchname> <value>
+		## ->
+		## //#define <switchname> <value> //gen_$TEV(ver_tool)_ev//
+		## #pragma envvar default <switchname> "<value>"
+		## <switchname> : string = $<switchname>
+		set fp [open sed.exe w]
+		puts $fp "s/setenv\\s*\\(\\S\\S*\\)\\s*\\(\\S\\S*\\)/\\/\\/#define \\1 \\2 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#pragma envvar default \\1 \"\\2\"\\n\\1 : string = \$\\1/g"
+		close $fp
+
+		## statements to remove from deck
+		set statementstoremove [list \
+			"$techkey" \
+			"GOLDENBCKDIR" \
+			"BATCH" \
+			"LAYOUT_PRIMARY" \
+			"LAYOUT_PATH" \
+			"LAYOUT_SYSTEM" \
+			"RESULTS_DATABASE" \
+			"SUMMARY_REPORT\[\[:blank:\]\]" \
+			"SOURCE_PRIMARY" \
+			"SOURCE_PATH" \
+			"SOURCE_SYSTEM" \
+			"LVS_REPORT" \
+			"CALIBRE_LVS_OPTIONS" \
+		]
+		set statementstoremovestr ""
+		foreach statementtoremove $statementstoremove {
+			set statementstoremovestr "$statementstoremovestr -e $statementtoremove"
+		}
+		set statementstoremovestr [string map {\[ \\\[ \] \\\]} $statementstoremovestr]
+		catch { exec $SEV(exec_cmd) -c "grep -v ^# $deckpath/sample_run.csh | grep setenv | grep -v $statementstoremovestr | sed -f sed.exe > evswitches && rm -f sed.exe" } dummy
+		catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && cat paths evswitches ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+		## remove VARIABLE <switchname> ENVIRONMENT
+		## The values of those switches come from environment/sourceme
+		catch { exec $SEV(exec_cmd) -c "sed -e 's/\\s*VARIABLE\\s\\s*\\(\\S\\S*\\)\\s\\s*ENVIRONMENT\\s*/ #define \\1 \$\\1 /g' ${pvtaskev} > ${pvtaskev}2 && mv ${pvtaskev}2 ${pvtaskev}" } dummy
+		
+		## remove GROUP statements not to interfere with switches
+		## //DRC UNSELECT CHECK <switchname> -> #define <switchname>
+		## DRC UNSELECT CHECK <switchname>   -> #undef <switchname>
+		## LVS EXECUTE -> #define
+		## VARIABLE POWER_NAME/GROUND_NAME   -> POWER_NAME/GROUND_NAME : list of string =
+		## VARIABLE    -> #define
+		## #define <switchname> <digits> -> <switchname> : const string = <digits>
+		## #define <switchname> <value>  -> #define <switchname> "<value>"
+		## #define <switchname>    //<comment> without '/' -> #define <switchname>
+		## //#define <switchname>  //<comment> without '/' -> #undef  <switchname>
+		## #define <number>    -> #define sw<number>
+		## #undef  <number>    -> #undef  sw<number>
+		## #ifdef  [$]<number> -> #ifdef  sw<number>		
+		## #ifdef  $<switchname> -> #ifdef  <switchname>		
+		## #ifndef [$]<number> -> #ifndef  sw<number>		
+		## #ifndef $<switchname> -> #ifndef  <switchname>		
+		## #ifdef   <switchname> <value>  -> #if <switchname> == <value>	
+		## #ifndef  <switchname> <value>  -> #if <switchname> != <value>	
+		set fp [open sed.exe w]
+		puts $fp "s/^\\/\\/\\s*DRC\\s*UNSELECT\\s*CHECK/#define/g"
+		puts $fp "s/^#define\\(.*\\/\\/gen_calibre_ev\\/\\/\\)\\s*$/\\/\\/#define\\1/g"
+		puts $fp "s/^\\s*DRC\\s*UNSELECT\\s*CHECK/#undef/g"
+		puts $fp "s/LVS\\s*EXECUTE/#define/g"
+		puts $fp "s/VARIABLE\\s*POWER_NAME/POWER_NAME : list of string =/g"
+		puts $fp "s/VARIABLE\\s*GROUND_NAME/GROUND_NAME : list of string =/g"
+		puts $fp "s/VARIABLE/#define/g"
+		puts $fp "s/^#define\\s*\\(\\S\\S*\\)\\s\\s*\\(\[0-9\]\[0-9\]*\\)\\s\\s*/\\1 \\: const string \\= \\2 /g"
+		puts $fp "s/^#define\\s*\\(\\S\\S*\\)\\s*\\/\[\\/\]*\[^\\/\]*$/#define \\1/g"
+		puts $fp "s/^\\/\\/#define\\s*\\(\\S\\S*\\)\\s*\\/\[\\/\]*\[^\\/\]*$/#undef \\1/g"
+		puts $fp "s/#define\\s*\\(\[0-9\]\\)/#define sw\\1/g"
+		puts $fp "s/#undef\\s*\\(\[0-9\]\\)/#undef sw\\1/g"
+		puts $fp "s/#ifndef\\s*\[\$\]\\(\[0-9\]\\)/#ifndef sw\\1/g"
+		puts $fp "s/#ifndef\\s*\\(\[0-9\]\\)/#ifndef sw\\1/g"
+		puts $fp "s/#ifndef\\s*\[\$\]\\(\\S\\)/#ifndef \\1/g"
+		puts $fp "s/#ifdef\\s*\[\$\]\\(\[0-9\]\\)/#ifdef sw\\1/g"
+		puts $fp "s/#ifdef\\s*\\(\[0-9\]\\)/#ifdef sw\\1/g"
+		puts $fp "s/#ifdef\\s*\[\$\]\\(\\S\\)/#ifdef \\1/g"
+		puts $fp "s/#ifdef\\s\\s*\\(\\S\\S*\\)\\s\\s*\\(\\S\\S*\\)\\s\\s*/#if \\1 == \\2 /g"
+		puts $fp "s/#ifndef\\s\\s*\\(\\S\\S*\\)\\s\\s*\\(\\S\\S*\\)\\s\\s*/#if \\1 != \\2 /g"
+		puts $fp "s/#ifdef\\s\\s*\\(\\S\\S*\\)\\s\\s*\\(\\S\\S*\\)\\s*$/#if \\1 == \\2/g"
+		puts $fp "s/#ifndef\\s\\s*\\(\\S\\S*\\)\\s\\s*\\(\\S\\S*\\)\\s*$/#if \\1 != \\2/g"
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "grep -v GROUP ${pvtaskev} > ${pvtaskev}2 && sed -f sed.exe ${pvtaskev}2 > ${pvtaskev} && rm -f sed.exe" } dummy
+	}
+	if { $TEV(type) == "lvs" && $TEV(ver_tool) == "icv" } {
+		## get default lvs switches, convert to CCS syntax 'after' generation by gen_tool.pl and add them to ev file
+		catch { exec $SEV(exec_cmd) -c "grep \"Original Path\" ${pvtaskev} | awk '{print \$4}'" } originalpath
+		catch { exec $SEV(exec_cmd) -c "grep tcl $originalpath/run | awk '{print \$2}'" } decktclfile
+		## set_if_not_set <switchname> 1 ;# <comment>
+		## ->
+		## //#define <switchname> // <comment> //gen_$TEV(ver_tool)_ev//
+		## #define <switchname>   // <comment>
+		
+		## set_if_not_set <switchname> 0 ;# <comment>
+		## ->
+		## //#define <switchname> // <comment> //gen_$TEV(ver_tool)_ev//
+		## #undef    <switchname> // <comment>
+		set fp [open sed.exe w]
+		puts $fp "s/set_if_not_set\\(.*\\)1\\s*;#\\(.*\\)$/\\/\\/#define\\1\\/\\/\\2 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#define\\1\\/\\/\\2/g"
+		puts $fp "s/set_if_not_set\\(.*\\)0\\s*;#\\(.*\\)$/\\/\\/#define\\1\\/\\/\\2 \\/\\/gen_$TEV(ver_tool)_ev\\/\\/\\n#undef\\1\\/\\/\\2/g"
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "grep -v ^# $originalpath/$decktclfile | grep set_if_not_set | sed -f sed.exe > evswitches && rm -f sed.exe" } dummy
+		catch { exec $SEV(exec_cmd) -c "grep -e Option -e Original ${pvtaskev} > toplines" } dummy
+		catch { exec $SEV(exec_cmd) -c "grep -v -e Option -e Original ${pvtaskev} > ${pvtaskev}2" } dummy		
+		catch { exec $SEV(exec_cmd) -c "cat toplines evswitches ${pvtaskev}2 > ${pvtaskev}" } dummy
+	}
+	if { $TEV(ver_tool) == "icv" } {
+		catch { exec $SEV(exec_cmd) -c "grep -e violation_name_unselect -e violation_name_select ${pvtaskev} | wc -l" } violationstatements
+		if { $violationstatements > 0 } {
+		## //violation_name_unselect( { "<switchname1>" [, ... "<switchnamen>"] } );
+		## ->
+		## #define <switchname1>
+		## [...
+		## #define <switchnamen>]
+
+		## violation_name_select( { "<switchname1>" [, ... "<switchnamen>"] } );
+		## ->
+		## #define <switchname1>
+		## [...
+		## #define <switchnamen>]
+
+		## violation_name_unselect( { "<switchname1>" [, ... "<switchnamen>"] } );
+		## ->
+		## #undef  <switchname1>
+		## [...
+		## #undef  <switchnamen>]
+
+		## //violation_name_select( { "<switchname1>" [, ... "<switchnamen>"] } );
+		## ->
+		## #undef  <switchname1>
+		## [...
+		## #undef  <switchnamen>]
+		
+		## preprocess: enforce spaces around , between quotes
+		catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -e 's/\"\\s*,\\s*\"/\" , \"/g' ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+		## preprocess: enforce spaces between syntax symbols for awk
+		set violationstats [list "violation_name_unselect" "violation_name_select"]
+		set fp [open sed.exe w]
+		foreach violationstat $violationstats {
+			puts $fp "s/\\/\\/\\s*$violationstat\\s*\[(\]\\s*\\{\\s*\"\(.*\)\"\\s*\\}\\s*\[)\]\\s*;/\\/\\/$violationstat ( { \"\\1\" } ) ;/g"
+			puts $fp "s/$violationstat\\s*\[(\]\\s*\\{\\s*\"\(.*\)\"\\s*\\}\\s*\[)\]\\s*;/$violationstat ( { \"\\1\" } ) ;/g"
+		}
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -rf sed.exe ${pvtaskev}2 > ${pvtaskev} && rm -f sed.exe" } dummy
+				
+		## expand multi switch violation_name_(un)select statement to multi single switch violation_name_(un)select statements and map to #define/#undef
+		set multiswitchfp [open multiswitch2single.awk w]		
+		puts $multiswitchfp "#!/bin/awk -f"
+		puts $multiswitchfp "{"
+		puts $multiswitchfp "	if ( \$(1) == \"violation_name_unselect\" || \$(1) == \"//violation_name_unselect\" || \$(1) == \"violation_name_select\" || \$(1) == \"//violation_name_select\" ) {"
+		puts $multiswitchfp "		print \$(1),\$(4)"
+		puts $multiswitchfp "		for (i=5;i<=NF;i=i+1) {"
+		puts $multiswitchfp "			if ( \$(i) == \",\" ) {"
+		puts $multiswitchfp "				print \$(1),\$(i+1)"
+		puts $multiswitchfp "			}"
+		puts $multiswitchfp "			if ( \$(i) == \";\" ) {"
+		puts $multiswitchfp "				break"
+		puts $multiswitchfp "			}"
+		puts $multiswitchfp "		}"
+		puts $multiswitchfp "	} else {"
+		puts $multiswitchfp "		print \$_"
+		puts $multiswitchfp "	}"		
+		puts $multiswitchfp "}"
+		close $multiswitchfp
+		set fp [open sed.exe w]
+		puts $fp "s/\\/\\/violation_name_unselect\\s*\[\"\]*\(\[^\"\]*\)\[\"\]*/#define \\1/g"
+		puts $fp "s/violation_name_unselect\\s*\[\"\]*\(\[^\"\]*\)\[\"\]*/#undef \\1/g"
+		puts $fp "s/\\/\\/violation_name_select\\s*\[\"\]*\(\[^\"\]*\)\[\"\]*/#undef \\1/g"
+		puts $fp "s/violation_name_select\\s*\[\"\]*\(\[^\"\]*\)\[\"\]*/#define \\1/g"
+		puts $fp "s/#define $//g"
+		puts $fp "s/#undef $//g"
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && chmod u+x multiswitch2single.awk && cat ${pvtaskev}2 | multiswitch2single.awk | sed -rf sed.exe > ${pvtaskev} && rm -f sed.exe" } dummy
+		catch { exec $SEV(exec_cmd) -c "rm -f multiswitch2single.awk" } dummy
+		}		
+	}
+
+	## replace the dots in switches by underscores
+	catch { exec $SEV(exec_cmd) -c "cat $switches_spec_file | awk '{ print \$1 }' | grep \"\\.\" > dotswitches.txt" } dummy
+	catch { exec $SEV(exec_cmd) -c "grep -e ^\[\[:blank:\]\]*#define -e ^\[\[:blank:\]\]*#undef -e ^\[\[:blank:\]\]*#ifdef -e ^\[\[:blank:\]\]*#ifndef ${pvtaskev} | awk '{ print \$2 }' | grep \"\\.\" >> dotswitches.txt" } dummy
+	catch { exec $SEV(exec_cmd) -c "cat dotswitches.txt | sort -u > dotswitches.txt2 && mv dotswitches.txt2 dotswitches.txt" } dummy
+	if { [file size dotswitches.txt] > 0 } {
+		set fp [open dotswitches.txt r]
+		set file_data [read $fp]
+		close $fp
+		set fp [open sed.exe w]
+		set lines [split $file_data "\n"]
+		foreach line $lines {
+			if { $line != "" } {
+				set usline [string map {. _} $line]
+				puts $fp "s#\\s$line\\s# $usline #g"
+			}
+		}
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -f sed.exe ${pvtaskev}2 > ${pvtaskev} && rm -f sed.exe" } dummy
+	}
+	catch { exec $SEV(exec_cmd) -c "rm -f dotswitches.txt" } dummy
+
+	## remove defines meant as functions
+	catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -e 's/#define\\s*\\S\\S*\[(\]\[^)\]*\[)\].*$//g' ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+	## remove (un)defines without switch name
+	catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -e 's/#define\\s*$//g' -e 's/#undef\\s*$//g' ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+	catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && grep -v VERBATIM ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+	catch { exec $SEV(exec_cmd) -c "head -n 17 ${pvtaskev} | grep \"^/\" | grep 'Option File' | wc -l" } optionfile
+	if { $optionfile == 0 } {
+		## put Option File at the top of ev file as supported by check_ev_switch
+		catch { exec $SEV(exec_cmd) -c "grep 'Option File' ${pvtaskev} > optionsfile" } dummy
+		catch { exec $SEV(exec_cmd) -c "grep -v 'Option File' ${pvtaskev} > ${pvtaskev}2 && cat optionsfile ${pvtaskev}2 > ${pvtaskev}" } dummy
+	}
+	## comment Option File with /* */ as supported by check_ev_switch
+	catch { exec $SEV(exec_cmd) -c "cp ${pvtaskev} ${pvtaskev}2 && sed -e 's/\\/\\/\\s*Option File\\(.*\\)$/\\/\\* Option File\\1 \\*\\//g' ${pvtaskev}2 > ${pvtaskev}" } dummy
+
+	catch { exec $SEV(exec_cmd) -c "rm -Rf vc.${pvtaskev} ${pvtaskev}2" } dummy
+	catch { exec $SEV(exec_cmd) -c "$::env(MSIP_CCS_UTILS)/csh/msip_ccs_check_ev_switch -cleanup=FALSE -verbose=1 -ccs_as_project -ev_file ./${pvtaskev} -vc_switch_text_file ${filegreptype}_$TEV(ver_tool)_switches_spec_app.txt $waivefileoption > check_ev_switch.log 2>&1" } dummy
+	## string with only spaces or * at VC and in deck is handled as string "CCSQASPACE" or "CCSQAASTERIX", show to user " " or "*"
+	catch { exec $SEV(exec_cmd) -c "sed -e 's/\"CCSQASPACE\"/\" \"         /g' -e 's/CCSQASPACE/\" \"       /g' -e 's/\"CCSQAASTERIX\"/\"\*\"           /g' -e 's/CCSQAASTERIX/\"*\"         /g' check_ev_switch.log > check_ev_switch.log2 && mv check_ev_switch.log2 check_ev_switch.log" } dummy
+	if { $TEV(qaapp) == "pcsqa" } {
+		catch { exec $SEV(exec_cmd) -c "sed -e 's/ CCS / PCS /g' -e 's/^ccs /pcs /g' check_ev_switch.log > check_ev_switch.log2 && mv check_ev_switch.log2 check_ev_switch.log" } dummy
+	}
+	if { [file exists vc.${pvtaskev}/${pvtaskev}.summary.txt] } {
+		## string with only spaces or * at VC and in deck is handled as string "CCSQASPACE" or "CCSQAASTERIX", show to user " " or "*"
+		catch { exec $SEV(exec_cmd) -c "sed -e 's/\"CCSQASPACE\"/\" \"         /g' -e 's/CCSQASPACE/\" \"       /g' -e 's/\"CCSQAASTERIX\"/\"\*\"           /g' -e 's/CCSQAASTERIX/\"*\"         /g' vc.${pvtaskev}/${pvtaskev}.summary.txt > vc.${pvtaskev}/${pvtaskev}.summary.txt2 && mv vc.${pvtaskev}/${pvtaskev}.summary.txt2 vc.${pvtaskev}/${pvtaskev}.summary.txt" } dummy
+		if { $TEV(qaapp) == "pcsqa" } {
+			catch { exec $SEV(exec_cmd) -c "sed -e 's/ CCS / PCS /g' -e 's/^ccs /pcs /g' vc.${pvtaskev}/${pvtaskev}.summary.txt > vc.${pvtaskev}/${pvtaskev}.summary.txt2 && mv vc.${pvtaskev}/${pvtaskev}.summary.txt2 vc.${pvtaskev}/${pvtaskev}.summary.txt" } dummy
+		}
+		sproc_cat_file -file vc.${pvtaskev}/${pvtaskev}.summary.txt
+		catch { exec $SEV(exec_cmd) -c "cat vc.${pvtaskev}/${pvtaskev}.summary.txt | awk '{ print \$NF }' | grep FAILED | wc -l" } errors
+		if { $errors > 0 } {
+			switch $TEV(qaapp) {
+				ccsqa {
+					sproc_msg -error "($errorprefix(4)) Check $TEV(type) Tapeout switches of $SEV(task) has been failed"	
+					sproc_msg -error "($errorprefix(5)) $errors mismatches with VC have been found:"	
+				}
+				pcsqa {
+					sproc_msg -error "($errorprefix(4)) Check $TEV(type) Tapeout switches of $SEV(task) has been failed, $errors mismatches with VC have been found"	
+				}
+			}
+			catch { exec $SEV(exec_cmd) -c "grep -e FAILED -e \"SWITCH NAME\" vc.${pvtaskev}/${pvtaskev}.summary.txt" } errorslog
+			puts $errorslog			
+			if { [file exists $waivefile] == 0 } {
+				puts "Hint: one can create a waive file $waivefile with each line a switch name at which the violation has to be waived"
+			}
+		}
+	} else {
+		sproc_msg -error "($errorprefix(4)) Check $TEV(type) Tapeout switches of $SEV(task) has been failed"	
+		sproc_cat_file -file check_ev_switch.log
+		set errors 1
+	} 
+
+}
+
+}
+
+if { $TEV(check_switches) == "0" && [file exists ${pvtaskev}] && [file size ${pvtaskev}] > 0 } {
+## check deck version
+catch { exec $SEV(exec_cmd) -c "grep \"^${greptype}\[\[:blank:\]\]\[\[:blank:\]\]*${tool}\[\[:blank:\]\]\[\[:blank:\]\]*\" $srcwork/deck_version.txt | sed -e 's#^${greptype}\\s\\s*${tool}\\s\\s*##' | sed -e 's#,#\\n#g' | grep Revision | head -1 > ${filegreptype}_$TEV(ver_tool)_deck_version.txt" } dummy
+catch { exec $SEV(exec_cmd) -c "grep Revision ${filegreptype}_$TEV(ver_tool)_deck_version.txt | wc -l " } revision
+set vcrevision ""
+if { $revision != 0 } {
+	## A revision is found.
+	## Check now, VC contains multiple deck revisions for VC component name (=greptype) and tool
+	## If so, give warning about no support yet
+
+	## Create local deck_version.txt, where for each VC component name (=greptype) and tool all Revisions are one line
+	## - All additional Revisions are at lines starting with space, mark them with comma
+	## - Remove all carriage returns
+	## - Create then carriage return at space between dates and VC component name (=<identifier>):
+	##   YYYY-MM-DD\s*<identifier> <identifier>:=everything except comma
+	## - Create then carriage return at omission of Revision value
+	## - Create then carriage return at omission of date after Revision, value and comma: Revision <value>, [A-Z]= first letter of VC component name
+	catch { exec $SEV(exec_cmd) -c "grep -h -e icv -e calibre -e hercules -e Revision $srcwork/deck_version.txt | sed -e 's/^\\s\\s*\\(\\S\\S*\\)/ , \\1/g' | tr -d '\\n' | sed -e 's/\\(\[0-9\]\[0-9\]\[0-9\]\[0-9\]\\-\[0-9\]\[0-9\]\\-\[0-9\]\[0-9\]\\)\\s*\\(\[^,\]\[^,*\]\\)/\\1\\n\\2/g' -e 's/Revision\\s\\s*,\\s*/Revision ,\\n/g' -e 's/Revision\\s\\s*\\(\[^,\]\[^,\]*\\),\\s*\\(\[A-Z\]\\)/Revision \\1,\\n\\2/g' > deck_version.txt" } dummy
+
+	## Get number of unique VC component name (=greptype) and tool specific Revisions
+	catch { exec $SEV(exec_cmd) -c "grep \"^${greptype}\[\[:blank:\]\]\[\[:blank:\]\]*${tool}\[\[:blank:\]\]\[\[:blank:\]\]*\" deck_version.txt | sed -e 's#^${greptype}\\s\\s*${tool}\\s\\s*##' | sed -e 's#,#\\n#g' | grep Revision | awk '{print \$2}' | sort -u | wc -l" } numrevisions
+	if { $numrevisions > 1 } {
+		sproc_msg -warning "($errorprefix(6)) Multiple deck Revisions definition for VC Component Name '${textgreptype} $TEV(ver_tool)' is not yet supported"	
+		sproc_script_stop -exit
+	}
+
+	## Get the only ONE Revision
+	catch { exec $SEV(exec_cmd) -c "grep Revision ${filegreptype}_$TEV(ver_tool)_deck_version.txt | awk '{print \$2}'" } vcrevision
+}
+if { $revision == 0 || $vcrevision == "" } {
+	catch { exec $SEV(exec_cmd) -c "grep \"^i${utype}\[\[:blank:\]\]\[\[:blank:\]\]*Interoperable\[\[:blank:\]\]\[\[:blank:\]\]*\" $srcwork/deck_version.txt | sed -e 's#^i${utype}\\s\\s*Interoperable\\s\\s*##' | sed -e 's#,#\\n#g' | grep Revision | head -1 > ${filegreptype}_$TEV(ver_tool)_deck_version.txt" } dummy
+	catch { exec $SEV(exec_cmd) -c "grep Revision ${filegreptype}_$TEV(ver_tool)_deck_version.txt | wc -l " } revision
+	if { $revision != 0 } {
+		catch { exec $SEV(exec_cmd) -c "grep Revision ${filegreptype}_$TEV(ver_tool)_deck_version.txt | awk '{print \$2}'" } vcrevision
+	}
+	if { $vcrevision != "" } {
+		sproc_msg -info "Deck Revision for VC Component Name 'i${utype} Interoperable' has been found for $SEV(task)"	
+	}
+}
+if { $revision == 0 || $vcrevision == "" } {
+	if { $runsetpath == "Not_Defined" || $runsetpath == "NA" } {
+		sproc_script_stop -exit		
+	}
+	set stop 0
+	set omissiontext "" 
+	if { $TEV(qaapp) == "pcsqa" && 
+	     ( [file exists $pvprefixvcmapfile] == 0 ||  
+	       ( [file exists $pvprefixvcmapfile] && $defaultpvprefixmapping == 1 ) ) &&
+	     [info exists refccs] } {
+		## stop with PASS status if
+		## default mapping fails, 
+		## no mapping file is available or omission of mapping in existing mapping file,
+		## CCS has COMPLETED or FROZEN status,
+   		## and creation date of CCS is before Sept 1st, 2019
+
+		if { [file exists $pvprefixvcmapfile] && $defaultpvprefixmapping == 1 } {
+			set omissiontext " in"
+		}	
+
+		## try status in root of CCS
+		set completed [glob -nocomplain $refccs/COMPLETED*]
+		set frozen    [glob -nocomplain $refccs/FROZEN*]
+		if { [llength $completed] == 0 && [llength $frozen] == 0 } {
+			## try status in usage.txt of CCS
+			if { [file exists $refccs/usage.txt] } {
+				catch { exec $SEV(exec_cmd) -c "grep \"Release Status\" $refccs/usage.txt | awk '{ print \$4 }'" } status
+				if { $status == "COMPLETED" || $status == "FROZEN" } {
+					set stop 1			
+				}
+			}			
+		} else {
+			## CCS is completed or frozen
+			if { [llength $completed] > 0 } {
+				set status "COMPLETED"
+			}
+			if { [llength $frozen] > 0 } {
+				set status "FROZEN"
+			}
+			set stop 1			
+		}
+		if { $stop == 1 } {
+			## COMPLETED/FROZEN CCS created before Sept 1st, 2019 ?
+			catch { exec $SEV(exec_cmd) -c "date +%s -d 2019/09/01" } sep1sec
+			set creationdatesec ""
+			if { [file exists $refccs/usage.txt] } {
+				catch { exec $SEV(exec_cmd) -c "date +%s -d \$(grep -i \"Creation date\" $refccs/usage.txt | awk '{ print \$4 }')" } creationdatesec
+			}
+			if { [regexp {(\d+)} $creationdatesec] == 0 } {
+				catch { exec $SEV(exec_cmd) -c "date +%s -d \$(ls -ld --time-style=full-iso $refccs | awk '{ print \$6 }')" } creationdatesec
+			}			
+			if { [regexp {(\d+)} $creationdatesec] && $creationdatesec > $sep1sec } {
+				set stop 0				
+			} 			
+		}
+	}
+	if { $stop == 1 } {
+		sproc_msg -warning "($errorprefix(6)) No deck Revision (for VC Component Name '${textgreptype} $TEV(ver_tool)' or 'i${utype} Interoperable') is defined for $SEV(task)"	
+		set reasontext "($errorprefix(6)) due to omission of mapping$omissiontext file $pvprefixvcmapfilename at $status CCS $refccs"
+		if { [info exists creationdatesec] && [regexp {(\d+)} $creationdatesec] } {
+			## check with creationdatesec has been executed, but stop has not been reset to 0
+			set reasontext "$reasontext, which has been created before Sept 1st, 2019"		
+		}
+		sproc_msg -warning "$reasontext"
+		sproc_script_stop -exit
+	}
+	sproc_msg -error "($errorprefix(6)) No deck Revision (for VC Component Name '${textgreptype} $TEV(ver_tool)' or 'i${utype} Interoperable') is defined for $SEV(task)"	
+	incr errors
+} else {
+catch { exec $SEV(exec_cmd) -c "grep \"Original Path\" ${pvtaskev} | grep $vcrevision | wc -l" } ccsrevisionlines
+if { $ccsrevisionlines > 0 } {
+	puts "VC deck revision $vcrevision is used by ${csname}:"
+	catch { exec $SEV(exec_cmd) -c "grep \"Original Path\" ${pvtaskev} | grep $vcrevision | head -1" } ccsrevisionlines
+	puts "$ccsrevisionlines"
+} else {
+	catch { exec $SEV(exec_cmd) -c "grep \"Original Path\" ${pvtaskev}" } ccsrevisionlines
+        switch $TEV(qaapp) {
+               ccsqa {
+			sproc_msg -error "($errorprefix(7)) VC deck revision $vcrevision for VC Component Name '${textgreptype} $TEV(ver_tool)' is not used by ${csname} for $SEV(task):"	
+			sproc_msg -error "($errorprefix(7)) $ccsrevisionlines" 
+               }
+               pcsqa {
+			sproc_msg -error "($errorprefix(7)) VC deck revision $vcrevision for VC Component Name '${textgreptype} $TEV(ver_tool)' is not used by ${csname} for $SEV(task): $ccsrevisionlines" 
+               }
+        }
+	incr errors
+}
+}
+}	
+
+
+if { $errors > 0 } {
+	puts "Working directory of $SEV(task) verification for debugging: $run_dir"
+}
+
+if { $TEV(check_switches) == "1" } {
+	sproc_msg -info "METRIC | INTEGER ${csname}QA.ISSUES.CHECKSWITCHES$SEV(task) | $errors"
+} else {
+	sproc_msg -info "METRIC | INTEGER ${csname}QA.ISSUES.CHECKDECKVERSION$SEV(task) | $errors"
+}
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

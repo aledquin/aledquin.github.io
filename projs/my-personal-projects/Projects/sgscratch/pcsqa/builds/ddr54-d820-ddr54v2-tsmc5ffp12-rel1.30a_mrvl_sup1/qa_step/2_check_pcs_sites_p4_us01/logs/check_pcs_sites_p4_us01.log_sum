@@ -1,0 +1,9 @@
+check_pcs_sites_p4_us01
+CHECK PASSED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:44:31 2022
+Execution time: 00:00:00:28
+
+Information: Process ID for tool: 3418
+Number of executed checks: 4

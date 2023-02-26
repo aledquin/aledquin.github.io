@@ -1,0 +1,16 @@
+c121-ss14lpp-1.8v : /remote/cad-rep/projects/hdmi/e701-hdmi21-rxphy-ss14lpp-18/rel6.01/cad/project.env
+ss14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.2/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ss14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ss14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.9.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ss14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.9.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ss14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.9.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+gf14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+gf14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+gf14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+gf14lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c124-gf14lpp-1.8v/rel3.8.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ss14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.10.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ss14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.10.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ss14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.10.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ss14lpp-18_10M_3Mx_4Cx_2Kx_1Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.12.0/cad/10M_3Mx_4Cx_2Kx_1Gx_LB/env.tcl
+ss14lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.12.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ss14lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c121-ss14lpp-1.8v/rel3.12.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl

@@ -1,0 +1,17 @@
+name,direction,pin_type,related_clock_pin,related_ground_pin,related_power_pin,derating_factor,desc,donot_repeat,is_bus,is_true_core_ground,lsb,max_capacitive_load,max_voltage,min_capacitive_load,msb,nominal_voltage,package_pin,related_select_pin,synlibchecker_waive,cellname,cell_x_dim_um,cell_y_dim_um
+ClrPORMemReset,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+DCTMemReset,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+DCTSane,O,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+DFTDatSel,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+MemResetLPullDown_VIO,O,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+MemResetLPullUp_VIO,O,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+PORMemReset,O,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+PwrOkDlyd,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+PwrOkDlyd_VIO,O,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+PwrOk_VIO,O,general_signal,-,VSS,VDDQ,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+PwrOk_VMEMP,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+Reset_X,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+SetDCTSanePulse,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+VDD,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+VDDQ,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36
+VSS,I,primary_ground,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_por,32.604,27.36

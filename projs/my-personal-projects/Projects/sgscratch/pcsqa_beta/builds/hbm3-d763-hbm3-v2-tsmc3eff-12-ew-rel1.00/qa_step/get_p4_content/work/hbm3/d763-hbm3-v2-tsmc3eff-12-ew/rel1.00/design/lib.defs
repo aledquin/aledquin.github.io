@@ -1,0 +1,83 @@
+### Include CAD defined lib.defs
+INCLUDE ${PROJ_HOME}/cad/lib.defs
+
+#INCLUDE ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PARENT_PCS_PRODUCT_NAME}/${MSIP_PARENT_PCS_PROJ_NAME}/${MSIP_PARENT_PCS_REL_NAME}/pcs/design/lib.defs
+
+### Design team defined libraries
+###
+#DEFINE libA ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/libA
+#DEFINE libB ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/${METAL_STACK}/libB
+
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/${METAL_STACK}/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}ec/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/lib/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PARENT_PCS_PRODUCT_NAME}/${MSIP_PARENT_PCS_PROJ_NAME}/${MSIP_PARENT_PCS_REL_NAME}/lib/lib.defs
+#INCLUDE   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PARENT_PCS_PRODUCT_NAME}ec/${MSIP_PARENT_PCS_PROJ_NAME}/${MSIP_PARENT_PCS_REL_NAME}/lib/lib.defs
+
+### For ongoing projects for products c10, ssp, usb2, usb3, hsic
+#DEFINE libA ${MSIP_PROJ_P4WS_ROOT}/common_libs/sc/<technology+note>/latest/lib/libA
+#DEFINE libB ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/libB
+
+### For released projects for products c10, ssp, usb2, usb3, hsic
+#DEFINE libA ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/releases/lib/libA
+#DEFINE libB ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/${MSIP_REL_NAME}/releases/lib/libB
+
+### OPTIONAL INCLUDE FILE IF THE PROJECT HAS THAT REQUIREMENT
+### USER SITE-SPECIFIC libraries
+#INCLUDE ${PROJ_HOME}/design/lib_${siteid}.defs
+
+# JIRA - P10023532-42290
+#Requested by PRADEET
+#DEFINE ts03nxpvlogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL100660_TSMCN3E_DDR_PHY_H169_Libraries_Phase1_Release_CQv1p0/ts03nxpvlogl03hdd048f/schematics/oa/ts03nxpvlogl03hdd048f
+#DEFINE ts03nxpllogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL100660_TSMCN3E_DDR_PHY_H169_Libraries_Phase1_Release_CQv1p0/ts03nxpllogl03hdd048f/schematics/oa/ts03nxpllogl03hdd048f
+#DEFINE ts03nxpelogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL100660_TSMCN3E_DDR_PHY_H169_Libraries_Phase1_Release_CQv1p0/ts03nxpelogl03hdd048f/schematics/oa/ts03nxpelogl03hdd048f
+DEFINE ts03nxpelogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL4259299_TSMCN3e_DDR_PHY_H169_Libraries_Release_CQv1p1_OAview/ts03nxpelogl03hdd048f/schematics/oa/ts03nxpelogl03hdd048f
+DEFINE ts03nxpllogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL4259299_TSMCN3e_DDR_PHY_H169_Libraries_Release_CQv1p1_OAview/ts03nxpllogl03hdd048f/schematics/oa/ts03nxpllogl03hdd048f
+DEFINE ts03nxpmlogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL4259299_TSMCN3e_DDR_PHY_H169_Libraries_Release_CQv1p1_OAview/ts03nxpmlogl03hdd048f/schematics/oa/ts03nxpmlogl03hdd048f
+DEFINE ts03nxpslogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL4259299_TSMCN3e_DDR_PHY_H169_Libraries_Release_CQv1p1_OAview/ts03nxpslogl03hdd048f/schematics/oa/ts03nxpslogl03hdd048f
+DEFINE ts03nxpvlogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL4259299_TSMCN3e_DDR_PHY_H169_Libraries_Release_CQv1p1_OAview/ts03nxpvlogl03hdd048f/schematics/oa/ts03nxpvlogl03hdd048f
+DEFINE ts03nxpwlogl03hdd048f /remote/cad-rep/msip/cd/lib/alpha_common_libs/tsmc3eff/IRL4259299_TSMCN3e_DDR_PHY_H169_Libraries_Release_CQv1p1_OAview/ts03nxpwlogl03hdd048f/schematics/oa/ts03nxpwlogl03hdd048f
+
+#Jira-P10023532-42290
+DEFINE dwc_hbm3phy_cmpana       ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_cmpana
+DEFINE dwc_hbm3phy_vref         ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_vref
+DEFINE dwc_hbm3phy_por          ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_por
+DEFINE dwc_hbm3phy_vddqls       ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_vddqls
+DEFINE dwc_hbm3phy_clk          ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_clk
+DEFINE dwc_hbm3phy_rx           ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_rx
+DEFINE dwc_hbm3phy_tx           ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_tx
+DEFINE dwc_hbm3phy_endcap       ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_endcap
+DEFINE dwc_hbm3phy_clamps       ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_clamps
+DEFINE dwc_hbm3phy_tiles        ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_tiles
+DEFINE dwc_hbm3phy_testout      ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_testout
+DEFINE dwc_hbm3phy_cover        ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_cover
+DEFINE hbm3phy_unitcells        ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/hbm3phy_unitcells
+DEFINE hbm3phy_unitcells_hbm    ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/hbm3phy_unitcells_hbm
+DEFINE hbm3phy_unitcells_hbm2   ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/hbm3phy_unitcells_hbm2
+DEFINE unit_esd                 ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/unit_esd
+DEFINE unit_esd_hbm3            ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/unit_esd_hbm3
+DEFINE work_rxmd                ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/work_rxmd
+DEFINE work_txmd                ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/work_txmd
+DEFINE work_clktree             ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/work_clktree
+DEFINE work_rx                  ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/work_rx
+DEFINE work_hbm3                ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/work_hbm3
+DEFINE dwc_ddrphy_thermdiode    ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_ddrphy_thermdiode
+DEFINE dwc_hbm3phy_tc_cells     ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_tc_cells
+DEFINE dwc_hbm3phy_utility      $PROJ_P4_ROOT/projects/${MSIP_PRODUCT_NAME}/$MSIP_PROJ_NAME/latest/lib/dwc_hbm3phy_utility
+DEFINE esd_foundry              ${MSIP_PROJ_P4WS_ROOT}/common_libs/central_ip/tsmc3eff/esd/foundry/1p++m_1xa1xb1xc1xd1ya1yb+y/rel_050a/esd_foundry
+DEFINE esd_gold                 ${MSIP_PROJ_P4WS_ROOT}/common_libs/central_ip/tsmc3eff/esd/rel_050a/esd_gold
+DEFINE sc_lvt                   ${MSIP_PROJ_P4WS_ROOT}/projects/cmnblks/u145-cmnblks-tsmc3eff-12/wip/lib/sc_lvt
+DEFINE sc_svt                   ${MSIP_PROJ_P4WS_ROOT}/projects/cmnblks/u145-cmnblks-tsmc3eff-12/wip/lib/sc_svt
+DEFINE sc_ulvt                  ${MSIP_PROJ_P4WS_ROOT}/projects/cmnblks/u145-cmnblks-tsmc3eff-12/wip/lib/sc_ulvt
+DEFINE pro_ddl                  ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/pro_ddl
+DEFINE sctg   			${MSIP_PROJ_P4WS_ROOT}/projects/cmnblks/u145-cmnblks-tsmc3eff-12/wip/lib/sctg
+DEFINE work_bdl 		${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/work_bdl
+DEFINE dwc_ddrphy_ddl    ${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_ddrphy_ddl
+
+##########################JIRA P10023532-43130 - Branched pro_pclk and pro_dcd libs####################################
+DEFINE pro_pclk			${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/pro_pclk
+DEFINE pro_dcd			${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/pro_dcd
+DEFINE dwc_hbm3phy_txdcd 	${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/dwc_hbm3phy_txdcd
+##########################JIRA P10023532-43343 - Copied pro_lp5x_rx/vref_r2r_dac_res & pro_lp5x_unitcells/eg_tielow cells from d931 ##########################
+DEFINE pro_lp5x_rx 		${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/pro_lp5x_rx
+DEFINE pro_lp5x_unitcells 	${MSIP_PROJ_P4WS_ROOT}/projects/${MSIP_PRODUCT_NAME}/${MSIP_PROJ_NAME}/latest/lib/pro_lp5x_unitcells

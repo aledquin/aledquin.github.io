@@ -1,0 +1,40 @@
+PCSQA STATUS:PASS
+PCSQA Project Name:d763-hbm3-v2-tsmc3eff-12-ew
+PCSQA Project Release:rel1.00
+PCSQA Score:107
+PCSQA Execution details:PCS QA 2022.04;larissa;us01(p4) us01;Mon Jul 18 07:12:05 PDT 2022
+PCSQA CHKSUM:52327d6ecd36c0a6a037aad708cb4687
+PCSQA Hipre Version:v7.6.0
+PCSQA Violations list:
+(PCSQA-REMOTECHECK) Usage of -sites option or PCSQA_PROJ_ROOT with non-default value, can result in limited results; PCS has not been validated at all (applicable) MSIP sites.
+(PCSQA-2.1z);PCS uses '_beta' release of CCS: /remote/proj/cad/c269-tsmc3eff-1.2v/rel3.2.0;WAIVE;P10023532-45025;KEEP
+(PCSQA-2.1bb all);Reference 'source MSIP_PROJ_ROOT/alpha/alpha_common/bin/alphaExtractUtils.tcl' in file /remote/cad-rep/projects/hbm3/d763-hbm3-v2-tsmc3eff-12-ew/rel1.00/cad/pcs.tcl refers to different PCS or other than reference CCS;WAIVE;DDR script;KEEP
+(PCSQA-2.1t us01);Combined chksum of PCS files (excluding .PCSQA_STATUS) (=52327d6ecd36c0a6a037aad708cb4687) is not the same as the one inside .PCSQA_STATUS file, PCSQA CHKSUM entry (=821373a18bae2d9444c5dee76d3e2121)
+(PCSQA-2.1t us01);Chksum of file path project.env (=932c093d5444f4162162dc299c4073f3) is not the same as the one inside cad/.PCSQA_STATUS file (=cb8c764b6086e323277927503a04f92e)
+(PCSQA-2.1t us01);Chksum of file path emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_RA.tcl (=13f54169ec81b0a009c458ebcc62f495) is not the same as the one inside cad/.PCSQA_STATUS file (=e147bd92a49d7a9eb94ab7a4966a3363)
+(PCSQA-2.1t us01);Chksum of file path emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_RA.tcl (=13f54169ec81b0a009c458ebcc62f495) is not the same as the one inside cad/.PCSQA_STATUS file (=e147bd92a49d7a9eb94ab7a4966a3363)
+(PCSQA-2.1t us01);Chksum of file path emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_totem.cfg (=7d28ffe136e202692c2a9b5ae8c094b9) is not the same as the one inside cad/.PCSQA_STATUS file (=0c237e85bff20611bf35b943a5640248)
+(PCSQA-2.1t us01);Chksum of file path emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_totem.cfg (=54cb780d6ef76657e40c6e6a8cd013c7) is not the same as the one inside cad/.PCSQA_STATUS file (=0c237e85bff20611bf35b943a5640248)
+(PCSQA-2.1t us01);No chksum entry in cad/.PCSQA_STATUS for file path models/readme.txt
+(PCSQA-2.1t us01);Chksum of file path usage.txt (=42696a16b3f22cf07fd47c8be4ca635b) is not the same as the one inside cad/.PCSQA_STATUS file (=a5f8bf52589c8ce751d9a27f74979974)
+
+PCSQA Automation fields: DO NOT MAKE MANUAL CHANGES BELOW THIS LINE
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/env.tcl;6bbfea274b42b7c4c1346daa61ca8f52
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/icv/SNPS/SNPS_sourceme;f507a06ddb463122ef3bf447e614ffd1
+emir/she.info;c76ee730408f4f07d48db404393b1aec
+lib.defs;8d479e6d1e17c84391d822aeedf802f9
+project.env;932c093d5444f4162162dc299c4073f3
+shared/env/env_common.tcl;6ba1015ad0b6e08dfbc12c5c252eec0a
+pcs.tcl;c66b51316d439148d0dd36e98bf8e327
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z/env.tcl;6bbfea274b42b7c4c1346daa61ca8f52
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z/icv/SNPS/SNPS_sourceme;f507a06ddb463122ef3bf447e614ffd1
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_RA.tcl;13f54169ec81b0a009c458ebcc62f495
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_RAESD.tcl;d1b0d14de20124c51723006f4fd0298c
+emir/map_ba_terminal_calibre.sp;3a5a20d32571f6625cf41a473e09a87d
+emir/map_ba_terminal_icv.sp;27aee4eacfc0e019b346ed0948f70f41
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_RA.tcl;13f54169ec81b0a009c458ebcc62f495
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_RAESD.tcl;d1b0d14de20124c51723006f4fd0298c
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_totem.cfg;7d28ffe136e202692c2a9b5ae8c094b9
+emir/15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM_totem.cfg;54cb780d6ef76657e40c6e6a8cd013c7
+models/readme.txt;d857aafeb48fe6a88a277cd3e8d0600c
+usage.txt;42696a16b3f22cf07fd47c8be4ca635b

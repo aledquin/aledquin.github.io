@@ -1,0 +1,18 @@
+
+## -----------------------------------------------------------------------------
+## START - RTM Generated Code: SEV Variable Definitions                         
+## -----------------------------------------------------------------------------
+
+set SEV(task)          "ude_env_dependent_checks"
+set SEV(src_name)      "gen_env"
+set SEV(dst_name)      "ude_env_dependent_checks"
+set SEV(tmp_dir)       "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/ude_env_dependent_checks/tmp"
+set SEV(script_file) "scripts_global/qa_scripts/ude_env_dependent_checks.tcl"
+set SEV(flow_name)     "tf_pcs_qa"
+set SEV(flow_order)    5000000
+
+
+## -----------------------------------------------------------------------------
+## STOP - RTM Generated Code: SEV Variable Definitions                          
+## -----------------------------------------------------------------------------
+

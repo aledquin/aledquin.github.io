@@ -1,0 +1,133 @@
+Summary of checks:
+
+TimingRoot = //wwcad/msip/projects/$productName/$projectName/$timingRel/design/timing  ($timingRel = "latest" by default)
+
+Lib presence:
+
+    $TimingRoot/nt/$macroName/lib/${macroName}_${metalStack}_${pvt}.lib
+    and
+    $TimingRoot/nt/$macroName/lib_pg/${macroName}_${metalStack}_${pvt}.lib
+
+    or
+    
+    $TimingRoot/sis/$macroName/lib/${macroName}_${metalStack}_${pvt}.lib
+    and	
+    $TimingRoot/sis/$macroName/lib_pg/${macroName}_${metalStack}_${pvt}.lib
+
+    or
+    
+    $TimingRoot/libgen/$macroName/lib/${macroName}_${metalStack}_${pvt}.lib
+    and	
+    $TimingRoot/libgen/$macroName/lib_pg/${macroName}_${metalStack}_${pvt}.lib
+    
+    Presence in one of the above three areas determines the flow type:  nt, sis or libgen.
+
+Timing generation log presence:
+
+    For NT macros:
+    	$TimingRoot/nt/$macroName/timing/Run_${pvt}_etm/timing.log
+    	$TimingRoot/nt/$macroName/timing/Run_${pvt}_internal/timing.log
+
+    For SiS macros:
+    	sis/$macroName/siliconsmart.log  (single file)
+	or
+	sis/$macroName/siliconsmart.log  (one-per-pvt)
+
+    For libgen macros:
+    	NONE   (What should I look for?)
+
+NT-specific files:
+    Existence of at least one .paths file for etm
+        nt/$macroName/timing/Run_${pvt}_etm/${macroName}_${metalStack}_${pvt}.paths
+
+    Existence of at least one saved session in etm  (existence only; no other checking)
+        nt/$macroName/timing/Run_${pvt}_etm/${macroName}_${pvt}
+
+    Existence of at least one Run_<pvt>_internal/ <macro>.excluded_Xld_nets.sorted
+        nt/$macroName/timing/Run_${pvt}_internal/${macroName}.edgerates.excluded_Xld_nets.sorted
+
+    Existence of at least one Run_<pvt>_internal/transistors_not_annotated_all
+        nt/$macroName/timing/Run_${pvt}_internal/transistors_not_annotated_all
+
+    Existence of at least one saved session for internal
+        nt/$macroName/timing/Run_${pvt}_internal/${macroName}_${pvt}
+
+    Existence of all .rpt files for in nt/$macroName/timing/Run_${pvt}_internal/$rpt, for $rpt = 
+          clock_arrivals.rpt
+    	  clock_network.rpt
+	  clock.rpt
+     	  clock_tree_nets.rpt
+     	  clock_tree_pins.rpt
+     	  coverage.rpt
+     	  fanout.rpt
+     	  max_arrival.rpt
+     	  max_arrival_transition_over_50ps.rpt
+     	  max_arrival_transition_over_90ps.rpt
+     	  maxcap.rpt
+     	  max_pbsa.rpt
+     	  max_SI_nets.rpt
+     	  max_timing.rpt
+     	  maxtrans.rpt
+     	  min_arrival_transition_over_50ps.rpt
+     	  min_arrival_transition_over_90ps.rpt
+     	  min_pbsa.rpt
+     	  minpulse.rpt
+     	  min_timing.rpt
+     	  noise.rpt
+     	  noise_sources.rpt
+     	  parasitics_annotated.rpt
+     	  parasitics_not_annotated.rpt
+     	  parasitics_summary.rpt
+     	  SI_convergence.rpt
+     	  si_delay_max.rpt
+     	  si_delay_min.rpt
+     	  simulation.rpt
+     	  topology.rpt
+     	  transistor_direction.rpt
+
+Quality Checks (qualCheckRoot = (sis|nt|libgen)/$macroName/quality_checks, depending on where libs were found.
+    alphaCompileLibs:
+        $qualCheckRoot/alphaCompileLibs/compile.log,  fails on presence of "^Error:".
+
+    alphaLibCheckMonotonicSetupHold (macros with timing arcs only)
+        $qualCheckRoot/alphaLibCheckMonotonicSetupHold/MONOTONICLOGS/*.  Fails on presence of "^Non monotonic"
+
+    alphaPinCheck:
+        $qualCheckRoot/alphaPinCheck/${macroName}_pincheck.log. Fails on presence of "DIRTY"
+
+    alphaPlotArcs:
+	csvFiles:
+	    $qualCheckRoot/alphaPlotArcs/compare_gold/${macroName}_report.csv or $qualCheckRoot/alphaPlotArcs/compare_gold/${macroName}_report_${pvt}.csv 
+	    $qualCheckRoot/alphaPlotArcs/compare_iterative/${macroName}_report.csv or $qualCheckRoot/alphaPlotArcs/compare_iterative/${macroName}_report_${pvt}.csv
+        Fails on mismatched arcs, or timing deltas greater than 10% for gold or 5% for iterative.
+
+        pdf, presence of:
+	    $qualCheckRoot/alphaPlotArcs/compare_gold/${macroName}.pdf or $qualCheckRoot/alphaPlotArcs/compare_gold/${macroName}_{$pvt}.pdf
+	    $qualCheckRoot/alphaPlotArcs/compare_iterative/${macroName}.pdf or $qualCheckRoot/alphaPlotArcs/compare_iterative/${macroName}_${pvt}.pdf
+
+    msip_hipreLibertyCheck (replacement for alphaLibertyChecks):
+
+        checkArc: 
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkArc/checkArc.log.  Passes on presence of "Arc consistency passed", fails otherwise.
+
+        checkBusOrder:
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkDerate/checkDerate.log  (macros with buses only)
+
+        checkDerate:
+ 	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkDerate/checkDerate.log.  Passes on "Liberty Derate Attributes Verified", fails otherwise
+
+        checkDuplicateAttributes:
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkDuplicateAttributes/*  Fails on presence of "^Error:"
+	    
+	checkMaxCap:
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkMaxCap/*  Fails on presence of "^Error:"
+
+	checkOperatingConditions:
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkOperatingConditions/*  Fails on presence of "^Error:"
+
+	checkPt:
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkPt/checkPt.log  Fails on presence of "^Error:"
+
+	checkTiming:
+	    $qualCheckRoot/msip_hipreLibertyCheck/libertyCheckLogs/used_files_checkTiming,  Fails on presence of "^Error:"
+

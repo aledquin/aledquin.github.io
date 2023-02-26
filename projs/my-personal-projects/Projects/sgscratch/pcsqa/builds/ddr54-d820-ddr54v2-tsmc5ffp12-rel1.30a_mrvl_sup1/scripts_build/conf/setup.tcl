@@ -1,0 +1,1 @@
+/remote/cad-rep/msip/tools/Lynxtools/pcsqa/2022.04/builds/common_build/scripts_build/conf/setup.tcl

@@ -1,0 +1,202 @@
+#!/depot/Python/Python-3.8.0/bin/python
+############################################################
+#  Test the p4 add changelist function
+#  Author : Harsimrat Singh Wadhawan
+############################################################
+# nolint utils__script_usage_statistics
+# nolint main
+# nolint alpha_common
+from unittest import TestCase  # noqa: F401
+from unittest.mock import patch
+from io import StringIO
+import unittest
+import os
+import pathlib
+import sys
+import time
+
+bindir = str(pathlib.Path(__file__).resolve().parent.parent)
+sys.path.append(bindir + '/../Util')
+
+from CommonHeader import NULL_VAL, EMPTY_STR, NONE
+from Messaging import iprint, fatal_error
+from P4Utils import da_p4_create_instance, da_p4_add_to_changelist
+from Misc import run_system_cmd
+
+import CommonHeader
+
+
+class TestChangelistFunctions(unittest.TestCase):
+
+    file_array = []
+    original_view = []
+    original_root = EMPTY_STR
+    depotPath = "wwcad/msip/projects/alpha/alpha_common/wiremodel"
+
+    # Helper class to emulate argparser
+    class ArgClass:
+        d = 0
+        v = 0
+
+    # Initialise variables
+    args = ArgClass()
+    __author__ = 'unittest'
+    __version__ = '1.00'
+    CommonHeader.init(args, __author__, __version__)
+
+    def setUp(self):
+
+        file_name = f"/tmp/random-file-test-{time.time()}.txt"
+        (stdout, stderr, reval) = run_system_cmd(
+            f"echo ABCXYZQWERTYUIOP > {file_name}", NONE)
+        self.file_array.append(file_name)
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()
+
+        self.original_view = client["View"].copy()
+        self.original_root = client["Root"]
+
+    def test_da_p4_add_to_changelist(self):
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()
+
+        self.depotPath = "//wwcad/msip/projects/alpha/alpha_common/wiremodel"
+        file_name = self.file_array[0]
+        with patch('sys.stdout', new=StringIO()) as fake_out:  # noqa: F841
+            mapping = da_p4_add_to_changelist(p4, self.depotPath, file_name)
+
+        client = p4.fetch_client()
+        try:
+            original_view = client["View"]
+        except Exception as e:  # noqa: F841
+            fatal_error(f"Could not get workspace view for P4 client {p4.client}")
+
+        try:
+            original_root = client["Root"]  # noqa: F841
+        except Exception as e:  # noqa: F841
+            fatal_error(f"Could not get workspace view for P4 client {p4.client}")
+
+        self.assertEqual(original_view[-1], mapping)
+        p4.disconnect()
+
+    def test_da_p4_add_to_changelist_non_existent_file(self):
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()  # noqa: F841
+
+        self.depotPath = "//wwcad/msip/projects/alpha/alpha_common/wiremodel"
+        file_name = f"/tmp/this-does-not-exist-{time.time()}.txt"
+        with patch('sys.stdout', new=StringIO()) as fake_out:  # noqa: F841
+            answer = da_p4_add_to_changelist(p4, self.depotPath, file_name)
+
+        self.assertEqual(answer, NULL_VAL)
+
+    def test_da_p4_add_to_changelist_non_existent_depot_path(self):
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()  # noqa: F841
+
+        self.depotPath = "//wwcad/msip/projects/ABC/XYZ/123"
+        file_name = self.file_array[0]
+        with patch('sys.stdout', new=StringIO()) as fake_out:  # noqa: F841
+            answer = da_p4_add_to_changelist(p4, self.depotPath, file_name)
+
+        self.assertEqual(answer, NULL_VAL)
+
+    def test_da_p4_add_to_changelist_bad_client(self):
+
+        self.depotPath = "//wwcad/msip/projects/alpha/alpha_common/wiremodel"
+        file_name = self.file_array[0]
+        p4 = da_p4_create_instance()
+        with patch('sys.stdout', new=StringIO()) as fake_out:  # noqa: F841
+            answer = da_p4_add_to_changelist(p4, self.depotPath, file_name)
+
+        self.assertEqual(answer, NULL_VAL)
+
+    def test_da_p4_add_to_changelist_no_mapping(self):
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()
+        client["View"] = []
+        p4.save_client(client)
+
+        self.depotPath = "//wwcad/msip/projects/alpha/alpha_common/wiremodel"
+        file_name = self.file_array[0]
+        with patch('sys.stdout', new=StringIO()) as fake_out:  # noqa: F841
+            mapping = da_p4_add_to_changelist(p4, self.depotPath, file_name)
+
+        client = p4.fetch_client()
+        self.assertEqual(client["View"][0], mapping)
+
+    def test_da_p4_add_to_changelist_no_root(self):
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()
+        client["Root"] = "/tmp/ABC"
+        p4.save_client(client)
+
+        self.depotPath = "//wwcad/msip/projects/alpha/alpha_common/wiremodel"
+        file_name = self.file_array[0]
+        with patch('sys.stdout', new=StringIO()) as fake_out:  # noqa: F841
+            mapping = da_p4_add_to_changelist(p4, self.depotPath, file_name)
+
+        client = p4.fetch_client()
+        self.assertEqual(NULL_VAL, mapping)
+
+    def tearDown(self):
+
+        p4 = da_p4_create_instance()
+        if (p4 is NULL_VAL):
+            fatal_error("Could not create P4 instance.")
+
+        p4.connect()
+        client = p4.fetch_client()
+
+        # Restore original mapping.
+        client["View"] = self.original_view
+        client["Root"] = self.original_root
+        p4.save_client(client)
+
+        try:
+            os.chdir(self.original_root)
+        except Exception as e:
+            iprint(str(e))
+
+        # Revert any added temporary files
+        for file in self.file_array:
+            file_base_name = os.path.basename(file)
+            filename = f"{self.original_root}/wwcad/msip/projects/alpha/alpha_common/wiremodel/{file_base_name}"
+            (out, err, ret) = run_system_cmd(
+                f"p4 revert {filename}", CommonHeader.VERBOSITY)
+
+        self.file_array = []
+
+
+if __name__ == '__main__':
+    unittest.main()

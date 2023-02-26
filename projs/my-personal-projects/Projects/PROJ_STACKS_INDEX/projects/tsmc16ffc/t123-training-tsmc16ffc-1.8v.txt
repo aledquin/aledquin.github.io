@@ -1,0 +1,14 @@
+tsmc16ffc-18_training_10M_2Xa1Xd_h_2Xe_vh_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMr_DRC/ICVN16FFC_10M_2Xa1Xd2Xe2Y2R_032.12c.encrypt
+tsmc16ffc-18_training_10M_2Xa1Xd_h_4Xe_vhvh_2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMr_DRC/ICVN16FFC_10M_2Xa1Xd4Xe2R_032.12c.encrypt
+tsmc16ffc-18_training_10M_2Xa1Xd_h_4Xe_vhvh_2Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMz_DRC/ICVN16FFC_10M_2Xa1Xd4Xe2Z_032.12c.encrypt
+tsmc16ffc-18_training_11M_2Xa1Xd_h_3Xe_vhv_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMr_DRC/ICVN16FFC_11M_2Xa1Xd3Xe2Y2R_032.12c.encrypt
+tsmc16ffc-18_training_11M_2Xa1Xd_v_3Xe_hvh_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMr_DRC/ICVN16FFC_11M_2Xa1Xd3Xe2Y2R_032.12c.encrypt
+tsmc16ffc-18_training_12M_1X2Xa2Xy2Y2Yy1Z1R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/BACKUP_DRC/ICVN16FFC_12M_1X2Xa2Xy2Y2Yy1Z1R_032.12c.encrypt
+tsmc16ffc-18_training_13M_2Xa1Xd_h_4Xe_vhvh_1Y2Z2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMr_DRC/ICVN16FFC_13M_2Xa1Xd4Xe1Y2Z2R_032.12c.encrypt
+tsmc16ffc-18_training_13M_2Xa1Xd_v_4Xe_hvhv_1Y2Z2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMr_DRC/ICVN16FFC_13M_2Xa1Xd4Xe1Y2Z2R_032.12c.encrypt
+tsmc16ffc-18_training_8M_2Xa1Xd_h_3Xe_vhv_1Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMz_DRC/ICVN16FFC_8M_2Xa1Xd3Xe1Z_032.12c.encrypt
+tsmc16ffc-18_training_8M_2Xa1Xd_v_3Xe_hvh_1Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMz_DRC/ICVN16FFC_8M_2Xa1Xd3Xe1Z_032.12c.encrypt
+tsmc16ffc-18_training_9M_2Xa1Xd_h_3Xe_vhv_1Z1U /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMu_DRC/ICVN16FFC_9M_2Xa1Xd3Xe1Z1U_032.12c.encrypt
+tsmc16ffc-18_training_9M_2Xa1Xd_h_3Xe_vhv_2Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMz_DRC/ICVN16FFC_9M_2Xa1Xd3Xe2Z_032.12c.encrypt
+tsmc16ffc-18_training_9M_2Xa1Xd_h_3Xe_vhv_2Z_14k5RDL /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMz_DRC/ICVN16FFC_9M_2Xa1Xd3Xe2Z_032.12c.encrypt
+tsmc16ffc-18_training_9M_2Xa1Xd_v_3Xe_hvh_2Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFC/common/rules/common/icv/drc/ver1.2c/orig/LOGIC_TopMz_DRC/ICVN16FFC_9M_2Xa1Xd3Xe2Z_032.12c.encrypt

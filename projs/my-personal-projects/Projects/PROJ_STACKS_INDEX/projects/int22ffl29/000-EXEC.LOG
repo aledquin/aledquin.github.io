@@ -1,0 +1,52 @@
+n231-c10-int22ffl29-18-ns.txt
+INFO: int22ffl29 18_msip rel1.4.0
+u141-cmnblks-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.3.0
+m0142-mem-int22ffl29-in22n9h41p11sadul256s.txt
+INFO: int22ffl29 18_em 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0142-mem-int22ffl29-in22n9h42p11sacrl128s.txt
+INFO: "em" "em" "m0142-mem-int22ffl29-in22n9h41p11sadul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0142-mem-int22ffl29-in22n9h41p11sasrl256s.txt
+INFO: "em" "em" "m0142-mem-int22ffl29-in22n9h41p11sadul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0142-mem-int22ffl29-in22n9h42p11sasul01ms.txt
+INFO: "em" "em" "m0142-mem-int22ffl29-in22n9h41p11sadul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0142-mem-int22ffl29-in22n9h41p11sadul02ms.txt
+INFO: "em" "em" "m0142-mem-int22ffl29-in22n9h41p11sadul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t231-c10-int22ffl29-18-ns.txt
+INFO: int22ffl29 18_msip rel1.4.0
+x716-usb2-int22ffl29-18-ns.txt
+INFO: int22ffl29 18_msip rel1.4.0_22_04_25_1
+p053-emclk-int22ffl29-18.txt
+INFO: CCS CCS "c756-int22ffl29-1.8v_em"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d560-lpddr4mv2-int22ffl29-18.txt
+INFO: int16ffl 18_msip rel1.1.0
+t053-pqv-int22ffl29-18.txt
+INFO: CCS CCS "c756-int22ffl29-1.8v_em"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+h130-hbi-x24_aib20-int22ffl29-18-ns.txt
+INFO: int22ffl29 18_msip rel1.1.0
+f531-gpio-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.3.0
+s001-pms-5164ts-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.1.0
+s001-pms-5166vm-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.1.0
+s001-pms-5165td-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.1.0
+s001-pms-5167pd-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.1.0
+s001-pms-5168dts-int22ffl29-18.txt
+INFO: int22ffl29 18_msip rel1.1.0

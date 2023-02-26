@@ -1,0 +1,88 @@
+Description
+
+The alphaHLDepotPhyvRelease_test script runs multiple testcases to ensure that the alphaHLDepotPhyvRelease runs properly. 
+The script prepares the testing files, calls the alphaHLDepotPhyvRelease script, and does several checks afterwards. These
+checks include:
+	1- checking that the verification files were copied correctly
+	2- checking the log file for fail, error, and warning messages
+	3- checking the captured cmd 'alphaHLDepotPhyvRelease_cmd' file matches the GR
+	4- checking the shell script 'alphaPinCheck.${MACRO}' file matches the GR
+After all of the checks are done the script deletes any files it created and reverts any file that was checked-out/added to
+perforce. If a single testcase was specified then the files are not deleted/reverted.
+
+Setting up the files
+
+First, the release area should be mapped into your local perforce:
+//depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/
+
+Second, the testcase tarballs should be mapped into you local perforce:
+//wwcad/msip/projects/training/t125-training-tsmc7ff-1.8v/*.tar.gz
+
+The testcase files contains stubs for the verification files and project specific files like the legalRelease.txt and the
+legalVerifs.txt files. The files are placed within a directory tree that is expected by the alphaHLDepotPhyvRelease script.
+
+Usage
+
+alphaHLDepotPhyvRelease_test.pl [options] <local_path>
+
+The testcases tarballs will be unpacked in the local path supplied.
+-g 	If your GitLab repository is not under '~/GitLab', '~/Gitlab' or '~/gitlab' then you can specifiy it using the '-g' option
+-v	verbosity
+-d 	debug
+
+The verbosity and debug options are passed to the alphaHLDepotPhyvRelease script.
+
+Expected output
+
+Some testcases will output some errors anyways. The output should be compared to the output below:
+
+Testcase 1: dwc_ddrphy_diff_io_ew
+No issues
+
+Testcase 2: dwc_ddrphy_utility_blocks
+-W- The following warning(s) were detected in the log file:
+  -W- The 'dwc_ddrphy_utility_blocks' utility macro should be tagged, which must be reviewed in log file:
+    '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_utility_blocks/1.00a/macro/dwc_ddrphy_utility_blocks.pincheck'
+    Please review the tagging info following the logged 'msip_layTree' command at the end of the file.
+
+Testcase 3: dwc_ddrphy_repeater_cells
+-W- The following warning(s) were detected in the log file:
+  -W- The 'dwc_ddrphy_repeater_cells' repeater macro should be tagged, which must be reviewed in log file:
+    '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_repeater_cells/1.00a/macro/dwc_ddrphy_repeater_cells.pincheck'
+    Please review the tagging info following the logged 'msip_layTree' command at the end of the file.
+
+Testcase 4: dwc_ddrphycover_dwc_ddrphydiff_top_ew
+-E- The following error(s) were detected in the log file:
+  -E-   Release file '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/calibre/ant/ant_dwc_ddrphycover_dwc_ddrphydiff_top_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt'
+    does not exist (must be seeded in p4 depot first), so skipping copy...
+  -E-   Release file '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/calibre/drc/drc_dwc_ddrphycover_dwc_ddrphydiff_top_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt'
+    does not exist (must be seeded in p4 depot first), so skipping copy...
+  -E-   Release file '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/calibre/lvs/lvs_dwc_ddrphycover_dwc_ddrphydiff_top_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt'
+    does not exist (must be seeded in p4 depot first), so skipping copy...
+  -E-   Release file '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/calibre/erc/erc_dwc_ddrphycover_dwc_ddrphydiff_top_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt'
+    does not exist (must be seeded in p4 depot first), so skipping copy...
+  -E- There were missing source behavioral files:
+     ${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/interface/dwc_ddrphycover_dwc_ddrphydiff_top_ew_interface.v
+     ${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/behavior/dwc_ddrphycover_dwc_ddrphydiff_top_ew.v
+     ${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/cosim/dwc_ddrphycover_dwc_ddrphydiff_top_ew.sp
+    Please create the missing source files, or get waivers from the CKT lead.
+-W- The following warning(s) were detected in the log file:
+  -W- Cound not find '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/interface/dwc_ddrphycover_dwc_ddrphydiff_top_ew_interface.v' verilog file, so skipping for pin check comparison...
+  -W- Cound not find '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/behavior/dwc_ddrphycover_dwc_ddrphydiff_top_ew.v' verilog file, so skipping for pin check comparison...
+  -W- Cound not find '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphycover_dwc_ddrphydiff_top_ew/1.00a/macro/cosim/dwc_ddrphycover_dwc_ddrphydiff_top_ew.sp' cdl file, so skipping for pin check comparison...
+
+Testcase 5: dwc_ddrphy_techrevision
+No issues
+
+Testcase 6: dwc_ddrphy_decapvaa_vdd2_ew
+No issues
+
+Testcase 7: dwc_ddrphy_gradient_master_ew
+-E- The following error(s) were detected in the log file:
+  -E-   Release file '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_gradient_master_ew/1.00a/macro/icv/drc/drc_dwc_ddrphy_gradient_master_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt'
+    does not exist (must be seeded in p4 depot first), so skipping copy...
+  -E-   Release file '${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_gradient_master_ew/1.00a/macro/icv/lvs/lvs_dwc_ddrphy_gradient_master_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt'
+    does not exist (must be seeded in p4 depot first), so skipping copy...
+
+-E- The following file(s) were not found:
+  ${P4_ABS_PATH}/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_gradient_master_ew/1.00a/macro/icv/drcint/drcint_dwc_ddrphy_gradient_master_ew_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R.rpt

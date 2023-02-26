@@ -1,0 +1,52 @@
+## list of settings for present release
+set rel "1.20a"
+set vcrel "1.20a"
+
+set releaseBranch "rel1.20_ew_1.20a_ew_rel_"
+set layout_tag "final release"
+set p4_release_root "products/lpddr54/project/d856-lpddr54-tsmc12ffc18"
+set process "tsmc12ffc18"
+set metal_stack "9M_2Xa1Xd_h_3Xe_vhv_2Z"
+set metal_stack_ip "7M_2Xa1Xd_h_3Xe_vhv"
+## legal pin layers
+set layers "M1 M2 M3 M4 M5 M6 M7 OVERLAP"
+## legal supply pin layers
+set supply_pins "M7"
+set supply_pins_override(dwc_ddrphy_lcdl) "M4"
+#set supply_pins_override(dwc_ddrphy_bdl) "M4"
+#set supply_pins_override(dwc_ddrphy_techrevision) "M4"
+## reference GDS files for DI
+#set reference_gds(dwc_ddrphy_sec_io) {dwc_ddrphy_sec_io_IntLoadFill.gds.gz dwc_ddrphy_sec_io_InternalLoad.gds.gz}
+## days since release files were created, for pin check/timing collateral validation
+set reference_date_time "14 days ago"
+## release GDS/CDL, default 'calibre'
+##   allows using 'icv' GDS/CDL files for release, **only** applies to TSMC N7 where Calibre is waived
+##   allows using 'HIPRE' GDS/CDL files from GenHiprePkg
+set release_gds_cdl "icv"
+## release GDS of shim macros, default 'drcint'
+#set release_gds_shim "drcint"
+## version for LEF comparison
+#set lef_diff_rel "1.00a_pre1"
+## cells to prune from CDL
+set cdl_prune_cells "cvcp* cvpp* vflag*"
+## macros that are PHYV only and can have autogen Verilog/LIB files
+#set releasePhyvMacro {dwc_ddrphy_decapvddq_ew dwc_ddrphy_decapvddq_ns dwc_ddrphy_decapvaa dwc_ddrphy_decapvaa_tile dwc_ddrphy_vddqclamp_ns maesdclamp18 dwc_ddrphy_vddclamp}
+## macros that are only shims, only LEF/GDS
+#set releaseShimMacro {dwc_ddrphy_pllshim dwc_ddrphy_memresetshim_ns}
+## macros to ignore for CKT release to DI
+#set releaseIgnoreMacro {dwc_ddrphy_rxac_ns dwc_ddrphy_rxdq_ns dwc_ddrphy_rxdqs_ns dwc_ddrphy_txfe_ns dwc_ddrphy_txfedqs_ns dwc_ddrphy_txbe_ns dwc_ddrphy_bdl dwc_ddrphy_dqsenreplica_ns}
+## name of UTILITY library macro for CKT release to customer, defaults to dwc_ddrphy_utility_cells
+set utility_name "dwc_ddrphy_utility_cells"
+set repeater_name "dwc_ddrphy_repeater_cells"
+## contents of REPEATER library macro for CKT release to customer
+set releaseRepeaterMacro {dwc_ddrphy_pclk_rpt_ns dwc_ddrphy_rpt1ch_ns dwc_ddrphy_rpt2ch_ns dwc_ddrphy_rpt3ch_ns dwc_ddrphy_rpt4ch_ns dwc_ddrphy_pwrokvdd_rpt_ns dwc_ddrphy_pclk_rpt_ew dwc_ddrphy_rpt1ch_ew dwc_ddrphy_rpt2ch_ew dwc_ddrphy_rpt3ch_ew dwc_ddrphy_rpt4ch_ew dwc_ddrphy_pwrokvdd_rpt_ew}
+## contents of UTILITY library macro for CKT release to customer
+set releaseUtilityMacro {dwc_ddrphy_vddqclamp_4x1_ns dwc_ddrphy_vddqclamp_2x2_ns dwc_ddrphy_vdd2clamp_4x1_ns dwc_ddrphy_vdd2clamp_2x2_ns dwc_ddrphy_vaa_vdd2clamp_4x1_ns dwc_ddrphy_vaa_vdd2clamp_4x1_ew dwc_ddrphy_endcell_ns dwc_ddrphy_decapvdd_4x1_ns dwc_ddrphy_decapvdd_1x1_ns dwc_ddrphy_decapvdd_1by4x1_ns dwc_ddrphy_decapvddq_4x1_ns dwc_ddrphy_decapvddq_1x1_ns dwc_ddrphy_decapvddq_1by4x1_ns dwc_ddrphy_decapvdd2_4x1_ns dwc_ddrphy_decapvdd2_1x1_ns dwc_ddrphy_decapvdd2_1by4x1_ns dwc_ddrphy_vddqclamp_4x1_ew dwc_ddrphy_vddqclamp_2x2_ew dwc_ddrphy_vdd2clamp_4x1_ew dwc_ddrphy_vdd2clamp_2x2_ew dwc_ddrphy_endcell_ew dwc_ddrphy_decapvdd_4x1_ew dwc_ddrphy_decapvdd_1x1_ew dwc_ddrphy_decapvdd_1by4x1_ew dwc_ddrphy_decapvddq_4x1_ew dwc_ddrphy_decapvddq_1x1_ew dwc_ddrphy_decapvddq_1by4x1_ew dwc_ddrphy_decapvdd2_4x1_ew dwc_ddrphy_decapvdd2_1x1_ew dwc_ddrphy_decapvdd2_1by4x1_ew dwc_ddrphy_decapvddhd_4x1_ew dwc_ddrphy_decapvddhd_1x1_ew dwc_ddrphy_decapvddhd_1by4x1_ew dwc_ddrphy_decapvddqhd_4x1_ew dwc_ddrphy_decapvddqhd_1x1_ew dwc_ddrphy_decapvddqhd_1by4x1_ew dwc_ddrphy_decapvddhd_4x1_ns dwc_ddrphy_decapvddhd_1x1_ns dwc_ddrphy_decapvddhd_1by4x1_ns dwc_ddrphy_decapvddqhd_4x1_ns dwc_ddrphy_decapvddqhd_1x1_ns dwc_ddrphy_decapvddqhd_1by4x1_ns}
+## layers to tag in UTILITY library macro for CKT release to customer
+##   Note -tsmc read from 'process' variable, so not necessary for TSMC processes unless needing extra layers
+set utility_tag_layers "63:63 60:63"
+## email list for CKT release to DI
+set releaseMailDist "kmaruk,golnar,ddr_di@synopsys.com,williamm,manukyan,gtravaj,mendizza,davidgh,sg-ddr-ckt-release@synopsys.com"
+## email list for CKT release of HSPICE, IBIS, and UTILITY release
+set releasePmMailDist "kmaruk,golnar,williamm,manukyan,gtravaj,mendizza,davidgh,sg-ddr-ckt-release@synopsys.com"
+set calibre_verifs "true"

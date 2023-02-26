@@ -1,0 +1,96 @@
+---
+calibre_verifs: true
+releaseMacro: 
+    dwc_ddrphy_utility_blocks:
+    - dwc_ddrphy_decapvddq_dbyte_ew
+    - dwc_ddrphy_decapvddq_acx4_ew
+    - dwc_ddrphy_decapvddq_master
+    - dwc_ddrphy_decapvsh_dbyte_ew
+    - dwc_ddrphy_decapvsh_acx4_ew
+    - dwc_ddrphy_decapvsh_master
+    - dwc_ddrphy_decapvddq_ld_dbyte_ew
+    - dwc_ddrphy_decapvddq_ld_acx4_ew
+    - dwc_ddrphy_decapvddq_ld_master
+    - dwc_ddrphy_decapvsh_ld_dbyte_ew
+    - dwc_ddrphy_decapvsh_ld_acx4_ew
+    - dwc_ddrphy_decapvsh_ld_master
+    - dwc_ddrphy_tcoil_dbyte_ew
+    - dwc_ddrphy_tcoil_master
+    dwc_ddrphy_utility_cells:
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_decapvddq_ld_ew
+    - dwc_ddrphy_decapvddq_ld_ns
+    - dwc_ddrphy_vddqclamp_ew
+repeater_name: dwc_ddrphy_clktree_repeater
+lef_diff_rel: 1.00a_pre3
+releaseDefMacro: 
+    - dwc_ddrphy_testbenches/dwc_ddrphyacx4_analog_inst_ew
+    - dwc_ddrphy_testbenches/dwc_ddrphydbyte_analog_inst_ew
+    - dwc_ddrphy_testbenches/dwc_ddrphymaster_analog_inst_ew
+releasePhyvMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_decapvddhd_ew
+    - dwc_ddrphy_decapvddhd_ns
+    - dwc_ddrphy_vddqclamp_ew
+    - dwc_ddrphy_vaaclamp
+    - dwc_ddrphy_decapvaa_tile
+    - dwc_ddrphy_vddclamp_ew
+    - dwc_ddrphy_decapvdd_tile
+releaseShimMacro: dwc_ddrphy_pllshim
+reference_gds: 
+    dwc_ddrphycover_dwc_ddrphymaster_top: dwc_ddrphymaster_top_beol_overlay.gds.gz dwc_ddrphymaster_top_feol_overlay.gds.gz
+    dwc_ddrphy_memreset_ew: dwc_ddrphy_memreset_ew_analogTestVflag.gds.gz
+    dwc_ddrphy_txrxdqs_ew: dwc_ddrphydbyte_lcdlroutes_ew.gds.gz
+    dwc_ddrphy_txrxac_ew: dwc_ddrphy_txrxac_ew_IntLoadFill.gds.gz dwc_ddrphy_txrxac_ew_InternalLoad.gds.gz dwc_ddrphy_txrxac_ew_LUPblock.gds.gz
+    dwc_ddrphy_vregvsh_ew: dwc_ddrphyacx4_ew_vds3.gds.gz dwc_ddrphydbyte_ew_vds3.gds.gz dwc_ddrphymaster_ew_vds3.gds.gz
+    dwc_ddrphycover_dwc_ddrphydbyte_top_ew: dwc_ddrphydbyte_top_ew_beol_overlay.gds.gz dwc_ddrphydbyte_top_ew_feol_overlay.gds.gz
+    dwc_ddrphycover_dwc_ddrphyacx4_top_ew: dwc_ddrphyacx4_top_ew_beol_overlay.gds.gz dwc_ddrphyacx4_top_ew_feol_overlay.gds.gz
+releasePmMailDist: 
+    jfisher,guttman,nhany,shamed,samy,dube,yakram,eltokhi,samy,hassana,sg-ddr-ckt-release@synopsys.com,ddr_di@synopsys.com
+supply_pins_override: 
+    dwc_ddrphy_utility_blocks: M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_ddrphycover_dwc_ddrphymaster_top: M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_ddrphy_bdl: M4
+    dwc_ddrphy_techrevision: M4
+    dwc_ddrphy_lcdl: M6
+    dwc_ddrphycover_dwc_ddrphydbyte_top_ew: M8 M14 M15 M16 M17 MTOP MTOP-1
+    dwc_ddrphycover_dwc_ddrphyacx4_top_ew: M8 M14 M15 M16 M17 MTOP MTOP-1
+cdl_prune_cells: cvcp* cvpp* vflag* *MOMcap_Cp *MOMcap_Cc *MOMcap_pu1 *MOMcap_pux vsync
+supply_pins: M8
+releaseIgnoreMacro: 
+    - dwc_ddrphy_rxac_ew
+    - dwc_ddrphy_rxdq_ew
+    - dwc_ddrphy_rxdqs_ew
+    - dwc_ddrphy_txfe_ew
+    - dwc_ddrphy_txfedqs_ew
+    - dwc_ddrphy_txbe_ew
+    - dwc_ddrphy_bdl
+    - dwc_ddrphy_dqsenreplica_ew
+layers_override: 
+    dwc_ddrphy_utility_blocks: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 M15 MTOP MTOP-1 AP RV
+    dwc_ddrphycover_dwc_ddrphymaster_top: M8 M9 M10 M11 M12 M13 M14 M15 MTOP MTOP-1
+    dwc_ddrphycover_dwc_ddrphydbyte_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 MTOP MTOP-1
+    dwc_ddrphycover_dwc_ddrphyacx4_top_ew: M8 M9 M10 M11 M12 M13 M14 M15 MTOP MTOP-1
+releaseBranch: rel1.00_cktpcs_1.10a_rel_
+releaseMailDist: 
+    jfisher,guttman,nhany,shamed,samy,dube,yakram,eltokhi,hassana,samy,sg-ddr-ckt-release@synopsys.com,ddr_di@synopsys.com
+release_gds_cdl: HIPRE
+metal_stack: 15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z
+metal_stack_ip: 8M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_2Y_vh
+layers: M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP
+timing_libs: lvf
+layout_tag: D823 Final PDK v1.2 Release
+reference_date_time: 21 days ago
+rel: 2.00a
+utility_name: dwc_ddrphy_utility_cells dwc_ddrphy_utility_blocks
+vcrel: 1.10a
+releaseCtlMacro: 
+    - dwc_ddrphy_txrxdq_ew
+    - dwc_ddrphy_txrxdqs_ew
+    - dwc_ddrphy_lcdl
+metal_stack_cover: 15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z
+p4_release_root: products/ddr54/project/d823-ddr54v2-cuamd-tsmc5ff-12
+process: tsmc5ff-12
+

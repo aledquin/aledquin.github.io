@@ -1,0 +1,158 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/iprel/scripts_global/bob/multi_something.tcl#2 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This is the standard decision script for data management.
+## * The decision being made is promote vs restore.
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+source $::env(MSIP_CCS_UTILS)/lib/xsxp.tcl
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set pcs $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+if { [file isdirectory $pcs] == 0 } {
+	set pcs [file normalize [getWorkDir get_p4_content]/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)]
+}
+
+set projectenv $pcs/cad/project.env
+
+set refspecversion ""
+set refprojectinfo [getWorkDir ref_ccs]/refproject.txt
+if { [file exists $refprojectinfo] } {
+	catch { exec $SEV(exec_cmd) -c "grep \"refspecversion: \" $refprojectinfo | awk '{ print \$2}'" } refspecversion
+	catch { exec $SEV(exec_cmd) -c "grep \"refvcdb: \"        $refprojectinfo | awk '{ print \$2}'" } refvcdb
+	catch { exec $SEV(exec_cmd) -c "grep \"refprojectid: \"   $refprojectinfo | awk '{ print \$2}'" } refprojectid
+}
+
+if { $refspecversion != "" } {
+	## Rule 2.1ss for reference porting spec
+	## If a tool is not overruled in PCS, version from CCS has to be taken.
+	set qaapp "pcsqa"
+	set vctoolserrors 0
+	## after ccs_utils call, projectenv points to local catenated CCS and PCS project.env !
+	set projectenv_bak $projectenv
+	## set vcarguments "-p $SVAR(pcs_name) -r $refspecversion"
+	set vcarguments "--id $refprojectid"
+	puts "Check tool versions defined in PCS project.env with Porting Spec $refspecversion ($refvcdb Id: $refprojectid)"
+	sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/check_tool_versions_with_vc_run.tcl
+	set projectenv $projectenv_bak	
+	if { $vctoolserrors > 0 } {
+		sproc_msg -error "(PCSQA-2.1ss) Tool versions cross-check with VC fails with $vctoolserrors errors:"
+		catch { exec $SEV(exec_cmd) -c "grep -e ^Tool -e \"-> FAILED\" $SEV(log_file) | sed -e 's/^/SNPS_ERROR  : \(PCSQA\-2\.1ss\) /g'" } failedlog
+		puts $failedlog
+	}
+}
+
+## Rule 2.1ccc
+sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/check_pvprefix_to_hipre_mapping.tcl
+
+## Rule 2.1bbb
+if { [file isdirectory $pcs] &&
+     ( [string compare -length 3 "ddr"   $SVAR(product_name)] == 0 ||
+       [string compare -length 5 "lpddr" $SVAR(product_name)] == 0 ) } {
+	set snpssourcemes [glob -nocomplain $pcs/cad/*/icv/SNPS/SNPS_sourceme]
+	if { [llength $snpssourcemes] > 0 } {
+		foreach snpssourceme $snpssourcemes {
+			set stack [file tail [file dirname [file dirname [file dirname $snpssourceme]]]]
+			set stackenv $pcs/cad/$stack/env.tcl
+			if { [file exists $stackenv] } {
+				## path of snpssourceme is via a metal stack
+				catch { exec $SEV(exec_cmd) -c "grep CHECK_SNE_RULES $snpssourceme | grep -v ^# | sed -e 's/=/ /g' | awk '{ print \$3 }' | sed -e 's/\"//g'" } check_sne_rules_value
+				if { $check_sne_rules_value == "" || $check_sne_rules_value != "TRUE" } {
+					sproc_msg -error "(PCSQA-2.1bbb) No 'export CHECK_SNE_RULES=\"TRUE\"' is available in cad/$stack/icv/SNPS/SNPS_sourceme"
+				}
+				catch { exec $SEV(exec_cmd) -c "grep SNE_POWER_NAME $snpssourceme | grep -v ^# | sed -e 's/=/ /g' | awk '{ print \$3 }' | sed -e 's/\"//g' | wc -l" } sne_power_name_value
+				if { $sne_power_name_value == 0 } {
+					sproc_msg -error "(PCSQA-2.1bbb) No 'export SNE_POWER_NAME=\"<value>\"' is available in cad/$stack/icv/SNPS/SNPS_sourceme"
+				}
+				## Not available (yet) in $stack.env
+				## set stackenv [getWorkDir check_ude_env_$stack]/$stack.env
+				## to check SNPSlowerLevelCellList
+				catch { exec $SEV(exec_cmd) -c "grep SNPSlowerLevelCellList $stackenv | grep -v ^# | grep \"db::createPref\" | wc -l" } snpslowerlevelcelllist_value
+				if { $snpslowerlevelcelllist_value == 0 } {
+					sproc_msg -error "(PCSQA-2.1bbb) No 'db::createPref SNPSlowerLevelCellList ...' is available in cad/$stack/env.tcl"
+				}
+			}
+		}
+	}
+}
+
+if { $refspecversion != "" } {
+
+	catch { exec $SEV(exec_cmd) -c "/usr/local/bin/siteid" } siteid
+
+	## determine creation of PCS
+	set p4port "export P4PORT=p4p-$siteid:1999"
+	set pcstriple $SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+	catch { exec $SEV(exec_cmd) -c "$p4port && p4 changes //wwcad/msip/projects/$pcstriple/pcs/... | tail -1 | awk '{print \$4}'" } creationdatepcs
+	catch { exec $SEV(exec_cmd) -c "date +%s -d $creationdatepcs" } creationdatesecpcs
+	if { [string is digit $creationdatesecpcs] == 0 } {
+		set creationdatesecpcs 0
+	}
+
+	set parentpcs ""
+	set parentpcstxt [getWorkDir ref_ccs]/parent_pcs.txt
+	if { [file exists $parentpcstxt] } {
+		catch { exec $SEV(exec_cmd) -c "cat $parentpcstxt | head -1" } parentpcs
+	}
+
+	set projectenv $pcs/cad/project.env
+	set msip_parentchild_type ""
+	set msip_parentchild_type_values [list "PARENT" "CHILD_CAD_SETUP" "CHILD_RnD_LIBS" "CHILD_ALL"]
+	if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENTCHILD_TYPE | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parentchild_type
+		if { $msip_parentchild_type != "" && [lsearch -exact $msip_parentchild_type_values $msip_parentchild_type] == -1 } {
+			## reset in case of non-valid value
+			set msip_parentchild_type ""
+		}
+	}
+	
+	set creationdatesecparentpcs 0
+	if { ( $msip_parentchild_type == "CHILD_CAD_SETUP" ||
+	       $msip_parentchild_type == "CHILD_ALL" ) &&
+	     $parentpcs != "" } {
+		catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PRODUCT_NAME | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_product_name
+		catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_PROJ_NAME    | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_proj_name
+		catch { exec $SEV(exec_cmd) -c "cat $projectenv | grep -v -e ^# -e unsetenv | grep setenv | grep MSIP_PARENT_PCS_REL_NAME     | head -1 | awk '{print \$3}' | sed -e 's/\"//g'" } msip_parent_pcs_rel_name
+		set parentpcstriple $msip_parent_pcs_product_name/$msip_parent_pcs_proj_name/$msip_parent_pcs_rel_name
+		catch { exec $SEV(exec_cmd) -c "$p4port && p4 changes //wwcad/msip/projects/$parentpcstriple/pcs/... | tail -1 | awk '{print \$4}'" } creationdateparentpcs
+		catch { exec $SEV(exec_cmd) -c "date +%s -d $creationdateparentpcs" } creationdatesecparentpcs
+		if { [string is digit $creationdatesecparentpcs] == 0 } {
+			set creationdatesecparentpcs 0
+		}
+	}
+
+	catch { exec $SEV(exec_cmd) -c "date +%s -d 2021/10/01" } oct1sec
+	if { $creationdatesecpcs >= $oct1sec && 
+             ( $creationdatesecparentpcs == 0 ||
+	       $creationdatesecparentpcs >= $oct1sec ) } {
+		## Rule 2.1nnn for reference porting spec
+		set qaapp "pcsqa"
+		set vccostlayerserrors 0
+		puts "Check foundry cost layers defined in PCS/Parent PCS/CCS Foundry_Cost_Layers_and_Cost_Devices.csv with Porting Spec $refspecversion ($refvcdb Id: $refprojectid)"
+		sproc_source -file $::env(MSIP_CCS_UTILS)/tcl/check_cost_layers_with_vc_run.tcl
+		if { $vccostlayerserrors > 0 } {
+			sproc_msg -error "(PCSQA-2.1nnn) Foundry Cost Layers cross-check with VC fails with $vccostlayerserrors errors"
+		}
+	}
+	
+}
+
+sproc_script_stop

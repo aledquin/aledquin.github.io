@@ -1,0 +1,271 @@
+#!/depot/perl-5.14.2/bin/perl
+###############################################################################
+#
+# Name    : std_template.pl
+# Author  : your name here
+# Date    : creation date here
+# Purpose : description of the script.. can put on multiple lines
+#
+# Modification History
+#     000 YOURNAME  CURRENT_DATE
+#         Created this script
+#     001 YOURNAME DATE_OF_YOUR_CHANGES
+#         Description of what you have changed.
+#     
+###############################################################################
+use strict;
+use warnings;
+use Pod::Usage;
+use Data::Dumper;
+use File::Copy;
+use Getopt::Std;
+use Getopt::Long;
+use File::Basename qw( dirname );
+use File::Spec::Functions qw( catfile );
+use Cwd     qw( abs_path getcwd );
+use Carp    qw( cluck confess croak );
+use FindBin qw( $RealBin $RealScript );
+
+use lib "$RealBin/../lib/";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+use std_template;
+
+#--------------------------------------------------------------------#
+#our $STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+our $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $PROGRAM_NAME = $RealScript;
+our $LOGFILENAME = getcwd() . "/$PROGRAM_NAME.LOG";
+our $VERSION      = '2022ww37'; # Syntax: YYYYww##[.#] optional day 1-7
+                                # The work week number can be found in
+                                # your outlook calendar. The days are 1=sunday
+                                # 2=monday ... 7=saturday
+#--------------------------------------------------------------------#
+our $fatal_error_NOEXIT = 1;
+
+BEGIN { our $AUTHOR='your name here'; header(); } 
+Main() unless caller();
+END {
+   local $?;   ## adding this will pass the status of failure if the script
+   write_stdout_log("$LOGFILENAME");
+   footer(); 
+}
+
+########  YOUR CODE goes in Main  ##############
+sub Main {
+   my $USERNAME = get_username();
+   # default -> automatically provide access and setup of the DEBUG and 
+   # VERBOSITY settings
+   utils__process_cmd_line_args();
+   #simple  -> simple_process_cmd_line_args();
+   #complex -> complex_process_cmd_line_args();
+
+   # Testing the subroutine in std_template.pm 
+   template_func_1('abc', 'def');
+
+   # How to display your POD usage statement
+   #
+   # pod2usage will print a usage message for the invoking script (using its 
+   # embedded pod documentation) and then exit the script with the desired 
+   # exit status. The usage message printed may have any one of three levels 
+   # of "verboseness": If the verbose level is 0, then only a synopsis is 
+   # printed. If the verbose level is 1, then the synopsis is printed along 
+   # with a description (if present) of the command line options and 
+   # arguments. If the verbose level is 2, then the entire manual page is 
+   # printed.
+   #
+   # Example:
+   #     use Pod::Usage;
+   #     pod2usage(0);   # for short synopsys
+   #     pod2usage(1);   # Synopsys and description of options and arguments
+   #     pod2usage(2);   # Entire manual page is printed
+
+   # Use NFS constant, it means Not Forward Slash
+   # if ( $filename =~ s|/(${\NFS})/(${\NFS})/(${\NFS})| )
+   
+   # All scripts should include tracking of script invocations. Use the subroutine below
+   #    to track invocations. Debugging user Jira is facilitated by capturing CMD line args.
+   #    Pass aref to list @ARGV in 2nd argument to sub call (this is optional).
+   #    Below are fives styles for calling usage routine, and style 1 is recommended to all.
+   #    The rest are less desireable in practice, in order.
+   #
+   # Style 1: unless( $DEBUG || defined $opt_nousage ){ utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@ARGV ); }
+   # Style 2: unless( $DEBUG ){ utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@ARGV ); }
+   # Style 3: unless( $DEBUG ){ utils__script_usage_statistics( $PROGRAM_NAME, $VERSION ); }
+   # Style 4: utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@ARGV ); 
+   # Least Preferred: Style 5: utils__script_usage_statistics( $PROGRAM_NAME, $VERSION );
+
+   my $cmd = 'whoami';
+   my ( $stdout, $retval ) = run_system_cmd( $cmd, $VERBOSITY );
+
+   my_random_sub( "ScoobyDoo" );
+
+   p4print( "p4print: This should be a green message.\n" );
+   iprint( "This is an info  message.\n" );
+   viprint( MEDIUM, "This is an info message that's only printed if the VERBOSITY variable is >=2.\n" );
+   wprint( "This is a  warn  message.\n" );
+   eprint( "This is an error message.\n" );
+   dprint( HIGH, "'\$DEBUG': '$DEBUG': This is a debug message.\n" );
+
+   prompt_before_continue( HIGH );
+
+   fatal_error( "This is a fatal message.\n" );
+
+   # Strong Preference :
+   #      use the stdlib functions to read/write files
+   #       read_file -- here's explanation of list of args 
+   #                 -- arg 1 (req'd) => input filename
+   #                 -- arg 2 (opt'l) => custom msg if err occurs when opening file
+   #    --> open(my $fh, "<", "$inFileName") || confess("$custom_msg: '$!'\n");
+   #                 
+   #  Here's two valid examples of calling read_file: 
+   my $filename = "TopCells.txt";
+   my @lines  = read_file($filename);
+      @lines  = read_file($filename, "project file 'TopCells.txt' couldn't be read" );
+
+   # how to use read_file_aref
+   my @contents;
+   my $error = read_file_aref($filename, \@contents);
+   if ( !$error ){
+       my $nlines = @contents;
+       iprint("Success in reading in '$nlines' lines of text from '$filename'\n");
+   }else{
+       wprint("Failed to open the file: $contents[0] \n") if ( $error == -1 );
+       wprint("Invalid argument passed to read_file_aref() \n") if ( $error == -2 );
+   }
+
+
+   #  write_file --                 
+   #                 -- arg 1 (req'd) => output data -> can be scalar, or array REF
+   #                 -- arg 2 (req'd) => output file name
+   #                 -- arg 3 (opt'l) => write option used in call to 'open()'
+   #  Here's multiple valid examples of calling write_file: 
+   my $aref = \@lines;
+   my $scalar_value = "line1\nline2\nline3\n";
+   my $status = write_file($scalar_value, $filename);
+                write_file($scalar_value, $filename);
+      $status = write_file($aref,         $filename);
+                write_file($aref,         $filename);
+                write_file(\@lines,       $filename);
+                write_file(\@lines,       $filename, "");
+
+   exit(0);  
+
+############    END Main    ####################
+} 
+
+#------------------------------------------------------------------------------
+sub my_random_sub($){
+   print_function_header();
+   my $firstVar = shift;
+
+   iprint( "hello world $firstVar!\n" );
+   print_function_footer();
+   return();
+}
+
+#------------------------------------------------------------------------------
+sub simple_process_cmd_line_args(){
+
+   my %options=();
+   getopts( "hd:", \%options );
+   my $opt_d = $options{d}; # debug verbosity setting
+   my $help  = $options{h};
+
+
+   if ( $help || ( defined $opt_d && $opt_d !~ m/^\d*$/ ) ){  
+      my $msg  = "USAGE:  $PROGRAM_NAME -v # -h \n";
+         $msg .= "... add debug statments with -v #\n";
+      iprint( $msg );
+      exit;
+   }   
+
+   # decide whether to alter DEBUG variable
+   # '-v' indicates DEBUG value ... set based on user input
+   if( defined( $opt_d ) && $opt_d =~ m/^\d*$/ ){  
+      $DEBUG = $opt_d;
+   }
+
+}
+
+#------------------------------------------------------------------------------
+sub complex_process_cmd_line_args(){
+    my ( $config, $opt_debug, $opt_verbosity, $optHelp, $opt_nousage_stats );
+    GetOptions(
+        "cfg=s"       => \$config,             # config files for check
+        "debug=s"     => \$opt_debug,
+        "verbosity=s" => \$opt_verbosity,
+        "nousage"     => \$opt_nousage_stats,  # when enabled, skip logging usage data
+        "help"        => \$optHelp,            # Prints help
+     );
+
+   # VERBOSITY will be used to control the intensity level of 
+   #     messages reported to the user while running.
+   if( defined $opt_verbosity ){
+      if( $opt_verbosity =~ m/^\d+$/ ){  
+         $main::VERBOSITY = $opt_verbosity;
+      }else{
+         eprint( "Ignoring option '-v': arg must be an integer\n" );
+      }
+   }
+
+   # decide whether to alter DEBUG variable
+   # '--debug' indicates DEBUG value ... set based on user input
+   # Patrick : modified in order to specify a value >0 but <1
+   if( defined $opt_debug ){
+      if( $opt_debug =~ m/^\d+\.*\d*$/ ){  
+         $main::DEBUG = $opt_debug;
+      }else{
+         eprint( "Ignoring option '-d': arg must be an integer\n" );
+      }
+   }
+   return( $config, $opt_debug, $opt_verbosity, $optHelp, $opt_nousage_stats );
+};
+
+__END__
+
+=head1 NAME
+
+std_template
+
+=head1 VERSION
+
+2022ww14
+
+=head1 ABSTRACT
+
+A synopsis of the new script
+
+=head1 DESCRIPTION
+
+Provide an overview of functionality and purpose of
+this script
+
+=head1 OPTIONS
+
+%opt stores the global variables
+%ignore overrides %opt
+
+=cut
+
+my (%opt,%ignore);
+
+=head2 ARGS
+
+=over 8
+
+=item B<-h> send for help (just spits out this POD by default, but we can 
+chose something else if we like 
+
+=back
+
+=head3 other arguments and flags that are valid
+
+For when GetOpt is too heavy
+
+-d -v -i[!] (value) 
+
+=cut

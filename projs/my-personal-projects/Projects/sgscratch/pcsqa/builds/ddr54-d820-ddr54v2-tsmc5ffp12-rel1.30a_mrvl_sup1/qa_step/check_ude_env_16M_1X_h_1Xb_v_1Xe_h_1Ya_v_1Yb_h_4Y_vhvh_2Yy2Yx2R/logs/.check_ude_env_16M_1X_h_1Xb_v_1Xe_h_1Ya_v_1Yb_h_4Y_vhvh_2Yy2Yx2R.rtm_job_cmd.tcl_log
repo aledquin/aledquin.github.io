@@ -1,0 +1,10 @@
+Running TCL Version 8.5.12.
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_js.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_tools.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_rc.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_user_defined_buttons.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_reports.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_public.tcl
+Loading /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_init_override.tcl
+rtm_job_cmd command ran succesfully.

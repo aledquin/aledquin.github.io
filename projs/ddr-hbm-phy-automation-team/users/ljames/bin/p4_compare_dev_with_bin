@@ -1,0 +1,321 @@
+#!/depot/perl-5.14.2/bin/perl
+#
+# Usage:
+#     p4_compare_dev_with_bin [ devPath ]  [ binPath ]
+#
+#     If you do not specify the p4 path then it will default to looking
+#     in /u/$USERNAME/p4_ws area.
+#
+#     Having the first argument being the devPath is very important.
+#     That is because this script assumes the 2nd argument is
+#     the bin path. Under /bin is located /beta and /dev and this
+#     script ignores those subdirs when looking in the binPath to gather
+#     up file names.
+#
+# Author: James Laderoute
+# Created: 3/18/2022
+#
+# Modifications:
+# 001   James Laderoute 3/18/2022
+#       created this script
+#-
+use strict;
+use warnings;
+
+use File::Find;
+use Digest::MD5 qw(md5);
+use Pod::Usage;
+use File::Basename ;  # for filename parsing
+use Cwd;              # for getpwuid
+use English;          # English names in place of punctuation variables
+use Getopt::Long;     # For command line parsing
+use Carp  qw(cluck confess croak );
+use FindBin qw( $RealBin $RealScript );
+
+
+use lib "$RealBin/../sharedlib/lib";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+#our $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $PROGRAM_NAME = $RealScript;
+our $VERSION      = '2022ww12';
+#--------------------------------------------------------------------#
+
+
+
+my $USERNAME = getlogin() || getpwuid($<) || $ENV{'USER'} ;
+my $HOME = "/u/${USERNAME}/";
+my @DIRS1 = ();
+my @DIRS2 = ();
+
+sub Main() {
+    my %opt_defaults = ( 'usage' => 1 );
+    my @required = qw/REQUIRED_ARGUMENTS/;
+    my @filenames = ();
+    my @myoptions = ( 'debug:i', 'verbosity:i', 'usage!', 'man', 'help' );
+    my %returned_options = ();
+    
+    my $error = script_process_cmd_line_args( 
+        \@myoptions, 
+        \%returned_options, 
+        \%opt_defaults, 
+        \@required, 
+        \@filenames
+        );
+    if ( exists($returned_options{'man'}) ){
+        pod2usage( {
+             -exitval => 0,
+             -verbose => 2 });
+    }
+    if ( $returned_options{'usage'} ){
+        &utils__script_usage_statistics($PROGRAM_NAME, $VERSION);
+    }
+    my $dir1 = '';
+    my $dir2 = '';
+    my $n_filenames = @filenames;
+    if ( $n_filenames != 0 ) {
+        $dir1 = shift @filenames;
+        $dir2 = shift @filenames;
+    }
+
+    if ( ! $dir1 ) {
+      $dir1 = "$HOME/p4_ws/wwcad/msip/alpha_common/bin/dev";
+    }
+    if ( ! $dir2 ) {
+      $dir2 = "$HOME/p4_ws/wwcad/msip/alpha_common/bin";
+    }
+      
+    find(\&process_file_for_dir1, ( $dir1 )); # bin/dev
+    find(\&process_file_for_dir2, ( $dir2 )); # bin
+
+    # @DIRS1 contains the files in alpha_common/bin/dev
+    my %dev_files ;
+    foreach my $file1_path ( @DIRS1 ) {
+        next unless ( -f $file1_path);
+        my $filename = &basename($file1_path);
+        $dev_files{"$filename"} = $file1_path;
+    }
+
+    my %bin_hash ;
+
+    # @DIRS2 contains the files in alpha_common/bin 
+    foreach my $file2_path ( @DIRS2 ) {
+        next unless ( -f $file2_path);
+        next if ( $file2_path =~ m|/dev/|);
+        next if ( $file2_path =~ m|/beta/|);
+
+        my $filename = &basename($file2_path);
+        $bin_hash{"$filename"} = $file2_path;
+
+        if ( exists( $dev_files{"$filename"} ) )
+        {
+            my $date_compare = "";
+
+            my $file1_path = $dev_files{"$filename"};
+            open(FH1, '<', $file1_path) || die;
+            my $md5_ctx1 = Digest::MD5->new;
+            $md5_ctx1->addfile( *FH1);
+            my $v1 = $md5_ctx1->hexdigest;
+            close(FH1);
+
+            open(FH2, '<', $file2_path) || die;
+            my $md5_ctx2 = Digest::MD5->new;
+            $md5_ctx2->addfile( *FH2 );
+            my $v2 = $md5_ctx2->hexdigest;
+            close(FH2);
+
+            my $d1 = '?'; # /bin/dev
+            my $d2 = '?'; # /bin
+            my $stat_ret = &isolder($file2_path, $file1_path, \$d2, \$d1);
+            $date_compare = " older (dev:$d1 bin:$d2)"    if ( -1 == $stat_ret );
+            $date_compare = " newer (dev:$d1 bin:$d2)"    if (  1 == $stat_ret );
+            $date_compare = " same_age (dev:$d1 bin:$d2)" if (  0 == $stat_ret );
+
+            if ( $v1 eq $v2 ) {
+                print("Same: $file2_path${date_compare}\n");
+            } else {
+                print("Diff: $file2_path${date_compare}\n");
+            }
+        }else{
+            print("ExtraInBin: $file2_path\n");
+        }
+    }
+
+    foreach my $file1_filename ( keys(%dev_files)) {
+        if ( ! exists( $bin_hash{"$file1_filename"})) {
+            my $filename = $dev_files{"$file1_filename"};
+            if ( defined($filename) ) {
+                print("ExtraInDev: $filename\n");
+            }
+
+        }
+
+    }
+
+    exit(0);
+}
+use File::stat;
+sub isolder($$$$) {
+    my $f1 = shift;
+    my $f2 = shift;
+    my $ref_date1 = shift;
+    my $ref_date2 = shift;
+
+    my $t1 = stat($f1)->mtime; # seconds
+    my $t2 = stat($f2)->mtime; # seconds
+
+    $$ref_date1 = localtime( $t1 );
+    $$ref_date2 = localtime( $t2 );
+    
+    return -1 if ( $t1 < $t2 );
+    return 1  if ( $t1 > $t2);
+    return 0; # dev_files timestamp
+}
+
+sub process_file_for_dir1 {
+    push( @DIRS1, $File::Find::name ); # this is the full filepath
+}
+
+sub process_file_for_dir2 {
+    push( @DIRS2, $File::Find::name );
+}
+
+#------------------------------------------------------------------------------
+sub script_process_cmd_line_args($$$$$){
+    my $aref_args      = shift; # the options to be looked for
+    my $href_options   = shift; # what the user selected gets put in here
+    my $href_defaults  = shift; # if you did not specify a value then defaults
+    my $aref_required  = shift; # list of required arguments
+    my $aref_filenames = shift; # list of args not specified
+
+    my $get_status = GetOptions( $href_options, @$aref_args);
+    if ( ! $get_status || $href_options->{'help'} ){
+        pod2usage(1);
+    }
+
+    foreach my $fname ( @ARGV ) {
+        push( @$aref_filenames , $fname);
+    }
+
+    #
+    # Make sure there are no missing REQUIRED arguments
+    #
+    my $have_required = 1;
+    foreach my $argname ( @{$aref_required} ){
+        next if $argname eq "REQUIRED_ARGUMENTS";
+        if (   ! exists($href_options->{"$argname"} ) 
+            || ! defined($href_options->{"$argname"} ) ){
+            $have_required = 0;
+            eprint( "Missing Required Argument -$argname\n" );
+        }
+    }
+    if ( ! $have_required ){
+        pod2usage(0);
+        return(0);
+    }
+
+    #
+    # Set defaults
+    #
+    if ( $href_defaults) {
+        foreach my $argname ( keys( %{$href_defaults} ) ){
+            if ( ! exists( $href_options->{"$argname"} ) ){
+                $href_options->{"$argname"} = $href_defaults->{"$argname"};
+            }
+        }
+    }
+
+   # VERBOSITY will be used to control the intensity level of 
+   #     messages reported to the user while running.
+   my $opt_verbosity = $href_options->{'verbosity'};
+   if( defined $opt_verbosity ){
+      if( $opt_verbosity =~ m/^\d+$/ ){  
+         $main::VERBOSITY = $opt_verbosity;
+      }else{
+         eprint( "Ignoring option '-v': arg must be an integer\n" );
+      }
+   }
+
+   # decide whether to alter DEBUG variable
+   # '--debug' indicates DEBUG value ... set based on user input
+   # Patrick : modified in order to specify a value >0 but <1
+   my $opt_debug = $href_options->{'debug'};
+   if( defined $opt_debug ){
+      if( $opt_debug =~ m/^\d+\.*\d*$/ ){
+         $main::DEBUG = $opt_debug;
+      }else{
+         eprint( "Ignoring option '-d': arg must be an integer\n" );
+      }
+   }
+
+   return(0); ## success is 0
+
+}
+
+
+Main();
+
+
+__END__
+
+
+=head1 NAME
+
+ p4_compare_dev_with_bin 
+
+=head1 VERSION
+
+ 2022ww12
+
+=head1 SYNOPSIS
+
+ p4_compare_dev_with_bin [options] [devPath binPath]
+
+ Options:
+   -help            brief help message
+   -man             full documentation
+
+ This script wil compare alpha_common/bin/dev against alpha_common/bin
+ It will report which files are exactly the dev_files and which are different
+ and which are missing from the other folder.
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-debug number>
+
+Set a debug level, in order to control debug messages.
+
+=item B<-verbose number>
+
+Set the verbosity level on messages.
+
+=item B<-help>
+
+Print a brief help message and exits.
+
+=item B<-man>
+
+Prints the manual page and exits.
+
+=back
+
+=head1 DESCRIPTION
+
+ This script wil compare alpha_common/bin/dev against alpha_common/bin
+ It will report which files are exactly the same and which are different
+ and which are missing from the other folder.
+
+=head1 RETURN VALUE
+
+Returns 0 if there are no warnings or errors
+Returns 1 if there are warnings or errors
+
+=cut

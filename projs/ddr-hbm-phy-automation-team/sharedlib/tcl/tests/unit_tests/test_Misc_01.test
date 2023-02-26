@@ -1,0 +1,364 @@
+#!/depot/tcl8.6.6/bin/tclsh
+#nolint Main
+#nolint utils__script_usage_statistics
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "Alvaro Quintana Carvacho"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+
+set opt_fast ""
+set opt_test ""
+set opt_help ""
+set opt_project ""
+
+#lappend auto_path "$RealBin/../bin"
+lappend auto_path "$RealBin/../../lib"
+
+package require Messaging 1.0
+namespace import ::Messaging::*
+
+package require Misc 1.0
+namespace import ::Misc::*
+
+header
+
+#######################################################################
+# Your config here
+#######################################################################
+
+set DA_RUNNING_UNIT_TESTS 1
+
+# -verbose level -> Sets the type of output verbosity desired to level, 
+#                   a list of zero or more of the elements body, pass, 
+#                   skip, start, and error. Default value is {body error}. 
+# Levels are defined as:
+# body (b) -> Display the body of failed tests
+# pass (p) -> Print output when a test passes
+# skip (s) -> Print output when a test is skipped
+# start (t)-> Print output whenever a test starts
+# error (e)-> Print errorInfo and errorCode, if they exist, 
+# when a test return code does not match its expected return code
+# The single letter abbreviations noted above are also recognized so 
+# that [configure -verbose pt] is the same as [configure -verbose {pass start}].
+::tcltest::verbose bpse
+::tcltest::debug 2
+
+#######################################################################
+# Create your procs here
+#######################################################################
+
+
+
+
+
+#######################################################################
+# Create your tests here
+#######################################################################
+
+#######################################################################
+# get_call_stack
+#######################################################################
+
+test Misc-get_call_stack_t01 { Test: Misc package: get_call_stack no prev level} \
+    -body { get_call_stack } \
+    -result {} \
+    -output {}
+
+test Misc-get_call_stack_t02 { Test: Misc package: get_call_stack 1 prev level} \
+    -body { proc A {} {get_call_stack} ; A } \
+    -result {::A} \
+    -output {}
+
+test Misc-get_call_stack_t03 { Test: Misc package: get_call_stack 2 prev level} \
+    -body { proc A {} {get_call_stack} ; proc B {} {A} ; B } \
+    -result {::B --> ::A} \
+    -output {}
+
+test Misc-get_call_stack_t04 { Test: Misc package: get_call_stack 3 prev level} \
+    -body { proc A {} {get_call_stack} ; proc B {} {A} ; proc C {} {B}; C } \
+    -result {::C --> ::B --> ::A} \
+    -output {}
+cleanupTests
+#######################################################################
+# get_subroutine_name
+#######################################################################
+
+
+test Misc-get_subroutine_name_t01 { Test: Misc package: get_subroutine_name no prev level} \
+    -body { get_subroutine_name } \
+    -result {::tcltest::RunTest} \
+    -output {}
+
+test Misc-get_subroutine_name_t02 { Test: Misc package: get_subroutine_name 1 prev level} \
+    -body { proc A {} {get_subroutine_name} ; A } \
+    -result {::A} \
+    -output {}
+
+cleanupTests
+#######################################################################
+# get_caller_sub_name
+#######################################################################
+
+
+test Misc-get_caller_sub_name_t01 { Test: Misc package: get_caller_sub_name no prev level} \
+    -body { get_caller_sub_name } \
+    -result {::tcltest::RunTest} \
+    -output {}
+
+test Misc-get_caller_sub_name_t02 { Test: Misc package: get_caller_sub_name 1 prev level} \
+    -body { proc A {} {get_caller_sub_name} ; A } \
+    -result {::tcltest::RunTest} \
+    -output {}
+
+test Misc-get_caller_sub_name_t03 { Test: Misc package: get_caller_sub_name 1 prev level} \
+    -body { proc A {} {get_caller_sub_name} ; proc B {} {A} ; B } \
+    -result {::B} \
+    -output {}
+
+cleanupTests
+#######################################################################
+# print_function_header
+#######################################################################
+
+
+test Misc-print_function_header_t01 { Test: Misc package: print_function_header} \
+    -body { print_function_header } \
+    -result {} \
+    -output {}
+
+test Misc-print_function_header_t02 { Test: Misc package: print_function_header + debug arg} \
+    -body { set DEBUG 1000; proc A {} {print_function_header}; A; unset DEBUG} \
+    -result {} \
+    -output {-D- Line 138: ::A: -------------------- Starting Function:  ::A --------------------
+}
+
+test Misc-print_function_header_t03 { Test: Misc package: print_function_header + verbosity arg} \
+    -body { set VERBOSITY 1000; proc A {} {print_function_header}; A; unset VERBOSITY} \
+    -result {} \
+    -output {}
+
+cleanupTests
+
+#######################################################################
+# print_function_footer
+#######################################################################
+
+
+test Misc-print_function_footer_t01 { Test: Misc package: print_function_footer} \
+    -body { print_function_footer } \
+    -result {} \
+    -output {}
+
+test Misc-print_function_footer_t02 { Test: Misc package: print_function_footer + debug arg} \
+    -body { set DEBUG 1000; proc A {} {print_function_footer}; A; set DEBUG 0; A} \
+    -result {} \
+    -output {-D- Line 161: ::A: -------------------- Ending Function:  ::A --------------------
+}
+
+test Misc-print_function_footer_t03 { Test: Misc package: print_function_footer + verbosity arg} \
+    -body { set VERBOSITY 1000; proc A {} {print_function_footer}; A; set VERBOSITY 0; A} \
+    -result {} \
+    -output {}
+
+cleanupTests
+
+#######################################################################
+# write_file
+#######################################################################
+
+
+test Misc-write_file_t01 { Test: Misc package: write_file + no file} \
+    -body { write_file } \
+    -returnCodes error \
+    -result {wrong # args: should be "write_file file_name message ?arg ...?"} \
+    -errorOutput {} \
+    -output {}
+
+test Misc-write_file_t02 { Test: Misc package: write_file + existing file} \
+    -body { 
+         close [open test_file a]
+         write_file test_file "Test message 1"
+         run_system_cmd "cat test_file"} \
+    -cleanup {file delete test_file} \
+    -result {{Test message 1} {} 0} \
+    -output {}
+
+test Misc-write_file_t03 { Test: Misc package: write_file + existing file + VERBOSITY} \
+    -body { 
+         set VERBOSITY CRAZY
+         close [open test_file a]
+         write_file test_file "Test message2"
+         run_system_cmd "cat test_file"
+         } \
+    -cleanup { set VERBOSITY 0; file delete test_file } \
+    -result {{Test message2} {} 0} \
+    -output {-I- Writing in test_file: 'Test message2'
+}
+
+test Misc-write_file_t04 { Test: Misc package: write_file + new file + mode w } \
+    -body {
+        write_file test_file "Test_message 4"
+        run_system_cmd "cat test_file"
+    } \
+    -result {{Test_message 4} {} 0} \
+    -output {} \
+    -cleanup {file delete test_file } 
+
+
+test Misc-write_file_t05 { Test: Misc package: write_file + new file + mode a } \
+    -body {
+        set VERBOSITY 1
+        write_file "test_file" "Test_message 5" w
+        write_file test_file "Test_message 6 (adding new line)" a
+        run_system_cmd "cat test_file"
+    } \
+    -result {{Test_message 5
+Test_message 6 (adding new line)} {} 0} \
+    -output {-I- mode --> w
+-I- mode --> a
+} \
+    -cleanup {file delete test_file } 
+
+test Misc-write_file_t06 { Test: Misc package: write_file + new file + -nonewline + no appending} \
+    -body {
+        set VERBOSITY 1
+        write_file "test_file" "Test_message 5" 
+        write_file test_file "Test_message 6 (adding  with no new line)" -nonewline
+        run_system_cmd "cat test_file"
+    } \
+    -result {{Test_message 6 (adding  with no new line)} {} 0}  \
+    -output {-I- -nonewline option enabled
+} \
+    -cleanup {file delete test_file } 
+
+
+test Misc-write_file_t07 { Test: Misc package: write_file + new file + -nonewline + appending} \
+    -body {
+        set VERBOSITY 1
+        write_file test_file "Test_message 5 " -nonewline
+        write_file test_file "Test_message 6 (adding with no new line)" -nonewline a
+        run_system_cmd "cat test_file"
+    } \
+    -result {{Test_message 5 Test_message 6 (adding with no new line)} {} 0} \
+    -output {-I- -nonewline option enabled
+-I- mode --> a
+-I- -nonewline option enabled
+} \
+    -cleanup {file delete test_file } 
+
+cleanupTests
+#######################################################################
+# read_file
+#######################################################################
+
+test Misc-read_file-t01 {Test: Misc package: read_file + no file to read} \
+    -body {read_file "some_file_that_we_are_should_not_exist"} \
+    -result {1}  \
+    -output "-E- some_file_that_we_are_should_not_exist does not exist.\n"
+
+test Misc-read_file-t02 {Test: Misc package: read_file + file to read + nonewline enabled} \
+    -setup {
+        run_system_cmd "rm -f file_text"
+        run_system_cmd "echo Fido > file_text"
+        run_system_cmd "echo Dodo >> file_text" } \
+    -body {read_file file_text -nonewline} \
+    -result {Fido
+Dodo} \
+    -output {} \
+    -constraints knownBug
+
+test Misc-read_file-t03 {Test: Misc package: read_file + file to read + nonewline disabled} \
+    -setup {
+        run_system_cmd "rm -f file_text"
+        run_system_cmd "echo Fido > file_text"
+        run_system_cmd "echo Dodo >> file_text" } \
+    -body {read_file file_text "" } \
+    -result {Fido
+Dodo} \
+    -output {} \
+    -cleanup {file delete file_text} \
+    -constraints knownBug
+
+    
+cleanupTests
+
+#######################################################################
+# check_file
+#######################################################################
+
+test Misc-check_file-t01 {Test: Misc package: check_file + no file to read} \
+    -body {check_file "some_file_that_we_are_should_not_exist"} \
+    -result {false}  \
+    -output "-E- The file '[file normalize some_file_that_we_are_should_not_exist]' does not exist.\n"
+
+test Misc-check_file-t02 {Test: Misc package: check_file + file to read} \
+    -setup {
+        run_system_cmd "echo Fido > file_text" } \
+    -body {check_file file_text} \
+    -result "true" \
+    -output {} \
+    -cleanup {file delete file_text}
+
+set check_file_output3 [join [list "-E- The file '[file normalize file_text]' is not readable." \
+                                   "-I- Permission mode: ----------" \
+                                   "-W- Please use the next command to fix it: chmod ug+r [file normalize file_text]\n"] \
+                             "\n"]
+test Misc-check_file-t03 {Test: Misc package: check_file + file to read + not readable} \
+    -setup {
+        run_system_cmd "echo Fido > file_text"
+        run_system_cmd "chmod 000 file_text" } \
+    -body {check_file file_text} \
+    -result "false" \
+    -output "$check_file_output3" \
+    -cleanup {file delete file_text}
+    
+test Misc-check_file-t04 {Test: Misc package: check_file + file to write + file does not exist} \
+    -setup { } \
+    -body {check_file file_text w} \
+    -result "true" \
+    -output {}
+
+test Misc-check_file-t05 {Test: Misc package: check_file + file to write + file exists} \
+    -setup {
+        run_system_cmd "echo Fido > file_text" } \
+    -body {check_file file_text w} \
+    -result "true" \
+    -output {} \
+    -cleanup {file delete file_text}
+
+test Misc-check_file-t06 {Test: Misc package: check_file + file to write + w + file not writable} \
+    -setup {
+        run_system_cmd "echo Fido > file_text" 
+        run_system_cmd "chmod 000 file_text" } \
+    -body {check_file file_text w} \
+    -result "false" \
+    -output "-E- The file '[file normalize file_text]' is not writable.\n" \
+    -cleanup {file delete file_text}
+
+test Misc-check_file-t07 {Test: Misc package: check_file + file to write + w + dir does not exist} \
+    -setup { } \
+    -body {check_file nonexistant_dir/file_text w} \
+    -result "false" \
+    -output "-E- The directory '[file normalize nonexistant_dir]' does not exist.\n" \
+    -cleanup {file delete file_text}
+
+test Misc-check_file-t08 {Test: Misc package: check_file + file to write + w + dir not writable} \
+    -setup { 
+        file mkdir nonwritable_dir 
+        run_system_cmd "chmod 000 nonwritable_dir" } \
+    -body {check_file nonwritable_dir/file_text w} \
+    -result "false" \
+    -output "-E- The directory '[file normalize nonwritable_dir]' is not writable.\n" \
+    -cleanup {file delete nonwritable_dir}
+
+cleanupTests
+

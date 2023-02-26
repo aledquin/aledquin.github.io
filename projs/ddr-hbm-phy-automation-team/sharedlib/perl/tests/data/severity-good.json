@@ -1,0 +1,5 @@
+{
+    "test_one": {"main::manual_tests__parse_severities": "HIGH"},
+    "test_two": {"main::manual_tests__map_check_severities": "HIGH"},
+    "test_three": {"main::helper_LOW": "LOW"}
+}

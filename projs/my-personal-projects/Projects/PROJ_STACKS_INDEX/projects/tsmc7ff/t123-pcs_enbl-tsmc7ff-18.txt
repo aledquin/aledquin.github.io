@@ -1,0 +1,1 @@
+tsmc7ffp-18_nicosia_12M_1X_h_1Xa_v_1Ya_h_4Y_vhvh_2Yy2Z /remote/cad-rep/fab/f101-tsmc/nicosia/logic/FF/common/rules/common/icv/drc/ver1.2a/orig/LOGIC_TopMz_DRC/ICVN7FF_12M_1X1Xa1Ya4Y2Yy2Z_002.12a.encrypt

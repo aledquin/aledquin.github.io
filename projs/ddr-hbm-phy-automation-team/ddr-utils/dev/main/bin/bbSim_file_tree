@@ -1,0 +1,760 @@
+#!/depot/perl-5.14.2/bin/perl
+#--- This Perl Script is meant to read in a bbSim file, grab the important values, and output a formatted file
+#--- Handling exceptions will be a big deal.
+use strict;
+use warnings;
+use Term::ANSIColor;
+use Pod::Usage;
+use Getopt::Std;
+use Getopt::Long;
+use File::Basename qw(dirname basename);
+use File::Spec::Functions qw( catfile );
+use Capture::Tiny qw/capture/;
+use Cwd     qw( abs_path );
+use Carp    qw( cluck confess croak );
+use FindBin qw( $RealBin $RealScript );
+
+use lib "$RealBin/../lib/perl/";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $PROGRAM_NAME = $RealScript;
+our $VERSION      = get_release_version();
+our $TESTMODE     = 0;
+#--------------------------------------------------------------------#
+
+BEGIN {
+    $STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+    #$STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+    header();
+}
+&Main();
+END{
+    footer();
+}
+
+sub Main {
+
+  #-------------------------------------------------------------------------------------
+  my $bbFile;
+  my $bbFileB;
+  my $bbFileC;
+  my $bbFileX;
+  my @bbSim_array;
+  my %bbSim_hash = ();
+  my $bbSim_file;
+  my %file_hash = ();
+  my $file_length;
+  my $file_path;
+  my $filePath;
+  my $filePathB;
+  my $filePathC;
+  my $filePathX;
+  my $file_path_print;
+  my $fileStatus;
+  my $fileStatusB;
+  my $fileStatusX;
+  my $fileStatusC;
+  my $file_type;
+  my $fileType;
+  my @file_type_array;
+  my $fileTypeB;
+  my $fileTypeC;
+  my $fileTypeX;
+  my $f_status;
+  my @grep_output;
+  my @grep_outputB;
+  my @grep_outputX;
+  my $inFile;
+  my @inFiles;
+  my $keyWord;
+  my $line;
+  my $max_length;
+  my $outFile = "file_tree.log";
+  my $pad;
+  my $pad2;
+  my @stuff;
+  my $tech;
+  my @outfile;
+  my @saved_args = @ARGV;
+  
+  # look for the standard options -debug #,  -verbosity #, -help, etc
+  my ($opt_nousage) = process_cmd_line_args();
+  unless( $DEBUG || $opt_nousage ){
+      utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@saved_args);
+  }
+  if (@ARGV<1){ usage(-1); } 
+  #--- open the OUTFILE
+  
+  chmod 0775, $outFile;
+  push (@outfile, ">>> Log for bbSim_file_tree <<<\n");
+  #-------------------------------------------------------------------------------------
+  @inFiles = @ARGV;
+  foreach my $inFile (@inFiles) {
+    chomp($inFile);
+    my @infile = read_file ($inFile);
+    # open (my $INFILE,  "<", "$inFile")  or die "... DIE: can't open $inFile\n";
+    $file_hash{"BBSIM"}{$inFile} = "EXISTS";
+    #------------------------------------------------------------------------
+    foreach my $line (@infile){
+      $line =~ s/^\s+//;
+
+      if (
+        ($line =~ m/^\b(ADD_CORNERS_VARIANTS_FILE(_BOL_STRESS|_BOL_STRESS_PD|_EOL_STRESS|_EOL_STRESS_PD)?)\b/) ||
+        ($line =~ m/^\b(CORNERS_LIST_FILE(_STRESS|_STRESS_PD)?)\b/)          ||
+        ($line =~ m/^\b(DEGRADATION_CONFIG_FILE)\b/)                         ||
+        ($line =~ m/^\b(DESCRIPTION_FILE)\b/)                                ||
+        ($line =~ m/^\b(GDS)\b/)                                             ||
+        ($line =~ m/^\b(INCLUDE)\b/)                                         ||
+        ($line =~ m/^\b(INCLUDE0)\b/)                                        ||
+        ($line =~ m/^\b(PRE_POST_INCLUDE)\b/)                                ||
+        ($line =~ m/^\b(MEASURE_CONFIG_FILE(_STRESS|_STRESS_PD)?)\b/)        ||
+        ($line =~ m/^\b(NETLIST(_STRESS|_STRESS_PD|_SPGEN|_SELF_NOISE)?)\b/) ||
+        ($line =~ m/^\b(PLOT_CONFIG_FILE(_STRESS|_STRESS_PD)?)\b/)           ||
+        ($line =~ m/^\b(POST_(MAKE|SIM|REPORT))\b/)                          ||
+        ($line =~ m/^\b(PRE_(MAKE|SIM|REPORT))\b/)                           ||
+        ($line =~ m/^\b(SPICE_COMMAND_FILE(_STRESS|_STRESS_PD|_SPGEN|_SELF_NOISE)?)\b/)        ) {
+        @stuff = split(/\s+/,$line);
+
+
+        $fileType = shift(@stuff);
+        if ($fileType =~ m/\b(NETLIST(_STRESS|_STRESS_PD|_SPGEN|_SELF_NOISE)?|INCLUDE|INCLUDE0)\b/) { $tech = shift(@stuff); }
+
+
+        foreach my $bbFile (@stuff) {
+          ($fileStatus,$filePath) = doesFileExist($fileType,$bbFile);
+          $bbSim_hash{$inFile}{$fileType}{$filePath} = $fileStatus;
+          $file_hash{$fileType}{$filePath} = $fileStatus;
+
+
+
+
+          if ($fileType =~ m/(PLOT_CONFIG_FILE(_STRESS|_STRESS_PD)?|CORNERS_LIST_FILE(_STRESS|_STRESS_PD)?|INCLUDE|SPICE_COMMAND_FILE)/) {
+            #--- which files may contain additional files?
+            $keyWord = $1;
+
+
+            if ( ($keyWord =~ m/PLOT_CONFIG_FILE(_STRESS|_STRESS_PD)?/) && ($fileStatus eq "EXISTS") ) {
+
+
+              @grep_output = `grep -P '^[^#].*\\.(aim|ace)\\b' $filePath | grep -v -P '^\\s*\$'`;
+              chomp(@grep_output);
+              $fileTypeB = "AIM_SCRIPT";
+
+
+              foreach my $bbFileB (@grep_output) {
+                $bbFileB =~ s/^\s+//;
+                $bbFileB =~ s/\.aim\s.*/.aim/;
+                $bbFileB =~ s/\.ace\s.*/.ace/;
+
+
+                ($fileStatusB,$filePathB) = doesFileExist($fileTypeB,$bbFileB);
+
+
+                $bbSim_hash{$inFile}{$fileTypeB}{$filePathB} = $fileStatusB;   
+                $file_hash{$fileTypeB}{$filePathB} = $fileStatusB;
+                if ($fileStatusB eq "EXISTS") {
+                  @grep_outputB = `grep '\\/perl\\/\\|\\.pl\\>' $filePathB | grep -v -P '^\\s*\$' | grep -v -P '^\\s*#'`;
+                  chomp(@grep_outputB);
+                  $fileTypeC = "PERL";
+
+
+                  foreach my $bbFileC (@grep_outputB) {
+                    chomp($bbFileC);
+                    $bbFileC =~ s/\.pl\b.*/.pl/;
+                    $bbFileC =~ s/^.*\s//;
+                    #--- need to do a non-greedy match : *?
+                    $bbFileC =~ s/.*?(\S+perl\S+).*/$1/;
+                    ($fileStatusC,$filePathC) = doesFileExist($fileTypeC,$bbFileC);
+                    $bbSim_hash{$inFile}{$fileTypeC}{$filePathC} = $fileStatusC;
+                    $file_hash{$fileTypeC}{$filePathC} = $fileStatusC;
+                  }
+                }
+              }
+            } elsif ($keyWord =~ m/\bCORNERS_LIST_FILE(_STRESS|_STRESS_PD)?\b/) {
+              $fileTypeB = $keyWord;
+              $fileTypeB =~ s/_LIST_/_REF_/;
+              my $bbFileB = $bbFile;
+              $bbFileB =~ s#/corners/#/corners_ref/#;
+              ($fileStatusB,$filePathB) = doesFileExist($fileTypeB,$bbFileB);
+              $bbSim_hash{$inFile}{$fileTypeB}{$filePathB} = $fileStatusB;
+              $file_hash{$fileTypeB}{$filePathB} = $fileStatusB;
+            } elsif ($keyWord =~ m/\bINCLUDE\b/) {
+              #--- need to look into the included emir file to see the other emir files (*.tcl) it may reference.
+              #grep -P '-ratcl' $filePath
+              #@grep_output = `grep -P '\\-ratcl' $filePath`;
+              @grep_output = `grep -P -i '(\\-ratcl|^\\s*\\.inc\\b|^\\s*\\.include\\b)' $filePath | grep -v -P '^\\s*\$'`;
+              chomp(@grep_output);
+              $fileTypeB = "INCLUDE";
+              foreach my $bbFileB (@grep_output) {
+                $bbFileB =~ s/^.*\-ratcl\s+//i;
+                $bbFileB =~ s/^\s*\.inc(lude)?\b\s+//i;
+                $bbFileB =~ s/[']//g;
+                $bbFileB =~ s/\s.*$//;
+                $bbFileB =~ s/"$//;
+                $bbFileB =~ s/^\.\///;
+                ($fileStatusB,$filePathB) = doesFileExist($fileTypeB,$bbFileB);
+                #$length_X = length($filePathB); if (($length_X > $length_path)&&($fileType ne "GDS")) { $length_path = $length_X; }
+                $bbSim_hash{$inFile}{$fileTypeB}{$filePathB} = $fileStatusB;
+                $file_hash{$fileTypeB}{$filePathB} = $fileStatusB;
+                #------------------------------------------------------------------------------------------
+                #--- SKYE : one last trip down the rabbit hole. No more layers. Only going down this far.
+                #------------------------------------------------------------------------------------------
+                if ($fileStatusB eq "EXISTS") {
+                  #--- grep for additional include files in the INCLUDE files.
+                  @grep_outputX = `grep -P -i '(\\-ratcl\\b|^\\s*\\.inc(lude)?\\b|\\bload_ba_file\\s+\\-file\\b|^\\s*source\\b|^\\s*\\.model\\b.*\\bTSTONEFILE\\b)' $filePathB | grep -v -P '^\\s*\$'`;
+                  chomp(@grep_outputX);
+                  $fileTypeX = "INCLUDE_X2";
+
+
+                  foreach my $bbFileX (@grep_outputX) {
+                    $bbFileX =~ s/^.*\-ratcl\s+//i;
+                    $bbFileX =~ s/^\s*\.inc(lude)?\b\s+//i;
+                    $bbFileX =~ s/^\s*source\b\s+//i;
+                    $bbFileX =~ s/^.*\bload_ba_file\s+\-file\b\s+//i;
+                    $bbFileX =~ s/^.*TSTONEFILE\b\s*=\s*//i;
+                    $bbFileX =~ s/[']//g;
+                    $bbFileX =~ s/["]//g;
+                    $bbFileX =~ s/\s.*$//;
+                    $bbFileX =~ s/"$//;
+                    $bbFileX =~ s/^\.\///;
+                    ($fileStatusX,$filePathX) = doesFileExist($fileTypeX,$bbFileX);
+                    $bbSim_hash{$inFile}{$fileTypeX}{$filePathX} = $fileStatusX;
+                    $file_hash{$fileTypeX}{$filePathX} = $fileStatusX;
+                  }
+                }
+                #------------------------------------------------------------------------------------------
+              } #--- foreach my $bbFileB (@grep_output)
+            } elsif ($keyWord =~ m/\bSPICE_COMMAND_FILE\b/) {
+              #--- need to look into the included emir file to see the other emir files (*.tcl) it may reference.
+              #grep -P '-ratcl' $filePath
+              #@grep_output = `grep -P '\\-ratcl' $filePath`;
+              @grep_output = `grep -P -i '(\\-ratcl|^\\s*\\.inc\\b|^\\s*\\.include\\b)' $filePath | grep -v NETLIST | grep -v '_process\\.sp' | grep -v 'sim_generic\\.sp' | grep -v 'cc\\.sp' | grep -v -P '^\\s*\$'`;
+              chomp(@grep_output);
+              $fileTypeB = "INCLUDE";
+
+              foreach my $bbFileB (@grep_output) {
+                $bbFileB =~ s/^.*\-ratcl\s+//i;
+                $bbFileB =~ s/^\s*\.inc(lude)?\b\s+//i;
+                $bbFileB =~ s/[']//g;
+                $bbFileB =~ s/["]//g;
+                $bbFileB =~ s/\s.*$//;
+                $bbFileB =~ s/"$//;
+                $bbFileB =~ s/^\.\///;
+
+                ($fileStatusB,$filePathB) = doesFileExist($fileTypeB,$bbFileB);
+
+                $bbSim_hash{$inFile}{$fileTypeB}{$filePathB} = $fileStatusB;
+                $file_hash{$fileTypeB}{$filePathB} = $fileStatusB;
+                #----------------------------------------------------------
+                #--- SKYE : one last trip down the rabbit hole. No more 
+                #    layers. Only going down this far.
+                #---------------------------------------------------------
+                if ($fileStatusB eq "EXISTS") {
+                  #--- grep for additional include files in the INCLUDE files.
+                  @grep_outputX = `grep -P -i '(\\-ratcl\\b|^\\s*\\.inc(lude)?\\b|\\bload_ba_file\\s+\\-file\\b|^\\s*source\\b|^\\s*\\.model\\b.*\\bTSTONEFILE\\b)' $filePathB | grep -v -P '^\\s*\$'`;
+                  chomp(@grep_outputX);
+                  $fileTypeX = "INCLUDE_X2";
+
+                  my $i = 0;
+                  foreach my $bbFileX (@grep_outputX) {
+                    $i++;
+                  }
+
+                  foreach my $bbFileX (@grep_outputX) {
+                    $bbFileX =~ s/^.*\-ratcl\s+//i;
+                    $bbFileX =~ s/^\s*\.inc(lude)?\b\s+//i;
+                    $bbFileX =~ s/^\s*source\b\s+//i;
+                    $bbFileX =~ s/^.*\bload_ba_file\s+\-file\b\s+//i;
+                    $bbFileX =~ s/^.*TSTONEFILE\b\s*=\s*//i;
+                    $bbFileX =~ s/[']//g;
+                    $bbFileX =~ s/["]//g;
+                    $bbFileX =~ s/\s.*$//;
+                    $bbFileX =~ s/"$//;
+                    $bbFileX =~ s/^\.\///;
+
+                    ($fileStatusX,$filePathX) = doesFileExist($fileTypeX,$bbFileX);
+                    #$length_X = length($filePathX); if (($length_X > $length_path)&&($fileType ne "GDS")) { $length_path = $length_X; }
+
+
+                    $bbSim_hash{$inFile}{$fileTypeX}{$filePathX} = $fileStatusX;
+                    $file_hash{$fileTypeX}{$filePathX} = $fileStatusX;
+                  } # end foreach bbFileX
+                } # if file EXISTS
+              } #--- foreach $bbFileB (@grep_output)
+            }  #--- endof elsif ($keWord =~ m/\bSPICE_COMMAND_FILE\b/)
+          }
+        } #-- end of foreach $bbFile @stuff
+      } # end if valid line contents
+      else {
+        print ">>> bbSim_file_tree INFO : other line : $line\n" unless 
+          (($line =~ m/^#/)                        ||
+           ($line =~ m/^$/)                        ||
+           ($line =~ m/^(ADD_CORNERS_VARIANTS_FILE_STRESS|ADD_CORNERS_VARIANTS_FILE_STRESS_PD)\b/) ||
+           ($line =~ m/^BLOCK\b/)                  ||
+           ($line =~ m/^ENV\b/)                    ||
+           ($line =~ m/^GRID_ACCOUNT\b/)           ||
+           ($line =~ m/^GRID_OPTIONS\b/)           ||
+           ($line =~ m/^LOCAL_SIM\b/)              ||
+           ($line =~ m/^MSIP_EMIR_RUN_CSIMRA_SHE_VERSION\b/)           ||
+           ($line =~ m/^NUM_DECIMALS\b/)           ||
+           ($line =~ m/^QSUB_LABEL\b/)             ||
+           ($line =~ m/^REMOVE_LIST\b/)            ||
+           ($line =~ m/^SERIES_SIM\b/)             ||
+           ($line =~ m/^SIMULATOR\b/)              ||
+           ($line =~ m/^SIMULATOR_OPTIONS\b/)      ||
+           ($line =~ m/^SIMULATOR_POST_OPTIONS\b/) ||
+           ($line =~ m/^TESTBENCH\b/)              ||
+           ($line =~ m/^TMI\b/)                    ||
+           ($line =~ m/^VIEWER\b/)                 );
+           push (@outfile, ">>> bbSim_file_tree INFO : other line : $line\n") unless
+        # print $OUTFILE ">>> bbSim_file_tree INFO : other line : $line\n" unless 
+          (($line =~ m/^#/)                        ||
+           ($line =~ m/^$/)                        ||
+           ($line =~ m/^(ADD_CORNERS_VARIANTS_FILE_STRESS|ADD_CORNERS_VARIANTS_FILE_STRESS_PD)\b/) ||
+           ($line =~ m/^BLOCK\b/)                  ||
+           ($line =~ m/^ENV\b/)                    ||
+           ($line =~ m/^GRID_ACCOUNT\b/)           ||
+           ($line =~ m/^GRID_OPTIONS\b/)           ||
+           ($line =~ m/^LOCAL_SIM\b/)              ||
+           ($line =~ m/^MSIP_EMIR_RUN_CSIMRA_SHE_VERSION\b/)           ||
+           ($line =~ m/^NUM_DECIMALS\b/)           ||
+           ($line =~ m/^QSUB_LABEL\b/)             ||
+           ($line =~ m/^REMOVE_LIST\b/)            ||
+           ($line =~ m/^SERIES_SIM\b/)             ||
+           ($line =~ m/^SIMULATOR\b/)              ||
+           ($line =~ m/^SIMULATOR_OPTIONS\b/)      ||
+           ($line =~ m/^SIMULATOR_POST_OPTIONS\b/) ||
+           ($line =~ m/^TESTBENCH\b/)              ||
+           ($line =~ m/^TMI\b/)                    ||
+           ($line =~ m/^VIEWER\b/)                 );
+      }
+      if ($line =~ m/^(SIMULATOR_POST_OPTIONS)\b/) {
+        my $bbSim_command = $1;
+        print         ">>> bbSim_file_tree INFO : ",color('bold red'),"WARNING",color('reset')," : bbSim command is OBSOLETE : ",color('red'),"$bbSim_command",color('reset'),",\n                                     use SIMULATOR_OPTIONS instead\n";
+        push (@outfile, ">>> bbSim_file_tree INFO : WARNING : bbSim command is OBSOLETE : $bbSim_command,\n                                     use SIMULATOR_OPTIONS instead\n");
+        print           ">>> -----------------------------------------------------------------------------------------------\n";
+        push (@outfile, ">>> -----------------------------------------------------------------------------------------------\n");
+      } elsif ($line =~ m/^(ADD_CORNERS_VARIANTS_FILE_STRESS|ADD_CORNERS_VARIANTS_FILE_STRESS_PD)\b/) {
+        my $bbSim_command = $1;
+        print           ">>> bbSim_file_tree INFO : ",color('bold red'),"WARNING",color('reset')," : bbSim command is OBSOLETE : ",color('red'),"$bbSim_command",color('reset'),",
+                                     use ADD_CORNERS_VARIANTS_FILE,
+                                         ADD_CORNERS_VARIANTS_FILE_BOL_STRESS,
+                                         ADD_CORNERS_VARIANTS_FILE_BOL_STRESS_PD,
+                                         ADD_CORNERS_VARIANTS_FILE_EOL_STRESS, or
+                                         ADD_CORNERS_VARIANTS_FILE_EOL_STRESS_PD instead\n";
+        push @outfile,  ">>> bbSim_file_tree INFO : WARNING : bbSim command is OBSOLETE : $bbSim_command,
+                                     use ADD_CORNERS_VARIANTS_FILE,
+                                         ADD_CORNERS_VARIANTS_FILE_BOL_STRESS,
+                                         ADD_CORNERS_VARIANTS_FILE_BOL_STRESS_PD,
+                                         ADD_CORNERS_VARIANTS_FILE_EOL_STRESS, or
+                                         ADD_CORNERS_VARIANTS_FILE_EOL_STRESS_PD instead\n";
+        
+        print          ">>> -----------------------------------------------------------------------------------------------\n";
+        push(@outfile, ">>> -----------------------------------------------------------------------------------------------\n");
+      } # end elsif ADD_CORNERS_VARIANTS_FILE_STRESS...
+    } # while (defined . . .
+    #------------------------------------------------------------------------
+  } # foreach $file
+
+  $max_length = 12;
+  @file_type_array = keys(%file_hash);
+  foreach my $file_type (sort @file_type_array) {
+    if (length($file_type) > $max_length) {
+      $max_length = length($file_type);
+    }
+  }
+
+  #--- print to STDOUT, by file TYPE
+  dprint(LOW, "Loop thru each file type in file_hash\n");
+  foreach my $file_type (sort (keys %file_hash)) {
+    foreach my $file_path (sort (keys %{$file_hash{$file_type}})) {
+      $file_path_print = $file_path;
+      if ($file_type eq "BBSIM") {
+        $file_path_print =~ s/^\.\///;
+        if ($file_path_print =~ m/[a-zA-Z0-9_.]+/) {
+          $file_path_print = "../bbSim/".$file_path_print;
+        }
+      }
+      $file_length = length($file_type);
+      if   ($file_length < $max_length){
+        $pad = " " x ($max_length - $file_length + 1);
+      } else {
+        $pad = " ";
+      }
+
+      $f_status = $file_hash{$file_type}{$file_path};
+      if ($f_status eq "EXISTS") {
+        $pad2 = " ";
+        print         ">>> $file_type $pad ($f_status)$pad2  $file_path_print\n";
+        push (@outfile, ">>> $file_type $pad ($f_status)$pad2  $file_path_print\n");
+        # print $OUTFILE ">>> $file_type $pad ($f_status)$pad2  $file_path_print\n";
+      } else {
+        $pad2 = "";
+        print         ">>> $file_type $pad ",color('red'),"($f_status)",color('reset'),"$pad2  $file_path_print\n";
+        push (@outfile, ">>> $file_type $pad ($f_status)$pad2  $file_path_print\n");
+        # print $OUTFILE ">>> $file_type $pad ($f_status)$pad2  $file_path_print\n";
+      }
+
+    } # end foreach file_path
+  } # end foreach fileType 
+
+  #--- ONLY do this part if there is MORE than one bbSim file.
+  @bbSim_array = keys(%bbSim_hash);
+ 
+  if (scalar(@bbSim_array)>1) {
+    dprint(LOW, "There is one or more bbSim_file in the \@bbSim_array\n");
+    print         "\n";
+    push (@outfile, "\n");
+    foreach my $bbSim_file (sort @bbSim_array) {
+      print         ">>> -------------------------------------------------------\n";
+      push (@outfile, ">>> -------------------------------------------------------\n");
+      print         "$bbSim_file\n";
+      push (@outfile, "$bbSim_file\n");
+      foreach my $file_type (sort (keys %{$bbSim_hash{$bbSim_file}})) {
+
+        $file_length = length($file_type);
+        if   ($file_length < $max_length){
+          $pad = " " x ($max_length - $file_length + 1);
+        } else {
+          $pad = " ";
+        }
+        foreach my $file_path (sort (keys %{$bbSim_hash{$bbSim_file}{$file_type}})) {
+          #---------------------------------------------
+          $f_status = $bbSim_hash{$bbSim_file}{$file_type}{$file_path};
+          if ($f_status eq "EXISTS") {
+            $pad2 = " ";
+            print         "    $file_type $pad ($f_status)$pad2  $file_path\n";
+            push (@outfile, "    $file_type $pad ($f_status)$pad2  $file_path\n");
+            # print $OUTFILE "    $file_type $pad ($f_status)$pad2  $file_path\n";
+          } else {
+            $pad2 = "";
+            print         "    $file_type $pad ",color('red'),"($f_status)",color('reset'),"$pad2  $file_path\n";
+            push (@outfile, "    $file_type $pad ($f_status)$pad2  $file_path\n");
+            # print $OUTFILE "    $file_type $pad ($f_status)$pad2  $file_path\n";
+          }
+        } # foreach file_path
+      } # foreach file_type
+      print "\n";
+    } # foreach bbSim_file
+  } else {
+      # then  @bbsim_array is 1 or less
+  }
+  
+  #--------------------------------------------------------------------------
+  #--- format ouput for gold_testbench activity
+  #--------------------------------------------------------------------------
+  dprint(LOW, "Format output for gold_testbench activity\n");
+  push (@outfile, "\n");
+  push (@outfile, "#----------------------------------------------------\n");
+  push (@outfile, "#--- relative file paths from <BLOCK> level dir\n");
+  push (@outfile, "#--- omitting NETLIST, GDS, cad-rep, cad/emir, cad/models\n");
+  push (@outfile, "#----------------------------------------------------\n");
+  foreach my $file_type (sort (keys %file_hash)) {
+    foreach my $file_path (sort (keys %{$file_hash{$file_type}})) {
+      $file_path_print = $file_path;
+      if ($file_type eq "BBSIM") {
+        $file_path_print =~ s/^\.\///;
+        if ($file_path_print =~ m/[a-zA-Z0-9_.]+/) {
+          $file_path_print = "../bbSim/".$file_path_print;
+        }
+      }
+      if ($file_path_print =~ m/^\.\./) {
+        $file_path_print =~ s/^\.\././;
+      }
+      unless (($file_type =~ m/^NETLIST(_STRESS|_STRESS_PD)?$/) ||
+              ($file_type eq "GDS") ||
+              ($file_path_print =~ m/\bcad\/emir\b/) ||
+              ($file_path_print =~ m/\bcad\/models\b/) ||
+              ($file_path_print =~ m/\/remote\/cad-rep\b/)
+             ) {
+        push (@outfile, "$file_path_print\n");
+        # print $OUTFILE "$file_path_print\n";
+      }
+    } # end foreach file_path
+  } # end foreach file_type
+
+  print ">>> --- see also file_tree.log ----------------------------\n";
+
+  write_file(\@outfile, $outFile);
+} #--- end from master IF
+&Main();
+#=============================================================================
+sub doesFileExist {
+  print_function_header();  
+  my $fileType = $_[0];
+  my $fileName = $_[1];
+  my $fileStatus = "MISSING";
+  my $filePath = $fileName;
+
+
+  #--- does the file exits? different places to look for different file types.
+  if ($fileType =~ m/\bINCLUDE\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../include/$fileName";
+    } elsif (-f "../../share/include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../../share/include/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../include/$fileName";
+    }
+  } elsif ($fileType =~ m/\bINCLUDE_X2\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../include/$fileName";
+    } elsif (-f "../../share/include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../../share/include/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../include/$fileName";
+    }
+  } elsif ($fileType =~ m/\bINCLUDE0\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../include/$fileName";
+    } elsif (-f "../../share/include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../../share/include/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../include/$fileName";
+    }
+  } elsif ($fileType =~ m/\bPRE_POST_INCLUDE\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../include/$fileName";
+    } elsif (-f "../../share/include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../../share/include/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../include/$fileName";
+    }
+  } elsif ($fileType =~ m/\bSPICE_COMMAND_FILE(_STRESS|_STRESS_PD|_SPGEN|_SELF_NOISE)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../circuit/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../circuit/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../circuit/$fileName";
+    }
+  } elsif ($fileType =~ m/\bNETLIST(_STRESS|_STRESS_PD|_SPGEN|_SELF_NOISE)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../circuit/project/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../circuit/project/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../circuit/project/$fileName";
+    }
+  } elsif ($fileType =~ m/\bCORNERS_LIST_FILE(_STRESS|_STRESS_PD)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../corners/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../corners/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../corners/$fileName";
+    }
+  } elsif ($fileType =~ m/\bCORNERS_REF_FILE(_STRESS|_STRESS_PD)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../corners_ref/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../corners_ref/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../corners_ref/$fileName";
+    }
+  } elsif ($fileType =~ m/\bADD_CORNERS_VARIANTS_FILE(_BOL_STRESS|_BOL_STRESS_PD|_EOL_STRESS|_EOL_STRESS_PD)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../corners/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../corners/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../corners/$fileName";
+    }
+  } elsif ($fileType =~ m/\bPLOT_CONFIG_FILE(_STRESS|_STRESS_PD)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      if ($fileName =~ m/^(\.\/)?plot\//) { $fileName = "../bbSim/".$fileName}
+      $filePath = $fileName;
+    } elsif (-f "../bbSim/plot/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../bbSim/plot/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+    }
+  } elsif ($fileType =~ m/\bMEASURE_CONFIG_FILE(_STRESS|_STRESS_PD)?\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      if ($fileName =~ m/^(\.\/)?measure\//) { $fileName = "../bbSim/".$fileName}
+      $filePath = $fileName;
+    } elsif (-f "../bbSim/measure/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../bbSim/measure/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+    }
+  } elsif ($fileType =~ m/\bDESCRIPTION_FILE\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "html/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "html/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+    }
+  } elsif ($fileType =~ m/\bAIM_SCRIPT\b/) {
+
+
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../cscope/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../cscope/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../cscope/$fileName";
+    }
+
+
+  } elsif ($fileType =~ m/\bPERL\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../perl/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../perl/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+    }
+  } elsif ($fileType =~ m/\b(PRE|POST)_(MAKE|SIM|REPORT)\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../scripts/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../scripts/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+      $filePath = "../scripts/$fileName";
+    }
+  } elsif ($fileType =~ m/\bGDS\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../include/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../include/$fileName";
+    } elsif (-f "../circuit/extract/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../circuit/extract/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+    }
+  } elsif ($fileType =~ m/\bDEGRADATION_CONFIG_FILE\b/) {
+    if (-f $fileName) {
+      $fileStatus = "EXISTS";
+      $filePath = $fileName;
+    } elsif (-f "../bbSim/degradation/$fileName") {
+      $fileStatus = "EXISTS";
+      $filePath = "../bbSim/degradation/$fileName";
+    } else {
+      $fileStatus = "MISSING";
+    }
+  } else {
+    die ">>> sub doesFileExist DIE : exception, $fileType not valid file type\n";
+  }
+  #---
+
+
+  return ($fileStatus,$filePath);
+} # doesFileExist
+
+sub usage($){
+    my $status = shift;
+    # print help here then abort
+    print "------------------------------------------------------------------------------\n";
+    print "Usage: bbSim_file_tree <inFile0>.bbSim [<inFile1>.bbSim . . . <inFileN>.bbSim]\n";
+    print "Does:  takes in <inFile0>.bbSim and other *.bbSim files, finds the names of all\n";
+    print "       the files required for the bbSim file, checks to see if the files exist,\n";
+    print "       and reports back on the files to STDOUT.\n";
+    exit $status;
+}
+
+#------------------------------------------------------------------------------
+sub process_cmd_line_args(){
+    print_function_header();  
+    my ( $opt_debug, $opt_verbosity, $opt_help, $opt_nousage, $opt_dryrun);
+    my $status = GetOptions(
+        "debug=i"     => \$opt_debug,
+        "verbosity=i" => \$opt_verbosity,
+        "nousage"     => \$opt_nousage,  # when enabled, skip logging usage data
+        "dryrun!"     => \$opt_dryrun,   # do not run destructive p4 commands
+        "help"        => \$opt_help,     # Prints help
+     );
+
+    $main::VERBOSITY = $opt_verbosity if ( defined $opt_verbosity);
+    $main::DEBUG     = $opt_debug     if ( defined $opt_debug );
+    $main::TESTMODE  = 1              if ( defined $opt_dryrun && $opt_dryrun );
+
+    if ( $opt_help ) {
+        usage(0);
+    }
+    if ( ! $status ){
+        # Something went wrong with the parsing of ARGV
+        usage(1);
+    }
+
+    return( $opt_nousage);
+};
+
+
+#--- NOTES
+#--- looking at include files inside of include files, INCLUDE_2
+#    Examples are
+
+#.inc '../../../../cad/emir/map_ba_terminal_icv.sp'
+#.inc '/remote/proj/pcie6/x570-pcie6-tsmc5ff-12-ns/rel1.01/cad/models/EOL/aging_1000ppm_selfheating.inc'
+#.inc '/remote/proj/pcie6/x570-pcie6-tsmc5ff-12-ns/rel1.01/cad/models/EOL/selfheating.inc'
+#.option xa_cmd = "load_ba_file -file ../../../15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z_SHDMIM/netlist/extract/rx_scope_fdiv/rcxtra/rx_scope_fdiv_rcc_typical_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z_SHDMIM.spf.gz -ccap_to_gcap 5e-18 -min_res 0.1 -rcnet *"
+#  .option xa_cmd = "set_ra_option -pwra 1 -sigra 1 -she 1 -ratau 1p -twindow tr_start tr_end -ratcl ./rx_custom_dig_emir_static.tcl"
+#source ../../../../cad/emir/RA.tcl
+#source /remote/cad-rep/proj/shared/sim/XA/emir/ra_out.tcl
+#.model des13127_00_tx S N=4 TSTONEFILE ="/remote/cad-rep/msip/cd/lib/widgets/P4_LATEST/widgets/c10_pkg/tstonefile/text.s4p"
+
+#../../ROPLL_VREG/include/ropll_tcoil_diff_rclk_helic.inc:$.model tx_tcoil_diff_s_parameter S N=8 TSTONEFILE = /remote/proj/esm25/x081-esm25-tsmc7ff-18-ns/rel1.01/design/sim/share/include/tx_tcoil_diff_rclk_helic.s8p

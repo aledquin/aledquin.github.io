@@ -1,0 +1,4 @@
+tsmc12ffcll-18_10M_2Xa1Xd_h_4Xe_vhvh_2Z /remote/cad-rep/fab/f101-tsmc/12nm/logic/FFC/rules/common/icv/drc/ver1.3a_internal_update_190125/orig/LOGIC_TopMz_DRC/ICVN12FFC_10M_2Xa1Xd4Xe2Z_001.13a.encrypt
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R /remote/cad-rep/fab/f101-tsmc/12nm/logic/FFC/rules/common/icv/drc/ver1.3a_internal_update_190125/orig/LOGIC_TopMr_DRC/ICVN12FFC_11M_2Xa1Xd3Xe2Y2R_001.13a.encrypt
+tsmc12ffcll-18_8M_2Xa1Xd_h_3Xe_vhv_1Z /remote/cad-rep/fab/f101-tsmc/12nm/logic/FFC/rules/common/icv/drc/ver1.3a_internal_update_190125/orig/LOGIC_TopMz_DRC/ICVN12FFC_8M_2Xa1Xd3Xe1Z_001.13a.encrypt
+tsmc12ffcll-18_9M_2Xa1Xd_h_3Xe_vhv_2Z /remote/cad-rep/fab/f101-tsmc/12nm/logic/FFC/rules/common/icv/drc/ver1.3a_internal_update_190125/orig/LOGIC_TopMz_DRC/ICVN12FFC_9M_2Xa1Xd3Xe2Z_001.13a.encrypt

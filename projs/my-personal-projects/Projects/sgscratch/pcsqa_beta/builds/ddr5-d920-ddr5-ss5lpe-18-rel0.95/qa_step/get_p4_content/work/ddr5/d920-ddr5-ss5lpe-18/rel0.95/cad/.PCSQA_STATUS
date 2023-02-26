@@ -1,0 +1,21 @@
+PCSQA STATUS:PASS
+PCSQA Project Name:d920-ddr5-ss5lpe-18
+PCSQA Project Release:rel0.95
+PCSQA Score:7
+PCSQA Execution details:PCS QA 2022.04;larissa;us01(p4) us01;Wed Jul 13 06:17:05 PDT 2022
+PCSQA CHKSUM:dcf235df5a33e6470c7f96cfb8dde00d
+PCSQA Hipre Version:v7.6.0
+PCSQA Violations list:
+(PCSQA-REMOTECHECK) Usage of -sites option or PCSQA_PROJ_ROOT with non-default value, can result in limited results; PCS has not been validated at all (applicable) MSIP sites.
+
+PCSQA Automation fields: DO NOT MAKE MANUAL CHANGES BELOW THIS LINE
+13M_4Mx_7Dx_2Iz_LB/env.tcl;6bbfea274b42b7c4c1346daa61ca8f52
+13M_4Mx_7Dx_2Iz_LB/lib.defs;df4bf299a0ee69a5ea15ef600b694024
+lib.defs;8d479e6d1e17c84391d822aeedf802f9
+project.env;5e1b6a44a3f90e8441705e49c1dcf88b
+shared/env/env_common.tcl;50dd83bf44a0abc6aa23624d6817d828
+emir/13M_4Mx_7Dx_2Iz_LB_RA.tcl;8bea0540a7ddb24ec17f210d09899e1a
+emir/13M_4Mx_7Dx_2Iz_LB_RAESD.tcl;434fef2bc547011cadc31b6a0f72f38e
+emir/map_ba_terminal_calibre.sp;7ab393ce9034fc46f5764520727ba933
+emir/map_ba_terminal_icv.sp;bfadbc79465aa240b0b241675d2ee088
+usage.txt;a9722905af8e8691694f83f1b690d685

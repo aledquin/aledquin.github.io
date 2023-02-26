@@ -1,0 +1,444 @@
+n214-c10-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel5.0.0
+INFO: DONE
+
+n226-c10-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+n224-c10-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12_amd rel2.0.0_22_06_08_1
+ERROR: IcvRunDRC not defined.
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0_22_06_08_1/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+INFO: DONE
+
+u117-cmnblks-tsmc5ff-12.txt
+INFO: tsmc5ff 12_palermo 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u122-cmnblks-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.4.0
+INFO: DONE
+
+m0105-mem-tsmc5ff-ts05n0g42p11sacul256s.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sasrl256s.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sadcl02ms.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-schematic.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-multiVtMSL.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sassl01ms.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g42p11sadrl128s.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sacrl256s.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-schematic_gen2.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+m0105-mem-tsmc5ff-ts05n0g41p11sadul02ms.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g42p11sacrl128s.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p10asdvd01ms.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sacrl256w.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sadcl02mw.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sasrl256w.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g42p11sacul256w.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g42p11sadrl128w.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-ts05n0g41p11sassl01mw.txt
+INFO: "em" "em" "m0105-mem-tsmc5ff-ts05n0g42p11sacul256s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-schematic_tcam.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t321-training-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0151-mem-tsmc5ff-layout.txt
+INFO: em em m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-schematic_gen2_lv.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-schematic_bcam.txt
+INFO: tsmc5ff 12 rel9.0.0
+INFO: DONE
+
+m0105-mem-tsmc5ff-schematic_gen2_autom.txt
+INFO: tsmc5ff 12 rel8.7.0
+INFO: DONE
+
+m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms.txt
+INFO: tsmc5ff 12_auto rel1.1.0
+INFO: DONE
+
+m0151-mem-tsmc5ff-ts05n0g42p11s2cul256s.txt
+INFO: em em m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0151-mem-tsmc5ff-ts05n0g41p11s2srl256s.txt
+INFO: em em m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0151-mem-tsmc5ff-ts05n0g41p11s2ssl01ms.txt
+INFO: em em m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0151-mem-tsmc5ff-ts05n0g42p11s2crl128s.txt
+INFO: em em m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0151-mem-tsmc5ff-ts05n0g41p10s2dvd01ms.txt
+INFO: em em m0151-mem-tsmc5ff-ts05n0g41p11s2dul02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0105-mem-tsmc5ff-schematic-mphdrf.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+e326-hdmi-earcrx-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+g143-dphy-tsmc5ff-12.txt
+INFO: tsmc5ff 12_palermo 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g152-dphy-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+g304-dphy-cphy-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.0
+INFO: DONE
+
+g311-dphy-cphy-tsmc5ff-12.txt
+INFO: tsmc5ff 12_amd 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g314-dphy-cphy-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.0
+INFO: DONE
+
+g313-dphy-cphy-tsmc5ff-12.txt
+INFO: tsmc5ff 12_amd rel2.0.0_22_05_19_1
+INFO: DONE
+
+g315-dphy-cphy-tsmc5ff-12.txt
+INFO: program program p200-program-marvell_xplorer-tsmc5ff-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l253-std-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 rel8.7.0
+INFO: DONE
+
+l250-std-tsmc5ff-1.2v_palermo.txt
+INFO: tsmc5ff 12_palermo rel5.0.0
+INFO: DONE
+
+x691-usb2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel6.0.0
+INFO: DONE
+
+x710-usb2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12_amd rel1.3.1
+INFO: DONE
+
+x719-usb2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+x718-usb2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12_amd rel2.0.0
+ERROR: IcvRunDRC not defined.
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+INFO: DONE
+
+p030-emclk-tsmc5ff-1.2v.txt
+INFO: CCS CCS "c253-tsmc5ff-1.2v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t037-pqv-tsmc5ff-1.2v.txt
+INFO: CCS CCS "c253-tsmc5ff-1.2v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+c250-tsmc5ff-1.2v_palermo.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+c253-tsmc5ff-1.2v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y241-emmc-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d823-ddr54v2-cuamd-tsmc5ff-12.txt
+INFO: tsmc5ff 12_amd rel2.0.0
+ERROR: IcvRunDRC not defined.
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+INFO: DONE
+
+d810-ddr54-tsmc5ff12.txt
+INFO: tsmc5ff 12 rel9.3.1_22_04_04_1
+INFO: DONE
+
+x326-e32-tsmc5ff-15-ns.txt
+INFO: tsmc5ff 12" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x336-e32-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+x339-e32-ldo-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+o214-diffbuf-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+o214-diffbuf-tsmc5ff-12-ew.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+d850-lpddr54-tsmc5ff12.txt
+INFO: tsmc5ff 12" "rel4.0.0"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d890-lpddr54-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+v001-eusb2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12_palermo rel8.0.0
+INFO: DONE
+
+v003-eusb2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel5.0.0
+INFO: DONE
+
+v014-eusb2-tsmc5ff12-ns.txt
+INFO: tsmc5ff 12 rel9.4.0
+INFO: DONE
+
+v019-eusb2-tsmc5ff-12-ns.txt
+INFO: program program p200-program-marvell_xplorer-tsmc5ff-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w157-nvm-otp-pcm-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 rel6.1.0
+INFO: DONE
+
+w003-nvm-otp-commonLibs-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w308-nvm-otp-shfdc-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+w307-nvm-otp-shfdc-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12_auto rel1.1.0
+INFO: DONE
+
+x585-e112-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.0
+INFO: DONE
+
+x587-e112adc-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+n400-c20-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n409-c20-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+n408-c20-tsmc5ff-12-ns.txt
+INFO: c20 c20 n408-c20-tsmc5ff-12-ns
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n403-c20-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12_amd rel1.3.1
+INFO: DONE
+
+n415-c20-tsmc5ff-12-ns.txt
+INFO: program program p200-program-marvell_xplorer-tsmc5ff-12
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x223-xsr-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel8.3.0
+INFO: DONE
+
+t044-pms-5124c-tsmc5ff-12.txt
+INFO: tsmc5ff 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+h104-hbi-x24_aib-tsmc5ff-ew.txt
+INFO: hbi hbi h104-hbi-x24_aib-tsmc5ff-ew
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d900-lpddr5xm-tsmc5ff12.txt
+INFO: tsmc5ff 12_amd rel1.2.1
+INFO: DONE
+
+d901-lpddr5xm-tsmc5ff-12.txt
+INFO: tsmc5ff 12_amd rel1.6.0
+INFO: DONE
+
+d750-hbm3-tsmc5ff12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+d940-ap-lpddr5x-tsmc5ff-12.txt
+INFO: tsmc5ff 12_auto rel1.1.0
+INFO: DONE
+
+d930-lpddr5x-tsmc5ff12.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+d941-ap-lpddr5x-tsmc5ff-12.txt
+INFO: tsmc5ff 12_auto rel1.1.0
+INFO: DONE
+
+d933-lpddr5x-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+f513-gpio-tsmc5ff-1.2v.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+x570-pcie6-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5159fvm-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+s001-pms-5121dts-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5149cat-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5125vm-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5124td-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+s001-pms-5124ts-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5147pvtc-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+s001-pms-5126pd-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5176dts2-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+s001-pms-5197tchip-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+x810-e224-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.0.0
+INFO: DONE
+
+h120-hbi2-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.0
+INFO: DONE
+
+d910-ddr5-tsmc5ff-12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+n403-aux-i2c_usb4ls-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12_amd rel2.0.0
+ERROR: IcvRunDRC not defined.
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+INFO: DONE
+
+p200-program-marvell_xplorer-tsmc5ff-12.txt
+INFO: tsmc5ff 12_auto rel1.1.0
+INFO: DONE
+
+v100-vsr-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+n700-c40-tsmc5ff-12-ns.txt
+INFO: tsmc5ff 12 rel9.4.0
+INFO: DONE
+
+d750-hbm3-tsmc5ff12.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+

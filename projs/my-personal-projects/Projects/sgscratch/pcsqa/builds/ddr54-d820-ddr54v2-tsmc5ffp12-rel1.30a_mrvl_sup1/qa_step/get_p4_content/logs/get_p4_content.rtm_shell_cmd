@@ -1,0 +1,21 @@
+#!/bin/sh
+##
+## rtm_shell_cmd -tool tcl_job -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/get_p4_content.log
+##
+
+echo "Information: Process ID for rtm_shell_cmd : $$"
+
+## No trap command
+
+. /global/etc/modules/3.1.6/init/sh
+module unload tcl
+module load tcl/8.6.6
+module list
+
+tclsh /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/conf/tool_wrapper.tcl < /dev/null > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/get_p4_content.log 2>&1
+
+/global/apps/lynx_2020.09/rtm_shell/lynx_rtm_2020.09/bin/rtm_check /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/.get_p4_content.rtm_check.data > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/get_p4_content/logs/.get_p4_content.rtm_check.log 2>&1
+
+echo "Information: End rtm_shell_cmd"
+
+## End of File

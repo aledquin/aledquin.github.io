@@ -1,0 +1,64 @@
+u102-cmnblks-ss10lpe-18-ns.txt
+INFO: ss10lpe 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u104-cmnblks-ss10lpe-18.txt
+INFO: ss10lpe 18 rel1.1
+ERROR: IcvRunDRC not defined.
+ss10lpe-18_13M_3Mx_6Dx_2Hx_2Bz_LB : /remote/cad-rep/proj/c126-ss10lpe-1.8v/rel1.1/cad/13M_3Mx_6Dx_2Hx_2Bz_LB/env.tcl
+l006-scl-ss10lpe-18.txt
+INFO: ss10lpe 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m001-mem-ss10lpe-0.75v-1.8v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t017-esdgold-ss10lpe-18-ns.txt
+INFO:   /remote/proj/users/$USER/p4_ws
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x641-ssp-ss10lpe-18-ns.txt
+INFO: ss10lpe 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x648-ssp-ss10lpe-18-ns.txt
+INFO: ss10lpe 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l123-std-ss10lpe-1.8v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l123-std-ss10lpe-1.8v_SAS.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l126-std-ss10lpe-1.8v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t888-training-ss10lpe-18-ns.txt
+INFO: ss10lpe 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x641-usb2-ss10lpe-18-ns.txt
+INFO: ss10lpe 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x648-usb2-ss10lpe-18-ns.txt
+INFO: ss10lpe 18 rel3.2
+ERROR: IcvRunDRC not defined.
+ss10lpe-18_13M_3Mx_6Dx_2Hx_2Bz_LB : /remote/cad-rep/proj/c126-ss10lpe-1.8v/rel3.2/cad/13M_3Mx_6Dx_2Hx_2Bz_LB/env.tcl
+x666-usb2-ss10lpe-18-ns.txt
+INFO: ss10lpe 18 rel2.6.0
+ERROR: IcvRunDRC not defined.
+ss10lpe-18_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c123-ss10lpe-1.8v/rel2.6.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+x641-usb3-ss10lpe-18-ns.txt
+INFO: ss10lpe 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l126-tio-ss10lpe-1.8v.txt
+INFO: common common "c126-ss10lpe-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+

@@ -1,0 +1,29 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+
+DESIGN dwc_lpddr5xphyacx2_ew ;
+
+UNITS DISTANCE MICRONS 2000 ;
+DIEAREA ( 0 0 ) ( 328512 148720 ) ;
+
+COMPONENTS 8 ;
+- AX_1/ACX_IO dwc_lpddr5xphy_txrxac_ew + PLACED ( 132096 0 ) FS
+  + SOURCE DIST ;
+- AX_0/lcdl_tx dwc_lpddr5xphy_txrxac_ew + PLACED ( 132096 74360 ) N
+  + SOURCE DIST ;
+- lstx_acx2 dwc_lpddr5xphy_lstx_acx2_ew + PLACED ( 132096 0 ) FS
+  + SOURCE DIST ;
+- AX_1 dwc_lpddr5xphy_lcdl + PLACED ( 55392 0 ) FS
+  + SOURCE DIST ;
+- AX_1/pclkrcv dwc_lpddr5xphy_pclk_rxdca + PLACED ( 66144 27716 ) N
+  + SOURCE DIST ;
+- clamp_acx2 dwc_lpddr5xphy_vddqclamp_x2_ew + PLACED ( 276384 0 ) N
+  + SOURCE DIST ;
+- AX_0/pclkrcv dwc_lpddr5xphy_pclk_rxdca + PLACED ( 66144 106808 ) FS
+  + SOURCE DIST ;
+- AX_0 dwc_lpddr5xphy_lcdl + PLACED ( 55392 127088 ) N
+  + SOURCE DIST ;
+END COMPONENTS
+
+END DESIGN

@@ -1,0 +1,38 @@
+<file type="gen_group">
+  <attribute name="flow_name" value="gen_flow"/>
+  <package type="tasks">
+
+  <package type="tool_task">
+      <attribute name="name" value="check_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="/remote/cad-rep/msip/tools/Lynxtools/shared/2021.09/qa_scripts/check_env_run.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="ref_ccs"/>
+      <attribute name="dst" value="check_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+	 	  <attribute name="variable" value="|TEV(metalstack)|15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+	 	  <attribute name="variable" value="|TEV(retry)|3"/>
+      <attribute name="pass_control" value="no_fatal"/>
+      <attribute name="job_enable" value="1"/>
+      <attribute name="job_resources" value="arch=glinux,h_rt=00:10:00"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="gate_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+      <attribute name="tool" value="tcl"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/gate_ude_env.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="check_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+      <attribute name="dst" value="gate_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+	 	  <attribute name="variable" value="|TEV(metalstack)|15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+      <attribute name="pass_control" value="no_fatal"/>
+      <attribute name="job_enable" value="0"/>
+  </package>
+
+  </package>
+    <package type="edges">
+	<package type="edge">
+          <attribute name="from" value="check_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+          <attribute name="to" value="gate_ude_env_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM"/>
+        </package>
+  </package>
+</file>

@@ -1,0 +1,18 @@
+
+## -----------------------------------------------------------------------------
+## START - RTM Generated Code: SEV Variable Definitions                         
+## -----------------------------------------------------------------------------
+
+set SEV(task)          "get_ref_ccs"
+set SEV(src_name)      "gen_env"
+set SEV(dst_name)      "ref_ccs"
+set SEV(tmp_dir)       "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/ref_ccs/tmp"
+set SEV(script_file) "scripts_global/qa_scripts/get_ref_ccs.tcl"
+set SEV(flow_name)     "tf_pcs_qa"
+set SEV(flow_order)    2000000
+
+
+## -----------------------------------------------------------------------------
+## STOP - RTM Generated Code: SEV Variable Definitions                          
+## -----------------------------------------------------------------------------
+

@@ -1,0 +1,24 @@
+
+# Sourcing all the env common set ups
+
+#echo "Sourcing Modules..."
+source $HOME/env/modules.csh
+
+#echo "Sourcing variables..."
+source $HOME/env/variables.csh
+
+#echo "Sourcing configurations..."
+source $HOME/env/config.csh
+
+#echo "Sourcing prompt configuration..."
+source $HOME/env/prompts.csh
+
+#echo "Sourcing aliases..."
+source $HOME/env/.alias
+
+#echo "Sourcing your customizations..."
+source $HOME/env/.alias.$USER
+
+
+
+#echo "Welcome!"

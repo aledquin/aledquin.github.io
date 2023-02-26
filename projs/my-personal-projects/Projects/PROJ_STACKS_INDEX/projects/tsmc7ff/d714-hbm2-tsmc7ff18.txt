@@ -1,0 +1,4 @@
+tsmc7ff_plus-18_13M_1Xs_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2R /remote/cad-rep/fab/f101-tsmc/7nm_plus/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMr_DRC/ICVN7FFplus_13M_1Xs1Xa1Ya5Y2Yy2R_022.10_1a.encrypt
+tsmc7ff_plus-18_13M_1Xs_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z /remote/cad-rep/fab/f101-tsmc/7nm_plus/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMz_DRC/ICVN7FFplus_13M_1Xs1Xa1Ya5Y2Yy2Z_022.10_1a.encrypt
+tsmc7ff_plus-18_15M_1Xs_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Yx2R /remote/cad-rep/fab/f101-tsmc/7nm_plus/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMr_DRC/ICVN7FFplus_15M_1Xs1Xa1Ya5Y2Yy2Yx2R_022.10_1a.encrypt
+tsmc7ff_plus-18_9M_1Xs_h_1X_v_1Ya_h_3Y_vhv_2Z /remote/cad-rep/fab/f101-tsmc/7nm_plus/logic/FF/common/rules/common/icv/drc/ver1.0_1a/orig/LOGIC_TopMz_DRC/ICVN7FFplus_9M_1Xs1X1Ya3Y2Z_022.10_1a.encrypt

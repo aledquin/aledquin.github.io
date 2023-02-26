@@ -1,0 +1,3 @@
+# This is a valid legalVcCorners csv file
+Corner Type	Case	Core Voltage (V)	PLL Voltage (V)	IO Voltage (V)	Temperature (C)	Extraction Corner
+ctype	case1	10.0	20	30.0	99	extractcorner

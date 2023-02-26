@@ -1,0 +1,88 @@
+stages:
+  - compile_and_lint
+  - unit_test
+  - functional_test
+  - coverage
+
+# List of tools
+# Each tool is a directory from the top of the repo
+# Note: each tool requires a dev/main dir to run make commands.
+.TOOLS: &TOOLS
+  - ddr-ckt-rel
+  - ddr-utils
+  - ddr-utils-in08
+  - ddr-utils-lay
+  - ddr-utils-timing
+  - ibis
+
+# Run a step for each tool in the TOOLS list
+# Use 'extends: .run_for_each_tool' in the step
+# Exposes the variable $TOOL for usage in script tags
+.run_for_each_tool:
+  parallel:
+    matrix:
+      - TOOL: *TOOLS
+
+# Unit/functional test setup commands
+.test_script_setup: &test_script_setup
+  - export GITROOT=$CI_PROJECT_DIR
+  - source ./admin/source_before_tests.csh
+  - export tool=$TOOL
+  - export DDR_DA_MAIN=$GITROOT/$tool/dev/main
+
+check_code:
+  stage: compile_and_lint
+  extends: .run_for_each_tool
+  script:
+    - *test_script_setup
+    - cd ${TOOL}/dev/main
+    - make --keep-going check_all
+
+unit_test:
+  stage: unit_test
+  extends: .run_for_each_tool
+  script:
+    - *test_script_setup
+    - cd ${TOOL}/dev/main
+    - make --keep-going unit_tests GITROOT=$CI_PROJECT_DIR
+  artifacts:
+    paths:
+      - .coverage.${TOOL}_unit_tests
+    expire_in: 1 week
+
+py_functional_test:
+  stage: functional_test
+  extends: .run_for_each_tool
+  script:
+    - *test_script_setup
+    - cd ${TOOL}/dev/main
+    - make --keep-going func_tests_py GITROOT=$CI_PROJECT_DIR
+  artifacts:
+    paths:
+      - .coverage.${TOOL}_functional_tests
+    expire_in: 1 week
+
+py_coverage:
+  stage: coverage
+  script:
+    - ./run_tests.py --merge
+  artifacts:
+    paths:
+      - htmlcov_combined
+    expire_in: 1 week
+
+check_code_sharedlib:
+  stage: compile_and_lint
+  script:
+    - *test_script_setup
+    - cd sharedlib
+    - make --keep-going check_all
+
+unit_test_sharedlib:
+  stage: unit_test
+  allow_failure: true # TODO: Fix Perl error occuring only on GitLab
+  script:
+    - *test_script_setup
+    - cd sharedlib
+    - make --keep-going unit_tests GITROOT=$CI_PROJECT_DIR
+

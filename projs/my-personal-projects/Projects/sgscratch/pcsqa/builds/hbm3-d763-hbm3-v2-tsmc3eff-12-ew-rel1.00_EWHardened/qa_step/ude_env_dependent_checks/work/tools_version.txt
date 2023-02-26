@@ -1,0 +1,12 @@
+hspice 2022.06
+calibre 2022.1-38.18
+xa 2021.09-SP2-1
+sis 2022.03-SP2
+finesim 2022.06
+nt 2022.03-SP2
+pt 2022.03-SP2
+lc 2022.03-SP2
+starrcxt 2020.09-SP5-4-VAL-20220524
+primesim 2022.06
+icv 2022.03-SP2
+cc 2021.09-SP2

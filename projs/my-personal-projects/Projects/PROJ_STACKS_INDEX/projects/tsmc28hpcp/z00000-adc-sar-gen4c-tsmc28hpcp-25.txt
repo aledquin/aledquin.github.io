@@ -1,0 +1,4 @@
+tsmc28hpcp-25_7M_5X1U /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/7m/icv/drc/ver1.7a_wi_patch_ver1.4a/orig/ICVN28HP_7M_5X1U_002.17a.encrypt+ICVN28ULP_AVT_PATCH.14a
+tsmc28hpcp-25_7M_5X1Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/7m/icv/drc/ver1.7a_wi_patch_ver1.4a/orig/ICVN28HP_7M_5X1Z_002.17a.encrypt+ICVN28ULP_AVT_PATCH.14a
+tsmc28hpcp-25_8M_5X2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/8m/icv/drc/ver1.7a_wi_patch_ver1.4a/orig/ICVN28HP_8M_5X2Z_002.17a.encrypt+ICVN28ULP_AVT_PATCH.14a
+tsmc28hpcp-25_9M_6X2Z /remote/cad-rep/fab/f101-tsmc/28nm/logic/HPCplus/common/rules/9m/icv/drc/ver1.7a_wi_patch_ver1.4a/orig/ICVN28HP_9M_6X2Z_002.17a.encrypt+ICVN28ULP_AVT_PATCH.14a

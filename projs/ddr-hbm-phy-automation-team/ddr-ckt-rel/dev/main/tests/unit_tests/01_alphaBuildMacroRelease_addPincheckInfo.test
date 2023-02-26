@@ -1,0 +1,60 @@
+#!/depot/tcl8.6.3/bin/tclsh8.6
+##!/depot/tk8.6.1/bin/wish
+# nolint Main
+# nolint utils__script_usage_statistics
+#
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "James Laderoute"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+
+# source the SUT (script under test) to load in all of it's procs
+# Setting global DDR_DA_UNIT_TEST so the script we are sourcing won't actually
+# run the script; it should return before anything actually runs.
+set DDR_DA_UNIT_TEST 1
+source $RealBin/../../bin/alphaBuildMacroRelease.tcl
+
+::tcltest::verbose bpse
+::tcltest::debug 2
+
+
+#######################################################################
+# Create your tests here
+#######################################################################
+
+test alphaBuildMacroRelease-pincheckInfo_t01 { Test: addPincheckInfo } \
+    -body { 
+    source $RealBin/../bin/alphaBuildMacroRelease.tcl
+
+    addPincheckInfo "release" "macro1" "info_macro_1" 
+    addPincheckInfo "release" "macro2" "info_macro_2" 
+
+    } \
+    -result {release {macro1 info_macro_1 macro2 info_macro_2}} \
+    -output {}
+
+cleanupTests
+
+# THIS CODE WORKS: 11/10/2022 5:25pm - ljames
+# How to do the same thing above in the test?
+#
+# set release 1
+# addPincheckInfo $release "macro" "info" 
+# 
+# if { ![dict exists $::pincheckInfo $release] } { 
+#     puts "FAILED"
+# } else {
+#     puts "PASSED"
+# }
+
+puts "Done"
+

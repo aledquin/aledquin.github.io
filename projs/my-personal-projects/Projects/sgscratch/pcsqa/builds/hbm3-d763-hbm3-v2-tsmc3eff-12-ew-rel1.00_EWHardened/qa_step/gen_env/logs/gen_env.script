@@ -1,0 +1,159 @@
+source ../../../../../scripts_global/conf/header_start.tcl
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+## -----------------------------------------------------------------------------
+## Code for creating some generated tasks.
+## -----------------------------------------------------------------------------
+
+## A gen_task must create an XML flow file using the
+## filename specified by the SEV(gen_file) variable.
+
+set fid_subflow [open $SEV(gen_file) w]
+puts $fid_subflow "<file type=\"gen_group\">\n  <attribute name=\"flow_name\" value=\"gen_flow\"/>\n  <package type=\"tasks\">"
+puts $fid_subflow ""
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set taskName "check_ude_env"
+
+set metalstacks [list]
+
+set cspath $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+set ccspath $cspath/cad
+set stackuppaths [glob -nocomplain $ccspath/*/env.tcl]
+if { [llength $stackuppaths] == 0 } {
+   sproc_msg -error "No metal stack options found at $ccspath"
+} else {
+   foreach stackuppath $stackuppaths {
+      lappend metalstacks [lindex [file split [file dirname $stackuppath]] end]
+   }
+}
+
+if { [info exists SEV(job,resources)] } {
+	set sevjobresources $SEV(job,resources)
+}
+if { [info exists SEV(job,resources)] } {
+	set sevjobresources $SEV(job,resources)
+}
+if { $sevjobresources != "" } {
+	set jobresources "$sevjobresources,h_rt=00:10:00"
+} else {
+	set jobresources "h_rt=00:10:00"
+}
+## change selected os_version to NOT CS7.3
+## unless Custom Compiler instead of Custom Designer is used
+## cdesigner gives on CS7.3:
+## Error: Incomplete installation. OpenAccess is missing or improperly installed.
+set change_osversion 1
+set projectenv $cspath/cad/project.env
+if { [file exists $projectenv] } {
+	catch { exec $SEV(exec_cmd) -c "grep MSIP_CC_VERSION $projectenv | grep -v ^# | grep setenv | grep -v unsetenv | wc -l" } msip_cc_version
+	catch { exec $SEV(exec_cmd) -c "grep MSIP_CD_VERSION $projectenv | grep -v ^# | grep setenv | grep -v unsetenv | wc -l" } msip_cd_version
+	if { $msip_cc_version > 0 && $msip_cd_version == 0 } {
+		set change_osversion 0
+	} else {
+		## fall back on Parent PCS
+		set parentpcs ""
+		set parentpcstxt [getWorkDir ref_ccs]/parent_pcs.txt
+		if { [file exists $parentpcstxt] } {
+			catch { exec $SEV(exec_cmd) -c "cat $parentpcstxt | head -1" } parentpcs
+		}
+		set projectenv $parentpcs/cad/project.env
+		if { [file exists $projectenv] } {
+			catch { exec $SEV(exec_cmd) -c "grep MSIP_CC_VERSION $projectenv | grep -v ^# | grep setenv | grep -v unsetenv | wc -l" } msip_cc_version
+			catch { exec $SEV(exec_cmd) -c "grep MSIP_CD_VERSION $projectenv | grep -v ^# | grep setenv | grep -v unsetenv | wc -l" } msip_cd_version
+			if { $msip_cc_version > 0 && $msip_cd_version == 0 } {
+				set change_osversion 0
+			}
+		}			
+		if { $change_osversion == 1 && $msip_cd_version == 0 } {
+			## fall back on CCS
+			set refccs ""
+			set refccstxt [getWorkDir ref_ccs]/ref_ccs.txt
+			if { [file exists $refccstxt] } {
+				catch { exec $SEV(exec_cmd) -c "cat $refccstxt | head -1" } refccs
+			}
+			set projectenv $refccs/design/project.env
+			if { [file exists $projectenv] } {
+				catch { exec $SEV(exec_cmd) -c "grep MSIP_CC_VERSION $projectenv | grep -v ^# | grep setenv | grep -v unsetenv | wc -l" } msip_cc_version
+				if { $msip_cc_version > 0 } {
+					set change_osversion 0
+				}
+			}			
+		}
+	}	
+}
+if { $change_osversion == 1 } {
+	catch { exec $SEV(exec_cmd) -c "echo $jobresources | grep \"os=\" | wc -l" } osversion
+	if { $osversion == 1 } {
+		catch { exec $SEV(exec_cmd) -c "echo $jobresources | sed -e 's/os=\[^\\s,\]*/os=!CS7.3/g'" } jobresources	
+	} else {
+		set jobresources "$jobresources,os=!CS7.3"
+	}
+}
+
+foreach metalstack $metalstacks {
+   puts $fid_subflow "  <package type=\"tool_task\">"
+   puts $fid_subflow "      <attribute name=\"name\" value=\"${taskName}_${metalstack}\"/>"
+   puts $fid_subflow "      <attribute name=\"tool\" value=\"tcl_job\"/>"
+   puts $fid_subflow "      <attribute name=\"script_file\" value=\"$env(MSIP_LYNX_SHARED)/qa_scripts/check_env_run.tcl\"/>"
+   puts $fid_subflow "      <attribute name=\"step\" value=\"$SEV(step)\"/>"
+   puts $fid_subflow "      <attribute name=\"src\" value=\"$SEV(src)\"/>"
+   puts $fid_subflow "      <attribute name=\"dst\" value=\"${taskName}_${metalstack}\"/>"
+
+   puts $fid_subflow "	 	  <attribute name=\"variable\" value=\"|TEV(metalstack)|$metalstack\"/>"
+   puts $fid_subflow "	 	  <attribute name=\"variable\" value=\"|TEV(retry)|3\"/>"
+##   puts $fid_subflow "     	  <attribute name=\"variable\" value=\"|TEV(qaapp)|pcsqa\"/>"
+   puts $fid_subflow "      <attribute name=\"pass_control\" value=\"no_fatal\"/>"
+   puts $fid_subflow "      <attribute name=\"job_enable\" value=\"1\"/>"
+   puts $fid_subflow "      <attribute name=\"job_resources\" value=\"$jobresources\"/>"
+
+   puts $fid_subflow "  </package>"
+   puts $fid_subflow ""
+   puts $fid_subflow "  <package type=\"tool_task\">"
+   puts $fid_subflow "      <attribute name=\"name\" value=\"gate_ude_env_${metalstack}\"/>"
+   puts $fid_subflow "      <attribute name=\"tool\" value=\"tcl\"/>"
+   puts $fid_subflow "      <attribute name=\"script_file\" value=\"\$SEV(gscript_dir)/qa_scripts/gate_ude_env.tcl\"/>"
+   puts $fid_subflow "      <attribute name=\"step\" value=\"$SEV(step)\"/>"
+   puts $fid_subflow "      <attribute name=\"src\" value=\"${taskName}_${metalstack}\"/>"
+   puts $fid_subflow "      <attribute name=\"dst\" value=\"gate_ude_env_${metalstack}\"/>"
+
+   puts $fid_subflow "	 	  <attribute name=\"variable\" value=\"|TEV(metalstack)|$metalstack\"/>"
+   puts $fid_subflow "      <attribute name=\"pass_control\" value=\"no_fatal\"/>"
+   puts $fid_subflow "      <attribute name=\"job_enable\" value=\"0\"/>"
+
+   puts $fid_subflow "  </package>"
+   puts $fid_subflow ""
+   set toedges("${taskName}_${metalstack}") [list "gate_ude_env_${metalstack}"]
+}
+
+
+################################################################################
+################################################################################
+
+if { [info exists toedges] } {
+	puts $fid_subflow "  </package>\n    <package type=\"edges\">"
+	foreach fromedge [array names toedges] {
+		foreach toedge $toedges($fromedge) {
+			puts $fid_subflow "	<package type=\"edge\">\n          <attribute name=\"from\" value=$fromedge/>\n          <attribute name=\"to\" value=\"$toedge\"/>\n        </package>"
+		}
+	}
+}
+
+puts $fid_subflow "  </package>\n</file>"
+close $fid_subflow
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

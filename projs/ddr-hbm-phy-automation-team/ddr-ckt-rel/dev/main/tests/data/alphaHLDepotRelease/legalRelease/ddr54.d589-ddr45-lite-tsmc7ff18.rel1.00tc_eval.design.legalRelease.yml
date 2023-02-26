@@ -1,0 +1,24 @@
+---
+calibre_verifs: true
+releaseShimMacro: dwc_ddrphy_d5m_pddrio_lupTermination
+reference_gds: 
+    dwc_ddr45_chip_analog_overlay_ew: dwc_ddr45_chip_ew.def
+releasePmMailDist: jfisher,cheah,thomasr,sg-d54-t7-ckt@synopsys.com,sg-ddr-ckt-release@synopsys.com
+supply_pins: M8
+releaseMailDist: 
+    jfisher,cheah,qizhao,davies,ddr_di@synopsys.com,sg-d54-t7-ckt@synopsys.com,sg-lp5-t7-ckt@synopsys.com,d589-ddr45-lite-tsmc7ff18@synopsys.com,sg-ddr-ckt-release@synopsys.com
+metal_stack: 15M_2X_hv_1Ya_h_5Y_vhvhv_2Yy2Yx2R
+metal_stack_ip: 8M_2X_hv_1Ya_h_4Y_vhvh
+layers: M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP
+release_gds_cdl: icv
+layout_tag: Final D589 test chip release
+reference_date_time: 14 days ago
+rel: 1.00a_tc
+vcrel: 0.95a_tc
+release_gds_shim: drcint
+p4_release_root: 
+    - products/ddr45-lite/project/d589-ddr45-lite-tsmc7ff18
+    - products/ddr43_lpddr4_v2/project/d519-ddr43-tsmc7ff18
+    - products/lpddr54/project/d859-lpddr54-tsmc7ff18
+process: tsmc7ff-18_qcom
+

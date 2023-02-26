@@ -1,0 +1,2 @@
+module load msip_ude/latest 2> /dev/null
+module load msip_eda_tools  2> /dev/null

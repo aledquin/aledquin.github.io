@@ -1,0 +1,704 @@
+Cell dwc_lpddr5xphy_txrxdqs_ew
+Arc : hold_rising
+pin :RxRepLcdlCalMode[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlCalMode[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlCalMode[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :RxRepCalClkEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=1.36500000954
+values: 28.0386257172 27.0323390961 25.7692855835 24.9418884277 25.4276218414
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=17.0625
+values: 34.9296722412 33.919708252 32.7616348267 31.7348690033 32.3086700439
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=34.125
+values: 40.8950157166 39.8783836365 38.7293357849 37.7037124634 38.255897522
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=68.25
+values: 49.7962493896 48.7612991333 47.637046814 46.6145744324 47.1073608398
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :PeakTest
+rel_pin : Pclk
+Constraint: rise_constraint
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=1.36500000954
+values: 28.0386257172 29.0323390961 30.7692855835 29.9418884277 28.4276218414
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlCalMode[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyMuxSelEven[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyMuxSelEven[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyMuxSelEven[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyMuxSelEven[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyMuxSelEven[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyMuxSelEven[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyMuxSelOdd[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyMuxSelOdd[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyMuxSelOdd[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyMuxSelOdd[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyMuxSelOdd[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyMuxSelOdd[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseEven[3]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseEven[3]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseEven[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseEven[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseEven[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseEven[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseEven[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseEven[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseOdd[3]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseOdd[3]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseOdd[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseOdd[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseOdd[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseOdd[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelCoarseOdd[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelCoarseOdd[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelFine[3]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelFine[3]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelFine[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelFine[2]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelFine[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelFine[1]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlySelFine[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlySelFine[0]
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :csrTxClkDcdOffset[4]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :scan_shift_cg
+rel_pin : Pclk
+Constraint: rise_constraint
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=2.09999990463
+values: 13.5554866791 12.6096611023 11.5872020721 10.5749740601 10.8163986206
+Constraint: fall_constraint
+======================================================================================
+Arc : non_seq_setup_rising
+pin :scan_shift_cg
+rel_pin : Pclk
+Constraint: rise_constraint
+Non monotonic : V
+variable: constrained_pin_transition, index=0, value=2.09999990463
+values: 13.5554866791 12.6096611023 11.5872020721 10.5749740601 10.8163986206
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :csrTxClkDcdOffset[4]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :csrTxClkDcdOffset[3]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :csrTxClkDcdOffset[3]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :csrTxClkDcdOffset[2]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :csrTxClkDcdOffset[2]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :csrTxClkDcdOffset[1]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :csrTxClkDcdOffset[1]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :csrTxClkDcdOffset[0]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :csrTxClkDcdOffset[0]
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :IDDQ_mode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :IDDQ_mode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :IDDQ_mode
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :IDDQ_mode
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : recovery_rising
+pin :ResetAsync
+rel_pin : Pclk
+Constraint: fall_constraint
+======================================================================================
+Arc : removal_rising
+pin :ResetAsync
+rel_pin : Pclk
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxDQSEnSync
+rel_pin : clk_int
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxDQSEnSync
+rel_pin : clk_int
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepCalClkEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepCalClkEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepCalEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepCalEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepCalReset
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepCalReset
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepCalSeqEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepCalSeqEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :RxRepLcdlBypMode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlBypMode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :RxRepLcdlBypMode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlBypMode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :RxRepLcdlBypMode
+rel_pin : RxRepLcdlBypIn
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlBypMode
+rel_pin : RxRepLcdlBypIn
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :RxRepLcdlBypMode
+rel_pin : RxRepLcdlBypIn
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlBypMode
+rel_pin : RxRepLcdlBypIn
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlCalClkEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlCalClkEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlCalEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlCalEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlCalReset
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlCalReset
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlCalSeqEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlCalSeqEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :RxRepLcdlDlyUpdateEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :RxRepLcdlDlyUpdateEn
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :TxDataEvenC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :TxDataEvenC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :TxDataEvenT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :TxDataEvenT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :TxDataOddC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :TxDataOddC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :TxDataOddT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :TxDataOddT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :TxOEEvenC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :TxOEEvenC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :TxOEEvenT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :TxOEEvenT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :TxOEOddC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :TxOEOddC
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_falling
+pin :TxOEOddT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_falling
+pin :TxOEOddT
+rel_pin : TxClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :scan_mode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :scan_mode
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :scan_mode
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :scan_mode
+rel_pin : TxClkDcdSampleClk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :scan_shift
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :scan_shift
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :scan_shift_cg
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :scan_shift_cg
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : hold_rising
+pin :scan_si
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================
+Arc : setup_rising
+pin :scan_si
+rel_pin : Pclk
+Constraint: rise_constraint
+Constraint: fall_constraint
+======================================================================================

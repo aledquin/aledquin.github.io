@@ -1,0 +1,127 @@
+#!/bin/bash
+
+tool_name=`basename $0`
+prefix="ddr-da-ddr-utils-timing"
+exec /remote/cad-rep/msip/tools/bin/msip_get_usage_info --tool_name "$prefix$tool_name" --stage main --category ude_ext_1 --tool_path $0 --tool_version "2022ww24"
+
+COND_LIST="sss ttt fff sssc fffh"
+
+# Routine to get the condition labels from the CONDITION lines in the template
+get_cond_labels () {
+   # $1 is libgen file
+   # $2 is list of corner labels
+   # $COND_LABELS is returned list of condition strings for that .libgen file
+
+   local THIS_COND
+
+   COND_LABELS=""
+
+   for CORNER in $2 ; do
+      # need to deal with sss vs sssc to get only 1 line per grep
+      if [ $CORNER == "sss" ] ; then
+         THIS_COND=`grep CONDITION $1 | grep $CORNER | grep -v "sssc" | grep -v "sssz" | sed 's/.*label=//' | sed 's/ .*//'`
+      elif [ $CORNER == "ttt" ] ; then
+         THIS_COND=`grep CONDITION $1 | grep $CORNER | grep -v "ttth" | grep -v "tttz" | sed 's/.*label=//' | sed 's/ .*//'`
+      elif [ $CORNER == "fff" ] ; then
+         THIS_COND=`grep CONDITION $1 | grep $CORNER | grep -v "fffh" | grep -v "fffz" | sed 's/.*label=//' | sed 's/ .*//'`
+      else
+         THIS_COND=`grep CONDITION $1 | grep $CORNER | sed 's/.*label=//' | sed 's/ .*//'`
+      fi 
+      COND_LABELS="$COND_LABELS $THIS_COND"
+   done
+}
+
+
+new_cond_labels () {
+
+   local THIS_COND
+
+   COND_LABELS=""
+
+   if [ $DO_ALT_BC -eq 1 -a $DO_ALT_WC -eq 1 ] ; then
+      for THIS_COND in `grep CONDITION $1 | sed 's/^.*label=//' | sed 's/ .*//' | grep -v CONDITION` ; do
+         COND_LABELS="$COND_LABELS $THIS_COND"
+      done
+   elif [ $DO_ALT_WC -eq 1 ] ; then
+      for THIS_COND in `grep CONDITION $1 | grep -v bc_core5 | sed 's/^.*label=//' | sed 's/ .*//' | grep -v CONDITION` ; do
+         COND_LABELS="$COND_LABELS $THIS_COND"
+      done
+   else
+      for THIS_COND in `grep CONDITION $1 | grep -v core5 | sed 's/^.*label=//' | sed 's/ .*//' | grep -v CONDITION` ; do
+         COND_LABELS="$COND_LABELS $THIS_COND"
+      done
+   fi
+}
+
+# Process Arguments
+DO_ALT_BC=0
+DO_ALT_WC=0
+INTEL=""
+while [ $# -gt 0 ] ; do
+   case $1 in
+      alt)
+         DO_ALT_BC=1
+         DO_ALT_WC=1
+         shift;;
+      altwc)
+         DO_ALT_WC=1
+         shift;;
+      -intel)
+         INTEL=" -intel"
+         shift;;
+      *)
+         echo "Unrecognized argument $1"
+         shift;;
+   esac
+done
+
+
+# Try to check for local files
+TEMPLATES=`/bin/ls -d * | grep '\.libgen' | grep -v libgen_part`
+
+if [ ${#TEMPLATES} -gt 0 ] ; then
+   LOCAL=1
+else
+   LOCAL=0
+   TEMPLATES=`/bin/ls */*.libgen`
+fi
+
+for TEMPLATE in $TEMPLATES ; do
+
+   #get_cond_labels $TEMPLATE "$COND_LIST"
+   new_cond_labels $TEMPLATE 
+
+   RUN_DIR="pwd"
+   if [ $LOCAL -eq 0 ] ; then
+      RUN_DIR=`echo $TEMPLATE | sed 's/\/.*//'`
+      TEMPLATE_FILE=`echo $TEMPLATE | sed 's/.*\///'`
+      cd $RUN_DIR
+   else
+      TEMPLATE_FILE=$TEMPLATE
+   fi
+
+   # Do work here
+   for COND in $COND_LABELS ; do
+      FILE_ROOT=`echo $TEMPLATE_FILE | sed 's/.libgen//'`
+      OUTPUT_FILE="$FILE_ROOT$COND.lib"
+      LOG_FILE="$FILE_ROOT$COND.log"
+      echo "Generating: $OUTPUT_FILE in $RUN_DIR"
+
+      # Comment out P4 for now
+      #if [ -e $OUTPUT_FILE ] ; then
+      #   if [ ! -w $OUTPUT_FILE ] ; then
+      #      p4 edit $OUTPUT_FILE
+      #      p4 edit `echo $OUTPUT_FILE | sed 's/\.lib/.db/'`
+      #   fi
+      #else
+      #   p4 add -t text $OUTPUT_FILE
+      #   p4 add -t binary `echo $OUTPUT_FILE | sed 's/\.lib/.db/'`
+      #fi
+
+      ./libgen $TEMPLATE_FILE $OUTPUT_FILE $INTEL condition=$COND minslew=0.002 -full_names -verbose > $LOG_FILE
+   done
+   
+   if [ $LOCAL -eq 0 ] ; then
+      cd ..
+   fi
+done

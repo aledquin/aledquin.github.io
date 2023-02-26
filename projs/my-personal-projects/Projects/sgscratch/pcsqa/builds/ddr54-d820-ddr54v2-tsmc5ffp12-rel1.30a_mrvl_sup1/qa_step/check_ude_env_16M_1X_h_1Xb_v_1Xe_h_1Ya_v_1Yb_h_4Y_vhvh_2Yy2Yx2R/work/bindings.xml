@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- created by Custom Compiler, build#  on Fri Jul 22 15:43:02 2022
+-->
+<file-format name="synopsysBindings" version="1">
+        <bindings>
+                <binding event="Shift-j" command="msip::CDtools::adhoc::le::createPinCombo" windowType="leLayout" userCreated="true"/>
+                <binding event="Shift-Up" command="layoutUtils::incrStopView" windowType="leLayout" userCreated="true"/>
+                <binding event="Shift-Down" command="layoutUtils::decrStopView" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-Space" command="layoutUtils::createFP" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-p" command="layoutUtils::bringPinsUp" windowType="leLayout" userCreated="true"/>
+                <binding event="Alt-Shift-p" command="layoutUtils::placePinGui" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-d" command="layoutUtils::dropRing" windowType="leLayout" userCreated="true"/>
+                <binding event="Alt-Shift-d" command="layoutUtils::dropRing 1" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-f" command="layoutUtils::placeFillCells" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-l" command="layoutUtils::generateLabelsForLVS" windowType="leLayout" userCreated="true"/>
+                <binding event="Ctrl-Shift-i" command="layoutUtils::makeScTracks" windowType="leLayout" userCreated="true"/>
+        </bindings>
+</file-format>

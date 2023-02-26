@@ -1,0 +1,19 @@
+
+## -----------------------------------------------------------------------------
+## START - RTM Generated Code: SEV Variable Definitions                         
+## -----------------------------------------------------------------------------
+
+set SEV(task)          "drc_check_decks_version"
+set SEV(src_name)      "ref_ccs"
+set SEV(dst_name)      "21vv_drc_check_decks_version"
+set SEV(tmp_dir)       "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/21vv_drc_check_decks_version/tmp"
+set SEV(script_file) "scripts_global/qa_scripts/check_switches_gen.tcl"
+set SEV(flow_name)     "tf_pcs_qa"
+set SEV(flow_order)    5020000
+
+set SEV(gen_file)    "../logs/drc_check_decks_version.gen"
+
+## -----------------------------------------------------------------------------
+## STOP - RTM Generated Code: SEV Variable Definitions                          
+## -----------------------------------------------------------------------------
+

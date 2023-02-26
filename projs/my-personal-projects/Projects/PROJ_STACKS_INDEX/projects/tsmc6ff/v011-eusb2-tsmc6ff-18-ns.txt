@@ -1,0 +1,2 @@
+tsmc6ff-18_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver0.5_1b/orig/LOGIC_TopMz_DRC/ICVN6FF_13M_1X1Xa1Ya5Y2Yy2Z_001.05_1b.encrypt
+tsmc6ff-18_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_MIM /remote/cad-rep/fab/f101-tsmc/6nm/logic/FF/common/rules/common/icv/drc/ver0.5_1b/orig/LOGIC_TopMz_DRC/ICVN6FF_13M_1X1Xa1Ya5Y2Yy2Z_001.05_1b.encrypt

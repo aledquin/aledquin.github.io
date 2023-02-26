@@ -1,0 +1,144 @@
+---
+calibre_verifs: true
+repeater_name: dwc_ddrphy_repeater_blocks
+releaseDefMacro: 
+    - dwc_ddrphy_testbenches/dwc_ddrphydiff_top_ew
+    - dwc_ddrphy_testbenches/dwc_ddrphymaster_top_ew
+    - dwc_ddrphy_testbenches/dwc_ddrphysec_top_ew
+    - dwc_ddrphy_testbenches/dwc_ddrphyse_top_ew
+    - dwc_ddrphy_testbenches/dwc_ddrphydiff_top_ns
+    - dwc_ddrphy_testbenches/dwc_ddrphymaster_top_ns
+    - dwc_ddrphy_testbenches/dwc_ddrphysec_top_ns
+    - dwc_ddrphy_testbenches/dwc_ddrphyse_top_ns
+releasePhyvMacro: 
+    - dwc_ddrphy_decapvaa_vdd2_ns
+    - dwc_ddrphy_decapvaa_vdd2_ew
+    - dwc_ddrphy_techrevision_ew
+    - dwc_ddrphy_techrevision_ns
+    - dwc_ddrphy_thermdiode
+    - dwc_ddrphy_decapvaa_vdd2_ns_mns
+    - dwc_ddrphy_decapvaa_vdd2_ew_mns
+    - dwc_ddrphy_vdd2clamp_4x1_ns
+    - dwc_ddrphy_vddqclamp_4x1_ns
+releaseShimMacro: 
+    - dwc_ddrphy_se_io_ew_overlay
+    - dwc_ddrphydiff_top_ew_gradient
+    - dwc_ddrphymaster_top_ew_gradient
+    - dwc_ddrphysec_top_ew_gradient
+    - dwc_ddrphyse_top_ew_gradient
+    - dwc_ddrphy_se_io_ns_overlay
+    - dwc_ddrphydiff_top_ns_gradient
+    - dwc_ddrphymaster_top_ns_gradient
+    - dwc_ddrphysec_top_ns_gradient
+    - dwc_ddrphyse_top_ns_gradient
+releasePmMailDist: 
+    golnar,mladd,gowan,hghonie,eltoukhy,fayez,,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-ckt-d850-rel2@synopsys.com
+supply_pins_override: 
+    dwc_ddrphy_utility_blocks: M14 M15 MTOP MTOP-1
+    dwc_ddrphy_repeater_blocks: M14 M15 MTOP MTOP-1
+    dwc_ddrphy_techrevision_ew: M6
+    dwc_ddrphy_pclk_rx_ew: M6
+    dwc_ddrphy_lcdl_ew: M4
+    dwc_ddrphy_techrevision_ns: M6
+    dwc_ddrphy_pclk_rx_ns: M6
+    dwc_ddrphy_lcdl_ns: M4
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: M8
+releaseMacro: 
+    dwc_ddrphy_utility_blocks:
+    - dwc_ddrphy_decapvddq_1by4x1_ns
+    - dwc_ddrphy_decapvddq_1x1_ns
+    - dwc_ddrphy_decapvddq_4x1_ns
+    - dwc_ddrphy_decapvdd_1by4x1_ns
+    - dwc_ddrphy_decapvdd_1x1_ns
+    - dwc_ddrphy_decapvdd_4x1_ns
+    - dwc_ddrphy_decapvddqhd_1by4x1_ns
+    - dwc_ddrphy_decapvddqhd_1x1_ns
+    - dwc_ddrphy_decapvddqhd_4x1_ns
+    - dwc_ddrphy_decapvddhd_1by4x1_ns
+    - dwc_ddrphy_decapvddhd_1x1_ns
+    - dwc_ddrphy_decapvddhd_4x1_ns
+    - dwc_ddrphy_endcell_ns
+    - dwc_ddrphy_clamp_dbyte13_ns
+    - dwc_ddrphy_clamp_dbyte12_ns
+    - dwc_ddrphy_clamp_dbyte11_ns
+    - dwc_ddrphy_clamp_dbyte10_ns
+    - dwc_ddrphy_clamp_ac2r_ns
+    - dwc_ddrphy_clamp_ac1r_ns
+    - dwc_ddrphy_clamp_master_ns
+    - dwc_ddrphy_vaaclamp_master_ns
+    - dwc_ddrphy_decap_ac2r_ns
+    - dwc_ddrphy_decap_ac1r_ns
+    - dwc_ddrphy_decap_master_ns
+    - dwc_ddrphy_decapvddq_1by4x1_ew
+    - dwc_ddrphy_decapvddq_1x1_ew
+    - dwc_ddrphy_decapvddq_4x1_ew
+    - dwc_ddrphy_decapvdd_1by4x1_ew
+    - dwc_ddrphy_decapvdd_1x1_ew
+    - dwc_ddrphy_decapvdd_4x1_ew
+    - dwc_ddrphy_decapvddqhd_1by4x1_ew
+    - dwc_ddrphy_decapvddqhd_1x1_ew
+    - dwc_ddrphy_decapvddqhd_4x1_ew
+    - dwc_ddrphy_decapvddhd_1by4x1_ew
+    - dwc_ddrphy_decapvddhd_1x1_ew
+    - dwc_ddrphy_decapvddhd_4x1_ew
+    - dwc_ddrphy_endcell_ew
+    - dwc_ddrphy_clamp_dbyte13_ew
+    - dwc_ddrphy_clamp_dbyte12_ew
+    - dwc_ddrphy_clamp_dbyte11_ew
+    - dwc_ddrphy_clamp_dbyte10_ew
+    - dwc_ddrphy_clamp_ac2r_ew
+    - dwc_ddrphy_clamp_ac1r_ew
+    - dwc_ddrphy_clamp_master_ew
+    - dwc_ddrphy_vaaclamp_master_ew
+    - dwc_ddrphy_decap_ac2r_ew
+    - dwc_ddrphy_decap_ac1r_ew
+    - dwc_ddrphy_decap_master_ew
+    - dwc_ddrphy_shimcell_ns
+    - dwc_ddrphy_shimcell_clamp_ns
+    - dwc_ddrphy_shimcell_decap_ns
+    - dwc_ddrphy_shimcell_decapvdd_ns
+    - dwc_ddrphy_shimcell_decapvddq_ns
+    - dwc_ddrphy_shimcell_master_top_ns
+    dwc_ddrphy_repeater_blocks:
+    - dwc_ddrphy_rpt1ch_ns
+    - dwc_ddrphy_rpt2ch_ns
+    - dwc_ddrphy_rpt1ch_ew
+    - dwc_ddrphy_rpt2ch_ew
+releaseBranch: rel2.00_cktpcs_2.20a_rel_
+releaseMailDist: 
+    golnar,mladd,gowan,hghonie,eltoukhy,fayez,ddr_di@synopsys.com,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-ckt-d850-rel2@synopsys.com
+release_gds_cdl: icv
+metal_stack: 15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z
+metal_stack_ip: 8M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_2Y
+layers: M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 M15 OVERLAP
+timing_libs: lvf
+layout_tag: Final Release (both ew and ns)
+releaseTCMacro: 
+    - dwc_ddrphy_vdd2clamp_4x1_ns
+    - dwc_ddrphy_vddqclamp_4x1_ns
+reference_date_time: 14 days ago
+rel: 2.20a_cusni_sup2
+utility_name: dwc_ddrphy_utility_blocks
+vcrel: 2.20a_cusni_sup2
+utility_tag_layers: 63:63 6:0
+releaseCtlMacro: 
+    - dwc_ddrphy_lcdl_ew
+    - dwc_ddrphy_pclk_master_ew
+    - dwc_ddrphy_pclk_rx_ew
+    - dwc_ddrphy_rxreplica_ew
+    - dwc_ddrphy_se_io_ew
+    - dwc_ddrphy_lcdl_ns
+    - dwc_ddrphy_pclk_master_ns
+    - dwc_ddrphy_pclk_rx_ns
+    - dwc_ddrphy_rxreplica_ns
+    - dwc_ddrphy_se_io_ns
+metal_stack_cover: 
+    - 15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2R
+    - 15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z
+    - 13M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Z
+    - 12M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Z
+releaseTCMailDist: golnar,mladd,gowan,hghonie,eltoukhy,fayez,sg-ddr-ckt-release@synopsys.com,davies
+p4_release_root: products/lpddr54/project/d850-lpddr54-tsmc5ffp12
+process: tsmc5ff-12
+

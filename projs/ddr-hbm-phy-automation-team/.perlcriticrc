@@ -1,0 +1,27 @@
+# This is a profile config for Perl::Critic 
+# https://metacpan.org/dist/Perl-Critic/view/lib/Perl/Critic/PolicySummary.pod
+# Policies: /depot/perl-5.22.0/lib/site_perl/5.22.0/Perl/Critic/Policy/
+#      perlcritic --list
+#
+severity = stern
+verbose  = 8
+theme    = core and bugs
+
+#  theme    = (core or pbp or security or maintenance) and bugs and not cosmetic
+
+
+[TestingAndDebugging::RequireUseStrict]
+severity = 5
+[TestingAndDebugging::RequireUseWarnings]
+severity = 5
+
+[-CodeLayout::ProhibitTrailingWhitespace]
+[-CodeLayout::ProhibitParensWithBuiltins]
+[-Subroutines::ProhibitSubroutinePrototypes]
+[-Variables::RequireLocalizedPunctuationVars] 
+[-Subroutines::RequireFinalReturn]
+[-InputOutput::ProhibitTwoArgOpen]
+[-Modules::ProhibitAutomaticExportation]
+[-ValuesAndExpressions::ProhibitConstantPragma]
+
+

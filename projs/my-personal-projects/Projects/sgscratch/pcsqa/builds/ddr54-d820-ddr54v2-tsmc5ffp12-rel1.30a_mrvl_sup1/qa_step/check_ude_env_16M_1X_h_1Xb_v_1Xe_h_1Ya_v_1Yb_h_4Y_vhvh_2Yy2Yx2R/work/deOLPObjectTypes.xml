@@ -1,0 +1,1003 @@
+<!--Created by Custom Compiler, build 7348141, on Fri Jul 22 15:43:02 2022
+-->
+<synopsys_file name="deOLPObjectTypes" version="1">
+	
+	<ObjectType name="leBlockage">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockageActiveLayer">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockageOther">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockagePin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockagePlacement">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockagePlacementHard">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockagePlacementPartial">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockagePlacementSoft">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBlockageRouting">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundary">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundaryAlignment">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundaryArea">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundaryCluster">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundaryPR">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundaryPRCoreRow">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundaryPRCoreRowSite">
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leBoundarySnap">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCoordinateMark">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCorridorArea">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leFigGroup">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leFigGroupMember">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGuardRing">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGuardRingShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGrid">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGridAxes">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGlobalWideAlignment">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGridMajorMinor">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leGridRoute">
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leInstance">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leInstanceArray">
+		<visible/>
+		<selectable/>
+	</ObjectType>
+	
+	<ObjectType name="leInstanceHierarchy">
+		<visible/>
+	</ObjectType>
+	
+	<ObjectType name="leInstancePin">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leInstanceScalar">
+		<visible/>
+		<selectable/>
+	</ObjectType>
+	
+	<ObjectType name="leInstanceVectorBit">
+		<visible/>
+		<selectable/>
+	</ObjectType>
+	
+	<ObjectType name="leMarker">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerAcknowledgedWarning">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerAnnotation">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerCriticalError">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerError">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerFatalError">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerInfo">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerSignedOffCriticalError">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerSignedOffError">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMarkerWarning">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leMpp">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePartialObject">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePartialObjectCenterLine">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePartialObjectCenterLineVertex">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePartialObjectEdge">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leStretchHandle">
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePartialObjectVertex">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePcellShape">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="lePin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteCorridor">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteGuide">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRow">
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRowSite">
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRuler">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leShapeEllipse">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leShapePath">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leShapePathSegment">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leShapePolygon">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leShapeRectangle">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSoftMacroBoundary">
+	</ObjectType>
+	
+	<ObjectType name="leSoftMacroPin">
+	</ObjectType>
+	
+	<ObjectType name="leSteiner">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leStripedWire">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leText">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leTrackRegion">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leTransmissionLine">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leTransmissionLineShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leVia">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leViaShape">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leVoltageArea">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leVoltageAreaGuardband">
+		<visible/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypeCore">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypeBlock">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypeSoftMacro">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypeBlackBox">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypePhysicalOnly">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypePad">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypeCover">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leCellTypeCoverBump">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeUser">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeDetail">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeGlobal">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeRing">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeStrap">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeMacroPinConn">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeStdPinConn">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeClockRing">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeClockStrap">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeZeroSkew">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeBus">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeShieldFix">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeShieldDynamic">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeFill">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeUserTrunk">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leRouteTypeCustomRoute">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeSignal">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypePower">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeGround">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeClock">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeTieOff">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeTieHigh">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeTieLow">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeAnalog">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeScan">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeReset">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leSignalTypeNoNet">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColor1">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColor2">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColor3">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColor4">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColor5">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColor6">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorSame">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMask1">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMask2">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMask3">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMask4">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMask5">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMask6">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorMaskSame">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorLock">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="leColorUnlock">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchOverlayObject">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchReferenceDesignObject">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchFlightLine">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchImage">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchInstance">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchInstancePin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchMarker">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchInstanceLabel">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchInstanceName">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchInstancePinName">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchWireName">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchPinName">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchNote">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchText">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchPin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchNoteShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchShapeLine">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchShapeArc">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchShapeCircle">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchShapeEllipse">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchShapePolygon">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchShapeRectangle">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchWire">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchTable">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSchTemplateGroup">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymMarker">
+		<visible/>
+		<selectable/>
+	</ObjectType>
+	
+	<ObjectType name="seSymImage">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymInstance">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymNote">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymNoteShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymPin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymPinName">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShapeArc">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShapeCircle">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShapeEllipse">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShapeLine">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShapePolygon">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymShapeRectangle">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymSelectionShape">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="seSymTable">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="neNet">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="nePin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="neInstance">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+	
+	<ObjectType name="neInstancePin">
+		<visible/>
+		<selectable/>
+		<shown/>
+	</ObjectType>
+</synopsys_file>

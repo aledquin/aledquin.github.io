@@ -1,0 +1,5 @@
+{
+    "main::manual_tests__parse_severities": "HIGH",
+    "main::manual_tests__map_check_severities": "HIGH",
+    "main::helper_LOW": "LOW"
+}

@@ -1,0 +1,19 @@
+source proj.dat
+
+read_pininfo pininfo/dwc_ddrphy_txrxca_ew.csv
+
+read_netlist netlist_testbench/dwc_ddrphy_txrxca_ew_cc_typical_9M_2X_vh_1Ya_v_3Y_hvh_2Z.spf
+
+set macro dwc_ddrphy_txrxca_ew
+
+set_virtualPower -dc=1 -virtualPower Xdqaword/Xeven/VMEMP_gated
+
+#set_node -class=static Xdqaword/Xeven/dllclk_hb
+
+#list mosgroups
+list nodes -details
+#
+list mosgroups
+gen_noise_model
+report_coupling -nobrief
+

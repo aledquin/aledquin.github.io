@@ -1,0 +1,4 @@
+c126-ss10lpe-1.8v : /remote/cad-rep/projects/cmnblks/u104-cmnblks-ss10lpe-18/rel1.00/cad/project.env
+ss10lpe-18_13M_3Mx_6Dx_2Hx_2Bz_LB : /remote/cad-rep/proj/c126-ss10lpe-1.8v/rel1.1/cad/13M_3Mx_6Dx_2Hx_2Bz_LB/env.tcl
+ss10lpe-18_13M_3Mx_6Dx_2Hx_2Bz_LB : /remote/cad-rep/proj/c126-ss10lpe-1.8v/rel3.2/cad/13M_3Mx_6Dx_2Hx_2Bz_LB/env.tcl
+ss10lpe-18_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c123-ss10lpe-1.8v/rel2.6.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl

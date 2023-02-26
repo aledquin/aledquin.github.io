@@ -1,0 +1,12 @@
+SNPS_ERROR  : (PCSQA-2.1t us01) Combined chksum of PCS files (excluding .PCSQA_STATUS) (=39ba7008ebc1c8558c277b031446c8ce) is not the same as the one inside .PCSQA_STATUS file, PCSQA CHKSUM entry (=)
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/env.tcl
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path 16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/she.info
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path lib.defs
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path project.env
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path shared/env/env_common.tcl
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_RA.tcl
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R_totem.cfg
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path emir/map_ba_terminal_icv.sp
+SNPS_ERROR  : (PCSQA-2.1t us01) No chksum entry in cad/.PCSQA_STATUS for file path usage.txt
+SNPS_ERROR  : Checking PCS ddr54/d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 at site us01, host us01msemt228, has been failed with 11 errors

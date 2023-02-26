@@ -1,0 +1,389 @@
+#!/depot/perl-5.14.2/bin/perl
+#
+# Usage:
+#     git_find_duplicates [ gitTop ]
+#
+#     If you do not specify the gitTop path then it will default to looking
+#     in /u/$USERNAME/GitLab/ddr-hbm-phy-automation-team/
+#
+# Author: James Laderoute
+# Created: 3/20/2022
+#
+# Modifications:
+# 001   James Laderoute 3/20/2022
+#       created this script
+# 002   James Laderoute 4/1/2022
+#       Exclude __pycache__ folders
+# 003   James Laderoute 4/4/2022
+#       Now compare the dates of the two files and show which is older and
+#       which is newer plus the actual dates.
+#       Added -comma option; to separate the info by a comma. That way you
+#       can view it in Excel.
+# 004   James Laderoute 11/10/2022
+#       Fixed the logic related to symlinks vs -nosymlinks
+#-
+use strict;
+use warnings;
+
+use File::Find;
+use Digest::MD5 qw(md5);
+use Pod::Usage;
+use File::Basename ;  # for filename parsing
+use Cwd;              # for getpwuid
+use English;          # English names in place of punctuation variables
+use Getopt::Long;     # For command line parsing
+use Carp  qw(cluck confess croak );
+use FindBin qw( $RealBin $RealScript );
+
+use lib "$RealBin/../sharedlib/lib";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+#our $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $PROGRAM_NAME = $RealScript;
+our $VERSION      = '2022ww13';
+#--------------------------------------------------------------------#
+
+my $USERNAME = getlogin() || getpwuid($<) || $ENV{'USER'} ;
+my $HOME = "/u/${USERNAME}/";
+my @DIRS1 = ();
+my @DIRS2 = ();
+
+sub Main() {
+    my %opt_defaults = ( 'usage' => 1 , 'hidden'=> 0, 'exactonly'=>0,
+        'symlinks'=>0, 'comma' => 0 );
+    my @required = qw/REQUIRED_ARGUMENTS/;
+    my @filenames = ();
+    my @myoptions = ( 'comma!', 'exactonly!', 'debug:i', 'verbosity:i', 'usage!', 'hidden!', 'symlinks!', 'man', 'help' );
+    my %returned_options = ();
+    
+    my $error = script_process_cmd_line_args( 
+        \@myoptions, 
+        \%returned_options, 
+        \%opt_defaults, 
+        \@required, 
+        \@filenames
+        );
+    if ( exists($returned_options{'man'}) ){
+        pod2usage( {
+             -pathlist => "$RealBin",
+             -exitval => 0,
+             -verbose => 2 });
+    }
+    if ( $error ) {
+        exit( $error );
+    }
+    
+    if ( $returned_options{'usage'} ){
+        &utils__script_usage_statistics($PROGRAM_NAME, $VERSION);
+    }
+    my $dir1 = '';
+    my $n_filenames = @filenames;
+    if ( $n_filenames != 0 ) {
+        $dir1 = shift @filenames;
+        $dir1 = $dir1 . '/' if ( $dir1 !~ m/\/$/ );
+    }
+
+    if ( ! $dir1 ) {
+      $dir1 = "/u/$USERNAME/GitLab/ddr-hbm-phy-automation-team/"
+    }
+    print("TOP=$dir1\n");
+      
+    find(\&process_file_for_dir1, ( $dir1 ));
+
+    my %same;
+    my @fexcludes;
+    my @excludes = ( 'readme', '\.git', '\.log$', '\.results$', '\.out$'. '__pycache__');
+    if ( $returned_options{'hidden'} == 0 ) {
+        push(@fexcludes, '^\.');
+    }
+   
+    DIRS1_LOOP:
+    foreach my $file1_path ( @DIRS1 ) {
+
+        # Modification:004 ljames
+        unless ( $returned_options{'symlinks'} ) {
+            next DIRS1_LOOP if ( -l $file1_path) ;  # when we don't allow symlinks
+        }
+        # Modification:004 ljames
+        # do not compare folder names; -f returns TRUE for plain files and symlinks
+        unless ( -f $file1_path) {
+            next DIRS1_LOOP;
+        }
+
+        my $filename = &basename($file1_path);
+        my $skip=0;
+        foreach my $pattern ( @excludes ) {
+            $skip=1 if ( $file1_path =~m/$pattern/i );
+        }
+        foreach my $pattern ( @fexcludes ) {
+            $skip=1 if ( $filename =~ m/$pattern/i );
+        }
+        
+        next if ( $skip);
+        my $sep = ' ';
+        $sep = ',' if ( $returned_options{'comma'} ); 
+ 
+        if ( exists($same{"$filename"}) ) {
+            my $d1='';
+            my $d2='';
+            my $f1_is_older = isolder($file1_path, $same{"$filename"},
+                \$d1, \$d2); 
+            if ( is_exact_same_file( $file1_path, $same{"$filename"} ) ) {
+                print("SAMEFILE${sep}${filename}${sep}");
+            }else{
+                if ( $returned_options{'exactonly'} == 0 ) {
+                    print("sameName${sep}${filename}${sep}");
+                } else {
+                    next;
+                }
+            }
+
+            my $p1 = $file1_path;
+            my $p2 = $same{"$filename"};
+            my $isp1symlink = (-l $p1) ? '*' : '';
+            my $isp2symlink = (-l $p2) ? '*' : '';
+            $p1 =~ s/$dir1/TOP\//;
+            $p1 =~ s/$filename//;
+            $p2 =~ s/$dir1/TOP\//;
+            $p2 =~ s/$filename//;
+            my $f1_older = '';
+            my $f2_older = '';
+            if ( $f1_is_older == -1 ){
+                $f1_older = "${sep}older${sep}";
+                $f2_older = "${sep}newer${sep}";
+            }elsif ( $f1_is_older == 1 ){
+                $f2_older = "${sep}older${sep}";
+                $f1_older = "${sep}newer${sep}";
+            } else {
+                $f1_older = "${sep}same_age${sep}";
+                $f2_older = "${sep}same_age${sep}";
+            }
+
+            
+            print("${p1}${isp1symlink}${f1_older}${d1}${sep}${p2}${isp2symlink}${f2_older}${d2}\n");
+
+        } else {
+            $same{"$filename"} = $file1_path;
+        }
+    }
+
+
+
+    exit(0);
+}
+
+sub is_exact_same_file($$) {
+    my $f1 = shift;
+    my $f2 = shift;
+
+    return 0 if ( -d $f1 || -d $f2);
+
+    open(FH1, '<', $f1) || die "$f1 $!";
+    my $md5_ctx1 = Digest::MD5->new;
+    $md5_ctx1->addfile( *FH1);
+    my $v1 = $md5_ctx1->hexdigest;
+    close(FH1);
+
+    open(FH2, '<', $f2) || die;
+    my $md5_ctx2 = Digest::MD5->new;
+    $md5_ctx2->addfile( *FH2);
+    my $v2 = $md5_ctx2->hexdigest;
+    close(FH2);
+
+    return ( $v1 eq $v2 );
+}
+
+sub process_file_for_dir1 {
+    my $file_path = $File::Find::name;
+    push( @DIRS1, $file_path); # this is the full filepath
+}
+
+
+#------------------------------------------------------------------------------
+sub script_process_cmd_line_args($$$$$){
+    my $aref_args      = shift; # the options to be looked for
+    my $href_options   = shift; # what the user selected gets put in here
+    my $href_defaults  = shift; # if you did not specify a value then defaults
+    my $aref_required  = shift; # list of required arguments
+    my $aref_filenames = shift; # list of args not specified
+
+    my $get_status = GetOptions( $href_options, @$aref_args);
+    if ( ! $get_status || $href_options->{'help'} ){
+        pod2usage( {
+             -sections => "NAME|SYNOPSIS|DESCRIPTION|VERSION",
+             -pathlist => "$RealBin",
+             -exitval => 0,
+             -verbose => 99});
+        return(1);
+    }
+
+    foreach my $fname ( @ARGV ) {
+        push( @$aref_filenames , $fname);
+    }
+
+    #
+    # Make sure there are no missing REQUIRED arguments
+    #
+    my $have_required = 1;
+    foreach my $argname ( @{$aref_required} ){
+        next if $argname eq "REQUIRED_ARGUMENTS";
+        if (   ! exists($href_options->{"$argname"} ) 
+            || ! defined($href_options->{"$argname"} ) ){
+            $have_required = 0;
+            eprint( "Missing Required Argument -$argname\n" );
+        }
+    }
+    if ( ! $have_required ){
+        pod2usage( {
+             -sections => "NAME|SYNOPSIS|DESCRIPTION|VERSION",
+             -pathlist => "$RealBin",
+             -exitval => 2,
+             -verbose => 1});
+        return(2);
+    }
+
+    #
+    # Set defaults
+    #
+    if ( $href_defaults) {
+        foreach my $argname ( keys( %{$href_defaults} ) ){
+            if ( ! exists( $href_options->{"$argname"} ) ){
+                $href_options->{"$argname"} = $href_defaults->{"$argname"};
+            }
+        }
+    }
+
+   # VERBOSITY will be used to control the intensity level of 
+   #     messages reported to the user while running.
+   my $opt_verbosity = $href_options->{'verbosity'};
+   if( defined $opt_verbosity ){
+      if( $opt_verbosity =~ m/^\d+$/ ){  
+         $main::VERBOSITY = $opt_verbosity;
+      }else{
+         eprint( "Ignoring option '-v': arg must be an integer\n" );
+      }
+   }
+
+   # decide whether to alter DEBUG variable
+   # '--debug' indicates DEBUG value ... set based on user input
+   # Patrick : modified in order to specify a value >0 but <1
+   my $opt_debug = $href_options->{'debug'};
+   if( defined $opt_debug ){
+      if( $opt_debug =~ m/^\d+\.*\d*$/ ){
+         $main::DEBUG = $opt_debug;
+      }else{
+         eprint( "Ignoring option '-d': arg must be an integer\n" );
+      }
+   }
+
+   return(0); ## success is 0
+
+}
+
+use File::stat;
+sub isolder($$$$) {
+    my $f1 = shift;
+    my $f2 = shift;
+    my $ref_date1 = shift;
+    my $ref_date2 = shift;
+
+    my $t1 = stat($f1)->mtime; # seconds
+    my $t2 = stat($f2)->mtime; # seconds
+
+    $$ref_date1 = localtime( $t1 );
+    $$ref_date2 = localtime( $t2 );
+    
+    return -1 if ( $t1 < $t2 );
+    return 1  if ( $t1 > $t2);
+    return 0; # same timestamp
+}
+
+
+
+Main();
+
+
+__END__
+
+
+=head1 NAME
+
+ git_find_duplicates 
+
+=head1 VERSION
+
+ 2022ww13
+
+=head1 SYNOPSIS
+
+ git_find_duplicates [options] [toppath]
+
+ Options:
+   -comma          Use a ',' as the info separator in the output
+   -[no]exactonly  -exactonly means only show files that are exactly the same
+   -[no]hidden     -nohidden means do not show .XYZ hidden files
+   -[no]symlinks   Default is -nosymlinks; ignore or not ignore files that are
+                   symbolic links.
+   -help           brief help message
+   -man            full documentation
+
+ This script will find duplicate files under a given root directory. If no
+ root directory is given, then it will default to ~/GitLab/ddr*
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-comma>
+
+Separate the columns of info with a comma. So you can use Excel on the output.
+
+=item B<-[no]exactonly>
+
+Only show the files that are exactly the same (based on MD5 hash). Otherwise
+it will show exact and files that have the same name.
+
+=item B<-[no]hidden>
+
+You can tell this script to not show linux hidden files. That is; filenames
+that begin with a period.
+
+=item B<-[no]symlinks>
+
+Include symlinks in the process or not.  The default is -nosymlinks.
+
+=item B<-debug number>
+
+Set a debug level, in order to control debug messages.
+
+=item B<-verbose number>
+
+Set the verbosity level on messages.
+
+=item B<-help>
+
+Print a brief help message and exits.
+
+=item B<-man>
+
+Prints the manual page and exits.
+
+=back
+
+=head1 DESCRIPTION
+
+This script will find duplicate files under a given root directory. If no
+root directory is given, then it will default to ~/GitLab/ddr*
+
+=head1 RETURN VALUE
+
+Returns 0 if there are no warnings or errors
+Returns 1 if there are warnings or errors
+
+=cut

@@ -1,0 +1,5 @@
+LIBRARY    dcg30_czr.mw
+  REFERENCE    /slowfs/pv_scratch28/24x7/dcrt/spf_main_dcnt/xzchang/24disk_1/D20161213_3471304/Test/congestion_suite_setup/cong_suite/dc_cong_suite/MWLIBS/STD/apollo/STD_3wellSLVT7G_1.2V
+  REFERENCE    /slowfs/pv_scratch28/24x7/dcrt/spf_main_dcnt/xzchang/24disk_1/D20161213_3471304/Test/congestion_suite_setup/cong_suite/dc_cong_suite/MWLIBS/STD/apollo/STD_3wellLVT7G_1.2V
+  REFERENCE    /slowfs/pv_scratch28/24x7/dcrt/spf_main_dcnt/xzchang/24disk_1/D20161213_3471304/Test/congestion_suite_setup/cong_suite/dc_cong_suite/MWLIBS/STD/apollo/STD_3wellMVT7G_1.2V
+  REFERENCE    /slowfs/pv_scratch28/24x7/dcrt/spf_main_dcnt/xzchang/24disk_1/D20161213_3471304/Test/congestion_suite_setup/cong_suite/dc_cong_suite/MWLIBS/MACRO/apollo/MEMORY_LVT_1.2V

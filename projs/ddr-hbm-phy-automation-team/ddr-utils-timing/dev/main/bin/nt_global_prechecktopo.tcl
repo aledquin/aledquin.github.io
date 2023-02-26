@@ -1,0 +1,1 @@
+# nolint utils__script_usage_statistics

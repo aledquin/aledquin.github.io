@@ -1,0 +1,89 @@
+## list of settings for present release
+set rel "1.00a"
+set vcrel "1.00a"
+set ferel "0.75b"
+set layout_tag "Final Release (both ew and ns)"
+set p4_release_root "products/lpddr54/project/d890-lpddr54-tsmc5ff12"
+## for final release: 
+set releaseBranch "rel1.00_cktpcs_1.00a_rel_"
+set process "tsmc5ff-12"
+set metal_stack "12M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Z_SHDMIM"
+set metal_stack_ip "8M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_2Y"
+set metal_stack_cover "12M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Z_SHDMIM"
+## legal pin layers
+set layers "M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP"
+set layers_override(dwc_ddrphy_utility_blocks) "M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 OVERLAP"
+set layers_override(dwc_ddrphy_repeater_blocks) "M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 OVERLAP"
+set layers_override(dwc_ddrphycover_dwc_ddrphyse_top_ew) "M8 M9 M10 M11 M12 MTOP MTOP-1"
+set layers_override(dwc_ddrphycover_dwc_ddrphysec_top_ew) "M8 M9 M10 M11 M12 MTOP MTOP-1"
+set layers_override(dwc_ddrphycover_dwc_ddrphydiff_top_ew) "M8 M9 M10 M11 M12 MTOP MTOP-1"
+set layers_override(dwc_ddrphycover_dwc_ddrphymaster_top_ew) "M8 M9 M10 M11 M12 MTOP MTOP-1"
+## legal supply pin layers
+set supply_pins "M8"
+set supply_pins_override(dwc_ddrphy_lcdl_ew) "M4"
+set supply_pins_override(dwc_ddrphy_pclk_rx_ew) "M6"
+set supply_pins_override(dwc_ddrphy_techrevision_ew) "M6"
+set supply_pins_override(dwc_ddrphy_lcdl_ns) "M4"
+set supply_pins_override(dwc_ddrphy_pclk_rx_ns) "M6"
+set supply_pins_override(dwc_ddrphy_techrevision_ns) "M6"
+set supply_pins_override(dwc_ddrphy_repeater_blocks) "M11 M12 MTOP MTOP-1"
+set supply_pins_override(dwc_ddrphy_utility_blocks) "M11 M12 MTOP MTOP-1"
+set supply_pins_override(dwc_ddrphycover_dwc_ddrphyse_top_ew) "M8 M11 M12 MTOP MTOP-1"
+set supply_pins_override(dwc_ddrphycover_dwc_ddrphysec_top_ew) "M8 M11 M12 MTOP MTOP-1"
+set supply_pins_override(dwc_ddrphycover_dwc_ddrphydiff_top_ew) "M8 M11 M12 MTOP MTOP-1"
+set supply_pins_override(dwc_ddrphycover_dwc_ddrphymaster_top_ew) "M8 M11 M12 MTOP MTOP-1"
+## area override for L-shaped macro
+set area_override(dwc_ddrphy_clamp_master_corner) "OVERLAP"
+## list of cells to seed CTL directories
+set releaseCtlMacro {dwc_ddrphy_lcdl_ew dwc_ddrphy_pclk_master_ew dwc_ddrphy_pclk_rx_ew dwc_ddrphy_rxreplica_ew dwc_ddrphy_se_io_ew dwc_ddrphy_lcdl_ns dwc_ddrphy_pclk_master_ns dwc_ddrphy_pclk_rx_ns dwc_ddrphy_rxreplica_ns dwc_ddrphy_se_io_ns}
+## list of timing releases (other than non-lvf)
+set timing_libs {lvf}
+## reference GDS files for DI
+#set reference_gds(dwc_ddrphy_sec_io) {dwc_ddrphy_sec_io_IntLoadFill.gds.gz dwc_ddrphy_sec_io_InternalLoad.gds.gz}
+## days since release files were created, for pin check/timing collateral validation
+set reference_date_time "14 days ago"
+## release GDS/CDL, default 'calibre'
+##  allows using 'icv' GDS/CDL files for release, **only** applies to TSMC N7 where Calibre is waived
+##  allows using 'HIPRE' GDS/CDL files from GenHiprePkg
+set release_gds_cdl "HIPRE"
+## release GDS of shim macros, default 'drcint'
+#set release_gds_shim "drcint"
+## version for LEF comparison
+#set lef_diff_rel "1.00a_pre1"
+## cells to prune from CDL
+set cdl_prune_cells "cvcp* cvpp* vflag*"
+## macros that are PHYV only and can have autogen Verilog/LIB files
+set releasePhyvMacro {dwc_ddrphy_decapvaa_vdd2_ns dwc_ddrphy_decapvaa_vdd2_ew dwc_ddrphy_techrevision_ew dwc_ddrphy_techrevision_ns dwc_ddrphy_thermdiode dwc_ddrphy_decapvaa_vdd2_ns_mns dwc_ddrphy_decapvaa_vdd2_ew_mns dwc_ddrphy_vdd2clamp_4x1_ns dwc_ddrphy_vddqclamp_4x1_ns}
+## macros that are only shims, only LEF/GDS
+set releaseShimMacro {dwc_ddrphy_se_io_ew_overlay dwc_ddrphydiff_top_ew_gradient dwc_ddrphymaster_top_ew_gradient dwc_ddrphysec_top_ew_gradient dwc_ddrphyse_top_ew_gradient dwc_ddrphy_se_io_ns_overlay dwc_ddrphydiff_top_ns_gradient dwc_ddrphymaster_top_ns_gradient dwc_ddrphysec_top_ns_gradient dwc_ddrphyse_top_ns_gradient}
+## macros to ignore for CKT release to DI
+#set releaseIgnoreMacro {dwc_ddrphy_rxac_ns dwc_ddrphy_rxdq_ns dwc_ddrphy_rxdqs_ns dwc_ddrphy_txfe_ns dwc_ddrphy_txfedqs_ns dwc_ddrphy_txbe_ns dwc_ddrphy_bdl dwc_ddrphy_dqsenreplica_ns}
+## content of Repeatr library macro for CKT release to customer
+set repeater_name {dwc_ddrphy_repeater_blocks dwc_ddrphy_repeater_cells} 
+#_cells
+set releaseMacro{dwc_ddrphy_repeater_cells} {dwc_ddrphy_rpt1ch_cell_ns dwc_ddrphy_rpt2ch_cell_ns dwc_ddrphy_rpt1ch_cell_ew dwc_ddrphy_rpt2ch_cell_ew}
+#_blocks
+set releaseMacro{dwc_ddrphy_repeater_blocks} {dwc_ddrphy_rpt1ch_ns dwc_ddrphy_rpt2ch_ns dwc_ddrphy_rpt1ch_ew dwc_ddrphy_rpt2ch_ew}
+## contents of UTILITY library macro for CKT release to customer
+set utility_name {dwc_ddrphy_utility_blocks dwc_ddrphy_utility_cells}
+#_cells
+set releaseMacro{dwc_ddrphy_utility_cells} {dwc_ddrphy_decapvdd2_1by4x1_cell_ns dwc_ddrphy_decapvdd2_1x1_cell_ns dwc_ddrphy_decapvdd2_4x1_cell_ns dwc_ddrphy_decapvdd_1by4x1_cell_ns dwc_ddrphy_decapvdd_1x1_cell_ns dwc_ddrphy_decapvdd_4x1_cell_ns dwc_ddrphy_decapvddhd_1by4x1_cell_ns dwc_ddrphy_decapvddhd_1x1_cell_ns dwc_ddrphy_decapvddhd_4x1_cell_ns dwc_ddrphy_decapvddq_1by4x1_cell_ns dwc_ddrphy_decapvddq_1x1_cell_ns dwc_ddrphy_decapvddq_4x1_cell_ns dwc_ddrphy_decapvddqhd_1by4x1_cell_ns dwc_ddrphy_decapvddqhd_1x1_cell_ns dwc_ddrphy_decapvddqhd_4x1_cell_ns dwc_ddrphy_endcell_cell_ns dwc_ddrphy_decapvdd2_1by4x1_cell_ew dwc_ddrphy_decapvdd2_1x1_cell_ew dwc_ddrphy_decapvdd2_4x1_cell_ew dwc_ddrphy_decapvdd_1by4x1_cell_ew dwc_ddrphy_decapvdd_1x1_cell_ew dwc_ddrphy_decapvdd_4x1_cell_ew dwc_ddrphy_decapvddhd_1by4x1_cell_ew dwc_ddrphy_decapvddhd_1x1_cell_ew dwc_ddrphy_decapvddhd_4x1_cell_ew dwc_ddrphy_decapvddq_1by4x1_cell_ew dwc_ddrphy_decapvddq_1x1_cell_ew dwc_ddrphy_decapvddq_4x1_cell_ew dwc_ddrphy_decapvddqhd_1by4x1_cell_ew dwc_ddrphy_decapvddqhd_1x1_cell_ew dwc_ddrphy_decapvddqhd_4x1_cell_ew dwc_ddrphy_endcell_cell_ew} 
+#_blocks
+set releaseMacro{dwc_ddrphy_utility_blocks} {dwc_ddrphy_decapvddq_1by4x1_ns dwc_ddrphy_decapvddq_1x1_ns dwc_ddrphy_decapvddq_4x1_ns dwc_ddrphy_decapvdd_1by4x1_ns dwc_ddrphy_decapvdd_1x1_ns dwc_ddrphy_decapvdd_4x1_ns dwc_ddrphy_decapvddqhd_1by4x1_ns dwc_ddrphy_decapvddqhd_1x1_ns dwc_ddrphy_decapvddqhd_4x1_ns dwc_ddrphy_decapvddhd_1by4x1_ns dwc_ddrphy_decapvddhd_1x1_ns dwc_ddrphy_decapvddhd_4x1_ns dwc_ddrphy_endcell_ns dwc_ddrphy_clamp_dbyte13_ns dwc_ddrphy_clamp_dbyte12_ns dwc_ddrphy_clamp_dbyte11_ns dwc_ddrphy_clamp_dbyte10_ns dwc_ddrphy_clamp_ac2r_ns dwc_ddrphy_clamp_ac1r_ns dwc_ddrphy_clamp_master_ns dwc_ddrphy_vaaclamp_master_ns dwc_ddrphy_decap_ac2r_ns dwc_ddrphy_decap_ac1r_ns dwc_ddrphy_decap_master_ns dwc_ddrphy_decapvddq_1by4x1_ew dwc_ddrphy_decapvddq_1x1_ew dwc_ddrphy_decapvddq_4x1_ew dwc_ddrphy_decapvdd_1by4x1_ew dwc_ddrphy_decapvdd_1x1_ew dwc_ddrphy_decapvdd_4x1_ew dwc_ddrphy_decapvddqhd_1by4x1_ew dwc_ddrphy_decapvddqhd_1x1_ew dwc_ddrphy_decapvddqhd_4x1_ew dwc_ddrphy_decapvddhd_1by4x1_ew dwc_ddrphy_decapvddhd_1x1_ew dwc_ddrphy_decapvddhd_4x1_ew dwc_ddrphy_endcell_ew dwc_ddrphy_clamp_dbyte13_ew dwc_ddrphy_clamp_dbyte12_ew dwc_ddrphy_clamp_dbyte11_ew dwc_ddrphy_clamp_dbyte10_ew dwc_ddrphy_clamp_ac2r_ew dwc_ddrphy_clamp_ac1r_ew dwc_ddrphy_clamp_master_ew dwc_ddrphy_vaaclamp_master_ew dwc_ddrphy_decap_ac2r_ew dwc_ddrphy_decap_ac1r_ew dwc_ddrphy_decap_master_ew dwc_ddrphy_shimcell_ns dwc_ddrphy_shimcell_clamp_ns dwc_ddrphy_shimcell_decap_ns dwc_ddrphy_shimcell_decapvdd_ns dwc_ddrphy_shimcell_decapvddq_ns dwc_ddrphy_shimcell_master_top_ns dwc_ddrphy_clamp_master_corner}
+## DEF
+set releaseDefMacro {dwc_ddrphy_testbenches/dwc_ddrphydiff_top_ew dwc_ddrphy_testbenches/dwc_ddrphymaster_top_ew dwc_ddrphy_testbenches/dwc_ddrphysec_top_ew dwc_ddrphy_testbenches/dwc_ddrphyse_top_ew dwc_ddrphy_testbenches/dwc_ddrphydiff_top_ns dwc_ddrphy_testbenches/dwc_ddrphymaster_top_ns dwc_ddrphy_testbenches/dwc_ddrphysec_top_ns dwc_ddrphy_testbenches/dwc_ddrphyse_top_ns}
+## TC
+#set releaseTCMacro {dwc_ddrphy_vdd2clamp_4x1_ns dwc_ddrphy_vddqclamp_4x1_ns}
+## layers to tag in UTILITY library macro for CKT release to customer
+##  Note -tsmc read from 'process' variable, so not necessary for TSMC processes unless needing extra layers
+set utility_tag_layers "63:63 6:0"
+## email list for CKT release to DI
+#set releaseMailDist "golnar,mladd,gowan,deepakgs,vilas,sivaku,bapna,chetana,ddr_di@synopsys.com,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-ckt-d850-rel2@synopsys.com"
+## email list for CKT release of HSPICE, IBIS, and UTILITY release
+#set releasePmMailDist "golnar,mladd,gowan,deepakgs,vilas,sivaku,bapna,chetana,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-ckt-d850-rel2@synopsys.com"
+set releaseMailDist "golnar,mladd,gowan,hghonie,eltoukhy,fayez,ddr_di@synopsys.com,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-ckt-d850-rel2@synopsys.com"
+## email list for CKT release of HSPICE, IBIS, and UTILITY release
+set releasePmMailDist "golnar,mladd,gowan,hghonie,eltoukhy,fayez,,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-ckt-d850-rel2@synopsys.com"
+## email list for TC release
+#set releaseTCMailDist "golnar,mladd,gowan,hghonie,eltoukhy,fayez,sg-ddr-ckt-release@synopsys.com,davies"
+set calibre_verifs "true"

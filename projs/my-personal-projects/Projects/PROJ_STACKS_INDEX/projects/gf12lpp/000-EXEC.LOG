@@ -1,0 +1,186 @@
+z00000-adc-sar-12b5m-gf12lpp-18.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+z3639-adc-sar-12b5m-gf12lpp-18.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n114-c10-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+n514-c10-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+u134-cmnblks-gf12lpp-18.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0130-mem-gf12lpp-gf12nug41p11sadcl02ms.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0130-mem-gf12lpp-schematic.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0130-mem-gf12lpp-gf12nug42p11sadrl128s.txt
+INFO: "em" "em" "m0130-mem-gf12lpp-gf12nug41p11sadcl02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g244-c10-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+x704-ssp-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.0
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+l146-std-gf12lpp-1.8v.txt
+INFO: gf12lpp 18 rel2.6.0
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB_MIM : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB_MIM/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+z00000-tchip-gf12lpp-18.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t997-training-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x704-usb2-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+x704-usb3-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.0
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+d728-hbm2e-gf12lpp18.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d807-ddr54-gf12lpp18.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+d586-lpddr4xm-gf12lpp18.txt
+INFO: gf12lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x330-e32-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.0
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+d887-lpddr54-gf12lpp18.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w280-nvm-otp-sx-gf12lpp-1.8v.txt
+INFO: gf12lpp 18 rel2.4.0
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.4.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.4.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.4.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.4.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+w313-nvm-otp-sx-gf12lpp-1.8v.txt
+INFO: gf12lpp 18 rel2.6.0
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB_MIM : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/11M_3Mx_4Cx_2Kx_2Gx_LB_MIM/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.6.0/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+x584-e112-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.3
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+n407-c20-gf12lpp-18-ns.txt
+INFO: c20 c20 n407-c20-gf12lpp-18-ns
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x224-xsr-gf12lpp-18-ns.txt
+INFO: gf12lpp 18 rel2.3.2
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.2/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl
+h103-hbi-x24_aib-gf12lpp-ns.txt
+INFO: gf12lpp 18 rel2.3.3
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_11M_3Mx_4Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/11M_3Mx_4Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/13M_3Mx_2Cx_4Kx_2Hx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_2Cx_2Kx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/9M_3Mx_2Cx_2Kx_2Gx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf12lpp-18_9M_3Mx_4Cx_2Gx_LB : /remote/cad-rep/proj/c146-gf12lpp-1.8v/rel2.3.3/cad/9M_3Mx_4Cx_2Gx_LB/env.tcl

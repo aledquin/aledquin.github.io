@@ -1,0 +1,392 @@
+z00000-adc-sar-gen4-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel6.3.0
+INFO: DONE
+
+z3641-adc-sar-12b5m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-adc-sar-gen4p5-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.12.0
+INFO: DONE
+
+z00000-adc-sar-8b28g-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel6.3.0
+INFO: DONE
+
+z34891-adc-iq-12b80m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z34991-adc-iq-12b160m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z34993-adc-iq-12b320m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.12.0
+INFO: DONE
+
+z34890-adc-12b80m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z34990-adc-12b160m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-adc-pipesar-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-adc-sar-12b-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.13.0
+INFO: DONE
+
+z3637-adc-sar-12b5m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z3647-adc-sar-12b5m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.2
+INFO: DONE
+
+n505-dpalt-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.15.0
+INFO: DONE
+
+n105-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.15.0
+INFO: DONE
+
+n108-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.1.1
+INFO: DONE
+
+n508-dpalt-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel6.2.0
+INFO: DONE
+
+n301-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel6.5.0
+INFO: DONE
+
+n551-dptx-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n553-dpalt-c10-tsmc16ffc-18-ns.txt
+INFO: c10 c10 n551-dptx-c10-tsmc16ffc-18-ns
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n113-c10-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.8.1
+INFO: DONE
+
+u106-cmnblks-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.1
+INFO: DONE
+
+z8562-dac-iq-12b640m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.10.0
+INFO: DONE
+
+z8631-dac-12b20m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.3.0
+INFO: DONE
+
+z00000-dac-iq-12b640m-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.9.2
+INFO: DONE
+
+z00000-dac-gsps-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-dac-12b1g-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.10.0
+INFO: DONE
+
+e312-hdmi-mhl-txphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.4.1
+INFO: DONE
+
+e702-hdmi21-rxphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.16.0
+INFO: DONE
+
+e317-hdmi-txphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e601-hdmi21-txphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.1.1
+INFO: DONE
+
+d525-d5m_sstl-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel6.1.0
+INFO: DONE
+
+g129-dphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.15.1
+INFO: DONE
+
+g219-mphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g134-dphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.1.0
+INFO: DONE
+
+g240-mphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.15.1
+INFO: DONE
+
+g301-dphy-cphy-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.9.2
+INFO: DONE
+
+z19606-pll-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.8.0
+INFO: DONE
+
+x650-ssp-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.16.0
+INFO: DONE
+
+x695-ssp-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.6.0
+INFO: DONE
+
+l227-std-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.10.0
+INFO: DONE
+
+z00000-tchip-tdcs32B-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.3.0
+INFO: DONE
+
+z00000-tchip-tdcs32B_SiVi-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel6.3.0
+INFO: DONE
+
+z00000-tchip-gold-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-tchip-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t666-training-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t333-training-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel3.3.3_18_06_01_1
+INFO: DONE
+
+t111-training-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.9.2
+INFO: DONE
+
+t123-training-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18_training rel1.0.0_22_05_17_3
+INFO: DONE
+
+t321-training-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18_training 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t112-training-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.17.0
+INFO: DONE
+
+x321-training_e32-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.9.2
+INFO: DONE
+
+x583-training_e112-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.17.0
+INFO: DONE
+
+x650-usb2-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.16.0
+INFO: DONE
+
+x714-usb2-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x650-usb3-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x650-usbc3-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.16.0
+INFO: DONE
+
+d511-ddr43-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel7.1.0
+INFO: DONE
+
+d521-ddr43-tsmc16ffc18.txt
+INFO: common common c227-tsmc16ffc-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x044-e16-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.15.1
+INFO: DONE
+
+p005-emclk-tsmc16ffc-1.8.txt
+INFO: CCS CCS "c227-tsmc16ffc-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d531-lpddr4mv2-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel7.1.0
+INFO: DONE
+
+d581-lpddr4mv2-tsmc16ffc18.txt
+INFO: common common c227-tsmc16ffc-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d721-hbm2-tsmc16ffc18.txt
+INFO: common common c227-tsmc16ffc-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l227-tio-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18" "rel4.4"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l001-tio-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18" "rel4.5"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l002-tio-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18" "rel4.5"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y200-emmc-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x080-e28-tsmc16ffc-18-ns.txt
+INFO: CCS CCS to
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x082-e25-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.12.0
+INFO: DONE
+
+x090-e25-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d801-ddr54-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel7.12.0
+INFO: DONE
+
+d551-lpddr4xm-tsmc16ffc18.txt
+INFO: common common c227-tsmc16ffc-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d552-lpddr4xm-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d591-lpddr4xm-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d571-lpddr4xm-tsmc16ffc18.txt
+INFO: common common c227-tsmc16ffc-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d541-lpddr4xm-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel7.6.0
+INFO: DONE
+
+d541-lpddr4xm-HD-ST-G2020-sow1832-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d553-lpddr4xm-ap1-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel7.13.0
+INFO: DONE
+
+x321-e32-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.16.0
+INFO: DONE
+
+o105-diffbuf-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+o695-diffbuf-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.6.0
+INFO: DONE
+
+x561-e56ec-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18_iPDK rel8.0.0
+INFO: DONE
+
+x561-e56-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18_iPDK rel8.0.0
+INFO: DONE
+
+d851-lpddr54-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 rel7.17.0
+INFO: DONE
+
+d871-lpddr54-tsmc16ffc18.txt
+INFO: tsmc16ffc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w154-nvm-otp-xpm-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.14.0
+INFO: DONE
+
+w001-nvm-otp-commonLibs-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.10.0
+INFO: DONE
+
+w155-nvm-otp-shfg2-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.16.0
+INFO: DONE
+
+w256-nvm-otp-ops-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.10.0
+INFO: DONE
+
+w267-nvm-otp-sx-tsmc16ffc-1.8v.txt
+INFO: tsmc16ffc 18 rel7.10.0
+INFO: DONE
+
+n413-c20-tsmc16ffc-18-ns.txt
+INFO: tsmc16ffc 18 rel7.9.2
+INFO: DONE
+
+t240-pcs_enbl-tsmc16ffc-18.txt
+INFO: mipi mipi g240-mphy-tsmc16ffc-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+s001-pms-5040pd-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.2
+INFO: DONE
+
+s001-pms-5030vm-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.2
+INFO: DONE
+
+s001-pms-5029ts-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.2
+INFO: DONE
+
+s001-pms-5060pvtc-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.2
+INFO: DONE
+
+s001-pms-5029td-tsmc16ffc-18.txt
+INFO: tsmc16ffc 18 rel7.14.2
+INFO: DONE
+

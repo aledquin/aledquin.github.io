@@ -1,0 +1,8 @@
+Please see confluence page for a list of jira stories that we resolved in
+this July 2022 release.
+
+https://jiradocs.internal.synopsys.com/display/SG/ddr-ckt-rel
+
+Conductor: James Laderoute
+
+

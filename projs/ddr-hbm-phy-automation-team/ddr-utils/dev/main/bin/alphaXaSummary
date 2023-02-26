@@ -1,0 +1,309 @@
+#!/depot/perl-5.14.2/bin/perl -w
+#!/depot/perl-5.8.0/bin/perl
+###############################################################################
+#
+# Name    : alphaXaSummary
+# Author  : John Sheridan Fisher
+# Date    : 2015-03-05
+# Purpose : N/A
+#
+# Modification History
+#             2022-05-26 12:38:49 => Adding Perl template. HSW.
+#            2017-09-05          => Maintainance by JSF.
+#             2015-03-05          => Created by John Sheridan Fisher, 
+###############################################################################
+# use warnings; #Remove this because of too much refactoring
+# nolint TestingAndDebugging::RequireUseWarnings
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use Data::Dumper;
+use File::Copy;
+use Getopt::Std;
+use Getopt::Long;
+use File::Basename qw( dirname );
+use File::Spec::Functions qw( catfile );
+use Cwd qw( abs_path getcwd );
+use Carp qw( cluck confess croak );
+use FindBin qw( $RealBin $RealScript );
+
+use lib "$RealBin/../lib/perl/";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $PREFIX       = "ddr-utils";
+our $PROGRAM_NAME = $RealScript;
+our $LOGFILENAME  = getcwd() . "/$PROGRAM_NAME.log";
+our $VERSION      = get_release_version();
+#--------------------------------------------------------------------#
+
+BEGIN {
+    our $AUTHOR = 'jfisher';
+    #$STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+    $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+    header();
+}
+
+END {
+    footer();
+    write_stdout_log( $LOGFILENAME );
+    utils__script_usage_statistics( "$PREFIX-$PROGRAM_NAME", $VERSION );
+}
+
+use Capture::Tiny qw/capture/;
+use File::Basename qw(dirname basename);
+use FindBin qw($RealBin $RealScript);
+
+
+## script defaults
+my %headerNames;
+$headerNames{'vmax'} = 'IRDrop(mV)';
+$headerNames{'acpc'} = 'I/Imax';
+$headerNames{'iavg'} = 'I/Imax';
+$headerNames{'irms'} = 'I/Imax';
+$headerNames{'layer'} = 'Layer';
+$headerNames{'node'} = 'Node name';
+
+#-----------------------------------------------------------
+## script usage message
+#-----------------------------------------------------------
+sub usage {
+    print << "EOP" ;
+Description
+  A script to summarize each XA xa-<net>_<meas>.ascii report file into a xa-<net>_<meas>.summary 
+    summary file, listing the (single) largest IRDrop or I/Imax at each layer
+
+Assumptions:
+- The first non-blank line is the header
+- The line after the header is reserved for units only (i.e. (<unit>) fields) or is blank
+- Every file header contains '$headerNames{'layer'}'
+- Every acpc file header contains '$headerNames{'acpc'}'
+- Every iavg file header contains '$headerNames{'iavg'}'
+- Every irms file header contains '$headerNames{'irms'}'
+- Every vmax file header contains '$headerNames{'vmax'}'
+
+USAGE : $PROGRAM_NAME [options] inputFiles
+
+command line options:
+-help             print this screen
+
+EOP
+exit ;
+}
+
+#-----------------------------------------------------------
+sub Main(){
+    return();
+}
+
+## get specified args
+my($success, $help);
+$success = GetOptions("help!"             => \$help,
+                      );
+
+## quit with usage message, if usage not satisfied
+&usage if ($success != 1);
+&usage if ($#ARGV < 0);
+&usage if $help;
+
+## local variables
+my($inputFile, $outputFile, $fileType, $meas_index, $layer_index, $node_index, $headerLine, $headerFound);
+my(@fields, $field_count, $net, $node, $value, $line, $index, $invalidHeaders);
+my(%meas_maxs, %meas_lines);
+
+## Welcome message
+my $cmdline =  qx/ps -o args $$/;
+print "$cmdline";
+print "\n$PROGRAM_NAME will attempt to create summary IRDrop or I/Imax (per layer) file(s) from XA voltage ASCII file(s).\n\n";
+
+## loop through each input file
+foreach my $inputFile (@ARGV){
+    ## check filename is expected
+    if(basename($inputFile) =~ /^(xa|output)\-[\w\_\@]+\_(vmax|iavg|irms|acpc)\.ascii(\_\d+)?$/){
+    ## store measurement to error trap header
+    $fileType = $2;
+
+    ## open input file
+    open(my $IFH, '<', $inputFile) || die "I/O ERROR: Failed to open file $inputFile: $!\n"; # nolint open<
+    print "  Reading $inputFile input file...\n";
+
+    ## reset file variables
+    undef $meas_index;
+    undef $layer_index;
+    undef $node_index;
+    undef $headerFound;
+    undef $headerLine;
+    undef $invalidHeaders;
+    undef %meas_maxs;
+    undef %meas_lines;
+    $net = 'unknown';
+
+    ## find the header
+    while(!defined $headerFound){
+        ## read possible header line into $_
+        $_ = <$IFH>;
+        ## trim comments
+        ## ignore blank lines (or comment lines)
+        if(/^\s*$/){
+        }
+        else{
+        ## store header
+        $headerLine = $_;
+        ## first non-blank/non-comment line assumed to be header 
+        $headerFound = 1;
+        ## handle problematic spacees in header fields...
+        s/EM\sLength/EM_Length/i;
+        s/Pulse\sWidth/Pulse_Width/i;
+        s/Signal\sPeriod/Signal_Period/i;
+        s/Node\sname/Node_name/i;
+        s/dT\sJoule/dT_Joule/i;
+        ## get rid of space before and after line
+        s/^\s*(\S.*\S)\s*$/$1/;
+        ## split line into fields
+        @fields = split '\s+',$_;
+        ## count fields
+        $field_count = $#fields;
+        ## find meas/layer indicies
+        for($index = 0; $index <= $#fields; $index++){
+            ## identify meas index
+            if($fields[$index] eq $headerNames{$fileType}){
+            ## error trap duplicate definitions
+            if(defined $meas_index){
+                print "\nWARNING: header field $headerNames{$fileType} defined twice at columns $meas_index and $index. Ignoring redefintion...\n\n";
+            }
+            else{
+                $meas_index = $index;
+            }
+            }
+            ## identify layer index
+            elsif($fields[$index] eq $headerNames{'layer'}){
+            ## error trap duplicate definitions
+            if(defined $layer_index){
+                print "\nWARNING: header field $headerNames{'layer'} defined twice at columns $layer_index and $index. Ignoring redefinition...\n\n";
+            }
+            else{
+                $layer_index = $index;
+            }
+            }
+            elsif($fields[$index] eq $headerNames{'node'}){
+            ## error trap duplicate definitions
+            if(defined $node_index){
+                print "\nWARNING: header field $headerNames{'node'} defined twice at columns $node_index and $index. Ignoring redefinition...\n\n";
+            }
+            else{
+                $node_index = $index;
+            }
+            }
+        } ## end  for($index = 0; $index <= $#fields; $index++){
+        } ## end else  if(/^\s*$/){
+    } ## end while(!defined $headerFound){
+
+    ## error trap that header contained meas and layer
+    if((defined $meas_index) && (defined $layer_index)){
+        ## grab second header
+        $_ = <$IFH>;
+        ## get rid of space before and after line
+        s/^\s*(\S.*\S)\s*$/$1/;
+        ## split line into fields
+        @fields = split '\s+',$_;
+        ## validate second header fields
+        foreach my $field (@fields){
+            if(!($field =~ /\(.*\)/)){
+                $invalidHeaders++;
+            }
+        }
+
+        ## if headers are valid, proceed
+        if(!defined $invalidHeaders){
+        ## read each input fileline
+        while(<$IFH>){
+            ## trim comments
+            ## ignore comments or blank lines
+            if(/^\s*$/){
+            }
+            ## identify net being processed
+            elsif(/^\s*processing\snet\s*\:\s*(\S+)\s*$/i){
+            $net = $1;
+            }
+            ## hopefully everything else is data
+            else{
+            ## get rid of space before and after line
+            s/^\s*(\S.*\S)\s*$/$1/;
+            ## trim Area value's ' um '
+            s/(\d+) (um)/$1$2/;
+            ## grad fields
+            @fields = split '\s+',$_;
+            ## check field count
+            if($#fields == $field_count){
+                ## seed meas-by-layer
+                if(!exists $meas_maxs{$fields[$layer_index]}){
+                $meas_maxs{$fields[$layer_index]} = -1e-15;
+                }
+                ## if line value is largest for layer, record it and full line
+                if($fields[$meas_index] > $meas_maxs{$fields[$layer_index]}){
+                $meas_maxs{$fields[$layer_index]} = $fields[$meas_index];
+                $meas_lines{$fields[$layer_index]} = $_;
+                }
+                ## check vmax node name
+                if( ($fileType eq 'vmax') && (defined $node_index) && (!($fields[$node_index] =~ /^$net[\:\_]\w?\d+$|^$net$|^ld_x\d+\:gate$|^ld_x\d+\:g$|^[\w\<\>\.]+\:gate$|^[\w\<\>\.]+\:g$|^[\w\<\>\.]+\:drain|^[\w\<\>\.]+\:d|^[\w\<\>\.]+\:source|^[\w\<\>\.]+\:s|^[\w\<\>\.]+\:bulk|^[\w\<\>\.]+\:b|^[\w\<\>\.]+\:plus|^[\w\<\>\.]+\:minus/i)) ){
+                print "WARNING: node name is expected to be <net>:<#>, <net>:<f#>, <net>_<#>, <net>, <inst>:<port> where net is $net, but was $fields[$node_index]\n";
+                }
+            }
+
+            ##error trap wrong number of fields on a row
+            else{
+                print "\nWARNING: Input file $inputFile:$. line has ".($#fields+1)." fields, while header line had ".($field_count+1)." fields\n$_  Ignoring line.\n\n";
+            }
+            } ## end else  if(/^\s*$/)
+        } ## end while(<$IFH>)
+      close(IFH);
+
+        ## create output file name
+        $outputFile = $inputFile;
+        $outputFile =~ s/\.ascii(\_\d+)?$/\.summary/;
+        if(defined $1){
+            $outputFile .= $1;
+        }
+
+        ## open output file
+        open(my $OFH, '>', $outputFile) || die "I/O ERROR: Failed to open file $outputFile: $!\n";  # nolint open>
+        print "    Writing $outputFile output file...\n";
+
+        ## write summary file
+        print OFH $headerLine;
+        ##  loop through nets
+
+        ## loop through ordered layers
+        foreach my $layer (sort { $meas_maxs{$b} <=> $meas_maxs{$a} } keys %meas_maxs){
+            print OFH "$meas_lines{$layer}\n";
+        }
+
+        ## close output file
+        close(OFH);
+        print "    Finished writing $outputFile output file.\n";
+        } ## end if(!defined $invalidHeaders){
+        else{
+        print "\nWARNING: The sub-header from input file $inputFile:$. must only have '(<unit>)' fields\n$_  Skipping.\n\n";
+        }
+    } ## end  if((!defined $meas_index) || (!defined $layer_index)){
+    else{
+        print "\nWARNING: The header from input file $inputFile:$. must have both '$headerNames{$fileType}' and '$headerNames{'layer'}' fields\n$headerLine  Skipping.\n\n";
+    }
+    ## close input file
+    } ## end  if($inputFile =~ /^xa\-\w+\_(vmax|iavg|irms|acpc)\.ascii(\_\d+)?$/){
+    ## skip unexpectd files
+    else{
+    print "\nWARNING: The $inputFile input file is not named xa-<net>_(vmax|iavg|irms).ascii as expected.  Skipping.\n\n";
+    }    
+} 
+
+
+## All done
+print "\nAll done\n";
+
+exit 0;

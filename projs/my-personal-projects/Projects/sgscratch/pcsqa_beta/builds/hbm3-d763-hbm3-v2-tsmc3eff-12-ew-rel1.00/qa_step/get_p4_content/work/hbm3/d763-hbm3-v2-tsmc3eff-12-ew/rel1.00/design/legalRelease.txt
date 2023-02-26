@@ -1,0 +1,25 @@
+## list of settings for present release
+set rel "1.00a_pre1"
+set vcrel "1.00a"
+set layout_tag "initial release"
+set p4_release_root "products/hbm3_v2/project/d763-hbm3-v2-tsmc3eff12"
+set int_ext "internal_releases"
+set foundry "tsmc"
+set process "tsmc3eff-12"
+set releasePhyvMacro { dwc_hbmphy_decapvddq_ew dwc_hbmphy_tiehigh dwc_hbmphy_vddqclampaw_ew dwc_hbmphy_vddclamp_ew dwc_hbmphy_vddqclamp_ew }
+set reference_date_time "14 days ago"
+set metal_stack "15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z"
+set metal_stack_ip "10M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_3Y_hvh"
+set layers "M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 OVERLAP"
+set supply_pins "M10"
+set supply_pins_override(dwc_hbmphy_lcdl_ew) "M4"
+set releaseMailDist "preetig,pradeet,mccready,srhobbs,ktummal,atohidi,octavian,yalaka,baanu,parziale,dickson,narasimh,rinshar,hbm_di@synopsys.com,sg-ddr-ckt-release@synopsys.com,ddrphy_d763_hbm3_v2_tsmc3eff12_l3@synopsys.com"
+set releasePmMailDist "preetig,pradeet,mccready,srhobbs,ktummal,atohidi,octavian,yalaka,baanu,parziale,dickson,narasimh,rinshar,hbm_di@synopsys.com,sg-ddr-ckt-release@synopsys.com,ddrphy_d763_hbm3_v2_tsmc3eff12_l3@synopsys.com"
+set release_gds_cdl "HIPRE"
+set cdl_prune_cells "vflag* "
+set timing_libs {lvf}
+set releaseBranch "rel1.00_rel_"
+set utility_tag_layers "63:63 6:0"
+set utility_name {dwc_hbmphy_utility_cells}
+set releaseMacro{dwc_hbmphy_utility_cells} {dwc_hbmphy_decapvddq_ew}
+set releaseShimMacro {dword_overlay_R_ew dword_overlay_L_ew dwc_hbmphy_midstack_ew_overlay aword_overlay_ew}

@@ -1,0 +1,6 @@
+Site locations
+Alternate design sites
+Site
+US01
+Disk Path
+/remote/us01sgnfs00051

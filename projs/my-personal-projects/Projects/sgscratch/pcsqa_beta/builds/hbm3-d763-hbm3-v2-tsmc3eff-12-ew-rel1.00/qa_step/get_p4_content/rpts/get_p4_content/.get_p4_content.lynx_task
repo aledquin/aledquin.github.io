@@ -1,0 +1,13 @@
+flow_order|1000000
+Host|snpsemt1tb10
+Tool|tcl
+Version|8.6.6
+Cores|1
+Wall Time|25
+CPU Time|NA
+CPU Efficiency|NA
+Mem|NA
+User|alvaro
+Logfile|/slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00/qa_step/get_p4_content/logs/get_p4_content.log
+Stop Time|1658175262
+License|LicenseDataUnavailable

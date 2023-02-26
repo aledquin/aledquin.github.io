@@ -1,0 +1,72 @@
+DRC calibre LN05LPE_CalibreDRC_A00-V1.0.0.0_encrypted_220124.tar.gz, Revision A00-V1.0.0.0, 2022-01-24
+ Samsung 5nm LPE Calibre DRC
+ 
+ 
+DRC icv verA00-V1.0.0.0_20220128, Revision A00-V1.0.0.0, 2022-01-28
+ Samsung 5nm LPE ICV DRC
+ 
+ 
+LVS calibre LN05LPE_CalibreLVS_A00-V1.0.0.0_encrypted.tar.gz, Revision A00-V1.0.0.0, 2022-01-14
+ Samsung 5nm LPE Calibre LVS
+ 
+ 
+LVS icv verA00-V1.0.0.0_20220209, Revision A00-V1.0.0.0, 2022-02-09
+ Samsung 5nm LPE ICV LVS
+ 
+ 
+Models hspice verA00-V1.0.0.0_20220114, Revision A00-V1.0.0.0, 2022-01-14
+ Samsung 5nm LPE HSPICE models
+ 
+ 
+PERC icv verA00-V0.9.5.0_20210716, Revision A00-V0.9.5.0, 2021-07-16
+ Samsung 5nm LPE ICV PERC
+ 
+ 
+PEX (cell level) star-rcxt verA00-V0.9.0.0_20201230, Revision A00-V0.9.0.0, 2020-12-30
+ Samsung 5nm Logic LPE star-rcxt (Cell-Level)
+ 
+ 
+PEX star-rcxt verA00-V1.0.0.0_20220114, Revision A00-V1.0.0.0, 2022-01-14
+ Samsung 5nm Logic LPE star-rcxt(TR-Level)
+ 
+ 
+Technology File Apache Redhawk Common_Platform_Auto_PROC-RedHawk_sec220121_0190.tar.gz, Revision A00-V1.0.0.0, 2022-01-21
+ Samsung 5nm Logic LPE RedHawk
+ 
+ 
+Technology File Apache Totem LN05LPE_Totem_A00-V0.9.0.0.tar.gz, Revision A00-V0.9.0.0, 2021-01-06
+ Samsung 5nm Logic LPE Totem 125C
+ 
+ 
+Technology File CustomSim-RA RATCL verA00-V1.0.0.0_20220121, Revision A00-V1.0.0.0, 2022-01-21
+ Samsung 5nm LPE RATCL for CustomSim-RA
+ 
+ 
+Technology File icc2 verA00-V0.9.1.0_20210412, Revision A00-V0.9.1.0, 2021-04-12
+ Samsung 5nm LPE ICC2 techfile
+ 
+ 
+Utility DFM Design Kits icv verA00-V1.0.0.0_20220209, Revision A00-V1.0.0.0, 2022-02-09
+ Samsung 5nm Logic LPE DFM Design Kits (DDK)
+ 
+ 
+Utility Dummy Fill calibre LN05LPE_CalibreSmartFill_A00-V0.9.0.0_Enc.tar.gz, Revision A00-V0.9.0.0, 2021-02-15
+ Samsung 5nm LPE Calibre Smart Fill
+ 
+ 
+Utility Dummy Fill icv verA00-V0.9.0.0_20210210, Revision A00-V0.9.0.0, 2021-02-10
+ Samsung 5 Logic LPE ICV Dummy Fill
+ 
+ 
+Utility Dynamic Device Voltage Checker hspice verA00-V1.0.0.0_20220114, Revision A00-V1.0.0.0, 2022-01-14
+ Samsung 5nm LPE Dynamic Device Voltage Checker
+ 
+ 
+Utility Floating Net Checker icv verA00-V1.0.0.0_20220321, Revision A00-V1.0.0.0, 2022-03-21
+ Samsung 5nm Logic LPE ICV Floating Net Checker
+ 
+ 
+iPDK customdesigner verA00-V1.0.0.0_20220211, Revision A00-V1.0.0.0, 2022-02-11
+ Samsung 5nm LPE iPDK Library
+ 
+ 

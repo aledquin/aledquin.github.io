@@ -1,0 +1,7 @@
+## testing
+read_tech tsmc10ff_tt0p85v100c_noise.tech
+read_pininfo pininfo/dwc_ddrphy_drvfedqs_ew.csv
+set_powers VDD VDDQ VAA
+set_grounds VSS
+set_domain_voltage VDD=0.85 VDDQ=1.5 VAA=1.8
+

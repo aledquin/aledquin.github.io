@@ -1,0 +1,68 @@
+---
+calibre_verifs: true
+repeater_name: dwc_ddrphy_repeater_cells
+releaseRepeaterMacro: 
+    - dwc_ddrphy_pclk_rpt_ew
+    - dwc_ddrphy_rpt1ch_ew
+    - dwc_ddrphy_rpt2ch_ew
+    - dwc_ddrphy_rpt3ch_ew
+    - dwc_ddrphy_rpt4ch_ew
+    - dwc_ddrphy_pwrokvdd_rpt_ew
+releasePmMailDist: 
+    mendizza,warrena,jmangatt,deepakgs,jayarama,vilas,vkadeto,dpatil,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-d850-lpddr5-t5-ckt@synopsys.com
+supply_pins_override: 
+    dwc_ddrphy_techrevision_ew: M6
+    dwc_ddrphy_pclk_rx_ew: M6
+    dwc_ddrphy_lcdl_ew: M4
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: M8
+releaseUtilityMacro: 
+    - dwc_ddrphy_vddqclamp_4x1_ew
+    - dwc_ddrphy_vddqclamp_2x2_ew
+    - dwc_ddrphy_vdd2clamp_4x1_ew
+    - dwc_ddrphy_vdd2clamp_2x2_ew
+    - dwc_ddrphy_endcell_ew
+    - dwc_ddrphy_decapvdd_4x1_ew
+    - dwc_ddrphy_decapvdd_1x1_ew
+    - dwc_ddrphy_decapvdd_1by4x1_ew
+    - dwc_ddrphy_decapvddq_4x1_ew
+    - dwc_ddrphy_decapvddq_1x1_ew
+    - dwc_ddrphy_decapvddq_1by4x1_ew
+    - dwc_ddrphy_decapvdd2_4x1_ew
+    - dwc_ddrphy_decapvdd2_1x1_ew
+    - dwc_ddrphy_decapvdd2_1by4x1_ew
+    - dwc_ddrphy_decapvddhd_4x1_ew
+    - dwc_ddrphy_decapvddhd_1x1_ew
+    - dwc_ddrphy_decapvddhd_1by4x1_ew
+    - dwc_ddrphy_decapvddqhd_4x1_ew
+    - dwc_ddrphy_decapvddqhd_1x1_ew
+    - dwc_ddrphy_decapvddqhd_1by4x1_ew
+releaseBranch: rel1.00_ew_1.10a_ew_pre3_rel_
+releaseMailDist: 
+    gerard,mendizza,warrena,jmangatt,deepakgs,jayarama,vilas,ddr_di@synopsys.com,aparik,vkadeto,dpatil,sg-ddr-ckt-release@synopsys.com,d850-lpddr54-tsmc5ffp12@synopsys.com,sg-d850-lpddr5-t5-ckt@synopsys.com
+release_gds_cdl: icv
+metal_stack: 15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z
+metal_stack_ip: 8M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_2Y
+layers: M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP
+layout_tag: |-
+    TC Pre- Final release
+reference_date_time: 14 days ago
+rel: 1.10a_ew_pre3
+utility_name: dwc_ddrphy_utility_cells
+vcrel: 1.00a_ew
+utility_tag_layers: 63:63 6:0
+releaseCtlMacro: 
+    - dwc_ddrphy_se_io_ew
+    - dwc_ddrphy_diff_io_ew
+    - dwc_ddrphy_pclk_master_ew
+    - dwc_ddrphy_pclk_rx_ew
+    - dwc_ddrphy_rxreplica_ew
+    - dwc_ddrphy_lcdl_ew
+    - dwc_ddrphy_sec_io_ew
+    - dwc_ddrphy_por_ew
+    - dwc_ddrphy_vrefdacref_ew
+    - dwc_ddrphy_zcalana_ew
+    - dwc_ddrphy_techrevision_ew
+p4_release_root: products/lpddr54/project/d850-lpddr54-tsmc5ffp12
+process: tsmc5ffp12
+

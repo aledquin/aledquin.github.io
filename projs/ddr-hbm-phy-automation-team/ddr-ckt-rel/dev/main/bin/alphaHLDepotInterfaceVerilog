@@ -1,0 +1,380 @@
+#!/depot/perl-5.14.2/bin/perl
+###############################################################################
+#
+# Name    : alphaHLDepotInterfaceVerilog
+# Author  : John Fisher, Ahmed Hesham(ahmedhes)
+# Date    : 2013-06-26
+# Purpose : This script will copy the generated release files from a 
+#           verification path to the depot release path. It will also call the 
+#           pincheck script for sanity checks.
+#
+# Modification History
+#     000 John Sheridan Fisher, 2013-06-26
+#         Created this script
+#     001 Ahmed Hesham(ahmedhes), 2022-04-13
+#         Refactored this script and added support for different behavior file
+#         format according to Jira P10020416-32279
+#     002 Ahmed Hesham(ahmedhes) 2022-07-21
+#         Added "macro" optional argument to extract the interface for a list of
+#         submacros, used with the repeater macros.
+#     003 Ahmedh Hesham(ahmedhes) 2022-07-28
+#         Removed the single ifdef-endif statments from the interface file as
+#         per the Jira P10020416-36074
+#     
+###############################################################################
+
+use strict;
+use warnings;
+use Getopt::Long;
+use File::Path;
+use File::Basename;
+use List::Util qw(first);
+use Cwd;
+use Capture::Tiny qw/capture/;
+use File::Basename qw(dirname basename);
+use Carp    qw( cluck confess croak );
+use FindBin qw($RealBin $RealScript);
+use lib "$RealBin/../lib/perl";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $AUTO_APPEND_NEWLINE = 1;
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $TESTMODE     = NONE;
+our $PROGRAM_NAME = $RealScript;
+our $LOGFILENAME  = getcwd() . "/$PROGRAM_NAME.log";
+our $VERSION      = get_release_version() || '2022.11'; 
+#--------------------------------------------------------------------#
+
+
+#------------------------------------------------------------------------------
+BEGIN {
+    our $AUTHOR='jsfisher, juliano, ljames';
+    $STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+    #$STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+    header();
+}
+&Main();
+END {
+    local $?;   ## adding this will pass the status of failure if the script
+                ## does not compile; otherwise this will always return 0
+    footer();
+    write_stdout_log( $LOGFILENAME );
+}
+#------------------------------------------------------------------------------
+
+sub Main {
+   my @orig_argv = @ARGV;  # keep this here cause GetOpts modifies ARGV
+
+    # Process the arguments passed to the script
+    my ( $opt_relfname, $opt_rtlfname, 
+         $nousage,      $opt_macrosList ) = process_cmd_line_args();
+   
+     # A call to the usage statistics
+    unless( $DEBUG || defined($nousage) ){
+       utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@orig_argv );
+    }
+
+    ## local variables
+    my $fname_behavioralFile = $opt_relfname;
+    my $fname_interfaceFile  = $opt_rtlfname;
+
+    ## welcome
+    iprint("Attempting to generate interface Verilog\n\t '$fname_interfaceFile'\nfrom ".
+           "behavioral Verilog file...\n\t '$fname_behavioralFile'\n");
+    
+    my @macros;
+    if( defined $opt_macrosList ){
+       @macros = split(/\,|\s/,$opt_macrosList);
+    }else{
+       my $macro = basename($fname_behavioralFile);
+       $macro    =~ s/\.v$//;
+       push(@macros, $macro);
+    }
+
+    my @lines;
+    foreach my $macro (@macros){
+       ## Get the lines where the module for this macro is defined
+       my @macroModule        = get_macro_module($macro, $fname_behavioralFile);
+       my @generatedInterface = generate_interface($macro, \@macroModule);
+       push(@lines, @generatedInterface );
+    }
+    write_file( \@lines, $fname_interfaceFile );
+
+    iprint("Completed!\n");
+    exit(0);
+}
+
+#------------------------------------------------------------------------------
+sub process_cmd_line_args(){      
+    my ( $opt_verbosity, $opt_help,     $opt_nousage,
+         $opt_relfname,     $opt_rtlfname,
+         $opt_debug,     $opt_testmode, $opt_macrosList );
+    my $success = GetOptions(
+        "help"        => \$opt_help, 
+        "verbosity=i" => \$opt_verbosity,
+        "debug=i"     => \$opt_debug,
+        "nousage"     => \$opt_nousage,
+        "testmode"    => \$opt_testmode,
+        "macros=s"    => \$opt_macrosList,
+        "release=s"   => \$opt_relfname,
+        "rtl=s"       => \$opt_rtlfname,
+    );
+
+    $main::VERBOSITY = $opt_verbosity if( defined $opt_verbosity );
+    $main::DEBUG     = $opt_debug     if( defined $opt_debug     );
+    $main::TESTMODE  = $opt_testmode  if( defined $opt_testmode  );
+
+    ## quit with usage message, if usage not satisfied
+    &usage(0) if $opt_help;
+    &usage(1) unless( $success );
+    &usage(1) unless( defined $opt_relfname );
+    &usage(1) unless( defined $opt_rtlfname );
+
+    print_function_footer();
+    return( $opt_relfname, $opt_rtlfname, $opt_nousage, $opt_macrosList );
+    # End of process_cmd_line_args
+}
+
+## script usage message
+sub usage($) {
+    my $exit_status = shift;
+
+    print << "EOP" ;
+Description
+  A script to strip down provided behavioral Verilog file to just a shell interface Verilog file
+
+USAGE : alphaHLDepotInterfaceVerilog [options] macro.v macro_interface.v
+
+command line options:
+-help             print this screen
+-verbosity #      Set global VERBOSITY setting (a number > 0)
+-debug #          Set global DEBUG setting (a number > 0)
+-nousage          Do not save the usage statistics
+-testmode         Prevents any command that would edit or delete files
+
+Assumptions:
+- The name of the input behavioral macro.v file will be used as the macro name and the output
+will only contain the 'macro' module declaration
+
+EOP
+    exit($exit_status) ;
+}
+
+sub get_macro_module($$){
+    print_function_header();
+    my $macro                = shift;
+    my $fname_behavioralFile = shift;
+    
+    my @macroModule;
+    my $start = "Not found";
+    foreach my $line ( read_file("$fname_behavioralFile") ){
+        if( $start eq "found" ){
+            push(@macroModule, $line);
+            if( $line =~ /^\s*endmodule/ ){
+                last;
+            }
+        }else{
+            if( $line =~ /^\s*module\s+$macro/ ){
+                $start = "found";
+                push(@macroModule, $line);
+            }
+        }
+    }
+
+    # check if the module was not found
+    if( $start eq "Not found" ){
+        fatal_error("The module for the macro '$macro' was not found in the file ".
+               "'$fname_behavioralFile'!\n");
+    }
+    print_function_footer();
+    return( @macroModule );
+}
+
+sub generate_interface($$){
+    print_function_header();
+    my $macro       = shift;
+    my @macroModule = @{+shift};
+
+    #Isolate the interface to know which format the behavior file is written in.
+    my (@moduleInterface, @moduleBody);
+    my $interfaceEnd = 0;
+    foreach my $line (@macroModule){
+        if( $interfaceEnd == 0){
+            push(@moduleInterface, $line);
+        }else{
+            push(@moduleBody, $line);
+        }
+
+        if( $line =~ /\);/ ){
+            $interfaceEnd = 1;
+        }
+    }
+    while( $moduleInterface[0] !~ /\(/ ){
+        my $line = shift(@moduleInterface);
+        chomp($line);
+        $moduleInterface[0] = $line. $moduleInterface[0];
+    }
+    
+    my $format = 0;
+    # 1: the module's interface includes the direction, input/output/inout
+    # 2: the module's interface just includes the signals names
+    foreach my $line (@moduleInterface){
+        $line =~ s/.*\(//;
+        if( $line =~ /^\s*$/ ){
+            shift(@moduleInterface);
+            next;
+        }
+
+        if( $line =~ /^\s*input|^\s*output|^\s*inout/ ){
+            $format = 1;
+            last;
+        }elsif( $line !~ /^`/ ){
+            $format = 2;
+            last;
+        }
+    }
+
+    my @generatedInterface;
+    my $endModule = "endmodule // $macro\n";
+    my $startModule = "module $macro (\n";
+    
+    # Copy the interface as it is.
+    if( $format == 1){
+        # Keep if-else blocks, keep the PG ports within if-blocks, otherwise
+        # skip the if-blocks
+        @generatedInterface = check_if_blocks(\@moduleInterface);
+        # If there are anything after the closing bracket );, remove it.
+        $generatedInterface[-1] =~ s/\);.*$/\);/; 
+        # Add the start and end lines
+        unshift(@generatedInterface, $startModule);
+        push(@generatedInterface, $endModule);
+    }
+    # Get the direction of the ports from within the module. 
+    elsif( $format == 2){
+        # Join the interface from the behavior file into a single string separated
+        # with spaces. Remove the start of the module and the closing of the interface,
+        # keeping only the ports names as well as any pre-processor directives.
+        my $concatInterface = join(" ", @moduleInterface);
+        $concatInterface    =~ s/^\s*module\s+$macro\s*\(//;
+        $concatInterface    =~ s/\);.*$//;
+
+        # Split the string with whitespaces and commas to get indiviual ports/directives.
+        my @ports = $concatInterface =~ /[^,\s]+/g;
+
+        push(@generatedInterface, $startModule);
+        # Look for the definitions of the ports in the module, copying the directives
+        # without change.
+        while( my $port = shift @ports ){
+            # The `if takes the next element too
+            if( $port =~ /^`if/ ){
+                my $label = shift @ports;
+                push(@generatedInterface, "$port $label\n");
+            }
+            # Other directives are copied as is 
+            elsif( $port =~ /^`/ ){
+                push(@generatedInterface, "$port\n");
+            }
+            # For ports, look for the definitions
+            else{
+                my $portDefinition = first { /^\s*input\s.*\s*[,]*$port\s*[,;]|
+                                             ^\s*output\s.*\s*[,]*$port\s*[,;]|
+                                              ^\s*inout\s.*\s*[,]*$port\s*[,;]/x } @moduleBody;
+                if( !defined($portDefinition) ){
+                    fatal_error("Failed to find the port definition for '$port'!\n");
+                }
+                
+                # Remove port names from the line and leading spaces
+                $portDefinition =~ s/\w+\s*(?=[,;]).*\s*$//;
+                $portDefinition =~ s/^\s*//;
+
+                push(@generatedInterface, "    $portDefinition $port,\n");
+
+            }
+        }
+        
+        # Keep if-else blocks, keep the PG ports within if-blocks, otherwise
+        # skip the if-blocks
+        @generatedInterface = check_if_blocks(\@generatedInterface);
+
+        my $removedLastComma = 0;
+        my $endsWithIf       = 0;
+        if( $generatedInterface[-1] =~ /^`endif/ ){
+            $endsWithIf = 1
+        }
+
+        my $lastIndex = $#generatedInterface;
+        $lastIndex-- if( $endsWithIf == 1);
+        for my $index (reverse(0..$lastIndex)){
+            # Remove the last comma in the ports
+            if( $removedLastComma == 0 && $generatedInterface[$index] =~ /,\s*$/ ){
+                $generatedInterface[$index] =~ s/,\s*$/\n/;
+                $removedLastComma            = 1;
+            }
+            # If the interface ends with the termination of an if-else block
+            # remove the last comma from `else
+            if( $endsWithIf == 1 && $generatedInterface[$index] =~ /^`else/ ){
+                # if it was an if else statment, then remove the last comma before the else
+                $generatedInterface[$index-1] =~ s/,\s*$/\n/;
+                $endsWithIf       = 0;
+            }
+        }
+ 
+        #End the interface
+        push(@generatedInterface,");\n$endModule");
+    }else{
+        fatal_error("Unknown behavior file format!\n");
+    }
+
+    print_function_footer();
+    return(@generatedInterface);
+}
+
+#------------------------------------------------------------------------------
+# Handle the if-blocks; 
+#   if-else:          keep the block as it is
+#   if with PG ports: Remove the ifdef/endif lines and keep the ports
+#   otherwise:        Remove the whole block
+#   Jira P10020416-38586
+#------------------------------------------------------------------------------
+sub check_if_blocks($){
+    print_function_header();
+    my $aref_inputInterface = shift;
+    my @outputInterface;
+
+    my $PG_flag = FALSE;
+    my @ifBlock;
+    foreach my $line (@{$aref_inputInterface}){
+        if( $line =~ /^`ifdef/ .. $line =~ /^`endif/ ){
+            push(@ifBlock,$line);
+            # Check if the if-block contains VSS/VDD entries
+            $PG_flag = TRUE if( $line =~ /(?:^|[\s,])(?:VSS|VDD)(?:$|[\s,])/i );
+        }else{
+            # Push the rest of the lines without alterations
+            push(@outputInterface,$line);
+        }
+        if( $line =~ /^`endif/ ){
+            if( grep{ /^`else/ } @ifBlock ){
+                # Keep the if-else block as it is
+                push(@outputInterface,@ifBlock);
+            }elsif( $PG_flag ){
+                # Remove the ifdef/endif lines (first and last elements)
+                # before adding the block to the interface. If the block
+                # doesn't contain PG (tested using VSS) then don't include it.
+                shift(@ifBlock);
+                pop(@ifBlock);
+                push(@outputInterface,@ifBlock);
+            }
+            # Clear the variables in case there are multiple if-blocks
+            @ifBlock = ();
+            $PG_flag = FALSE;
+        }
+    }
+
+    print_function_footer();
+    return( @outputInterface );
+}

@@ -1,0 +1,305 @@
+proc write_load_and_tran_cons_files { args } {
+    global OUTPUTS
+
+    set date [clock format  [clock seconds] -format {%a %b %m %H: %M:%S %Y}]
+    set results(-cell) ""
+    #set results(-max_slew_limit) 200
+    #set results(-min_slew_limit) 20
+    #set results(-max_clock_slew_limit) 200
+    #set results(-min_clock_slew_limit) 20
+
+    parse_proc_arguments -args $args results
+
+    set cell $results(-cell)
+    #set max_slew_limit $results(-max_slew_limit)
+    #set min_slew_limit $results(-min_slew_limit)
+    #set max_clock_slew_limit $results(-max_clock_slew_limit)
+    #set min_clock_slew_limit $results(-min_clock_slew_limit)
+    set max_slew_limit 100
+    set min_slew_limit 10
+    set max_clock_slew_limit 100
+    set min_clock_slew_limit 10
+
+
+    #global timing_hash
+    #set corner_short $timing_hash(corner_short)
+    
+    set load_cons_filename [pwd]/.$cell.load.cons
+    if {[catch {set load_cons_fd [open $load_cons_filename w]}]!=0} {
+        echo -error "Could not open file $load_cons_filename"
+        return
+    }
+    puts $load_cons_fd "****************************************"
+    puts $load_cons_fd "Report : constraint"
+    puts $load_cons_fd "        -all_violators"
+    puts $load_cons_fd "        -path slack_only"
+    puts $load_cons_fd "        -max_capacitance"
+    puts $load_cons_fd "Design : $cell"
+    puts $load_cons_fd "Version: Nanotime"
+    puts $load_cons_fd "Date   : $date"
+    puts $load_cons_fd "****************************************"
+    puts $load_cons_fd "#FF_MODE"
+    puts $load_cons_fd ""
+    puts $load_cons_fd "   max_capacitance"
+    puts $load_cons_fd ""
+    puts $load_cons_fd "                             Required        Actual"
+    puts $load_cons_fd "   Pin                      Capacitance    Capacitance       Slack"
+    puts $load_cons_fd "   -----------------------------------------------------------------"
+
+    set tran_cons_filename [pwd]/.$cell.tran.cons
+    if {[catch {set tran_cons_fd [open $tran_cons_filename w]}]!=0} {
+        echo -error "Could not open file $tran_cons_filename"
+        return
+    }
+    puts $tran_cons_fd "****************************************"
+    puts $tran_cons_fd "Report : constraint"
+    puts $tran_cons_fd "        -all_violators"
+    puts $tran_cons_fd "        -path slack_only"
+    puts $tran_cons_fd "        -max_transition"
+    puts $tran_cons_fd "Design : $cell"
+    puts $tran_cons_fd "Version: Nanotime"
+    puts $tran_cons_fd "Date   : $date"
+    puts $tran_cons_fd "****************************************"
+    puts $tran_cons_fd ""
+    puts $tran_cons_fd ""
+    puts $tran_cons_fd "   max_transition"
+    puts $tran_cons_fd ""
+    puts $tran_cons_fd "                             Required        Actual"
+    puts $tran_cons_fd "   Pin                      Transition     Transition        Slack"
+    puts $tran_cons_fd "   -----------------------------------------------------------------"
+
+    set tran_vio_filename [pwd]/$cell.edgerates
+    if {[catch {set tran_vio_fd [open $tran_vio_filename w]}]!=0} {
+        echo -error "Could not open file $tran_vio_filename"
+        return
+    }
+    
+    #### File pointer of edgerates debug file
+    set tran_vio_debug_filename [pwd]/$cell.edgerates.debug
+    if {[catch {set tran_vio_fd_debug [open $tran_vio_debug_filename w]}]!=0} {
+        echo -error "Could not open file $tran_vio_debug_filename"
+        return
+    }
+    #### File pointer of edgerates filtered file, that shows only violations
+    set tran_viof_filename [pwd]/$cell.edgerates.filtered
+    if {[catch {set tran_viof_fd [open $tran_viof_filename w]}]!=0} {
+        echo -error "Could not open file $tran_viof_filename"
+        return
+    }
+    #### File pointer of edgerates sorted file, that shows ALL nodes
+    set tran_sorted_filename [pwd]/$cell.edgerates.sorted
+    if {[catch {set tran_sorted_fd [open $tran_sorted_filename w]}]!=0} {
+        echo -error "Could not open file $tran_sorted_filename"
+        return
+    }
+    #### File pointer of edgerates file, excluding ALL Xld nodes
+    set tran_vio_filename_excl_Xld_net_only [pwd]/$cell.edgerates.excluded_Xld_nets
+    if {[catch {set tran_vio_fd_excl_Xld_net_only [open $tran_vio_filename_excl_Xld_net_only w]}]!=0} {
+        echo -error "Could not open file $tran_vio_filename_excl_Xld_net_only"
+        return
+    }
+    #### File pointer of edgerates file, excluding ALL Xld nodes, sorted the edgerates
+    set tran_sorted_filename_excl_Xld_net_only [pwd]/$cell.edgerates.excluded_Xld_nets.sorted
+    if {[catch {set tran_sorted_fd_excl_Xld_net_only [open $tran_sorted_filename_excl_Xld_net_only w]}]!=0} {
+        echo -error "Could not open file $tran_sorted_filename_excl_Xld_net_only"
+        return
+    }
+ 
+
+    #set max_slew_limit [lindex [array get timing_hash "corner_options:$corner_short:er_max"] 1]
+    #set max_slew_limit 100
+    #set min_slew_limit [lindex [array get timing_hash "corner_options:$corner_short:er_min"] 1]
+    #set min_slew_limit 10
+    #set max_clock_slew_limit [lindex [array get timing_hash "corner_options:$corner_short:er_max_clock"] 1]
+    #set max_clock_slew_limit 100
+    #if {$max_clock_slew_limit eq ""} {
+    #  puts "Warning: gtech::corner_options::${corner_short}::er_max_clock undefined... defaulting to gtech::corner_options::${corner_short}::er_max"
+    #  set max_clock_slew_limit $max_slew_limit
+    #}
+    #set min_clock_slew_limit [lindex [array get timing_hash "corner_options:$corner_short:er_min_clock"] 1]
+    #set min_clock_slew_limit 10
+    #if {$min_clock_slew_limit eq ""} {
+    #  puts "Warning: gtech::corner_options::${corner_short}::er_min_clock undefined... defaulting to gtech::corner_options::${corner_short}::er_min"
+    #  set min_clock_slew_limit $min_slew_limit
+    #}
+
+    set nets [get_nets -hier * -filter {is_supply == false && full_name !~ "MESH*"} -quiet]
+    
+    # find the maximum net name length
+    set namelen 0
+    foreach_in_collection net $nets {
+        set net_name [get_attribute -class net $net full_name] 
+        set len [string length $net_name]
+        if {$len > $namelen} {
+            set namelen $len
+        }
+    }
+    
+    set line [format "%-${namelen}s\t%s\t%s\t%s" Net Value Dir Driver]
+    puts $tran_vio_fd "\#$line"
+    puts $tran_vio_fd "\#--------------------------------------------------------------------------------------------------"
+    puts $tran_viof_fd "\#$line"
+    puts $tran_viof_fd "\#--------------------------------------------------------------------------------------------------"
+    puts $tran_sorted_fd "\#$line"
+    puts $tran_sorted_fd "\#--------------------------------------------------------------------------------------------------"
+    ### For filter out Xld nets
+    puts $tran_vio_fd_excl_Xld_net_only "\#$line"
+    puts $tran_vio_fd_excl_Xld_net_only "\#--------------------------------------------------------------------------------------------------"
+    puts $tran_sorted_fd_excl_Xld_net_only "\#$line"
+    puts $tran_sorted_fd_excl_Xld_net_only "\#--------------------------------------------------------------------------------------------------"
+
+
+    if {$max_slew_limit ne "" && $max_clock_slew_limit ne ""} {
+        foreach_in_collection net $nets {
+            set net_name [get_attribute -class net $net full_name] 
+            set pins [get_pins -leaf -of $net -quiet]
+            set max_rise_slew -1
+            set max_fall_slew -1
+            set driver_pin ""
+            set pin_name_raw ""
+            set pin_name_raw_not_gate "reset"
+            set pin_name_raw_is_drn "reset"
+            set pin_name_raw_is_src "reset"
+            foreach_in_collection pin $pins {
+
+                #The value given is a tcl array of arrays like so:{{0.050000 rise CCLK}}
+                # The slew in the first part of the first string in the array.  
+                set fall_slew_string [lindex [lindex [get_attribute -quiet -class pin $pin max_fall_transition] 0] 0]
+                if {$fall_slew_string ne ""} {
+                    set fall_slew [expr [lindex [split $fall_slew_string " "] 0] * 1]
+                    if {$fall_slew > $max_fall_slew} { set max_fall_slew $fall_slew }
+                }
+                
+                #The value given is a tcl array of arrays like so:{{0.050000 rise CCLK}}
+                # The slew in the first part of the first string in the array.  
+                set fall_slew_string [lindex [lindex [get_attribute -quiet -class pin $pin min_fall_transition] 0] 0]
+                if {$fall_slew_string ne ""} {
+                    set fall_slew [expr [lindex [split $fall_slew_string " "] 0] * 1]
+                    if {$fall_slew > $max_fall_slew} { set max_fall_slew $fall_slew }
+                }
+                
+                #The value given is a tcl array of arrays like so:{{0.050000 rise CCLK}}
+                # The slew in the first part of the first string in the array.  
+                set rise_slew_string [lindex [lindex [get_attribute -quiet -class pin $pin max_rise_transition] 0] 0]
+                if {$rise_slew_string ne ""} {
+                    set rise_slew [expr [lindex [split $rise_slew_string " "] 0] * 1]
+                    if {$rise_slew > $max_rise_slew} { set max_rise_slew $rise_slew }
+                }
+                
+                #The value given is a tcl array of arrays like so:{{0.050000 rise CCLK}}
+                # The slew in the first part of the first string in the array.  
+                set rise_slew_string [lindex [lindex [get_attribute -quiet -class pin $pin min_rise_transition] 0] 0]
+                if {$rise_slew_string ne ""} {
+                    set rise_slew [expr [lindex [split $rise_slew_string " "] 0] * 1]
+                    if {$rise_slew > $max_rise_slew} { set max_rise_slew $rise_slew }
+                }
+
+                # get the driver pin as a source/drain driving the net
+                set pin_name [get_attribute -class pin $pin full_name] 
+                set indx [string last "." $pin_name]
+                set pin_name [string replace $pin_name $indx $indx :]
+                set pin_name_raw $pin_name                
+                if ![regexp -nocase ":(gate)$" $pin_name match pin] {
+                    set pin_name_raw_not_gate  "not gate"               
+                    if [regexp -nocase ":(drn|src)$" $pin_name match pin] {
+                        regsub -nocase ":(drn|src)$" $pin_name  ":[string toupper $pin]" pin_name
+                        set pin_name_raw_is_drn  "is drain"               
+                        set pin_name_raw_is_src  "is source"               
+                    }
+                    if [regexp -nocase "\/main:" $pin_name match pin] {
+                        regsub -nocase "\/main:" $pin_name  ":" pin_name
+                        #regsub -nocase "^X" $pin_name "" pin_name
+                    }
+                    set driver_pin $pin_name
+                }
+            }
+
+            if {[get_attribute $net is_clock]} {
+                set slew_rise_difference [expr $max_clock_slew_limit - $max_rise_slew]
+                set slew_fall_difference [expr $max_clock_slew_limit - $max_fall_slew]
+            } else {
+                set slew_rise_difference [expr $max_slew_limit - $max_rise_slew]
+                set slew_fall_difference [expr $max_slew_limit - $max_fall_slew]
+            }
+
+            # For debug
+            set line_debug [format "%-${namelen}s\t%5d\t%s\t%s\t%s\t%s\t%s\t%s" $net_name [expr round($max_rise_slew)] rise $driver_pin $pin_name_raw $pin_name_raw_not_gate $pin_name_raw_is_drn $pin_name_raw_is_src]
+            set line [format "%-${namelen}s\t%5d\t%s\t%s" $net_name [expr round($max_rise_slew)] rise $driver_pin ]
+            if {$max_rise_slew > 0} {
+                puts $tran_vio_fd $line
+                puts $tran_vio_fd_debug $line_debug
+                ### vlaw
+                lappend to_sort_edges "$line" 
+            ### print net_name to file only
+                if ![regexp -nocase "^Xld" $net_name match net] {
+                    puts $tran_vio_fd_excl_Xld_net_only $line
+                    lappend to_sort_edges_excl_Xld_net_only "$line" 
+                }
+            ### 
+            }
+            if {$slew_rise_difference < 0} {
+                lappend slew_violations "$line"
+            }
+            # For debug
+            set line_debug [format "%-${namelen}s\t%5d\t%s\t%s\t%s\t%s\t%s\t%s" $net_name [expr round($max_fall_slew)] fall $driver_pin $pin_name_raw $pin_name_raw_not_gate $pin_name_raw_is_drn $pin_name_raw_is_src]
+            set line [format "%-${namelen}s\t%5d\t%s\t%s" $net_name [expr round($max_fall_slew)] fall $driver_pin]
+            if {$max_fall_slew > 0} {
+                puts $tran_vio_fd $line
+                puts $tran_vio_fd_debug $line_debug
+                ### vlaw
+                lappend to_sort_edges "$line" 
+            ### print net_name to file only
+                if ![regexp -nocase "^Xld" $net_name match net] {
+                    puts $tran_vio_fd_excl_Xld_net_only $line
+                    lappend to_sort_edges_excl_Xld_net_only "$line" 
+                }
+            ### 
+            }
+            if {$slew_fall_difference < 0} {
+                lappend slew_violations "$line"
+            }
+        }
+	    if [info exist slew_violations] {
+          set sorted_slew_violations [lsort -decreasing -integer -index 1 $slew_violations]
+          foreach violation $sorted_slew_violations {
+            puts $tran_viof_fd $violation
+          }
+        }
+
+	    if [info exist to_sort_edges] {
+          set sorted_edges [lsort -decreasing -integer -index 1 $to_sort_edges]
+          foreach sorted $sorted_edges {
+            puts $tran_sorted_fd $sorted
+          }
+        }
+
+	    if [info exist to_sort_edges_excl_Xld_net_only] {
+          set sorted_edges_excl_Xld_net_only [lsort -decreasing -integer -index 1 $to_sort_edges_excl_Xld_net_only]
+          foreach sorted_edges_excl_Xld_net_only $sorted_edges_excl_Xld_net_only {
+            puts $tran_sorted_fd_excl_Xld_net_only $sorted_edges_excl_Xld_net_only
+          }
+        }
+
+
+    }
+
+    #apparently we need an empty newline at the bottom of the file followed by a '1' for the file to be parsed correctly
+    puts $load_cons_fd ""
+    puts $load_cons_fd "1"
+
+    puts $tran_cons_fd ""
+    puts $tran_cons_fd "1"
+       
+    close $tran_cons_fd
+    close $load_cons_fd
+    close $tran_vio_fd
+    close $tran_vio_fd_debug
+    close $tran_viof_fd
+    close $tran_sorted_fd
+    close $tran_vio_fd_excl_Xld_net_only
+    close $tran_sorted_fd_excl_Xld_net_only
+}
+define_proc_attributes  -define_args {
+    { "-cell"         "cellname" "string" string optional}
+}  write_load_and_tran_cons_files
+

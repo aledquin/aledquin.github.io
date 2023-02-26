@@ -1,0 +1,36 @@
+#!/usr/bin/tclsh
+# the next line restarts using tclsh
+#exec tclsh "$0" "$@"
+
+source ../Pocvsetup.tcl
+
+global __scriptdir
+
+
+append auto_path " $__scriptdir/tbcload"
+
+#package require tbcload 1.4
+
+set __date [clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]
+global __date
+if { [file exists $__scriptdir/Simple_pocv_generation.tcl] } {
+source $__scriptdir/Simple_pocv_generation.tcl
+} elseif { [file exists $__scriptdir/Simple_pocv_generation.tbc] } {
+source $__scriptdir/Simple_pocv_generation.tbc
+} else {
+        puts "ERROR: Simple_pocv_generation.tbc/.tcl not found(Please place all POCV script files in same directory)"
+        exit
+}
+if { [file exists $__scriptdir/general_pocv.tcl] } {
+source $__scriptdir/general_pocv.tcl
+} elseif { [file exists $__scriptdir/general_pocv.tbc] } {
+source $__scriptdir/general_pocv.tbc
+} else {
+        puts "ERROR: general_pocv.tbc/.tcl not found(Please place all POCV script files in same directory)"
+        exit
+}
+
+###### Note : format of arguments to -nand4 -nand3 so on .... should be as per the name of created coefficients' files ###### 
+
+merge_set_variation_parameters -nand4  nt_${PVT}_NAND_4*variation.tcl -nand3  nt_${PVT}_NAND_3*variation.tcl -nand2   nt_${PVT}_NAND_2*variation.tcl -nor4   nt_${PVT}_NOR_4*variation.tcl -nor3 nt_${PVT}_NOR_3*variation.tcl -nor2  nt_${PVT}_NOR_2*variation.tcl -inv  nt_${PVT}_inv*variation.tcl -output set_variation_parameters.tcl
+exit

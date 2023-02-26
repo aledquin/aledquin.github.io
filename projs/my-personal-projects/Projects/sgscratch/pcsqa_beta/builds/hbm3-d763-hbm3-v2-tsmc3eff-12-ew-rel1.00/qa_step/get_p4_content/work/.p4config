@@ -1,0 +1,3 @@
+P4CLIENT=msip_pcsqa_alvaro_us01_hbm3_d763_hbm3_v2_tsmc3eff_12_ew_rel1_00_1_beta
+P4CONFIG=.p4config
+P4PORT=1999

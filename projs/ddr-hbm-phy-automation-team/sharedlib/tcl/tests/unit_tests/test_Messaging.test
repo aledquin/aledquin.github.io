@@ -1,0 +1,542 @@
+#!/depot/tcl8.6.6/bin/tclsh
+#nolint Main
+#nolint utils__script_usage_statistics
+
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "Alvaro Quintana Carvacho"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+
+set opt_fast ""
+set opt_test ""
+set opt_help ""
+set opt_project ""
+
+#lappend auto_path "$RealBin/../bin"
+lappend auto_path "$RealBin/../../lib"
+
+package require Messaging 1.0
+namespace import ::Messaging::*
+
+package require Misc 1.0
+namespace import ::Misc::*
+
+
+
+#######################################################################
+# Your config here
+#######################################################################
+
+# set DA_RUNNING_UNIT_TESTS 0
+
+# -verbose level -> Sets the type of output verbosity desired to level, 
+#                   a list of zero or more of the elements body, pass, 
+#                   skip, start, and error. Default value is {body error}. 
+# Levels are defined as:
+# body (b) -> Display the body of failed tests
+# pass (p) -> Print output when a test passes
+# skip (s) -> Print output when a test is skipped
+# start (t)-> Print output whenever a test starts
+# error (e)-> Print errorInfo and errorCode, if they exist, 
+# when a test return code does not match its expected return code
+# The single letter abbreviations noted above are also recognized so 
+# that [configure -verbose pt] is the same as [configure -verbose {pass start}].
+::tcltest::verbose bpse
+::tcltest::debug 2
+
+#######################################################################
+# Create your procs here
+#######################################################################
+
+
+
+
+
+#######################################################################
+# Create your tests here
+#######################################################################
+
+#######################################################################
+## colored
+#######################################################################
+
+test Messaging-colored_t01 { Test: Messaging package: colored + no inputs} \
+    -body { colored } \
+    -returnCodes error \
+    -result {wrong # args: should be "colored message color"} \
+    -output {}
+
+test Messaging-colored_t02 { Test: Messaging package: colored + excess of inputs} \
+    -body { colored a b c d e t } \
+    -returnCodes error \
+    -result {wrong # args: should be "colored message color"} \
+    -output {}
+
+test Messaging-colored_t03 { Test: Messaging package: colored + red} \
+    -body { colored "This is the message in red" red} \
+    -result {} \
+    -output {[1;31mThis is the message in red[0m
+}
+
+test Messaging-colored_t04 { Test: Messaging package: colored + green} \
+    -body { colored "This is the message in green" green} \
+    -result {} \
+    -output {[1;32mThis is the message in green[0m
+}
+
+test Messaging-colored_t05 { Test: Messaging package: colored + yellow} \
+    -body { colored "This is the message in yellow" yellow} \
+    -result {} \
+    -output {[1;33mThis is the message in yellow[0m
+}
+
+test Messaging-colored_t06 { Test: Messaging package: colored + blue} \
+    -body { colored "This is the message in blue" blue} \
+    -result {} \
+    -output {[1;34mThis is the message in blue[0m
+}
+
+test Messaging-colored_t07 { Test: Messaging package: colored + cyan} \
+    -body { colored "This is the message in cyan" cyan} \
+    -result {} \
+    -output {[1;36mThis is the message in cyan[0m
+}
+
+test Messaging-colored_t08 { Test: Messaging package: colored + white_on_red} \
+    -body { colored "This is the message in white_on_red" white_on_red} \
+    -result {} \
+    -output {[37;41mThis is the message in white_on_red[0m
+}
+
+test Messaging-colored_t09 { Test: Messaging package: colored + white_on_red} \
+    -body { colored "This is the normal message" normal} \
+    -result {} \
+    -output {[1mThis is the normal message[0m
+}
+
+cleanupTests
+
+
+#######################################################################
+## const_to_int
+#######################################################################
+
+test Messaging-const_to_int_t01 { Test: Messaging package: const_to_int + number} \
+    -body { const_to_int 50} \
+    -result {50} \
+    -output {}
+
+test Messaging-const_to_int_t02 { Test: Messaging package: const_to_int + NONE} \
+    -body { const_to_int NONE} \
+    -result {0} \
+    -output {}
+
+test Messaging-const_to_int_t03 { Test: Messaging package: const_to_int + LOW} \
+    -body { const_to_int LOW} \
+    -result {1} \
+    -output {}   
+
+test Messaging-const_to_int_t04 { Test: Messaging package: const_to_int + MEDIUM} \
+    -body { const_to_int MEDIUM} \
+    -result {2} \
+    -output {}  
+
+cleanupTests
+
+
+#######################################################################
+## dprint
+#######################################################################
+
+test Messaging-dprint_t01 { Test: Messaging package: [dprint threshold=0 message]} \
+    -setup {} \
+    -body { dprint 0 "This is the message" } \
+    -result {-D- This is the message 
+} \
+    -output {[1;34m-D- This is the message[0m
+}
+
+test Messaging-dprint_t02 { Test: Messaging package: [dprint threshold=10 message]} \
+    -setup {} \
+    -body { dprint 10 "This is the message" } \
+    -result {} \
+    -output {}
+
+#test Messaging-dprint_t03 { Test: Messaging package: [dprint threshold=10 message] + DEBUG 100} \
+#    -setup {set DEBUG 100} \
+##    -body { dprint 10 "This is the message" } \
+##    -result {-D- This is the message 
+##-D- Line 218: : This is the message 
+##} \
+#    -output {[1;34m-D- Line 218: : This is the message[0m
+#}
+
+#test Messaging-dprint_t04 { Test: Messaging package: [dprint threshold=10 message] + DEBUG 100 + VERBOSITY 200} \
+#    -setup {set DEBUG 100
+#            set VERBOSITY 200} \
+#    -body { proc proc_test {} {
+#                dprint 10 "This is the message"
+#             }
+#             proc_test } \
+# #     -result {-D- This is the message 
+# # -D- Line 218: : This is the message 
+# # -D- Line 183: ::proc_test: This is the message 
+# # } \
+# #    -output {[1;34m-D- Line 183: ::proc_test: This is the message[0m
+# }
+
+# test Messaging-dprint_t04 { Test: Messaging package: [dprint threshold=10 message] + DEBUG 100 + TIMESTAMP enabled} \
+#     -setup {set DEBUG 100
+#             set TIMESTAMP 1 } \
+#     -body { dprint 10 "This is the message" } \
+#     -result {} \
+#     -output {[1;34m[Tue Oct 11 18:48:58 EDT 2022]-D- This is the message[0m
+# }
+# 
+
+cleanupTests
+
+#######################################################################
+## eprint
+#######################################################################
+
+test Messaging-eprint_t01 { Test: Messaging package: [eprint NoMessage]} \
+    -setup {if {[info exists DEBUG]} {unset DEBUG} } \
+    -body { eprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "eprint message"} \
+    -output {}
+
+# test Messaging-eprint_t02 { Test: Messaging package: [eprint message]} \
+#     -setup {} \
+#     -body { eprint "This is the message" } \
+#     -result {-D- This is the message 
+# # -D- Line 218: : This is the message 
+# # -D- Line 183: ::proc_test: This is the message 
+# -E- This is the message 
+# } \
+#     -output {[1;31m-E- This is the message[0m
+# }
+
+cleanupTests
+
+#######################################################################
+## veprint
+#######################################################################
+
+test Messaging-veprint_t01 {Test: Messaging package: [veprint NoMessage]} \
+    -setup {} \
+    -body { veprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "veprint threshold message"} \
+    -output {}
+
+test Messaging-veprint_t02 {Test: Messaging package: [veprint message] + noVERBOSITY} \
+    -setup {set VERBOSITY 0} \
+    -body { veprint 1 "This is the message" } \
+    -result {} \
+    -output {}
+
+# test Messaging-veprint_t03 {Test: Messaging package: [veprint message] + VERBOSITY} \
+#     -setup {set VERBOSITY 10} \
+#     -body { veprint 1 "This is the message" } \
+#     -result {-D- This is the message 
+# -D- Line 218: : This is the message 
+# -D- Line 183: ::proc_test: This is the message 
+# -E- This is the message 
+# -E- This is the message 
+# } \
+#     -output {[1;31m-E- This is the message[0m
+# }
+# 
+cleanupTests
+
+#######################################################################
+## iprint
+#######################################################################
+
+test Messaging-iprint_t01 { Test: Messaging package: [iprint NoMessage]} \
+    -setup {} \
+    -body { iprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "iprint message"} \
+    -output {}
+
+# test Messaging-iprint_t02 { Test: Messaging package: [iprint message]} \
+#     -setup {} \
+#     -body { iprint "This is the message" } \
+#     -result {-D- This is the message 
+# -D- Line 218: : This is the message 
+# -D- Line 183: ::proc_test: This is the message 
+# -E- This is the message 
+# -E- This is the message 
+# -I- This is the message 
+# } \
+#     -output {[1m-I- This is the message[0m
+# }
+# 
+cleanupTests
+
+#######################################################################
+## viprint
+#######################################################################
+
+test Messaging-viprint_t01 {Test: Messaging package: [viprint NoMessage]} \
+    -setup {} \
+    -body { viprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "viprint threshold message"} \
+    -output {}
+
+test Messaging-viprint_t02 {Test: Messaging package: [viprint message] + noVERBOSITY} \
+    -setup {set VERBOSITY 0} \
+    -body { viprint 1 "This is the message" } \
+    -result {} \
+    -output {}
+
+# test Messaging-viprint_t03 {Test: Messaging package: [viprint message] + VERBOSITY} \
+#     -setup {set VERBOSITY 10} \
+#     -body { viprint 1 "This is the message" } \
+#     -result {-D- This is the message 
+# -D- Line 218: : This is the message 
+# -D- Line 183: ::proc_test: This is the message 
+# -E- This is the message 
+# -E- This is the message 
+# -I- This is the message 
+# -I- This is the message 
+# } \
+#     -output {[1m-I- This is the message[0m
+# }
+
+cleanupTests
+
+#######################################################################
+## wprint
+#######################################################################
+
+test Messaging-wprint_t01 { Test: Messaging package: [wprint NoMessage]} \
+    -setup {} \
+    -body { wprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "wprint message"} \
+    -output {}
+#
+#test Messaging-wprint_t02 { Test: Messaging package: [wprint message]} \
+#    -setup {} \
+#    -body { wprint "This is the message" } \
+#    -result {-D- This is the message 
+#-D- Line 218: : This is the message 
+#-D- Line 183: ::proc_test: This is the message 
+#-E- This is the message 
+#-E- This is the message 
+#-I- This is the message 
+#-I- This is the message 
+#-W- This is the message 
+#} \
+#    -output {[1;33m-W- This is the message[0m
+#}
+#
+cleanupTests
+
+#######################################################################
+## vwprint
+#######################################################################
+
+test Messaging-vwprint_t01 {Test: Messaging package: [vwprint NoMessage]} \
+    -setup {} \
+    -body { vwprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "vwprint threshold message"} \
+    -output {}
+
+test Messaging-vwprint_t02 {Test: Messaging package: [vwprint message] + noVERBOSITY} \
+    -setup {set VERBOSITY 0} \
+    -body { vwprint 1 "This is the message" } \
+    -result {} \
+    -output {}
+
+# test Messaging-vwprint_t03 {Test: Messaging package: [vwprint message] + VERBOSITY} \
+#     -setup {set VERBOSITY 10} \
+#     -body { vwprint 1 "This is the message" } \
+#     -result {-D- This is the message 
+# -D- Line 218: : This is the message 
+# -D- Line 183: ::proc_test: This is the message 
+# -E- This is the message 
+# -E- This is the message 
+# -I- This is the message 
+# -I- This is the message 
+# -W- This is the message 
+# -W- This is the message 
+# } \
+#     -output {[1;33m-W- This is the message[0m
+# }
+# 
+cleanupTests
+
+#######################################################################
+## header
+#######################################################################
+
+# test Messaging-header_t01 { Test: Messaging package: header} \
+#     -setup {} \
+#     -body { header } \
+#     -result {} \
+#     -output {}
+# 
+# cleanupTests
+# 
+#######################################################################
+## footer
+#######################################################################
+# 
+# test Messaging-footer_t01 { Test: Messaging package: footer} \
+#     -setup {} \
+#     -body { footer } \
+#     -result {} \
+#     -output {}
+# 
+# cleanupTests
+# 
+# 
+#######################################################################
+## nprint
+#######################################################################
+
+test Messaging-nprint_t01 { Test: Messaging package: [nprint NoMessage]} \
+    -setup {} \
+    -body { nprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "nprint message"} \
+    -output {}
+
+test Messaging-nprint_t02 { Test: Messaging package: [nprint message]} \
+    -setup {} \
+    -body { nprint "This is the message" } \
+    -result {} \
+    -output {[1mThis is the message[0m
+}
+
+cleanupTests
+
+#######################################################################
+## p4print
+#######################################################################
+
+test Messaging-p4print_t01 { Test: Messaging package: [p4print message]} \
+    -setup {} \
+    -body { p4print } \
+    -returnCodes error \
+    -result {wrong # args: should be "p4print message"} \
+    -output {}
+
+test Messaging-p4print_t02 { Test: Messaging package: [p4print message]} \
+    -setup {} \
+    -body { p4print "This is the message" } \
+    -result {} \
+    -output {[1;32mThis is the message[0m
+}
+
+cleanupTests
+
+#######################################################################
+## hprint
+#######################################################################
+
+test Messaging-hprint_t01 { Test: Messaging package: [hprint NoMessage]} \
+    -setup {} \
+    -body { hprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "hprint message"} \
+    -output {}
+
+test Messaging-hprint_t02 { Test: Messaging package: [hprint message]} \
+    -setup {} \
+    -body { hprint "This is the message" } \
+    -result {} \
+    -output {[1;36m-I- This is the message[0m
+}
+
+cleanupTests
+
+#######################################################################
+## vhprint
+#######################################################################
+
+test Messaging-vhprint_t01 { Test: Messaging package: [vhprint NoMessage]} \
+    -setup {} \
+    -body { vhprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "vhprint threshold message"} \
+    -output {}
+
+test Messaging-vhprint_t02 { Test: Messaging package: [hprint threshold=1 message] + noVERBOSITY} \
+    -setup {} \
+    -body {set VERBOSITY 0
+           vhprint 1 "This is the message" } \
+    -result {} \
+    -output {}
+
+test Messaging-vhprint_t03 { Test: Messaging package: [hprint threshold=1 message] + VERBOSITY} \
+    -setup {set VERBOSITY 10} \
+    -body { vhprint 1 "This is the message" } \
+    -result {} \
+    -output {[1;36m-I- This is the message[0m
+}
+
+cleanupTests
+
+#######################################################################
+## sysprint
+#######################################################################
+
+test Messaging-sysprint_t01 { Test: Messaging package: [sysprint NoMessage] } \
+    -setup {} \
+    -body {sysprint} \
+    -returnCodes error \
+    -result {wrong # args: should be "sysprint message"} \
+    -output {}
+
+test Messaging-sysprint_t02 { Test: Messaging package: [sysprint message]} \
+    -setup {} \
+    -body { sysprint "This is the message" } \
+    -result {} \
+    -output {[1;35m-S- This is the message[0m
+}
+
+cleanupTests
+
+#######################################################################
+## fprint
+#######################################################################
+
+test Messaging-fprint_t01 { Test: Messaging package: [fprint NoMessage]} \
+    -setup {} \
+    -body { fprint } \
+    -returnCodes error \
+    -result {wrong # args: should be "fprint message"} \
+    -output {}
+
+test Messaging-fprint_t02 { Test: Messaging package: [fprint message] + noExitStatus} \
+    -setup {} \
+    -body {fprint "This is the message" } \
+    -result {1} \
+    -output {[37;41m-F- This is the message[0m
+}
+
+test Messaging-fprint_t03 { Test: Messaging package: [hprint threshold=1 message] + VERBOSITY} \
+    -setup {set exit_status 50} \
+    -body {fprint "This is the message" } \
+    -result {50} \
+    -output {[37;41m-F- This is the message[0m
+}
+
+cleanupTests

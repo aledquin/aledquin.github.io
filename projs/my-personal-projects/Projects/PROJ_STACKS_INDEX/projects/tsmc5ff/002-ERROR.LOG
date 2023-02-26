@@ -1,0 +1,5 @@
+c253-tsmc5ff-1.2v_amd : /remote/cad-rep/projects/c10/n224-c10-tsmc5ff-12-ns/rel4.00_prerel_for_cosim_20220609/cad/project.env
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0_22_06_08_1/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl
+tsmc5ff-12_amd_17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z : /remote/cad-rep/proj/c253-tsmc5ff-1.2v_amd/rel2.0.0/cad/17M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_4Yy2Z/env.tcl

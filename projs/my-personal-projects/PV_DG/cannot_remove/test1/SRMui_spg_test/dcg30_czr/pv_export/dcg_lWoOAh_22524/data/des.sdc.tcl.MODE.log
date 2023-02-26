@@ -1,0 +1,6 @@
+Information: Loading SDC version 2.1 file '/slowfs/dcopt105/alvaro/DCG_congestion/test1/SRMui_spg_test/dcg30_czr/pv_export/dcg_lWoOAh_22524/data/des.sdc.tcl.MODE' (FILE-007)
+create_clock [get_ports clk]  -period 10  -waveform {0 5}
+1
+Information: Loading SDC version 2.1 file '/slowfs/dcopt105/alvaro/DCG_congestion/test1/SRMui_spg_test/dcg30_czr/pv_export/dcg_lWoOAh_22524/data/des.sdc.tcl.MODE' (FILE-007)
+create_clock [get_ports clk]  -period 10  -waveform {0 5}
+1

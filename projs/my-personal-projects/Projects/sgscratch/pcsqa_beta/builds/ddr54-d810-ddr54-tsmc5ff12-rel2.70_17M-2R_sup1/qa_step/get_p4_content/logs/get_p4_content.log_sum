@@ -1,0 +1,11 @@
+get_p4_content
+CHECK FAILED
+PCSQA/module version: 2022.06-beta
+User: alvaro
+Run time: Mon Jul 18 16:13:57 2022
+Execution time: 00:00:01:09
+
+Information: Process ID for tool: 13392
+SNPS_WARNING: (PCSQA-2.1g) PCS not found at a p4 msip_projects_<site> client
+SNPS_ERROR  : (PCSQA-2.1g) PCS not found in p4
+Number of executed checks: 2

@@ -1,0 +1,12 @@
+while read VAR_LINE ; do
+	switch_name=$(echo "${VAR_LINE}" | awk '{print $1}' | sed -e 's/\./_/g')
+	switch_value=$(echo "${VAR_LINE}" | awk '{for (i=2; i<=NF-1; i++) printf $i","}' | sed -e 's/^/"/' -e 's/,$/"/g')
+	if [[ $(echo $switch_value | grep ',' | wc -l) -eq 0 ]]; then switch_value=$(echo $switch_value | sed -e 's/^"//g' -e 's/"$//g'); fi
+	case $switch_value in
+    		"ON" | "OFF" | "on" | "off")   VAR_SWITCH_VALUE_TYPE="ON_OFF"; switch_value=$(echo $switch_value | tr "a-z" "A-Z") ;;
+    		"YES" | "NO" | "yes" | "no")   VAR_SWITCH_VALUE_TYPE="YES_NO"; switch_value=$(echo $switch_value | tr "a-z" "A-Z") ;;
+    		"[]")      VAR_SWITCH_VALUE_TYPE="EMPTY" ;;
+    		*) VAR_SWITCH_VALUE_TYPE="STRING" ;;
+	esac
+	echo "${VAR_SWITCH_VALUE_TYPE}    ${switch_name}    $switch_value" >> DRC_ANT_SHDMIM_calibre_switches_spec_app.txt
+done < DRC_ANT_SHDMIM_calibre_switches_spec.txt

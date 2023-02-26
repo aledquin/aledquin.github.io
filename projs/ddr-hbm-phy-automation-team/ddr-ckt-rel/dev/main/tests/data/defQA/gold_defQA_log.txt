@@ -1,0 +1,49 @@
+Welcome to DEF QA
+-I- Reading dwc_lpddr5xphyacx2_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphyacx2_ew.def
+-I- dwc_lpddr5xphyacx2_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphyckx2_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphyckx2_ew.def
+-I- dwc_lpddr5xphyckx2_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphycmosx2_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphycmosx2_ew.def
+-I- dwc_lpddr5xphycmosx2_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphycsx2_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphycsx2_ew.def
+-I- dwc_lpddr5xphycsx2_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphydqsx1_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphydqsx1_ew.def
+-I- dwc_lpddr5xphydqsx1_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphydqx1_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphydqx1_ew.def
+-I- dwc_lpddr5xphydqx1_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphydx4_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphydx4_ew.def
+-I- dwc_lpddr5xphydx4_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphydx5_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphydx5_ew.def
+-I- dwc_lpddr5xphydx5_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-I- Reading dwc_lpddr5xphymaster.def file from p4 server
+-I- Checking dwc_lpddr5xphymaster.def
+-E- Couldn't find dwc_combophy_pll_ns file from dwc_lpddr5xphymaster.def in ckt_release_1.00a_pre3_crr.txt
+
+-I- Reading dwc_lpddr5xphyzcal_ew.def file from p4 server
+-I- Checking dwc_lpddr5xphyzcal_ew.def
+-I- dwc_lpddr5xphyzcal_ew.def DEF file is clean with all sub-block instances present in ckt_release_1.00a_pre3_crr.txt with valid coordinates
+
+-E- dwc_lpddr5xphycover_acx2_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_ckx2_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_cmosx2_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_csx2_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_dx4_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_dx5_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_master_top_ew.lef file from CRR File not found in any def file
+-E- dwc_lpddr5xphycover_zcal_top_ew.lef file from CRR File not found in any def file

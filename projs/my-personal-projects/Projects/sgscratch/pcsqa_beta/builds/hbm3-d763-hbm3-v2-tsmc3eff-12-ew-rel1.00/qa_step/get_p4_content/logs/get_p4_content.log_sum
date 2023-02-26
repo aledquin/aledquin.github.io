@@ -1,0 +1,10 @@
+get_p4_content
+CHECK PASSED
+PCSQA/module version: 2022.06-beta
+User: alvaro
+Run time: Mon Jul 18 16:13:57 2022
+Execution time: 00:00:00:25
+
+Information: Process ID for tool: 6850
+Project p4 contents has been stored at /slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00/qa_step/get_p4_content/work/hbm3/d763-hbm3-v2-tsmc3eff-12-ew/rel1.00
+Number of executed checks: 3

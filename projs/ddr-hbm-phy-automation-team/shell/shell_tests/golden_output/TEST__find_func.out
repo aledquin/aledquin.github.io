@@ -1,0 +1,3 @@
+../../notify/dev/main/lib/utilities.pm:sub  hprint { my $str=shift; my $msg="-I- $str"; print colored("$msg", 'yellow'); logger($msg); }
+../../sharedlib/lib/Util/Messaging.pm:sub hprint($){ 
+Usage: find_func <function_name>

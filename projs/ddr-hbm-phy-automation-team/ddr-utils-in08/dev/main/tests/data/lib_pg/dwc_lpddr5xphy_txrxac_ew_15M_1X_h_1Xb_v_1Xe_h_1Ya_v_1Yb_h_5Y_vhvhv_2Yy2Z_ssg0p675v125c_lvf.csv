@@ -1,0 +1,4 @@
+Table of LVF model analysis (LIBCHK-357)
+index_1:,input_net_transition,
+index_2:,total_output_net_capacitance,
+Cell name,pin/subgroup,timing_type,when,Group,line_num,index_1,index_2,nominal,early,late,sigma/nom,sigma/sigma

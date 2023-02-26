@@ -1,0 +1,12 @@
+tsmc22ulp : rel1.9.0 : 18 : l248-std-tsmc22ulp-1.8v
+tsmc22ulp : rel1.8.1 : 18 : w000-nvm-otp-commonLibs-tsmc22ulp-1.8v
+tsmc22ulp : rel1.8.1 : 18 : e319-hdmi-txphy-tsmc22ulp-18
+tsmc22ulp : rel1.8.0 : 18 : z00000-tchip-tdcs32b-tsmc22ulp-18
+tsmc22ulp : rel1.4.0 : 18 : e408-hdmi-mhl-rxphy-tsmc22ulp-18
+tsmc22ulp : rel1.3.0 : 18 : g223-mphy-tsmc22ulp-18
+tsmc22ulp : rel1.13.0 : 18 : w153-nvm-otp-shfg2-tsmc22ulp-1.8v
+tsmc22ulp : rel1.13.0 : 18 : m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms
+tsmc22ulp : rel1.12.0 : 18 : x679-usb2-tsmc22ulp-18-ns
+tsmc22ulp : rel1.1.0 : 25 : w303-nvm-otp-xs-tsmc22ulp-2.5v
+tsmc22ulp : rel1.10.0 : 18 : g145-dphy-tsmc22ulp-18
+tsmc22ulp : rel1.10.0 : 18 : d517-lpddr4mv2-tsmc22ulp18

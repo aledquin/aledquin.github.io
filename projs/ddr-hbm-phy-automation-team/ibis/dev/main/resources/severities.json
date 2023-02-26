@@ -1,0 +1,17 @@
+{
+    "main::check_file_sizes": "HIGH",
+    "main::check_model_numbers": "HIGH",
+    "main::check_waveform_lengths": "HIGH",
+    "main::check_ibis_summary_file": "HIGH",
+    "main::check_model_descriptions": "HIGH",
+    "main::check_c_comp_values": "HIGH",
+    "main::check_vddq_correctness": "HIGH",
+    "main::voh_check": "HIGH",
+    "main::vol_check": "HIGH",
+    "main::check_pulldown_driving_impedance": "HIGH",
+    "main::check_pullup_driving_impedance": "HIGH",
+    "main::ODT_check_PowerClamp_waveform": "HIGH",
+    "main::ODT_check_GNDClamp_waveform": "HIGH",
+    "main::compare_cal_codes_with_pdf": "HIGH",
+    "main::compare_cal_codes_with_summary": "HIGH"
+}

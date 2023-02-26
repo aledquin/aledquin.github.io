@@ -1,0 +1,25 @@
+This is James Laderoute's scratch area. It's a temporary area where James can
+quickly work on a script and commit/push his changes as often as he wishes.
+
+If James is working on a script in here but then later finds an official
+home for it within gitlab then he can move the file to the offical area
+and remove it from here.
+
+When you move the file to another folder please use the 'git mv' command.
+The 'git mv' command updates the index for both old and new paths 
+automatically.
+
+$ pwd
+~/GitLab/ddr-hbm-phy-automation-team/users/ljames
+
+$ ls
+james_file.pl
+
+Now James has found a home for his perl script and wants to
+move it.
+
+$ git mv james_file.pl ../../perl/bin
+
+Now James can cd to the perl/bin area and work on it there from now on.
+
+

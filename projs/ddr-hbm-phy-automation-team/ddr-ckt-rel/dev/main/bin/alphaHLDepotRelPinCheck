@@ -1,0 +1,1112 @@
+#!/depot/perl-5.14.2/bin/perl -w
+##
+## Created by John Sheridan Fisher, 2015-11-20
+## Maintained by jsf, 2017-08-01
+##
+## To-Do:
+##
+
+## PERL libs
+use strict;
+use warnings;
+use Getopt::Long;
+use File::Copy;
+use File::Basename;
+use Data::Dumper;
+use File::Path;
+use Cwd 'abs_path';
+use Cwd;
+use Carp qw(cluck confess croak);
+use Date::Parse; 
+use Date::Manip; 
+use POSIX qw(strftime);
+use Term::ANSIColor;
+use Clone 'clone';
+use List::MoreUtils qw(uniq);
+use Capture::Tiny qw/capture/;
+use File::Basename qw(dirname basename);
+
+use FindBin qw($RealBin $RealScript);
+use lib "$RealBin/../lib/perl/";
+use alphaHLDepotRelease;
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+use Util::P4;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $DEBUG                = NONE;
+our $VERBOSITY            = NONE;
+our $TESTMODE             = NONE;
+our $PROGRAM_NAME         = $RealScript;
+our $LOGFILENAME          = getcwd() . "/$PROGRAM_NAME.log";
+our $VERSION              = get_release_version();
+our $AUTO_APPEND_NEWLINE  = 1;
+#--------------------------------------------------------------------#
+BEGIN { 
+    our $AUTHOR='jfisher, snehar, ljames, juliano';
+    #$STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+    $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+    header(); 
+}
+&Main();
+END {
+    local $?;   ## adding this will pass the status of failure if the script
+                ## does not compile; otherwise this will always return 0
+    footer();
+    write_stdout_log( $LOGFILENAME );
+}
+
+
+sub Main(){
+
+    my $username          = get_username();
+    my @ctl_pininfo_inout = ();
+    my @ctl_pin_inout     = ();
+    my @stacks;
+
+    ## hardcoded defaults
+    my $relCornersHeaderBase = "Corner Type\tCase\tCore Voltage (V)\tPLL Voltage (V)\tIO Voltage (V)\tTemperature (C)\tExtraction Corner";
+
+    ## get specified args
+
+    my @orig_argv = @ARGV;  # keep this here cause GetOpts modifies ARGV
+    my ( $opt_projSPEC, $opt_macros, $opt_nousage, $opt_p4ws, $opt_docx, $opt_rel, $opt_lefVsGdsMap ) 
+                = process_cmd_line_args();
+
+    $opt_p4ws = 'p4_ws' unless( defined $opt_p4ws ); # setup default value
+
+    unless ( $main::DEBUG or $opt_nousage ){
+        utils__script_usage_statistics( $RealScript, $VERSION, \@orig_argv);
+    }
+
+    ## local vars
+    my($macro, @corners_vc, @corners, $corner, @metalStacksMatched, @metalStacksIpMatched);
+    my($errorFound, %corners_vc_params, %corners_ckt_params, %corners_params);
+    my($srcPath, $srcPathAbs);
+    my($macroLibPath, $macroLibPGPath, $projLibPath, $projLibPGPath, $libLibrary, $libFileName, $libPGFileName, $libHeader);
+    my($layersMacro, $supplyPinsMacro );
+    my($streamLayerMapFile, @fields, $field, %repeaterSubMacros, $relPathBase, $relPath, $relPathAbs);
+    my($relCornersFile, $relCornersHeader, $procs_field, $vdds_field, $vaa, $vddq, $rcxts_field);
+    my($temps_field, @temps, $temp, $temp_txt, @procs, $proc, @vdds, $vdd, $vdd_txt, @rcxts, $rcxt);
+    my($relLibPath, $relLibPGPath, $pininfoFile, $pininfoHeader, %cellPins, $cell, %cellSupplies);
+    my($relLibFile, $relLibPGFile, $macroLibFile, $macroLibPGFile, $projLibFile, $projLibPGFile);
+    my($cmd, $libBody, $area, $pin, $file, @files, $datePincheck, $chmodExec);
+    my(%pincheckLogFiles, %pincheckShellFiles, $pincheckCmd, @missingFiles);
+    my(%libCompileErrors, %pincheckDirtys, %pincheckWarnings, %shimMacros);
+    my($gdsCheckFile, $lefCheckFile, $lefDiffCheckFile, %lefDiffLogFiles, %lefDiffWarnings, %lefDiffDirtys );
+    my $p4client = $ENV{P4CLIENT};
+    my( $ctlMacro );
+    my ($isRelRep);
+
+    my ($projType, $proj, $pcsRel) =  parse_project_spec( $opt_projSPEC, \&usage );
+
+    my $projPathAbs   = "/remote/cad-rep/projects/$projType/$proj/$pcsRel";
+    my ( $projMacroFile, 
+         $projNtFile,
+         $projRelFile,
+         $projVerifFile ) = get_project_files_path( $projPathAbs, $projType, $proj, $pcsRel );
+    viprint(LOW, "get_project_files_path($projPathAbs, $projType, $proj, $pcsRel) \n\treturns: $projMacroFile,$projNtFile,$projRelFile,$projVerifFile\n");
+
+    wprint("projMacroFile: $projMacroFile\n") if ( $projMacroFile eq NULL_VAL);
+    wprint("projNtFile   : $projNtFile\n")    if ( $projNtFile    eq NULL_VAL);
+    wprint("projRelFile  : $projRelFile\n")   if ( $projRelFile   eq NULL_VAL);
+    wprint("projVerifFile: $projVerifFile\n") if ( $projVerifFile eq NULL_VAL);
+
+    my $p4LogFile     = $RealScript . '.p4';
+    my $projEnv       = "$projPathAbs/cad/project.env";
+
+    my ( $cadproj, $cadrel, $cadhome ) = getCadHome( $projEnv );
+    viprint(LOW, "getCadHome( $projEnv ) returns  $cadproj, $cadrel, $cadhome\n");
+ 
+    ## setup p4 log file
+    logger("  Setup p4 log file\n");
+    $cmd = "echo '##output of p4 commands' > $p4LogFile";
+    logger("    \$ $cmd\n");
+    my ($out, $err) = run_system_cmd($cmd, $main::DEBUG );
+
+    ##################################
+    # Parse TopCells File
+    ##################################
+    my %legalMacros = readTopCells( $projMacroFile );
+    my @macros = check_if_macros_are_legal( \%legalMacros, $opt_macros );
+
+    ##################################
+    # Parse alphaNT File
+    ##################################
+    my( $aref_pvt_corners, $href_params ) = readNtFile( $projNtFile );
+    my @corners_ckt = @$aref_pvt_corners;
+    if ( $main::DEBUG >= SUPER ) {
+        dprint(SUPER, "PVT Corners extracted from project NT file:\n\t$projNtFile\n"
+                 .scalar(Dumper $aref_pvt_corners). "\n" 
+                 .scalar(Dumper $href_params). "\n" );
+     }
+
+    dprint_dumper(SUPER, "PVT Corners extracted from project NT file:\n\t$projNtFile\n",\@corners_ckt);
+    prompt_before_continue(SUPER);
+
+    #--------------------------------------------------------
+    # Parse Legal Release File
+    #--------------------------------------------------------
+    my ($lefDiffRel );
+    my ( $rel, $p4ReleaseRoot, $referenceDateTime, $process, $metalStack,
+         $metalStackIp, $metalStackCover, $href_stackHash, 
+         $layers, $href_layersOverrides, $supplyPins, $href_supplyPinsOverrides,
+         $href_areaOverrides, $href_bndLayer, $releaseShimMacro, $releasePhyvMacro, 
+         $releaseUtilityMacro, $releaseRepeaterMacro, $projDiskArchiveLibFiles, 
+         $coverStackExists, 
+         $releaseDefMacro, 
+         $autoMatch, 
+         $href_shimMacros, 
+         $href_phyvMacros, 
+         $href_releaseMacro,
+         $href_repeaterSubMacros ,
+         $aref_timingLibs,
+         $href_referenceGdses,
+         $aref_utilityMacro,
+         $aref_ctlMacs,
+         $aref_repeaterMacro,
+         $aref_allowedTiming
+     ) = readLegalRelease( $projRelFile);
+
+    %repeaterSubMacros = %$href_repeaterSubMacros;
+
+    my @metalStacks   = split(/\s+/, $metalStack   );
+    my @metalStacksIp = split(/\s+/, $metalStackIp );
+#    if( $autoMatch ){ 
+#        stackMatch(\@metalStacks, \@metalStacksIp, $href_stackHash); 
+#    }
+    my ( @allStacks, @metalStacksCover );
+    push(@allStacks, @metalStacks);
+    if( defined $metalStackCover ){
+        @metalStacksCover = split(/\s+/,$metalStackCover);
+        coverStackCheck(\@metalStacksCover,\@metalStacksIp);
+    }else{ 
+        @metalStacksCover = @{clone(\@metalStacks)}; 
+    }
+
+    @metalStacksMatched   = (keys(%$href_stackHash));
+    @metalStacksIpMatched = (values(%$href_stackHash));
+    my %phyvMacros = %$href_phyvMacros;
+   
+#------------------------------------------------
+    dprint(SUPER, "\$releasePhyvMacros=$releasePhyvMacro\n" ) if ( $releasePhyvMacro );
+    dprint_dumper(SUPER, "\$phyvMacros=",\%phyvMacros);
+    dprint_dumper(SUPER, "\$legal_phyvMacros=",$href_phyvMacros);
+    #%layersOverrides     = %{ clone( $href_layersOverrides  ) };
+    #%supplyPinsOverrides = %{ clone( $href_supplyPinsOverrides ) };
+    dprint_dumper(SUPER, "\$href_layersOverrides=",$href_layersOverrides);
+    dprint_dumper(SUPER, "\$href_supplyPinsOverrides=",$href_supplyPinsOverrides);
+    prompt_before_continue(SUPER);
+
+    dprint(SUPER, "\$releaseShimMacros=$releaseShimMacro\n" ) if ( $releaseShimMacro );
+    dprint_dumper(SUPER, "\$shimMacros=",\%shimMacros);
+    dprint_dumper(SUPER, "\$legal_shimMacros=", $href_shimMacros);
+    prompt_before_continue(SUPER);
+#------------------------------------------------
+
+    ## set stream layer map
+    my $n_metalStacks = @metalStacks;
+    viprint(LOW, "Processing $n_metalStacks metal stack(s)\n");
+    foreach my $metalStack (@metalStacks){
+
+        $streamLayerMapFile = firstAvailableFile(
+            "$projPathAbs/cad/$metalStack/stream/stream.layermap",
+            "$cadhome/$metalStack/stream/stream.layermap",
+            "$cadhome/$metalStack/stream/STD/stream.layermap");
+
+        if( ! -e $streamLayerMapFile ){
+            if ( $streamLayerMapFile eq "" ){
+                $streamLayerMapFile = "stream.layermap";
+            }
+            eprint("Cannot find $streamLayerMapFile stream layer map file.");
+            exit 1;
+        }
+    }
+
+    ## set release path
+    $relPathBase = "/u/${username}/$opt_p4ws";
+    if( ! -e $relPathBase ){
+        eprint("P4 path $relPathBase does not exist.");
+        eprint("Please ensure that ~/$opt_p4ws is a sym link to the P4 workspace.");
+        exit 1;
+    }
+
+    $relPath = "$relPathBase/$p4ReleaseRoot/ckt/rel";
+    if( ! -e $relPath ){
+        eprint("Release path $relPath does not exist.");
+        eprint("Please check that this work space 'p4 client' contains ");
+        eprint("//depot/$p4ReleaseRoot/... //$p4client/$p4ReleaseRoot/...");
+        exit 1;
+    }
+    $relPathAbs = abs_path($relPath);
+
+    # Rel version override if $opt_rel provided. Jira P10020416-39944
+    if( defined $opt_rel){
+        $rel = verifyRelVersion($p4ReleaseRoot, $rel, $opt_rel, \@macros); 
+    }
+
+    ## set datestamp
+    $datePincheck = UnixDate($referenceDateTime, "%Y-%m-%d %H:%M:%S");
+    ## $date = strftime "%a %b %e %H:%M:%S %Y", localtime; # PERFORMANCE_ISSUE [265_185] P10020416-38682
+    ## NOTE: this '$date' variable is not used anywhere
+
+## loop through macros
+MACROLOOP: 
+    ## loop through macros
+    my $n_macros = @macros;
+    viprint(LOW, "Processing $n_macros macro(s)\n");
+    foreach my $macro ( sort @macros ){
+        my $now = localtime();
+        #checking for the existance of pincheck files at macro level
+        my $pincheckFlowCheck = checkPinCheckExist("//depot/$p4ReleaseRoot/ckt/rel/$macro/$rel/macro/...");
+
+        if ($pincheckFlowCheck == FALSE){
+            wprint("No pincheck folder files found, defaulting to old flow");
+            if ($macro =~ /_blocks/){
+                push @stacks, $metalStacksMatched[0];
+            } elsif ($macro =~ /cover/ || $macro =~ /_tcoil_replica/){
+                # P10020416-38355: use metalStackCover for tcoil_replica
+                push @stacks, $metalStacksCover[0];
+            } else {
+                push @stacks, $metalStacksIpMatched[0];
+            }
+        } elsif ($pincheckFlowCheck == TRUE) {
+            wprint("Pincheck folder files found, defaulting to new flow");
+            @stacks = da_findSubdirs("$relPathAbs/$macro/$rel/macro/pincheck");
+            my ($out, $err) = run_system_cmd("chmod +rw $relPathAbs/$macro/$rel/macro/$macro"."_pincheck_summary.txt"); 
+        } else {
+            fatal_error("Missing argument in checkPinCheckExist function!");
+        }
+    
+        ## setup pincheck summary file
+        my @lines;
+        push(@lines, "" );
+        push(@lines, "Info: Current time is $now\n" );
+        push(@lines, "MetalStack - Summary, STALE check of Non-Timing Files, STALE check of Timing Files" );
+        write_file( \@lines, "$relPathAbs/$macro/$rel/macro/$macro"."_pincheck_summary.txt" );
+
+        my $nstacks = @stacks;
+        viprint(LOW, "Processing $nstacks stacks\n");
+        foreach my $stack (@stacks){
+            viprint(MEDIUM, "\tStack='$stack'\n");
+            my %pincheckFiles;
+            if ($pincheckFlowCheck == FALSE){
+                ## pin check files
+                $pincheckShellFiles{$macro} = "${relPathAbs}/${macro}/${rel}/macro/alphaPinCheck.${macro}";
+                $pincheckLogFiles{$macro}   = "${relPathAbs}/${macro}/${rel}/macro/${macro}.pincheck";
+                $lefDiffLogFiles{$macro}    = "${relPathAbs}/${macro}/${rel}/macro/${macro}.lefdiff";
+                $lefCheckFile               = "${relPathAbs}/${macro}/${rel}/macro/lef/${stack}/${macro}.lef";
+            } else {
+                $pincheckShellFiles{$macro} = "${relPathAbs}/${macro}/${rel}/macro/pincheck/$stack/alphaPinCheck.${macro}";
+                $pincheckLogFiles{$macro}   = "${relPathAbs}/${macro}/${rel}/macro/pincheck/$stack/${macro}.pincheck";
+                $lefDiffLogFiles{$macro}    = "${relPathAbs}/${macro}/${rel}/macro/pincheck/$stack/${macro}.lefdiff";
+                $lefCheckFile               = "${relPathAbs}/${macro}/${rel}/macro/lef/${stack}/${macro}.lef";
+            }
+
+            if(defined $lefDiffRel){
+                $lefDiffCheckFile = "${relPathAbs}/${macro}/${lefDiffRel}/macro/lef/${stack}/${macro}.lef";
+            }
+            $gdsCheckFile = "${relPathAbs}/${macro}/${rel}/macro/gds/${stack}/${macro}.gds.gz";
+            ## shim macros only have LEF/GDS files
+            if( ! defined $shimMacros{$macro} ){
+                if( (grep{/$macro/} @$aref_utilityMacro) || (grep{/$macro/} @$aref_repeaterMacro) ){
+                    ## utility macros need to use project disk pininfo files because not all cells in utility macro will be released
+                    if( ! defined $phyvMacros{$macro} ){
+                        $pincheckFiles{$macro}->{
+                        firstAvailableFile("${projPathAbs}/design/pininfo/${rel}/${macro}.csv",
+                                           "${projPathAbs}/design_unrestricted/pininfo/${rel}/${macro}.csv")
+                        } = 'pinCSV';
+                    }
+                }else{
+                    $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/pininfo/${macro}.csv"} = 'pinCSV';                
+                    my $PINCSVFILE =  "${relPathAbs}/${macro}/${rel}/macro/pininfo/${macro}.csv";
+                    # P10020416-34481 , ljames 5/11/2022
+                    if ( -e $PINCSVFILE){
+                        #my @csvpinarray = `cat $PINCSVFILE | cut -d ',' -f1-2 | sed 's/\\[.*\\]//g' ` ;
+                        my ($output, $reval) = run_system_cmd( "cat $PINCSVFILE | cut -d ',' -f1-2 | sed 's/\\[.*\\]//g' ", $VERBOSITY );
+                        my @csvpinarray = split(/\n/, $output);
+                        # sleep 1; # inside foreach my $stack, inside foreach $macro PERFORMANCE_ISSUE n^2 [3_000_397]
+                        for(my $i = 0; $i <= $#csvpinarray ; $i = $i + 1) {
+                            my @split_csvpinarray = split /,/ , $csvpinarray[$i];
+                            $split_csvpinarray[1] =~ s/I/In/g;
+                            $split_csvpinarray[1] =~ s/O/Out/g;
+                            $split_csvpinarray[1] =~ s/IO/InOut/g;
+                            push @ctl_pininfo_inout ,"$split_csvpinarray[0] $split_csvpinarray[1]" ;
+                        } 
+                        @ctl_pininfo_inout = sort @ctl_pininfo_inout;
+                    }
+                }
+                ## utility and shim macros only have LEF/GDS files, covercells do not have cosim
+                if( !(grep{/$macro/} @$aref_utilityMacro ) && 
+                    !(grep{/$macro/} @$aref_repeaterMacro) && !($macro =~ /cover/) ){
+                    $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/cosim/${macro}.sp"} = 'cdl';
+                }
+                ## covercells do not have behavior views
+                if ( ! ($macro =~ /cover/) ){
+                    $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/behavior/${macro}.v"} = 'verilog';
+                }
+                ## new requirement - covercells to have interface view
+                $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/interface/${macro}_interface.v"} = 'verilog';
+
+                $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/netlist/${stack}/${macro}.cdl"} = 'cdl';
+                if( grep{/^$macro$/} @$aref_ctlMacs ){
+                    # ATPG stands for Automatic Test Pattern Generation
+                    # CTL stands for Core Test Language
+                    $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/atpg/ctl/${macro}.ctl"} = 'ctl';
+                    my $ctlfile = "${relPathAbs}/${macro}/${rel}/macro/atpg/ctl/${macro}.ctl";
+                    logger( "\tFound '$ctlfile' ctl file.\n");
+                    $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/atpg/ctl/${macro}.ctl"} = 'ctl';
+                    # PERFORMANCE_ISSUE [16_345] - maybe use something other than sed here?
+                    my @ctlpins = `sed -n '/Signals {/,/}/p' $ctlfile | sed 's/\"//g' | sed 's/\;//g' | grep -v 'Signals \{' | grep -v '\}'`;
+    #               chomp @ctlpins; @ctlpins = sort @ctlpins;            
+                    my $n_ctlpins = @ctlpins;
+                    viprint(LOW, "Processing $n_ctlpins ctl pin(s)\n");
+                    foreach my $ctlpin (@ctlpins) {
+                        $ctlpin =~ s/\[.*\]//g; 
+                        $ctlpin =~ s/^\s+//g;
+                        if($ctlpin =~ /^VDD/ || $ctlpin =~ /^VSS/) {
+                            logger("\tError: $ctlpin is a power/ground pin.\n");
+                        }
+                        push @ctl_pin_inout, $ctlpin; 
+                    }
+                    @ctl_pin_inout = uniq @ctl_pin_inout; 
+                    @ctl_pin_inout = sort @ctl_pin_inout;
+    #               print @ctl_pin_inout;
+                }
+                chomp (@ctl_pin_inout,@ctl_pininfo_inout);
+                for my $j (@ctl_pininfo_inout){
+                    if (! grep {$j eq $_} @ctl_pin_inout){
+                         if($j !~ /name direction/) {
+                             if($j =~ /VDD/ || $j =~ /VSS/) {
+                                 logger("\tWarning: $j is power pin. Does not exist in ctl.\n");
+    #                            print "Warning: $j";
+                             } else {
+                                logger("\tError: $j pin/direction mismatch. Please check ctl file.\n");
+                             }
+                         }
+                     }
+    #                print "$j \n" if grep {$j eq $_} @ctl_pin_inout; 
+                } # for $j
+
+                for my $k (@ctl_pin_inout) {
+                   logger("\tError: $k pin/direction mismatch. Please check pininfo file.\n") if ! grep {$k eq $_} @ctl_pininfo_inout;
+    #               print "$j \n" if grep {$j eq $_} @ctl_pin_inout;
+                }
+            
+
+    #######################################################################################################################################        
+                $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/gds/${stack}/${macro}.gds.gz"}     = 'gds';
+                $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/lef/${stack}/${macro}.lef"}        = 'lef';
+                $pincheckFiles{$macro}->{"${relPathAbs}/${macro}/${rel}/macro/lef/${stack}/${macro}_merged.lef"} = 'lef';
+                $pincheckFiles{$macro}->{$streamLayerMapFile} = 'streamLayermap';
+
+            }
+        
+            ## determine if macro has a layers override
+            if (exists $href_layersOverrides->{$macro}){
+               $layersMacro = $href_layersOverrides->{$macro};
+            }else{
+               $layersMacro = $layers;
+            }
+
+            ## determine if macro has an override supply pin
+            if(exists $href_supplyPinsOverrides->{$macro}){
+                $supplyPinsMacro = $href_supplyPinsOverrides->{$macro};
+            }else{
+                $supplyPinsMacro = $supplyPins;
+            }
+    
+            ## seed pincheck run
+            ##  in debug mode the source file will have non-orientation specific RTL
+            my $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaPinCheck.pl" );
+            my $extraArgs = "";
+            $extraArgs = " -debug $main::DEBUG"         if ( $main::DEBUG > 0 );
+            $extraArgs = " -verbosity $main::VERBOSITY" if ( $main::VERBOSITY >  0);
+            $pincheckCmd = "$tool \\\n  ${extraArgs} -log $pincheckLogFiles{$macro} -nousage -appendlog -macro $macro -tech  ${process} -lefObsLayers '$layersMacro' -lefPinLayers '$layersMacro' -PGlayers '$supplyPinsMacro' -since '$datePincheck' -dateRef CDATE -bracket square \\\n";
+            ## set macro corners
+            ##   use default timing corners for all but utility cells library macro
+            if( !(grep{/$macro/} @$aref_utilityMacro) && !(grep{/$macro/} @$aref_repeaterMacro) ){
+                @corners = @corners_ckt;
+            }
+            ##   use copy of VC page corners for utility cells library macro
+            else {
+                $relCornersFile = firstAvailableFile(
+                    "$projPathAbs/design/legalVcCorners.csv",
+                    "$projPathAbs/design_unrestricted/legalVcCorners.csv");
+    
+                ## open release corners files
+                iprint("    Reading '$relCornersFile' release corners file...\n");
+                my @rel_corners = read_file( $relCornersFile );
+                
+                ## grab header and check it is expected
+                $relCornersHeader = shift( @rel_corners );
+                chomp $relCornersHeader;
+                $relCornersHeader =~ s/\#.*//;
+                ## if first header is comment or empty, grab next line
+                while($relCornersHeader =~ /^\s*$/){
+                    $relCornersHeader = shift( @rel_corners );
+                    chomp $relCornersHeader;
+                    $relCornersHeader =~ s/\#.*//;
+                }
+                ## now that comment and empty lines are gone, should have the real header
+                if( $relCornersHeader ne $relCornersHeaderBase ){
+                    eprint("release corners file header is not as expected (exactly 7 fields with tab delimiting).\n  Found: $relCornersHeader\n  Expected: $relCornersHeaderBase");
+                    exit 1;
+                }
+                ## loop through release corners
+                my $n_rel_corners = @rel_corners;
+                viprint(LOW, "Processing $n_rel_corners release corner(s)\n");
+                foreach my $relcorner ( @rel_corners ){
+                    ## grab and split fields
+                    @fields = split('\t', $relcorner);
+                    ## validate the number of fields of each line
+                    if($#fields != 6){
+                        eprint("$relCornersFile VC release corners file must have 7 fields and has ".($#fields+1).".\n$relcorner");
+                        exit 1;
+                    }
+                    ## store fields
+                    $procs_field = lc($fields[1]);
+                    $vdds_field  = $fields[2];
+                    $vaa         = $fields[3];
+                    $vddq        = $fields[4];
+                    $temps_field = $fields[5];
+                    $rcxts_field = $fields[6];
+                    ## check for empty fields
+                    if($procs_field eq ''){
+                        eprint("$relCornersFile VC release corners file must have non-empty Case field.\n$relcorner");
+                        exit 1;
+                    }
+                    if($vdds_field eq ''){
+                        eprint("$relCornersFile VC release corners file must have non-empty Voltage field.\n$relcorner");
+                        exit 1;
+                    }
+                    if($vaa eq ''){
+                        eprint("$relCornersFile VC release corners file must have non-empty PLL Voltage field.\n$relcorner");
+                        exit 1;
+                    }
+                    if($vddq eq ''){
+                        eprint("$relCornersFile VC release corners file must have non-empty IO Voltage field.\n$relcorner");
+                        exit 1;
+                    }
+                    if($temps_field eq ''){
+                        eprint("$relCornersFile VC release corners file must have non-empty Temperature field.\n$relcorner");
+                        exit 1;
+                    }
+                    if($rcxts_field eq ''){
+                        eprint("$relCornersFile VC release corners file must have non-empty Extractions field.\n$relcorner");
+                        exit 1;
+                    }
+                    ## split fields into units and prep special characters
+                    $procs_field =~ s/[\s\/\,]+/,/g;
+                    $vdds_field  =~ s/[\s\/\,]+/,/g;
+                    $temps_field =~ s/[\s\/\,]+/,/g;
+                    $rcxts_field =~ s/[\s\/\,]+/,/g;
+
+                    @procs = split ',',$procs_field;
+                    @vdds  = split ',',$vdds_field;
+                    @temps = split ',',$temps_field;
+                    @rcxts = split ',',$rcxts_field;
+                    $vddq  =~ s/\s*([\d\.]+)v?\s*\(?.*\)?\s*$/$1/i;
+                    $vaa   =~ s/\s*([\d\.]+)v?\s*\(?.*\)?\s*$/$1/i;
+                    #
+                    ## generate corners for each line
+                    my $n_procs = @procs;
+                    viprint(LOW, "Processing $n_procs release corners per line\n");
+                    foreach my $proc (@procs){
+                        my $n_vdds = @vdds;
+                        viprint(LOW, "Processing $n_vdds vdds\n");
+                        foreach my $vdd (@vdds){
+                            my $n_temps = @temps;
+                            viprint(LOW, "Processing $n_temps temps\n");
+                            foreach my $temp (@temps){
+                                ## validate voltages
+                                unless( $vdd =~ /^\d+\.\d+$/  ){
+                                    fatal_error("$relCornersFile VC release corners $vdd core voltage is expected to be #.# only.\n$_", 1); 
+                                }
+                                unless( $vddq =~ /^\d+\.\d+$/ ){
+                                    fatal_error("$relCornersFile VC release corners $vddq IO voltage is expected to be #.# only.\n$_", 1); 
+                                }
+                                unless( $vaa =~ /^\d+\.\d+$/  ){
+                                    fatal_error("$relCornersFile VC release corners $vaa PLL voltage is expected to be #.# only.\n$_", 1); 
+                                }
+                                unless( $temp =~ /^\-?\d+$/   ){
+                                    fatal_error("$relCornersFile VC release corners $temp temperature is expected to be # only.\n$_", 1); 
+                                }
+
+                                ## create text strings
+                                $vdd_txt  =  $vdd;
+                                $vdd_txt  =~ s/(\.\d+)0+$/$1/;
+                                $vdd_txt  =~ s/\./p/;
+                                $temp_txt =  $temp;
+                                $temp_txt =~ s/\-/n/;
+                                $temp_txt =~ s/\.0+$//;
+                                $temp_txt =~ s/(\.\d+)0+$/$1/;
+                                $temp_txt =~ s/\./p/;
+                                $corner   =  "${proc}${vdd_txt}v${temp_txt}c";
+                                push @corners_vc, $corner;
+                            } # foreach temps
+                        } # foreach vdds
+                    } # foreach procs
+                } ## end  foreach( @rel_corners )
+                ## print timing corners
+                logger("      Found VC timing corners: ". join(', ', @corners_vc)."\n");
+
+                ## use VC corners
+                @corners = @corners_vc;
+            } ## end  else if($macro ne $aref_utilityMacro)
+
+        ## for SHIM macros and covercells, do not check for timing libs as they do not exist 
+        if(defined $shimMacros{$macro} || $macro =~ /cover/){
+            goto PINCHECK_SCRIPT;
+        }
+
+        ## for each corner
+        my $n_corners = @corners;
+        viprint(LOW, "Processing $n_corners corner(s)\n");
+        foreach my $corner (@corners){
+            ## set LIB/LIBPG file names
+            ##   utility cells are not allowed to have metal stack
+            if( (grep{/$macro/} @$aref_utilityMacro) || (grep{/$macro/} @$aref_repeaterMacro) ){
+                $libLibrary = "${macro}_${corner}";
+                dprint(CRAZY, "libLibrary = $libLibrary\n" );
+            }
+            ##   all other cells are allowed
+            else{
+                ## Need matched metal_stack from metal_stack_ip in the case there are multiple defined metal_stack
+                my %reverseHash = reverse %$href_stackHash; 
+                my $tempStack = $reverseHash{$stack};
+                if (defined $tempStack){
+                    $libLibrary = "${macro}_${tempStack}_${corner}";
+                    dprint(CRAZY, "macro,stack,tempStack,corner=> $macro,$stack,$tempStack,$corner\n"
+                                 ."libLibrary = $libLibrary\n"
+                          );
+                } elsif ($macro =~ /_tcoil_replica/) {
+                    # P10020416-38355: use metalStackCover for tcoil_replica
+                    $libLibrary = "${macro}_${stack}_${corner}";
+                    dprint(CRAZY, "macro,stack,corner=> $macro,$stack,$corner\n"
+                                 ."libLibrary = $libLibrary\n"
+                          );
+                } else {
+                    my @keys = keys( %$href_stackHash);
+                    fprint("Unable to determine libLiberty: '$stack' not found in the stack reverseHash while processing macro='$macro' corner='$corner'\n");
+                    fatal_error("Failed during processing '$n_corners' corner(s)\nThe stackHash keys are '" . join(',',@keys) . "'\n");
+                }
+            }
+            my $n_timingLibs = @$aref_timingLibs; 
+            viprint(LOW, "Processing $n_timingLibs timing libs(s)\n");
+            foreach my $timingLib (@$aref_timingLibs) {
+                my $addon;
+                if ($timingLib eq "nldm") { 
+                    $addon = ""; 
+                }else{ 
+                    $addon = "_${timingLib}"; 
+                }
+                my $libPath   = "${relPathAbs}/${macro}/${rel}/macro/timing/${stack}/lib${addon}/${libLibrary}.lib";
+                my $libpgPath = "${relPathAbs}/${macro}/${rel}/macro/timing/${stack}/lib_pg${addon}/${libLibrary}_pg.lib";
+
+=begin comment
+    Need to check if firstAvailableFile() returns an empty string in the case where either files don't exist. 
+    Otherwise, when printing missing files, it would print an empty string instead of the path.
+    In the future, when all libs are standardized to be zipped (e.g. end in .gz), this can be removed and
+    firstAvailableFile() will no longer be needed.
+    -- @kevinxie Mar 1 2022
+=end comment
+=cut
+                my $libFile   = firstAvailableFile("${libPath}", "${libPath}.gz");
+                my $libpgFile = firstAvailableFile("${libpgPath}", "${libpgPath}.gz");
+                ## if neither file exists, set .gz as default so missing files can print it
+                if ($libFile eq ""){
+                    $pincheckFiles{$macro}->{"${libPath}.gz"} = 'liberty';
+                }else{
+                    $pincheckFiles{$macro}->{"${libFile}"} = 'liberty';
+                }
+                if ($libpgFile eq ""){
+                    $pincheckFiles{$macro}->{"${libpgPath}.gz"} = 'liberty';
+                }else{
+                    $pincheckFiles{$macro}->{"${libpgFile}"} = 'liberty';
+                }
+            } ## end foreach my $timingLib(@$aref_timingLibs)
+        } ## end foreach $corner (@corners)
+
+        my $n_timingLibs = @$aref_timingLibs;
+        viprint(LOW, "Processing $n_timingLibs timing libs again\n");
+        foreach my $timingLib (@$aref_timingLibs) {
+            my $addon;
+            if($timingLib eq "nldm") { 
+                $addon = ""; 
+            }else{ 
+                $addon = "_${timingLib}";
+            }
+            ## check compile.log files
+            foreach my $lib ("lib", "lib_pg"){
+                $file = "${relPathAbs}/${macro}/${rel}/macro/timing/${stack}/${lib}${addon}/compile.log";
+                if((-e $file) && (!-z $file)){
+                    my @lines = read_file( $file );
+                    foreach my $line ( @lines ){
+                        if( $line =~ m/error/i ){
+                            $libCompileErrors{"${relPathAbs}/${macro}/${rel}/macro/timing/${stack}/${lib}${addon}/"}++;
+                        }
+                    }
+                }
+                ## or complain if it is missing/empty
+                else{
+                    push(@missingFiles, $file) unless grep{$_ eq $file} @missingFiles;
+                }
+            } ## foreach lib
+        } # foreach aref_timingLibs
+
+    PINCHECK_SCRIPT:
+        ## finalize pincheck run
+        my $nfiles = keys %{$pincheckFiles{$macro}};
+        viprint(LOW, "Finalize pincheck run for $nfiles files for macro '$macro'");
+        foreach my $file (sort keys %{$pincheckFiles{$macro}}){
+            # PERFORMANCE_ISSUE n^3 files*stacks*macro [766_005]
+            next if ( $file eq NULL_VAL );
+            if(!-e $file){
+                wprint("Could not find $file $pincheckFiles{$macro}->{$file} file, so skipping for pin check comparison...");
+                push (@missingFiles, $file) unless grep{$_ eq $file} @missingFiles;  
+            } elsif(-z $file){
+                wprint("Zero size for $file $pincheckFiles{$macro}->{$file} file, so skipping for pin check comparison...");
+                push (@missingFiles, $file) unless grep{$_ eq $file} @missingFiles;  
+            } else{
+                $pincheckCmd .= "  -$pincheckFiles{$macro}->{$file} $file ";    # this adds the -ctl option
+                logger("Found $file $pincheckFiles{$macro}->{$file} file for pin check comparison\n");
+            }
+        }
+
+        my ($preRoot) = ($p4ReleaseRoot =~ /(.*)\/project/);
+
+        ## Jira P10020416-40897; Allows specifying lefVsGds.map file
+        if ((defined $opt_lefVsGdsMap) and (-e $opt_lefVsGdsMap)){
+            $pincheckCmd .= "-lefVsGdsMap $opt_lefVsGdsMap ";
+        }
+ 
+        my $cktSpecsFile = getCktSpecsFile("//depot/$preRoot/common/ckt_specs", $macro);
+        if (($cktSpecsFile ne NULL_VAL) and $opt_docx ){
+            $pincheckCmd .= "-docx $cktSpecsFile\n";
+        }
+
+        $pincheckCmd .= "\n";
+
+        #$pincheckCmd .= "  |& cat >> $pincheckLogFiles{$macro}{$stack}\n";
+        #$pincheckCmd .= "  |& cat >> $pincheckLogFiles{$macro}\n";
+        ## add LEF diff to pin check run, if requested and LEF exists (if no LEF, previous warning will flag)
+        if(defined $lefDiffRel && (-e $lefCheckFile)){
+            ## if diff LEF does not exist, warn and still run (to log error)
+            if(!-e $lefDiffCheckFile){
+                wprint("$lefDiffCheckFile LEF diff file does not exist...");
+            }
+
+            #$pincheckCmd .= "rm $lefDiffLogFiles{$macro}{$stack}\n";
+            $pincheckCmd .= "rm $lefDiffLogFiles{$macro}\n";
+            #$pincheckCmd .= "$RealBin/alphaPinCheck.pl \\\n  -macro $macro -tech  ${process} -phys -lefObsLayers '$layersMacro' \\\n  -lef $lefCheckFile \\\n  -lef $lefDiffCheckFile \\\n  |& cat >> $lefDiffLogFiles{$macro}{$stack}\n";
+            my $extraArgs = "";
+            $extraArgs = " -debug $main::DEBUG"         if ( $main::DEBUG > 0 );
+            $extraArgs = " -verbosity $main::VERBOSITY" if ( $main::VERBOSITY >  0);
+
+            my $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaPinCheck.pl" );
+            $pincheckCmd .= "$tool \\\n  ${extraArgs} -log $lefDiffLogFiles{$macro} -nousage -appendlog -macro $macro -tech  ${process} -phys -lefObsLayers '$layersMacro' \\\n  -lef $lefCheckFile \\\n  -lef $lefDiffCheckFile";
+            #|& cat >> $lefDiffLogFiles{$macro}\n";
+        }
+
+        ## change pin check paths to user home paths
+        $pincheckCmd =~ s/ \S+\/$opt_p4ws/ \/u\/\$USER\/$opt_p4ws/g;
+        ## write pincheck shell
+        #iprint("  Writing and executing $pincheckShellFiles{$macro}{$stack} pin check shell script file...\n");
+        iprint("  Writing and executing $pincheckShellFiles{$macro} pin check shell script file...\n");
+        ##   check out pin check shell/log if it exists,or add an empty file to seed depot
+        @files = ($pincheckShellFiles{$macro}, $pincheckLogFiles{$macro});
+        if(defined $lefDiffRel && (-e $lefCheckFile)){
+            #push @files, $lefDiffLogFiles{$macro}{$stack};
+            push @files, $lefDiffLogFiles{$macro};
+        }
+        createPinCheckSummary($pincheckLogFiles{$macro}, "$relPathAbs/$macro/$rel/macro/$macro"."_pincheck_summary.txt") unless $pincheckFlowCheck == FALSE;
+        push @files, "$relPathAbs/$macro/$rel/macro/$macro"."_pincheck_summary.txt";
+        # PERFORMANCE_ISSUE n^3 files*macros*stacks [186_508]
+        foreach my $file (@files){
+            if(-e $file){
+                do_system("p4 edit $file |& cat >> $p4LogFile");
+            }else{
+                do_system("touch $file; p4 add $file |& cat >> $p4LogFile");
+            }
+        }
+        #open($SFH, ">$pincheckShellFiles{$macro}{$stack}") || confess "I/O ERROR: Failed to open file $pincheckShellFiles{$macro}{$stack}: $!\n";
+        if ( $TESTMODE ) {
+            hprint("TESTMODE: create file $pincheckShellFiles{$macro} \n")
+        }else{
+            my @lines_pinchk;
+            ## remove pincheck log file, so we can append it, for utility macro cells
+            #print $SFH "rm $pincheckLogFiles{$macro}{$stack}\n";
+            push(@lines_pinchk, "rm $pincheckLogFiles{$macro}\n" );
+            ## Need to check submacros for utility macros for all families, repeater macros for lpddr54 family only
+            if( grep{/$macro/} @$aref_utilityMacro ){
+                ## we need to check each level 1 cell, instead of level 0 (top level)
+                my $nphyv = @{$phyvMacros{$macro}};
+                viprint(LOW, "Processing $nphyv phyv cells for macro $macro\n");
+                foreach my $cell (@{$phyvMacros{$macro}}){
+                    ## so swap cell for macro
+                    $cmd = $pincheckCmd;
+                    ## changes pin check macro name
+                    $cmd =~ s/\-macro $macro\b/\-macro $cell/;
+                    ## changes pin check vmodule name for debug
+                    $cmd =~ s/\-vmodule $macro\b/\-vmodule $cell/;
+                    ## changes pin check CSV file to be used to cell version
+                    $cmd =~ s/$macro\.csv\b/$cell.csv/;
+                    viprint(LOW, "adding \$cmd to \@lines_pinchk where \$cmd='$cmd'\n");
+                    push(@lines_pinchk, $cmd );
+                }
+                ## and check tag (done here since we only run this once (not per cell) .. lazy programmer
+                #push(@lines_pinchk, "echo |& cat >> $pincheckLogFiles{$macro}\n";
+                #push(@lines_pinchk, "echo |& cat >> $pincheckLogFiles{$macro}\n";
+                #push(@lines_pinchk, "echo msip_layTree -v $gdsCheckFile |& cat >> $pincheckLogFiles{$macro}\n";
+                #push(@lines_pinchk, "msip_layTree -v $gdsCheckFile |& cat >> $pincheckLogFiles{$macro}\n";
+            }
+            elsif( (grep{/$macro/} @$aref_repeaterMacro) && defined $href_releaseMacro->{$macro} ){
+                my $nrepeater_sub_macros = @{$repeaterSubMacros{$macro}};
+                viprint(LOW, "Processing $nrepeater_sub_macros repeater sub macros for macro '$macro'\n");
+                foreach my $cell (@{$repeaterSubMacros{$macro}}){
+                    ## so swap cell for macro
+                    $cmd = $pincheckCmd;
+                    ## changes pin check macro name
+                    $cmd =~ s/\-macro $macro\b/\-macro $cell/;
+                    ## changes pin check vmodule name for debug
+                    $cmd =~ s/\-vmodule $macro\b/\-vmodule $cell/;
+                    ## changes pin check CSV file to be used to cell version
+                    $cmd =~ s/$macro\.csv\b/$cell.csv/;
+                    viprint(LOW, "adding \$cmd to \@lines_pinchk where \$cmd='$cmd'\n");
+                    push(@lines_pinchk, $cmd );
+                }
+            }
+            ## for all other macros, just dump the pin check command
+            else{
+                push(@lines_pinchk, $pincheckCmd );
+                viprint(LOW, "adding \$pincheckCmd to \@lines_pinchk where \$pincheckCmd='$pincheckCmd'\n");
+            }
+            write_file( \@lines_pinchk, $pincheckShellFiles{$macro} );
+            viprint(LOW, "Wrote file '$pincheckShellFiles{$macro}'\n");
+        }
+
+#        $chmodExec = 0755;
+        #chmod $chmodExec, $pincheckShellFiles{$macro}{$stack};
+        chmod 0755, $pincheckShellFiles{$macro} unless ($TESTMODE);
+        ## run pincheck script
+        #$cmd = "$pincheckShellFiles{$macro}{$stack}";
+        $cmd = "$pincheckShellFiles{$macro}";
+
+        ##   output to log file
+        logger("    \$ $cmd\n");
+        do_system($cmd);
+
+        ## interrogate pincheck file for DIRTY checks
+        #iprint("  Checking $pincheckLogFiles{$macro}{$stack} pin check log file...\n");
+        iprint("  Checking $pincheckLogFiles{$macro} pin check log file...\n");
+       
+        my ($dirtysCount, $warningsCount) = countDirtysAndWarnings( $pincheckLogFiles{$macro} );
+        #$pincheckDirtys{$macro}{$stack}++;
+        $pincheckDirtys{$macro} += $dirtysCount;
+        #$pincheckWarnings{$macro}{$stack}++;
+        $pincheckWarnings{$macro} += $warningsCount;
+
+        ## interrogate lefdiff file for DIRTY checks
+        if(defined $lefDiffRel && (-e $lefCheckFile)){
+            #iprint("  Checking $lefDiffLogFiles{$macro}{$stack} pin check log file...\n");
+            iprint("  Checking $lefDiffLogFiles{$macro} pin check log file...\n");
+            #open(PFH, $lefDiffLogFiles{$macro}{$stack}) || confess "I/O ERROR: Failed to open file $lefDiffLogFiles{$macro}{$stack}: $!\n";
+            my @lines = read_file( $lefDiffLogFiles{$macro} );
+            foreach( @lines ){
+                if(/^\s*DIRTY/i || /^\s*Error/i){
+                    #$lefDiffDirtys{$macro}{$stack}++;
+                    $lefDiffDirtys{$macro}++;
+                }
+                if(/^\s*Warning/i){
+                    #$lefDiffWarnings{$macro}{$stack}++;
+                    $lefDiffWarnings{$macro}++;
+                }
+            }
+        }
+        ## p4 opened file
+        logger("  List opened P4 files\n");
+        $cmd = "p4 opened ${relPathAbs}/${macro}/${rel}/macro/... |& cat >> $p4LogFile";
+        logger("    \$ $cmd\n");
+        run_system_cmd("$cmd", $main::DEBUG );
+
+        if ($pincheckFlowCheck == FALSE){last;}
+        }## end foreach $stack (@stacks)
+    } ## end  MACROLOOP: foreach $macro (@macros)
+
+    ## All done
+    iprint("All done.\n\n");
+
+    ## p4 submit command
+    hprint("To complete release deliverables submission to the depot:");
+    foreach my $macro (@macros){
+        p4print("p4 submit -d 'Release $rel of macro $macro final pincheck view' ${relPathAbs}/${macro}/${rel}/...");
+    }
+    hprint("  or");
+    foreach my $macro (@macros){
+        p4print("p4 submit -d 'Release $rel of macro $macro final pincheck views, updated to fix XYZ' ${relPathAbs}/${macro}/${rel}/...");
+    }
+
+    ## warn about any lefdiff warning
+    foreach my $macro (@macros){
+        if(exists $lefDiffWarnings{$macro}){
+            #foreach my $stack (keys($lefDiffWarnings{$macro})){
+                #wprint("\n***WARNING: There were $lefDiffWarnings{$macro}{$stack} checks that were 'Warning' in the ${macro} macro ${stack} stack lefdiff run.");
+                #wprint("  The warnings are listed in the lefdiff log file:\n    $lefDiffLogFiles{$macro}{$stack} ");
+                nprint "\n";
+                wprint("  There were $lefDiffWarnings{$macro} checks that were 'Warning' in the $macro macro lefdiff run.");
+                wprint("  The warnings are listed in the pin check log file:\n    $lefDiffLogFiles{$macro} ");
+                wprint("  These items may be acceptable, but please review them.\n");
+            #}
+        }
+    }    
+
+    ## warn about any pincheck warning
+    foreach my $macro (@macros){
+        if((exists $pincheckWarnings{$macro}) && ($pincheckWarnings{$macro} > 0)){
+            #foreach my $stack (keys($pincheckWarnings{$macro})){
+                #wprint("\n***WARNING: There were $pincheckWarnings{$macro}{$stack} checks that were 'Warning' in the ${macro} macro ${stack} stack pincheck run.");
+                #wprint("  The warnings are listed in the pin check log file:\n    $pincheckLogFiles{$macro}{$stack} ");
+                nprint "\n";
+                wprint("  There were $pincheckWarnings{$macro} checks that were 'Warning' in the $macro macro pincheck run.");
+                wprint("  The warnings are listed in the pin check log file:\n    $pincheckLogFiles{$macro} ");
+                wprint("  These items may be acceptable, but please review them.\n");
+            #}
+        }    
+    }
+
+    ## warn to manually check tagging of utility macro
+    foreach my $macro (@macros){
+        if( (grep{/$macro/} @$aref_utilityMacro) || (grep{/$macro/} @$aref_repeaterMacro) ){
+            nprint "\n";
+            wprint(" The $macro utility macro should be tagged, which must be reviewed in log file:\n    $pincheckLogFiles{$macro} ");
+            #wprint("\n***WARNING: The $macro utility macro should be tagged, which must be reviewed in log file(s):");
+            #foreach my $stack (keys($pincheckLogFiles{$macro})){
+            #    wprint("    $pincheckLogFiles{$macro}{$stack}");
+            #}
+            wprint("  Please review the tagging info following the logged 'msip_layTree' command at the end of the file.\n");
+        }
+    }
+
+    ## warn about any lefdiff dirty/error
+    foreach my $macro (@macros){
+        if(defined $lefDiffRel && (!-e $lefCheckFile)){
+            if((exists $lefDiffDirtys{$macro}) && ($lefDiffDirtys{$macro} > 0)){
+                #foreach my $stack (keys($lefDiffDirtys{$macro})){
+                    #wprint("\n***WARNING: There were $lefDiffDirtys{$macro}{$stack} checks that were 'DIRTY/Error' in the ${macro} macro ${stack} stack lefdiff run.");
+                    #wprint("  The failed checks are listed in the lefdiff log file:\n    $lefDiffLogFiles{$macro}{$stack} ");
+                    nprint "\n";
+                    wprint("  There were $lefDiffDirtys{$macro} checks that were 'DIRTY/Error' in the $macro macro lefdiff run.");
+                    wprint("  The failed checks are listed in the pin check log file:\n    $lefDiffLogFiles{$macro} ");
+                    wprint("  These items may be acceptable, but please review them.\n");
+                #}
+            }
+        }
+    }    
+
+    ## warn about any pincheck dirty/error
+    foreach my $macro (@macros){
+        if((exists $pincheckDirtys{$macro}) && ($pincheckDirtys{$macro} > 0)){
+            #foreach my $stack (keys$pincheckDirtys{$macro}){
+            #    wprint("\n***WARNING: There were $pincheckDirtys{$macro}{$stack} checks that were 'DIRTY/Error' in the ${macro} macro ${stack} stack pincheck run.");
+            #    wprint("  The failed checks are listed in the pin check log file:\n    $pincheckLogFiles{$macro}{$stack} ");
+                nprint "\n";
+                wprint("  There were $pincheckDirtys{$macro} checks that were 'DIRTY/Error' in the $macro macro pincheck run.");
+                wprint("  The failed checks are listed in the pin check log file:\n    $pincheckLogFiles{$macro} ");
+                wprint("  Please fix all DIRTY checks, or get waivers from the CKT lead.\n");
+            #}
+        }    
+    }
+
+    ## warn about any missing files
+    if($#missingFiles >= 0){
+        nprint "\n";
+        wprint("  There were missing source behavioral file(s):");
+        wprint("    ");
+        wprint(join("\n    ",@missingFiles));
+        wprint("");
+        wprint("  Please create the missing source files, or get waivers from the CKT lead.\n");
+    }
+
+    ## warn about lib compile errors
+    foreach my $relLibPath (sort keys %libCompileErrors){
+        if(exists $libCompileErrors{$relLibPath}){
+            nprint "\n";
+            wprint("  There were $libCompileErrors{$relLibPath} errors in the $relLibPath LIB compile.");
+            wprint("  Please fix all ERRORS, or get waivers from the CKT lead.\n");
+        }
+    }
+
+    ## close log file
+    #close(LOG);
+} # end Main
+###########   END Main    ###########
+
+#-------------------------------------------------------------------------------
+# process the command line arguments
+#     set the values for DEBUG and VERBOSITY
+#-------------------------------------------------------------------------------
+sub process_cmd_line_args(){
+    print_function_header();
+    my ( $opt_projSPEC, $opt_macros,  $opt_dryrun,  $opt_verbosity,
+         $opt_debug,    $opt_help,    $opt_nousage, $opt_p4ws,
+         $opt_docx,     $opt_rel,     $opt_lefVsGdsMap );
+
+    $opt_docx = TRUE;   # -docx is the default, override with -nodocx
+
+    my $success = GetOptions(
+          "p=s"             => \$opt_projSPEC,
+          "macros=s"        => \$opt_macros,
+          "docx!"           => \$opt_docx,
+          "dryrun!"         => \$opt_dryrun,
+          "verbosity=i"     => \$opt_verbosity,
+          "debug=i"         => \$opt_debug,
+          "help"            => \$opt_help, 
+          "nousage"         => \$opt_nousage,
+          "p4ws=s"          => \$opt_p4ws,
+          "rel=s"           => \$opt_rel,
+          "lefVsGdsMap=s"   => \$opt_lefVsGdsMap,
+    );
+
+    $main::VERBOSITY = $opt_verbosity if( defined $opt_verbosity );
+    $main::DEBUG     = $opt_debug     if( defined $opt_debug     );
+    $main::TESTMODE  = 1              if( defined $opt_dryrun    );
+
+    ## quit with usage message, if usage not satisfied
+    &usage(0) if $opt_help;
+    &usage(1) unless( $success );
+    &usage(1) unless( defined $opt_projSPEC );
+    &usage(1) if ( defined $opt_rel && !defined $opt_macros );
+
+    return( $opt_projSPEC, $opt_macros, $opt_nousage, $opt_p4ws, $opt_docx, $opt_rel, $opt_lefVsGdsMap );
+}
+
+#-------------------------------------------------------------------------------
+#  script usage message
+#-------------------------------------------------------------------------------
+sub usage($) {
+    my $exit_status = shift;
+
+    print << "EOP" ;
+Description
+  A script to run pin check on all views of all macros in the depot
+
+USAGE : $PROGRAM_NAME [options] -p <projSPEC>
+
+------------------------------------
+Required Args:
+------------------------------------
+-p  <projSPEC>     project SPEC (i.e. <project_type>/<project>/<CD_rel> )
+
+
+------------------------------------
+Optional Args:
+------------------------------------
+-help               print this screen
+-macros      <arg>  macros to release, space or comma-separated 
+-p4ws        <arg>  Overrides path to your personal Perforce work area (default: \$HOME/p4_ws)
+-[no]docx           Default is -docx, -nodocx will prevent the docx option from
+                    being passed to alphaPinCheck.pl calls.
+-rel         <arg>  Overrides the release version for older instances (must be used in conjuction with '-macros')
+-lefVsGdsMap <arg>  Specifies the lefVsGdsMap file, if not available in or different from the version in 
+                    /remote/cad-rep/msip/ude_conf/lef_vs_gds/TECH
+-dryrun             do not execute p4 commands (other than status/opened)
+-nousage            do not report the usage of this script
+-verbosity   <#>    print additional messages ... includes details of system calls etc. 
+                    Must provide integer argument -> higher values increases verbosity.
+-debug       <#>    print additional diagnostic messagess to debug script
+
+
+Assumptions:
+- Requires that the depot has been seeded (with blank or old files), so that all files exist
+
+EOP
+    exit($exit_status) ;
+}
+
+#-------------------------------------------------------------------------------
+sub get_keys_value($$$$){
+    print_function_header();
+    my $projRelFile = shift;
+    my $href        = shift;
+    my $action      = shift;   # $action = exit || warn 
+    my $key         = shift;
+    my $label       = shift;
+
+    unless( exists $href->{$key} ){
+       my $msg = "Failed to find '$key' $label in release file, doesn't exist: '$projRelFile'";
+       if( $action eq 'exit' ){
+           fatal_error( $msg, 1 );
+       }else{
+           wprint( $msg );
+       }
+    };
+    unless( defined $href->{$key} ){
+       my $msg = "Failed to find '$key' $label in release file, isn't defined: '$projRelFile'";
+       if( $action eq 'exit' ){
+           fatal_error( $msg, 1 );
+       }else{
+           wprint( $msg );
+       }
+    };
+
+    dprint(CRAZY, "'$label': '$key'->". $href->{$key} ."\n" );
+    return( $href->{$key} );
+}
+
+#------------------------------------------------------------------------------
+sub do_system($){
+    my $cmd = shift;
+    if ( $main::TESTMODE ) {
+        hprint("TESTMODE: run_system_cmd( '$cmd', \$main::DEBUG )\n");
+        return 0;
+    }
+    vhprint( LOW, "do_system( '$cmd' )\n");
+    my ($out, $err) = run_system_cmd( $cmd, $main::DEBUG );
+    if ( $err ) {
+        wprint("'$cmd' return status=$err\n");
+    }
+
+    return $err;
+}
+
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+sub createPinCheckSummary($$){
+    my $filePath       = shift;
+    my $summaryPath    = shift;
+
+    my $dirtyCheck     = "CLEAN";
+    my $nonTimingClean = "FRESH";
+    my $timingClean    = "FRESH";
+
+    my @lines = read_file( $filePath );
+    foreach my $line ( @lines ){
+        #are all checks in alphapincheck clean?
+        if ($line =~ /DIRTY/){
+            $dirtyCheck = "DIRTY";
+        } 
+        #are non timing views up to date with legalRelease?
+        if ($line =~ /-E-\s*Non.*is stale/){
+            $nonTimingClean = "STALE";
+        }
+        #are timing views up to date with legalRelease?
+        if ($line =~ /-E-\s*Timing.*is stale/){
+            $timingClean = "STALE";
+        }
+        if ($dirtyCheck eq "DIRTY" && $nonTimingClean eq "STALE" && $timingClean eq "STALE") {
+            last;
+        }
+    }
+
+    my $metalStack;
+    $metalStack = $1 if $filePath =~ /pincheck\/(\S+)\//;
+
+    my @sumfile_lines;
+    push(@sumfile_lines, "\n----------------------------------------\n" );
+    push(@sumfile_lines, "$metalStack - $dirtyCheck, $nonTimingClean, $timingClean\n" );
+    write_file( \@sumfile_lines, $summaryPath, '>' );
+}

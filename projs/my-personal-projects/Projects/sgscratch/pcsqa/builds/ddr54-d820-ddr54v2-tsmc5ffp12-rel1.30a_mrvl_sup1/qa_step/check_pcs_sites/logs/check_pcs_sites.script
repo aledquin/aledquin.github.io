@@ -1,0 +1,312 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/iprel/scripts_global/bob/multi_something.tcl#2 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2011.09-SP3
+## HEADER_MSG    Copyright (c) 2012 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2011.09-SP3
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This is the standard decision script for data management.
+## * The decision being made is promote vs restore.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## HISTORY
+##
+## 04/16/2015, ahogenhu
+##             PCSQA giving unexpected errors when running it locally (STAR 9000873535)
+## -----------------------------------------------------------------------------
+
+source ../../../../../scripts_global/conf/header_start.tcl
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+## -----------------------------------------------------------------------------
+## Code for creating some generated tasks.
+## -----------------------------------------------------------------------------
+
+## A gen_task must create an XML flow file using the
+## filename specified by the SEV(gen_file) variable.
+
+set fid_subflow [open $SEV(gen_file) w]
+puts $fid_subflow "<file type=\"gen_group\">\n  <attribute name=\"flow_name\" value=\"gen_flow\"/>\n  <package type=\"tasks\">"
+puts $fid_subflow ""
+
+set udeproj   $::env(udeproj)
+set ude3proj  /remote/cad-rep/projects
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set pcs $::env(PCSQA_PROJ_ROOT)/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version)
+
+catch { exec $SEV(exec_cmd) -c "/usr/local/bin/siteid" } thissite
+set getp4contentwork [getWorkDir get_p4_content]
+catch { exec $SEV(exec_cmd) -c "find $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) -type f | wc -l" } pcsfiles
+if { $pcsfiles == 0 } {
+	catch { exec $SEV(exec_cmd) -c "find $getp4contentwork/$SVAR(product_name)/$SVAR(pcs_name)/$SVAR(pcs_version) -type l | wc -l" } pcsfiles
+}
+if { $pcsfiles > 0 } {
+puts $fid_subflow "  <package type=\"tool_task\">"
+puts $fid_subflow "      <attribute name=\"name\" value=\"$SEV(task)_p4_${thissite}\"/>"
+puts $fid_subflow "      <attribute name=\"tool\" value=\"tcl_job\"/>"
+puts $fid_subflow "      <attribute name=\"script_file\" value=\"\$SEV(gscript_dir)/qa_scripts/check_pcs.tcl\"/>"
+puts $fid_subflow "      <attribute name=\"step\" value=\"$SEV(step)\"/>"
+puts $fid_subflow "      <attribute name=\"src\" value=\"$SEV(src)\"/>"
+puts $fid_subflow "      <attribute name=\"dst\" value=\"2_$SEV(task)_p4_${thissite}\"/>"
+puts $fid_subflow "      <attribute name=\"pass_control\" value=\"no_fatal\"/>"
+puts $fid_subflow "  </package>"
+puts $fid_subflow ""
+}
+
+if { [file exists $::env(PCSQA_WORK_DIR)/msip_site_hostlist_qa] } {
+	set default_msip_site_file $::env(PCSQA_WORK_DIR)/msip_site_hostlist_qa
+} else {
+	set default_msip_site_file $::env(udecadrep)/msip/admin/msip_site_hostlist_qa
+}
+if { $::env(PCSQA_PROJ_ROOT) == $ude3proj } {
+	## overrule the sites selected by user by -site command line option 
+	set msip_site_file $::env(PCSQA_WORK_DIR)/msip_site
+	if { [file exists $msip_site_file] == 0 } {
+		set msip_site_file $default_msip_site_file
+	}
+	catch { exec $SEV(exec_cmd) -c "cat $msip_site_file | grep -v ^\[\[:blank:\]\]*# | awk {'print \$1'}" } siteslist	
+	## catch { exec bash -c "source $::env(MODULESHOME)/init/bash &>/dev/null && source $::env(udecadrep)/etc/.bashrc &>/dev/null && module purge && module load msip_shell_pcs_manager && msip_pcs_getProjectSites $SVAR(product_name) $SVAR(pcs_name) $SVAR(pcs_version) | grep \"Project is mapped at the following sites :\" | sed -e 's/^\[^:\]*://g' -e 's/^\\s*//g' " } siteslist
+	set sites [split $siteslist "\n"]
+} else {
+	set sites [list]
+}
+if { [llength $sites] == 0 && [file isdirectory $pcs] } {
+	set sites [list "$thissite"]
+}
+if { [llength $sites] > 0 && [lsearch -exact $sites $thissite] == -1 &&
+     [file isdirectory $pcs] } {
+	lappend sites $thissite
+}
+
+set refccs ""
+set refccstxt [getWorkDir ref_ccs]/ref_ccs.txt
+if { [file exists $refccstxt] } {
+	catch { exec $SEV(exec_cmd) -c "cat $refccstxt | head -1" } refccs
+}
+if { $refccs == "" } {
+	set refccs "norefccs"
+}
+
+set parentpcs ""
+set parentpcstxt [getWorkDir ref_ccs]/parent_pcs.txt
+if { [file exists $parentpcstxt] } {
+	catch { exec $SEV(exec_cmd) -c "cat $parentpcstxt | head -1" } parentpcs
+}
+if { $parentpcs == "" } {
+	set parentpcs "noparentpcs"
+}
+
+set pinsversion ""
+set pinsversiontxt [getWorkDir ref_ccs]/pins_version.txt
+if { [file exists $pinsversiontxt] } {
+	catch { exec $SEV(exec_cmd) -c "grep \"Pin product version:\" $pinsversiontxt | head -1 | awk '{ print \$4 }'" } pinsversion
+}
+if { $pinsversion == "" } {
+	set pinsversion "nopinsversion"
+}
+
+catch { exec $SEV(exec_cmd) -c "cat $SEV(gscript_dir)/qa_scripts/check_rule_applicable.tcl $SEV(gscript_dir)/qa_scripts/check_pcs.tcl > $run_dir/lynx_check_pcs.tcl && \
+                                $SEV(gscript_dir)/qa_scripts/lynx2tcl $run_dir/lynx_check_pcs.tcl $run_dir/nolynx_check_pcs.tcl $refccs $SVAR(product_name) $SVAR(pcs_name) $SVAR(pcs_version) $parentpcs $pinsversion && \
+				rm -f $run_dir/lynx_check_pcs.tcl" } dummy
+
+if { [info exists SEV(builds_dir)] &&
+     [info exists SEV(build_name)] &&
+     [info exists SEV(step_name)] } {
+	## since Lynx 2018.06-SP1
+	set udeenvfiles [glob -nocomplain $SEV(step_dir)/check_ude_env_*/work/*.env]
+} else {
+	## until Lynx 2018.06-SP1
+	set udeenvfiles [glob -nocomplain $SEV(work_dir)/check_ude_env_*/*.env]
+}
+if { [llength $udeenvfiles] > 0 } {
+	## get all LOADEDMODULES from ude env files and 
+	## create moduleprojectenv to test availability of tools
+	## at all sites: Rule 2.1jk
+	catch { exec $SEV(exec_cmd) -c "rm -f moduleprojectenv" } dummy
+	foreach udeenvfile $udeenvfiles {
+		catch { exec $SEV(exec_cmd) -c "grep ^LOADEDMODULES $udeenvfile | awk '{ print \$2 }' | sed -e 's/:/\\n/g' >> moduleprojectenv" } dummy		
+	}
+	if { [file exists moduleprojectenv] } {
+		## skip default modules set by ude, 
+		## at which the user is not faced by module load errors
+		set udemodules [list "msip_ude3" "msip_ude" "msip_ude_emll" "msip_eda_tools"]
+
+		## At definition of star_rcxt version in project.env,
+		## in the ude environment dump 
+		## both star_rcxt and starrc appear with same version.
+		## However, module load of star_rcxt is mapped to starrc.
+		## This will result in double entries in PCS QA error message.
+		set projectenv $pcs/cad/project.env
+		if { [file exists $projectenv] } {
+			catch { exec $SEV(exec_cmd) -c "grep star_rcxt $projectenv | grep module | grep -v ^\[\[:blank:\]\]*# | wc -l" } starrcxtset
+			if { $starrcxtset == 0 } {
+				set projectenv $parentpcs/cad/project.env
+				if { [file exists $projectenv] } {
+					catch { exec $SEV(exec_cmd) -c "grep star_rcxt $projectenv | grep module | grep -v ^\[\[:blank:\]\]*# | wc -l" } starrcxtset				
+				}
+				if { $starrcxtset == 0 } {
+					set projectenv $refccs/design/project.env
+					if { [file exists $projectenv] } {
+						catch { exec $SEV(exec_cmd) -c "grep star_rcxt $projectenv | grep module | grep -v ^\[\[:blank:\]\]*# | wc -l" } starrcxtset				
+					}
+				}
+			}
+			if { $starrcxtset > 0 } {
+				## skip check starrc
+				lappend udemodules "starrc"
+			}
+		}
+		
+		## prefix each module with
+		## module unload
+		## module load
+		set fp [open moduleprojectenv r]
+		set file_data [read $fp]
+		close $fp
+		set modules [split $file_data "\n"]
+		set moduleswritten [list]
+		set fp [open newmoduleprojectenv w]
+		foreach module $modules {
+			if { $module != "" } {
+				set slash [string first / $module]
+				if { $slash != -1 } {
+					set modulenoversion [string range $module 0 [expr $slash - 1]]
+				} else {
+					set modulenoversion $module
+				}
+				if { [lsearch -exact $moduleswritten $module         ] == -1 &&
+				     [lsearch -exact $udemodules     $modulenoversion] == -1 } {
+					puts $fp "module unload $modulenoversion"
+					puts $fp "module load $module"
+					lappend moduleswritten $module
+				}
+			}
+		}
+		close $fp
+		catch { exec $SEV(exec_cmd) -c "mv newmoduleprojectenv moduleprojectenv" } dummy
+	}
+
+	catch { exec $SEV(exec_cmd) -c "grep -h ^LPPLIBCCSQA $udeenvfiles | sort -u > lppsource" } dummy		
+
+	## Pre-process Rule 2.1lll
+	## Add:
+	## cvcp_has_AreaCap [true|false]
+	## to lppsource
+	if { [file isdirectory $pcs] && 
+	     $refccs != "" &&
+	     [file exists lppsource] } {
+		catch { exec $SEV(exec_cmd) -c "cat lppsource | head -1 | awk '{ print \$2 }'" } lppsource
+		if { [string compare -length 6 "lpplib" $lppsource] == 0 ||
+		     $lppsource == "ipdk" } {
+			set caddirs [glob -nocomplain $pcs/cad/*]
+			## get metal stack dependent PDK path
+			foreach caddir $caddirs {
+				set metalstack ""
+				if { [file exists $caddir/env.tcl] } {
+					set metalstack [file tail $caddir]
+				}
+				set ccslibdefs $refccs/cad/$metalstack/lib.defs
+				if { [file exists $ccslibdefs] } {
+					catch { exec $SEV(exec_cmd) -c "grep ^DEFINE\[\[:blank:\]\]\[\[:blank:\]\]*techlib\[\[:blank:\]\] $ccslibdefs | head -1 | awk '{ print \$3 }'" } pdkpath
+					if { $pdkpath != "" && [file isdirectory $pdkpath] } {
+						catch { exec $SEV(exec_cmd) -c "$SEV(gscript_dir)/qa_scripts/msip_ppdk_cvcp_has_AreaCap.py $pdkpath" } cvcp_has_AreaCap
+						if { $cvcp_has_AreaCap == "true" || $cvcp_has_AreaCap == "false" } {
+							if { $cvcp_has_AreaCap == "true" } {
+								catch { exec $SEV(exec_cmd) -c "echo \"cvcp_has_AreaCap $cvcp_has_AreaCap\" >> lppsource" } dummy
+								break
+							}
+						} else {
+							sproc_msg -warning "msip_ppdk_cvcp_has_AreaCap.py returns '$cvcp_has_AreaCap' on PDK path $pdkpath"
+						}
+					}
+				}
+			}
+		}
+	}
+
+	## Pre-process Rule 2.1ee1
+	catch { exec $SEV(exec_cmd) -c "grep -h ^P4PORT $udeenvfiles | sort -u > udeenv" } dummy		
+}
+
+set remote_check_by_user 1
+
+## use default msip_site_file to check if selected sites are valid and for hosts
+set msip_site_file $default_msip_site_file
+
+foreach site $sites {
+	catch { exec $SEV(exec_cmd) -c "grep $site $msip_site_file | wc -l" } validsite
+	if { $validsite == 0 && $site == $thissite } {
+		set validsite 1
+	}
+	if { ( $validsite > 0 || $site == "kilo" ) && $site != "us8e" } {
+
+	catch { exec $SEV(exec_cmd) -c "grep $site $msip_site_file | awk {'print \$2'}" } host
+	if { $host == "" && $site == $thissite } {
+		set host $::env(HOSTNAME)
+	}
+	if { $site == "kilo" } {
+		set host "kilo1"
+	}
+
+	puts $fid_subflow "  <package type=\"tool_task\">"
+	puts $fid_subflow "      <attribute name=\"name\" value=\"$SEV(task)_${site}\"/>"
+	puts $fid_subflow "      <attribute name=\"tool\" value=\"tcl_job\"/>"
+	puts $fid_subflow "      <attribute name=\"script_file\" value=\"\$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl\"/>"
+	puts $fid_subflow "      <attribute name=\"step\" value=\"$SEV(step)\"/>"
+	puts $fid_subflow "      <attribute name=\"src\" value=\"$SEV(src)\"/>"
+	puts $fid_subflow "      <attribute name=\"dst\" value=\"2_$SEV(task)_${site}\"/>"
+
+	puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(site)|$site\"/>"
+	puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(host)|$host\"/>"
+	if { $remote_check_by_user == 1 } {
+		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(user)|$::env(USER)\"/>"
+	}
+	puts $fid_subflow "      <attribute name=\"pass_control\" value=\"no_fatal\"/>"
+	puts $fid_subflow "  </package>"
+	puts $fid_subflow ""
+	
+	if { $site == $thissite && $remote_check_by_user == 0 } {
+		puts $fid_subflow "  <package type=\"tool_task\">"
+		puts $fid_subflow "      <attribute name=\"name\" value=\"$SEV(task)_$::env(USER)_${site}\"/>"
+		puts $fid_subflow "      <attribute name=\"tool\" value=\"tcl_job\"/>"
+		puts $fid_subflow "      <attribute name=\"script_file\" value=\"\$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl\"/>"
+		puts $fid_subflow "      <attribute name=\"step\" value=\"$SEV(step)\"/>"
+		puts $fid_subflow "      <attribute name=\"src\" value=\"$SEV(src)\"/>"
+		puts $fid_subflow "      <attribute name=\"dst\" value=\"2_$SEV(task)_$::env(USER)_${site}\"/>"
+
+		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(site)|$site\"/>"
+		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(host)|$host\"/>"
+		puts $fid_subflow "        <attribute name=\"variable\" value=\"|TEV(user)|$::env(USER)\"/>"
+		puts $fid_subflow "      <attribute name=\"pass_control\" value=\"no_fatal\"/>"
+		puts $fid_subflow "  </package>"
+		puts $fid_subflow ""
+	}
+
+	} else {
+		sproc_msg -warning "$site is no valid MSIP site"
+	}
+}
+
+
+puts $fid_subflow "  </package>\n</file>"
+close $fid_subflow
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

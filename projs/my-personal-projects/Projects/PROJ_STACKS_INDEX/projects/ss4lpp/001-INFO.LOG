@@ -1,0 +1,9 @@
+ss4lpp : rel2.9.0 : 12_S00 : m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+ss4lpp : rel2.8.0 : 12_S00 : x720-usb2-ss4lpp-12-ns
+ss4lpp : rel2.8.0 : 12_S00 : x573-pcie6-ss4lpp-12-ns
+ss4lpp : rel2.7.0 : 12_S00 : n411-c20-ss4lpp-12-ns
+ss4lpp : rel2.6.2 : 12_S00 : x341-e32-ss4lpp-12-ns
+ss4lpp : rel2.6.0 : 12_S00 : f502-gpio-ss4lpp-1.2v
+ss4lpp : rel2.4.1 : 12_S00 : u140-cmnblks-ss4lpp-12
+ss4lpp : rel2.2.0 : 12_S00 : l153-std-ss4lpp-1.2v_S00
+ss4lpp : rel2.0.1 : 12_S00 : u136-cmnblks-ss4lpp-12

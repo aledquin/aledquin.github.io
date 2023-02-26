@@ -1,0 +1,140 @@
+n227-c10-ss4lpp-12-ns.txt
+INFO: ss4lpp 12_SS0 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u136-cmnblks-ss4lpp-12.txt
+INFO: ss4lpp 12_S00 rel2.0.1
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.0.1/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.0.1/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+u140-cmnblks-ss4lpp-12.txt
+INFO: ss4lpp 12_S00 rel2.4.1
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.4.1/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.4.1/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+m0135-mem-ss4lpp-sa04nlg42p22sassl01ms.txt
+INFO: "em" "em" "m0135-mem-ss4lpp-sa04nlg41p11sassl02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sasrl256s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p11sasrl128s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p11sacul256s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sassl02ms.txt
+INFO: ss4lpp 12_S00 rel2.9.0
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.9.0/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.9.0/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_16M_3Mx_2Fx_7Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.9.0/cad/16M_3Mx_2Fx_7Dx_2Hx_2Iz_LB/env.tcl
+m0135-mem-ss4lpp-sa04nlg41p11sadtc160s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sadsl02ms.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sadrl256s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p10asdv101ms.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-layout.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11cpsrlhpcs.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p22sassl512s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sahtc160s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-schematic.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p11sasul512s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p11sasul256s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sagsl512s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p11sagrl128s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg41p11sagsl01ms.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0135-mem-ss4lpp-sa04nlg42p11sashl128s.txt
+INFO: em em m0135-mem-ss4lpp-sa04nlg41p11sassl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l153-std-ss4lpp-1.2v_S00.txt
+INFO: ss4lpp 12_S00 rel2.2.0
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.2.0/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.2.0/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+x720-usb2-ss4lpp-12-ns.txt
+INFO: ss4lpp 12_S00 rel2.8.0
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.8.0/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.8.0/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+d741-hbm2e-ss4lpp12_S00.txt
+INFO: ss4lpp 12_SS0 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x341-e32-ss4lpp-12-ns.txt
+INFO: ss4lpp 12_S00 rel2.6.2
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.6.2/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.6.2/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+n411-c20-ss4lpp-12-ns.txt
+INFO: ss4lpp 12_S00 rel2.7.0
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.7.0/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.7.0/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+f502-gpio-ss4lpp-1.2v.txt
+INFO: ss4lpp 12_S00 rel2.6.0
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.6.0/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.6.0/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl
+x573-pcie6-ss4lpp-12-ns.txt
+INFO: ss4lpp 12_S00 rel2.8.0
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_1Fx_8Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.8.0/cad/14M_3Mx_1Fx_8Dx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss4lpp-12_S00_14M_3Mx_2Fx_7Dx_2Iz_LB : /remote/cad-rep/proj/c153-ss4lpp-1.2v_S00/rel2.8.0/cad/14M_3Mx_2Fx_7Dx_2Iz_LB/env.tcl

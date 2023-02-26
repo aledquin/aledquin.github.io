@@ -1,0 +1,2 @@
+tsmc22ulp-25_10M_7X2Z /remote/cad-rep/fab/f101-tsmc/22nm/logic/ULP/common/rules/common/icv/drc/ver1.5a/orig/LOGIC_TopMz_DRC/ICVN22ULP_10M_7X2Z_001.15a.encrypt
+tsmc22ulp-25_8M_5X2Z /remote/cad-rep/fab/f101-tsmc/22nm/logic/ULP/common/rules/common/icv/drc/ver1.5a/orig/LOGIC_TopMz_DRC/ICVN22ULP_8M_5X2Z_001.15a.encrypt

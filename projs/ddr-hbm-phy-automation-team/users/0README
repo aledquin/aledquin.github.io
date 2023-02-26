@@ -1,0 +1,37 @@
+This folder is for user scripts so that scripts will be under a revision
+control system (RCS) and not in people's $HOME/ directories.
+
+This is meant to get people started with the git revision control system.
+
+If you don't see your $USER folder in here, please add one.
+
+# We typically have our Git Root area here.
+$ cd ~/GitLab/ddr-hbm-phy-automation-team/users
+
+# Once you cd to the users area in your git root
+
+$ mkdir $USER
+$ touch $USER/0README
+
+  You don't need a 0README file, but if you create your user directory
+  without any files in it, git won't add it. So you need at least 1 file
+  here.
+
+  The following command will stage everything under $USER, including $USER
+  . Staging means you tell git which of your modified files that you are
+  ready to submit to the server.
+
+$ git add $USER
+
+$ git commit -m "Short note about what changes you have made"
+
+  A git commit does not 'submit' your changes to the main git repository but
+  it is the next step to doing that.
+
+$ git push origin master
+
+  This 'git push' command is what takes your 'commits' that you have done
+  and submits those changes to the git server. It 'pushes' your commits to
+  the server.
+
+

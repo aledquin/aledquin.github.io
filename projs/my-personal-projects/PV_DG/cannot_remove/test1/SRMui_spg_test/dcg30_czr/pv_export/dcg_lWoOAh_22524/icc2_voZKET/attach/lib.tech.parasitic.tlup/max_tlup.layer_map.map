@@ -1,0 +1,24 @@
+conducting_layers
+
+	poly	 	 GA
+	metal1		 M1
+	metal2		 M2
+	metal3		 M3
+	metal4		 M4
+	metal5		 M5
+	metal6		 M7
+	metal7		 MB
+	metal8           MC
+	metal9           ZA
+
+via_layers
+
+	polyCont	 CW_PS
+	via1		 VIA1
+	via2		 VIA2
+	via3		 VIA3
+	via4		 VIA4
+	via5		 VIA6
+	via6		 VIAA
+        via7             VIAB
+        via8             VIAZG

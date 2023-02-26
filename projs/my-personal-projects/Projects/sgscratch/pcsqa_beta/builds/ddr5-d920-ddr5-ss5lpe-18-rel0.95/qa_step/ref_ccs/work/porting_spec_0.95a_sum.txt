@@ -1,0 +1,507 @@
+<?xml version="1.0"?><xml>
+
+Release Info
+
+
+
+Project
+d920-ddr5-ss5lpe-18
+
+
+Project Type
+LP5X_D5_V3
+
+
+Release Version
+0.95a
+
+
+Reason for Release Creation
+Initial release
+
+
+Parent release
+c141-ss5lpe-1.8v_A00, 2.0.0
+
+
+Release Creation in ViCi
+2022-05-20
+
+
+Release Status
+In progress
+
+Release Participants
+
+
+
+SI/PI Lead
+
+
+SI modeling Lead
+
+
+Release Engineer
+
+
+Project Engineering Manager
+Arevik Grigoryan
+
+
+Product Line Owner
+Vishal Thareja
+
+
+Primary CAD Engineer
+Larissa Nitchougovskaia
+
+
+Power Analysis Engineer
+
+
+Local CAD Engineer
+Alvaro Quintana
+
+
+Interop Engineer
+
+
+CAD Manager
+
+
+Build Engineer
+
+Setup CAD Environment from common Parent Project
+
+
+
+Parent selected release
+c141-ss5lpe-1.8v_A00, 2.0.0
+
+Technology Devices
+
+
+
+Foundry CDL Name
+
+Foundry Model Name For using in Databook
+
+Description
+
+PVT Corners
+
+
+
+Corner Type
+
+Frequency Mb/s
+
+Case
+
+Core Voltage (V)
+
+PLL Voltage (V)
+
+IO Voltage (V)
+
+Temperature (C)
+
+Extraction Corner
+
+IP TAG
+
+
+
+Component
+
+_Instance_tag
+
+Component
+
+Vendor
+
+Component
+
+Product
+
+Component
+
+Version
+
+Component
+
+Metric
+
+Component
+
+_IP_Type
+
+Pin Version
+
+
+
+Pin product
+ddr5
+
+Pin product version
+ver6.01
+
+Automotive Delivery
+
+
+
+Automotive Delivery
+N/A
+
+Technology Process
+
+
+
+Foundry Metal Option
+13M_4Mx_7Dx_2Iz_LB
+
+PHY Metal Option
+
+Site locations
+
+
+Main Design Site
+US01
+
+Alternate design sites
+
+
+Site
+US01
+
+Disk Path
+/remote/us01sgnfs00444
+
+Design Restricted
+No
+
+Sub Projects/Components
+
+
+
+Component
+ACx2
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+CKx2
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+CMOSx2
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+CSx2
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+DX4
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+DX5
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+MASTER
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+Repeater_cells
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+Utility Blocks
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+Utility_cells
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+ZCAL
+
+Project name
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+CTB
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+Example
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+Firmware
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+HSPICE/IBIS Views
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+installed_coreKit
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+Macro
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+PHYINIT
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+PUB_TOP
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready

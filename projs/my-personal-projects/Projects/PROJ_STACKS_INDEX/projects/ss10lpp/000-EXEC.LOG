@@ -1,0 +1,80 @@
+n107-c10-ss10lpp-18-ns.txt
+INFO: common common "c127-ss10lpp-1.8v_S00"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n507-dpalt-c10-ss10lpp-18-ns.txt
+INFO: common common "c127-ss10lpp-1.8v_S00"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u119-cmnblks-ss10lpp-18.txt
+INFO: ss10lpp 18_S00 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0096-mem-ss10lpp-sa10nlg41p11sadtc160s.txt
+INFO: ss10lpp 18_S00 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0096-mem-ss10lpp-sa10nlg42p22sassl512s.txt
+INFO: ss10lpp 18_S00 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0096-mem-ss10lpp-sa10nlg42p22sagsl512s.txt
+INFO: ss10lpp 18_S00 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0096-mem-ss10lpp-sa10nlg41p11sagtc80ks.txt
+INFO: "em" "em" "m0096-mem-ss10lpp-sa10nlg42p22sagsl512s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0096-mem-ss10lpp-uhs-schematic.txt
+INFO: ss10lpp 18_S00 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l127-std-ss10lpp-1.8v_S00.txt
+INFO: ss10lpp 18_S00 rel3.1.3
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+x658-usb2-ss10lpp-18-ns.txt
+INFO: ss10lpp 18_S00 rel3.1.3
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+d523-ddr43-ss10lpp18.txt
+INFO: common common "c127-ss10lpp-1.8v_S00"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x036-e16-ss10lpp-1.8v.txt
+INFO: ss10lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x036-e16-ss10lpp-18.txt
+INFO: ss10lpp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d543-lpddr4mv2-ss10lpp18.txt
+INFO: common common "c127-ss10lpp-1.8v_S00"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l127-tio-ss10lpp-1.8v.txt
+INFO: common common "c127-ss10lpp-1.8v_S00"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d803-ddr54-ss10lpp18.txt
+INFO: common common "c127-ss10lpp-1.8v_S00"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x323-e32-ss10lpp-18-ns.txt
+INFO: ss10lpp 18_S00 rel4.2.0
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel4.2.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel4.2.0/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+ss10lpp-18_S00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel4.2.0/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl

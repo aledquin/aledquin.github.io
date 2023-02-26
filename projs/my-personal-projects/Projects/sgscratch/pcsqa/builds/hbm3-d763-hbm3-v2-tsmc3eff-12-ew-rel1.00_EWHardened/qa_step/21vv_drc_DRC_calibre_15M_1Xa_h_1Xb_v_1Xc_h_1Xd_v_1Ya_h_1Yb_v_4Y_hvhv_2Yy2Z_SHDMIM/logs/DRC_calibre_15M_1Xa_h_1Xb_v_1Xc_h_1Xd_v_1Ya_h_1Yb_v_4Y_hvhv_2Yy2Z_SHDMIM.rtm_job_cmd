@@ -1,0 +1,54 @@
+#!/bin/sh
+##
+## rtm_job_cmd -aro_enable 0 -job_enable 1 -job_queue "" -job_options "" -job_resources "arch=glinux" -job_misc1 "misc1" -job_misc2 "misc2" -job_misc3 "misc3" -job_misc4 "mt" -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.log -tool tcl_job
+##
+
+echo "Information: Process ID for rtm_job_cmd : $$"
+
+LYNX_SESSION_ID=us01msemt228.internal.synopsys.com/29528/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/1
+export LYNX_SESSION_ID
+
+LYNX_VARFILE_SEV=../logs/DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.sev.varfile
+export LYNX_VARFILE_SEV
+
+LYNX_VARFILE_TEV=../logs/DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.tev.varfile
+export LYNX_VARFILE_TEV
+
+LYNX_SOCKET_HOST=us01msemt228.internal.synopsys.com
+export LYNX_SOCKET_HOST
+
+LYNX_SOCKET_PORT=33799
+export LYNX_SOCKET_PORT
+
+LYNX_JOB=1
+export LYNX_JOB
+
+SYNOPSYS_RTM=/global/apps/lynx_2020.09/rtm_shell/lynx_rtm_2020.09
+export SYNOPSYS_RTM
+
+unset TCL_LIBRARY
+TCLLIBPATH=/global/freeware/Linux/2.X/activetcl-8.5.12/deps/tcllib-1.20/lib/tcllib1.20 /global/freeware/Linux/2.X/activetcl-8.5.12/deps/tcllib-1.10/lib/tcllib1.10:/remote/cad-rep/msip/tools/SharedLib/2022.04/tcl/sha1
+export TCLLIBPATH
+
+FM_WAIT_LICENSE=1
+export FM_WAIT_LICENSE
+HERCULES_LICENSE_WAIT=1
+export HERCULES_LICENSE_WAIT
+ICV_LICENSE_WAIT=1
+export ICV_LICENSE_WAIT
+SNPSLMD_QUEUE=true
+export SNPSLMD_QUEUE
+SNPS_MAX_QUEUETIME=60
+export SNPS_MAX_QUEUETIME
+SNPS_MAX_WAITTIME=600
+export SNPS_MAX_WAITTIME
+STARRC_LICENSE_WAIT=yes
+export STARRC_LICENSE_WAIT
+
+qsub -S /bin/sh -cwd -V -o /dev/null -e /dev/null -r no -P bnormal -N LYNX##hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened#qa_step#21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM#DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM  -A quick -l 'arch=glinux' /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.rtm_sh_cmd > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/.DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.job.log 2>&1
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_job.tcl -js_method grd -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.log < /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/.DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.job.log
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_wait_for_task_start.tcl /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/.DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.touch_start /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/21vv_drc_DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM/logs/.DRC_calibre_15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z_SHDMIM.touch_error
+
+## End of File

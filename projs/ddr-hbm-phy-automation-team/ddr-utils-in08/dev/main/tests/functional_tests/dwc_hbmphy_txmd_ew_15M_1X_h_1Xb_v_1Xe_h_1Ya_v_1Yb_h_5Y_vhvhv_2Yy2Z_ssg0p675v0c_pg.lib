@@ -1,0 +1,1861 @@
+library ("dwc_hbmphy_txmd_ew_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z_ssg0p675v0c") {
+  technology(cmos) ;
+  delay_model : table_lookup ;
+  library_features(report_delay_calculation ) ;
+  date : "Thu Mar 24 22:47:59 2022" ;
+  revision : "NanoTime Version S-2021.06-SP3" ;
+  nom_process : 1.0000 ;
+  nom_voltage : 0.6750 ;
+  nom_temperature : 0.0000 ;
+  operating_conditions ("ssg0p675v0c") {
+    process : 1.0000 ;
+    voltage : 0.6750 ;
+    temperature : 0.0000 ;
+  }  /* End operating_conditions(ssg0p675v0c) */
+  voltage_unit : "1V" ;
+  time_unit : "1ps" ;
+  capacitive_load_unit(1.000000, ff) ;
+  slew_derate_from_library : 1.0000 ;
+  slew_lower_threshold_pct_rise : 20.0000 ;
+  slew_lower_threshold_pct_fall : 20.0000 ;
+  slew_upper_threshold_pct_rise : 80.0000 ;
+  slew_upper_threshold_pct_fall : 80.0000 ;
+  input_threshold_pct_rise : 50.0000 ;
+  input_threshold_pct_fall : 50.0000 ;
+  output_threshold_pct_rise : 50.0000 ;
+  output_threshold_pct_fall : 50.0000 ;
+  k_process_cell_rise : 0.000000 ;
+  k_process_cell_fall : 0.000000 ;
+  k_volt_cell_rise : 0.000000 ;
+  k_volt_cell_fall : 0.000000 ;
+  k_temp_cell_rise : 0.000000 ;
+  k_temp_cell_fall : 0.000000 ;
+  k_process_rise_transition : 0.000000 ;
+  k_process_fall_transition : 0.000000 ;
+  k_volt_rise_transition : 0.000000 ;
+  k_volt_fall_transition : 0.000000 ;
+  k_temp_rise_transition : 0.000000 ;
+  k_temp_fall_transition : 0.000000 ;
+  default_fanout_load : 1.0 ;
+  default_inout_pin_cap : 1.0 ;
+  default_input_pin_cap : 1.0 ;
+  default_output_pin_cap : 0.0 ;
+  current_unit : "1uA" ;
+  pulling_resistance_unit : "1kohm" ;
+  comment : "ETM extracted by NanoTime Version S-2021.06-SP3 for linux64 -- Oct 14, 2021" ;
+  define(min_delay_flag, timing, boolean) ;
+  define(program, library, string) ;
+  define(internal_noise_peak_time_above_low, pin, float) ;
+  define(is_unconstrained, pin, boolean) ;
+  define(internal_noise_height_above_low, pin, float) ;
+  define(internal_noise_width_below_high, pin, float) ;
+  define(internal_noise_peak_time_below_high, pin, float) ;
+  define(internal_noise_height_below_high, pin, float) ;
+  define(max_noise_immunity_low, pin, float) ;
+  define(max_noise_immunity_high, pin, float) ;
+  define(original_pin, pin, string) ;
+  define(internal_noise_width_above_low, pin, float) ;
+  program : nt_shell ;
+  lu_table_template (f_itrans_ocap) {
+    variable_1 : input_net_transition ;
+    variable_2 : total_output_net_capacitance ;
+    index_1(" 0.0000, 1.0000 ") ;
+    index_2(" 0.0000, 1.0000 ") ;
+  }  /* End lu_table_template(f_itrans_ocap) */
+  lu_table_template (f_dtrans_ctrans) {
+    variable_1 : constrained_pin_transition ;
+    variable_2 : related_pin_transition ;
+    index_1(" 0.0000, 1.0000 ") ;
+    index_2(" 0.0000, 1.0000 ") ;
+  }  /* End lu_table_template(f_dtrans_ctrans) */
+  type (BUS4_type0) {
+    base_type : array ;
+    data_type : bit ;
+    bit_width : 4 ;
+    bit_from : 3 ;
+    bit_to : 0 ;
+    downto : true ;
+  }  /* End type(BUS4_type0) */
+  type (BUS8_type1) {
+    base_type : array ;
+    data_type : bit ;
+    bit_width : 8 ;
+    bit_from : 7 ;
+    bit_to : 0 ;
+    downto : true ;
+  }  /* End type(BUS8_type1) */
+  voltage_map("VDD",0.675) ;
+  voltage_map("VDDQ",0.99) ;
+  voltage_map("VSS",0.000) ;
+  cell (dwc_hbmphy_txmd_ew) {
+    dont_use : true ;
+    dont_touch : true ;
+    interface_timing : true ;
+    timing_model_type : "extracted" ;
+    area : 605.286360 ;
+    pg_pin ("VDD") {
+      pg_type : primary_power ;
+      voltage_name : "VDD" ;
+    }  /* End pg_pin(VDD) */
+    pg_pin ("VDDQ") {
+      pg_type : primary_power ;
+      voltage_name : "VDDQ" ;
+    }  /* End pg_pin(VDDQ) */
+    pg_pin ("VSS") {
+      pg_type : primary_ground ;
+      voltage_name : "VSS" ;
+    }  /* End pg_pin(VSS) */
+    bus (Reserved) {
+      bus_type : BUS4_type0 ;
+      direction : input ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      pin ("Reserved[3]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 0.051200 ;
+        related_power_pin : VDD ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(0.051200, 0.051200) ;
+        fall_capacitance_range(0.051200, 0.051200) ;
+      }  /* End pin(Reserved[3]) */
+      pin ("Reserved[2]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 0.052998 ;
+        related_power_pin : VDD ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(0.052998, 0.052998) ;
+        fall_capacitance_range(0.052998, 0.052998) ;
+      }  /* End pin(Reserved[2]) */
+      pin ("Reserved[1]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 0.053242 ;
+        related_power_pin : VDD ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(0.053242, 0.053242) ;
+        fall_capacitance_range(0.053242, 0.053242) ;
+      }  /* End pin(Reserved[1]) */
+      pin ("Reserved[0]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 0.053291 ;
+        related_power_pin : VDD ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(0.053291, 0.053291) ;
+        fall_capacitance_range(0.053291, 0.053291) ;
+      }  /* End pin(Reserved[0]) */
+    }  /* End bus(Reserved) */
+    bus (TxCalN_VQ) {
+      bus_type : BUS8_type1 ;
+      direction : input ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      pin ("TxCalN_VQ[7]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 26.993334 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(26.993334, 26.993334) ;
+        fall_capacitance_range(26.993334, 26.993334) ;
+      }  /* End pin(TxCalN_VQ[7]) */
+      pin ("TxCalN_VQ[6]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 10.786674 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(10.786674, 10.786674) ;
+        fall_capacitance_range(10.786674, 10.786674) ;
+      }  /* End pin(TxCalN_VQ[6]) */
+      pin ("TxCalN_VQ[5]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 10.741429 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(10.741429, 10.741429) ;
+        fall_capacitance_range(10.741429, 10.741429) ;
+      }  /* End pin(TxCalN_VQ[5]) */
+      pin ("TxCalN_VQ[4]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.771812 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.771812, 6.771812) ;
+        fall_capacitance_range(6.771812, 6.771812) ;
+      }  /* End pin(TxCalN_VQ[4]) */
+      pin ("TxCalN_VQ[3]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.656908 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.656908, 6.656908) ;
+        fall_capacitance_range(6.656908, 6.656908) ;
+      }  /* End pin(TxCalN_VQ[3]) */
+      pin ("TxCalN_VQ[2]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.745663 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.745663, 6.745663) ;
+        fall_capacitance_range(6.745663, 6.745663) ;
+      }  /* End pin(TxCalN_VQ[2]) */
+      pin ("TxCalN_VQ[1]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.696075 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.696075, 6.696075) ;
+        fall_capacitance_range(6.696075, 6.696075) ;
+      }  /* End pin(TxCalN_VQ[1]) */
+      pin ("TxCalN_VQ[0]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.680989 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.680989, 6.680989) ;
+        fall_capacitance_range(6.680989, 6.680989) ;
+      }  /* End pin(TxCalN_VQ[0]) */
+    }  /* End bus(TxCalN_VQ) */
+    bus (TxCalP_VQX) {
+      bus_type : BUS8_type1 ;
+      direction : input ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      pin ("TxCalP_VQX[7]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 27.022106 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(27.022106, 27.022106) ;
+        fall_capacitance_range(27.022106, 27.022106) ;
+      }  /* End pin(TxCalP_VQX[7]) */
+      pin ("TxCalP_VQX[6]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 10.766796 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(10.766796, 10.766796) ;
+        fall_capacitance_range(10.766796, 10.766796) ;
+      }  /* End pin(TxCalP_VQX[6]) */
+      pin ("TxCalP_VQX[5]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 10.754111 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(10.754111, 10.754111) ;
+        fall_capacitance_range(10.754111, 10.754111) ;
+      }  /* End pin(TxCalP_VQX[5]) */
+      pin ("TxCalP_VQX[4]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.762885 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.762885, 6.762885) ;
+        fall_capacitance_range(6.762885, 6.762885) ;
+      }  /* End pin(TxCalP_VQX[4]) */
+      pin ("TxCalP_VQX[3]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.655183 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.655183, 6.655183) ;
+        fall_capacitance_range(6.655183, 6.655183) ;
+      }  /* End pin(TxCalP_VQX[3]) */
+      pin ("TxCalP_VQX[2]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.709477 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.709477, 6.709477) ;
+        fall_capacitance_range(6.709477, 6.709477) ;
+      }  /* End pin(TxCalP_VQX[2]) */
+      pin ("TxCalP_VQX[1]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.688289 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.688289, 6.688289) ;
+        fall_capacitance_range(6.688289, 6.688289) ;
+      }  /* End pin(TxCalP_VQX[1]) */
+      pin ("TxCalP_VQX[0]") {
+        direction : input ;
+        max_transition : 100.000000 ;
+        capacitance : 6.671848 ;
+        related_power_pin : VDDQ ;
+        related_ground_pin : VSS ;
+        rise_capacitance_range(6.671848, 6.671848) ;
+        fall_capacitance_range(6.671848, 6.671848) ;
+      }  /* End pin(TxCalP_VQX[0]) */
+    }  /* End bus(TxCalP_VQX) */
+    pin ("ForceAsync") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 0.679490 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(0.670427, 0.670427) ;
+      fall_capacitance_range(0.679490, 0.679490) ;
+    }  /* End pin(ForceAsync) */
+    pin ("ForceHigh_VQ") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 3.065524 ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(3.065524, 3.065524) ;
+      fall_capacitance_range(3.065524, 3.065524) ;
+    }  /* End pin(ForceHigh_VQ) */
+    pin ("ForceLow_VQ") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 5.313150 ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(5.313150, 5.313150) ;
+      fall_capacitance_range(5.313150, 5.313150) ;
+    }  /* End pin(ForceLow_VQ) */
+    pin ("PAD_VQ") {
+      direction : output ;
+      is_three_state : true ;
+      max_capacitance : 2583.575684 ;
+      min_capacitance : 382.775726 ;
+      capacitance : 183.575729 ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(183.575729, 183.575729) ;
+      fall_capacitance_range(183.575729, 183.575729) ;
+      timing () {
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : negative_unate ;
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("371.478668, 474.506012, 576.789124, 678.891907, 935.791016",\
+                 "378.172150, 481.199493, 583.482605, 685.585388, 942.484497",\
+                 "388.631805, 491.659149, 593.942322, 696.045105, 952.944153",\
+                 "404.647949, 507.675293, 609.958435, 712.061218, 968.960327",\
+                 "431.758911, 534.786255, 637.069397, 739.172180, 996.071228") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.496801, 4.544441, 5.803098, 7.171324, 10.794511",\
+                 "3.750872, 4.742717, 5.959645, 7.298583, 10.879471",\
+                 "4.244066, 5.141636, 6.281753, 7.563886, 11.059201",\
+                 "5.127273, 5.891796, 6.909215, 8.092540, 11.427281",\
+                 "6.812738, 7.405250, 8.237823, 9.252766, 12.276288") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("416.922363, 526.087524, 634.659302, 743.765747, 1016.128906",\
+                 "422.126282, 531.291443, 639.863220, 748.969666, 1021.332825",\
+                 "430.751617, 539.916809, 648.488586, 757.595032, 1029.958130",\
+                 "444.600464, 553.765625, 662.337402, 771.443848, 1043.807007",\
+                 "468.007660, 577.172852, 685.744629, 794.851074, 1067.214233") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.944812, 4.691754, 5.646546, 6.727509, 9.687270",\
+                 "4.167719, 4.880665, 5.804466, 6.860591, 9.780161",\
+                 "4.597052, 5.252038, 6.120035, 7.129567, 9.970685",\
+                 "5.362152, 5.933269, 6.713763, 7.645293, 10.345740",\
+                 "6.817676, 7.275419, 7.924812, 8.728032, 11.169708") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("393.960327, 503.125488, 611.697266, 720.803711, 993.166870",\
+                 "400.666046, 509.831207, 618.402954, 727.509460, 999.872620",\
+                 "411.283936, 520.449097, 629.020874, 738.127319, 1010.490479",\
+                 "427.507355, 536.672546, 645.244324, 754.350769, 1026.713867",\
+                 "455.024994, 564.190186, 672.761963, 781.868408, 1054.231567") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.117163, 4.020910, 5.102808, 6.278100, 9.380745",\
+                 "3.389661, 4.235660, 5.273684, 6.417760, 9.474781",\
+                 "3.907101, 4.660091, 5.620265, 6.705466, 9.671975",\
+                 "4.820887, 5.449034, 6.289904, 7.275905, 10.075844",\
+                 "6.528697, 7.005348, 7.677619, 8.504218, 10.995707") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("372.574860, 475.602203, 577.885315, 679.988098, 936.887207",\
+                 "377.775085, 480.802399, 583.085571, 685.188354, 942.087402",\
+                 "386.378326, 489.405640, 591.688782, 693.791565, 950.690674",\
+                 "400.177826, 503.205170, 605.488342, 707.591125, 964.490173",\
+                 "424.054077, 527.081421, 629.364563, 731.467346, 988.366394") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.436055, 4.497866, 5.766697, 7.141901, 10.774985",\
+                 "3.687615, 4.692849, 5.920036, 7.266276, 10.857823",\
+                 "4.154943, 5.068321, 6.221887, 7.514241, 11.025307",\
+                 "4.965889, 5.751903, 6.790316, 7.991266, 11.355787",\
+                 "6.468527, 7.089864, 7.955512, 9.002339, 12.088659") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxClk" ;
+        timing_type : rising_edge ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("410.815918, 519.981079, 628.552856, 737.659302, 1010.022461",\
+                 "416.688354, 525.853516, 634.425293, 743.531738, 1015.894897",\
+                 "425.740997, 534.906189, 643.477966, 752.584412, 1024.947510",\
+                 "439.027069, 548.192261, 656.764038, 765.870483, 1038.233643",\
+                 "461.552551, 570.717712, 679.289490, 788.395935, 1060.759155") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.531704, 4.350166, 5.366086, 6.493902, 9.526521",\
+                 "3.787594, 4.560359, 5.537852, 6.636543, 9.624320",\
+                 "4.219568, 4.925014, 5.841805, 6.892212, 9.802368",\
+                 "4.912994, 5.530689, 6.360775, 7.337257, 10.120236",\
+                 "6.187769, 6.688759, 7.389887, 8.245381, 10.796765") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("382.917511, 485.944824, 588.227966, 690.330750, 947.229858",\
+                 "388.695343, 491.722656, 594.005798, 696.108582, 953.007690",\
+                 "397.646027, 500.673340, 602.956482, 705.059265, 961.958374",\
+                 "410.699005, 513.726318, 616.009460, 718.112244, 975.011353",\
+                 "432.484711, 535.512024, 637.795166, 739.897949, 996.797058") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.562207, 4.594959, 5.842743, 7.203443, 10.815875",\
+                 "3.787423, 4.771677, 5.982717, 7.317434, 10.892126",\
+                 "4.164940, 5.076519, 6.228568, 7.519773, 11.029078",\
+                 "4.762304, 5.577084, 6.642881, 7.866372, 11.268247",\
+                 "5.839749, 6.521272, 7.453254, 8.561713, 11.764204") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxDatAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("395.425842, 504.591034, 613.162781, 722.269226, 994.632385",\
+                 "400.839844, 510.005005, 618.576782, 727.683228, 1000.046387",\
+                 "409.973419, 519.138611, 627.710388, 736.816833, 1009.179993",\
+                 "423.300690, 532.465881, 641.037659, 750.144104, 1022.507263",\
+                 "446.956665, 556.121826, 664.693604, 773.800049, 1046.163208") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.114432, 4.018793, 5.101140, 6.276744, 9.379838",\
+                 "3.320623, 4.180616, 5.229577, 6.381565, 9.450302",\
+                 "3.730758, 4.513266, 5.499136, 6.604271, 9.602095",\
+                 "4.460629, 5.133051, 6.018234, 7.042375, 9.908525",\
+                 "5.870409, 6.396305, 7.126265, 8.009965, 10.618068") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("361.630157, 464.657501, 566.940613, 669.043396, 925.942505",\
+                 "366.718872, 469.746216, 572.029358, 674.132141, 931.031189",\
+                 "375.578644, 478.605988, 580.889160, 682.991943, 939.890991",\
+                 "388.023651, 491.050964, 593.334106, 695.436890, 952.335999",\
+                 "409.136688, 512.164001, 614.447144, 716.549927, 973.449036") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.066566, 4.222340, 5.554471, 6.971663, 10.662910",\
+                 "3.276740, 4.377368, 5.673213, 7.066632, 10.725244",\
+                 "3.702127, 4.704261, 5.929087, 7.273652, 10.862761",\
+                 "4.421768, 5.289268, 6.403152, 7.665005, 11.128606",\
+                 "5.768138, 6.457224, 7.397279, 8.513030, 11.728822") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxEn" ;
+        timing_type : three_state_disable ;
+        timing_sense : negative_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("305.565765, 305.565765, 305.565765, 305.565765, 305.565765",\
+                 "311.771332, 311.771332, 311.771332, 311.771332, 311.771332",\
+                 "322.213623, 322.213623, 322.213623, 322.213623, 322.213623",\
+                 "335.983673, 335.983673, 335.983673, 335.983673, 335.983673",\
+                 "358.116699, 358.116699, 358.116699, 358.116699, 358.116699") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.116519, 3.116519, 3.116519, 3.116519, 3.116519",\
+                 "3.360915, 3.360915, 3.360915, 3.360915, 3.360915",\
+                 "3.867579, 3.867579, 3.867579, 3.867579, 3.867579",\
+                 "4.703999, 4.703999, 4.703999, 4.703999, 4.703999",\
+                 "6.196145, 6.196145, 6.196145, 6.196145, 6.196145") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("312.313324, 312.313324, 312.313324, 312.313324, 312.313324",\
+                 "318.528931, 318.528931, 318.528931, 318.528931, 318.528931",\
+                 "329.036560, 329.036560, 329.036560, 329.036560, 329.036560",\
+                 "342.806580, 342.806580, 342.806580, 342.806580, 342.806580",\
+                 "365.010864, 365.010864, 365.010864, 365.010864, 365.010864") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.332165, 3.332165, 3.332165, 3.332165, 3.332165",\
+                 "3.563768, 3.563768, 3.563768, 3.563768, 3.563768",\
+                 "4.056488, 4.056488, 4.056488, 4.056488, 4.056488",\
+                 "4.860508, 4.860508, 4.860508, 4.860508, 4.860508",\
+                 "6.323859, 6.323859, 6.323859, 6.323859, 6.323859") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxEn" ;
+        timing_type : three_state_enable ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("434.586456, 543.751648, 652.323425, 761.429871, 1033.792969",\
+                 "441.129242, 550.294434, 658.866211, 767.972656, 1040.335815",\
+                 "451.540558, 560.705750, 669.277527, 778.383972, 1050.747070",\
+                 "466.698029, 575.863220, 684.434998, 793.541443, 1065.904541",\
+                 "492.010406, 601.175537, 709.747314, 818.853821, 1091.216919") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322",\
+                 "165.467056, 312.892456, 460.108795, 610.098572, 980.442322") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("4.239708, 4.942281, 5.856370, 6.904561, 9.811055",\
+                 "4.411047, 5.090025, 5.981578, 7.011075, 9.886304",\
+                 "4.777295, 5.410505, 6.256556, 7.247095, 10.055059",\
+                 "5.471694, 6.032450, 6.801572, 7.722517, 10.402938",\
+                 "6.854404, 7.309847, 7.956431, 8.756751, 11.192163") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("390.056793, 493.084137, 595.367310, 697.470093, 954.369141",\
+                 "396.599609, 499.626923, 601.910095, 704.012878, 960.911926",\
+                 "407.010925, 510.038239, 612.321411, 714.424194, 971.323242",\
+                 "422.168396, 525.195740, 627.478882, 729.581665, 986.480713",\
+                 "447.456451, 550.483765, 652.766907, 754.869690, 1011.768799") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651",\
+                 "153.450150, 288.511292, 425.388794, 561.271179, 902.579651") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("3.755637, 4.746487, 5.962645, 7.301033, 10.881114",\
+                 "3.948040, 4.900137, 6.085667, 7.401844, 10.949012",\
+                 "4.353415, 5.232261, 6.356143, 7.625778, 11.101624",\
+                 "5.105793, 5.873112, 6.893290, 8.078947, 11.417660",\
+                 "6.557717, 7.171330, 8.028199, 9.066638, 12.136618") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : negative_unate ;
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("237.274536, 245.819595, 253.318680, 260.493744, 277.729126",\
+                 "243.757401, 252.302460, 259.801544, 266.976593, 284.212006",\
+                 "253.953781, 262.498840, 269.997925, 277.172974, 294.408386",\
+                 "268.893616, 277.438690, 284.937775, 292.112823, 309.348206",\
+                 "294.631500, 303.176575, 310.675659, 317.850708, 335.086090") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.300518, 2.305838, 2.310859, 2.315907, 2.329077",\
+                 "2.547684, 2.552490, 2.557026, 2.561589, 2.573502",\
+                 "3.021621, 3.025674, 3.029501, 3.033354, 3.043421",\
+                 "3.823936, 3.827140, 3.830166, 3.833214, 3.841185",\
+                 "5.291086, 5.293401, 5.295590, 5.297795, 5.303565") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("256.189789, 266.203369, 274.701508, 282.695984, 301.622803",\
+                 "261.265625, 271.279205, 279.777313, 287.771790, 306.698639",\
+                 "269.721527, 279.735107, 288.233215, 296.227692, 315.154541",\
+                 "282.584473, 292.598053, 301.096191, 309.090668, 328.017487",\
+                 "304.190002, 314.203583, 322.701691, 330.696167, 349.623016") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.666054, 2.672404, 2.678239, 2.683944, 2.698497",\
+                 "2.851027, 2.856966, 2.862424, 2.867763, 2.881388",\
+                 "3.212063, 3.217335, 3.222183, 3.226927, 3.239041",\
+                 "3.833993, 3.838411, 3.842476, 3.846455, 3.856624",\
+                 "4.983151, 4.986551, 4.989681, 4.992745, 5.000584") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("234.792282, 244.805862, 253.303970, 261.298462, 280.225281",\
+                 "241.309494, 251.323074, 259.821198, 267.815674, 286.742493",\
+                 "251.648453, 261.662018, 270.160156, 278.154633, 297.081451",\
+                 "266.738068, 276.751648, 285.249756, 293.244232, 312.171051",\
+                 "292.814301, 302.827850, 311.325989, 319.320465, 338.247284") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.003228, 2.011670, 2.019415, 2.026975, 2.046207",\
+                 "2.273801, 2.281242, 2.288075, 2.294750, 2.311755",\
+                 "2.776142, 2.782239, 2.787844, 2.793326, 2.807312",\
+                 "3.607571, 3.612266, 3.616585, 3.620812, 3.631613",\
+                 "5.092165, 5.095493, 5.098555, 5.101554, 5.109226") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("236.353683, 244.898743, 252.397827, 259.572876, 276.808258",\
+                 "241.423111, 249.968170, 257.467255, 264.642303, 281.877716",\
+                 "249.868500, 258.413574, 265.912659, 273.087708, 290.323090",\
+                 "262.646790, 271.191864, 278.690948, 285.865997, 303.101379",\
+                 "284.567169, 293.112244, 300.611328, 307.786377, 325.021759") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.132941, 2.138679, 2.144090, 2.149530, 2.163713",\
+                 "2.358035, 2.363226, 2.368124, 2.373051, 2.385905",\
+                 "2.773663, 2.778077, 2.782245, 2.786439, 2.797395",\
+                 "3.456187, 3.459730, 3.463078, 3.466449, 3.475261",\
+                 "4.664865, 4.667490, 4.669973, 4.672472, 4.679014") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxClk" ;
+        timing_type : rising_edge ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("254.046829, 264.060425, 272.558533, 280.553009, 299.479858",\
+                 "259.921173, 269.934753, 278.432861, 286.427338, 305.354187",\
+                 "268.973663, 278.987244, 287.485382, 295.479858, 314.406677",\
+                 "282.259705, 292.273285, 300.771393, 308.765869, 327.692719",\
+                 "304.783783, 314.797363, 323.295502, 331.289978, 350.216797") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.423306, 2.430290, 2.436704, 2.442974, 2.458954",\
+                 "2.666203, 2.672551, 2.678386, 2.684091, 2.698644",\
+                 "3.065159, 3.070683, 3.075763, 3.080732, 3.093419",\
+                 "3.686426, 3.691021, 3.695247, 3.699385, 3.709957",\
+                 "4.793716, 4.797250, 4.800503, 4.803689, 4.811835") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("251.004166, 259.549225, 267.048309, 274.223358, 291.458771",\
+                 "256.783875, 265.328918, 272.828003, 280.003082, 297.238464",\
+                 "265.734436, 274.279480, 281.778564, 288.953644, 306.189026",\
+                 "278.787170, 287.332214, 294.831299, 302.006378, 319.241760",\
+                 "300.572418, 309.117493, 316.616577, 323.791626, 341.027008") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.376588, 2.381738, 2.386599, 2.391487, 2.404243",\
+                 "2.596505, 2.601220, 2.605671, 2.610149, 2.621842",\
+                 "2.954240, 2.958385, 2.962300, 2.966239, 2.976533",\
+                 "3.501436, 3.504933, 3.508238, 3.511565, 3.520265",\
+                 "4.454021, 4.456772, 4.459372, 4.461989, 4.468839") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxDatAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("237.210648, 247.224228, 255.722351, 263.716827, 282.643646",\
+                 "242.614487, 252.628067, 261.126190, 269.120667, 288.047485",\
+                 "251.468399, 261.481995, 269.980103, 277.974579, 296.901428",\
+                 "264.141388, 274.154968, 282.653076, 290.647552, 309.574402",\
+                 "287.378784, 297.392365, 305.890472, 313.884949, 332.811798") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.011170, 2.019579, 2.027294, 2.034825, 2.053983",\
+                 "2.228358, 2.235950, 2.242921, 2.249731, 2.267073",\
+                 "2.643948, 2.650350, 2.656233, 2.661986, 2.676659",\
+                 "3.347278, 3.352337, 3.356991, 3.361544, 3.373175",\
+                 "4.647810, 4.651455, 4.654810, 4.658095, 4.666495") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("228.012421, 236.557480, 244.056564, 251.231628, 268.467010",\
+                 "233.101227, 241.646301, 249.145386, 256.320435, 273.555817",\
+                 "241.691330, 250.236389, 257.735474, 264.910522, 282.145905",\
+                 "253.444183, 261.989227, 269.488312, 276.663391, 293.898773",\
+                 "273.907135, 282.452209, 289.951294, 297.126343, 314.361755") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("1.878788, 1.885298, 1.891435, 1.897599, 1.913650",\
+                 "2.116380, 2.122162, 2.127616, 2.133098, 2.147389",\
+                 "2.571393, 2.576154, 2.580648, 2.585170, 2.596974",\
+                 "3.289976, 3.293699, 3.297215, 3.300755, 3.310009",\
+                 "4.558603, 4.561290, 4.563830, 4.566388, 4.573081") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxEn" ;
+        timing_type : three_state_disable ;
+        timing_sense : negative_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("230.096329, 230.096329, 230.096329, 230.096329, 230.096329",\
+                 "236.043930, 236.043930, 236.043930, 236.043930, 236.043930",\
+                 "245.496780, 245.496780, 245.496780, 245.496780, 245.496780",\
+                 "258.841278, 258.841278, 258.841278, 258.841278, 258.841278",\
+                 "279.656769, 279.656769, 279.656769, 279.656769, 279.656769") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.070319, 2.070319, 2.070319, 2.070319, 2.070319",\
+                 "2.308794, 2.308794, 2.308794, 2.308794, 2.308794",\
+                 "2.785562, 2.785562, 2.785562, 2.785562, 2.785562",\
+                 "3.562244, 3.562244, 3.562244, 3.562244, 3.562244",\
+                 "4.887614, 4.887614, 4.887614, 4.887614, 4.887614") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("209.851410, 209.851410, 209.851410, 209.851410, 209.851410",\
+                 "215.651657, 215.651657, 215.651657, 215.651657, 215.651657",\
+                 "224.559326, 224.559326, 224.559326, 224.559326, 224.559326",\
+                 "237.148941, 237.148941, 237.148941, 237.148941, 237.148941",\
+                 "256.443268, 256.443268, 256.443268, 256.443268, 256.443268") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000",\
+                 "50.000000, 50.000000, 50.000000, 50.000000, 50.000000") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("1.712052, 1.712052, 1.712052, 1.712052, 1.712052",\
+                 "1.979303, 1.979303, 1.979303, 1.979303, 1.979303",\
+                 "2.487493, 2.487493, 2.487493, 2.487493, 2.487493",\
+                 "3.288626, 3.288626, 3.288626, 3.288626, 3.288626",\
+                 "4.612167, 4.612167, 4.612167, 4.612167, 4.612167") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxEn" ;
+        timing_type : three_state_enable ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("236.001740, 246.015320, 254.513428, 262.507904, 281.434753",\
+                 "241.967316, 251.980881, 260.479004, 268.473480, 287.400330",\
+                 "251.451309, 261.464905, 269.963013, 277.957489, 296.884338",\
+                 "265.939209, 275.952759, 284.450897, 292.445374, 311.372192",\
+                 "289.609161, 299.622711, 308.120850, 316.115326, 335.042145") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203",\
+                 "13.672966, 24.746492, 35.580475, 46.531067, 74.672203") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.006275, 2.014704, 2.022438, 2.029987, 2.049190",\
+                 "2.245102, 2.252638, 2.259557, 2.266317, 2.283534",\
+                 "2.692507, 2.698794, 2.704572, 2.710222, 2.724635",\
+                 "3.456225, 3.461125, 3.465632, 3.470043, 3.481312",\
+                 "4.766895, 4.770449, 4.773720, 4.776923, 4.785115") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("242.116180, 250.661240, 258.160309, 265.335388, 282.570770",\
+                 "248.468399, 257.013458, 264.512543, 271.687592, 288.923004",\
+                 "258.060394, 266.605469, 274.104553, 281.279602, 298.514984",\
+                 "273.286224, 281.831299, 289.330383, 296.505432, 313.740845",\
+                 "297.063538, 305.608612, 313.107697, 320.282745, 337.518158") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491",\
+                 "11.317436, 21.743294, 31.964682, 42.423389, 68.495491") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("382.775726, 783.575745, 1181.975708, 1582.775635, 2583.575684") ;
+          values("2.081446, 2.087324, 2.092869, 2.098442, 2.112967",\
+                 "2.305177, 2.310487, 2.315497, 2.320535, 2.333678",\
+                 "2.753717, 2.758163, 2.762361, 2.766586, 2.777620",\
+                 "3.556980, 3.560423, 3.563676, 3.566952, 3.575517",\
+                 "4.956408, 4.958879, 4.961216, 4.963569, 4.969728") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+    }  /* End pin(PAD_VQ) */
+    pin ("PwrOk_VQ") {
+      direction : input ;
+      max_transition : 200.000000 ;
+      capacitance : 2.778710 ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(2.778710, 2.778710) ;
+      fall_capacitance_range(2.778710, 2.778710) ;
+    }  /* End pin(PwrOk_VQ) */
+    pin ("TxClk") {
+      direction : input ;
+      clock : true ;
+      max_transition : 100.000000 ;
+      capacitance : 3.276450 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(3.271845, 3.271845) ;
+      fall_capacitance_range(3.276450, 3.276450) ;
+    }  /* End pin(TxClk) */
+    pin ("TxCoreloopEn") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 1.421511 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(1.421511, 1.421511) ;
+      fall_capacitance_range(1.411131, 1.411131) ;
+    }  /* End pin(TxCoreloopEn) */
+    pin ("TxCoreloopOut") {
+      direction : output ;
+      max_capacitance : 55.855911 ;
+      min_capacitance : 16.855911 ;
+      capacitance : 15.855911 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(15.855911, 15.855911) ;
+      fall_capacitance_range(15.855911, 15.855911) ;
+      timing () {
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : negative_unate ;
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("114.797226, 118.549179, 122.576927, 130.801331, 146.392090",\
+                 "121.490700, 125.242653, 129.270401, 137.494812, 153.085556",\
+                 "131.950378, 135.702316, 139.730072, 147.954483, 163.545242",\
+                 "147.966522, 151.718475, 155.746216, 163.970627, 179.561386",\
+                 "175.077454, 178.829407, 182.857162, 191.081558, 206.672318") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.999048, 3.002468, 3.003014, 3.006032, 3.007585",\
+                 "3.291764, 3.294881, 3.295378, 3.298128, 3.299544",\
+                 "3.844316, 3.846985, 3.847411, 3.849767, 3.850980",\
+                 "4.801625, 4.803762, 4.804103, 4.805990, 4.806962",\
+                 "6.571155, 6.572716, 6.572966, 6.574345, 6.575055") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("121.943123, 125.664688, 130.032242, 137.886261, 153.474579",\
+                 "127.147079, 130.868637, 135.236206, 143.090210, 158.678543",\
+                 "135.772568, 139.494125, 143.861679, 151.715698, 167.304031",\
+                 "149.621719, 153.343277, 157.710831, 165.564850, 181.153183",\
+                 "173.032913, 176.754471, 181.122025, 188.976044, 204.564362") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("26.705006, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705006, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705006, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705006, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705006, 31.379427, 38.248154, 53.759544, 88.303497") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("3.489482, 3.492370, 3.494960, 3.495449, 3.496945",\
+                 "3.739606, 3.742301, 3.744718, 3.745174, 3.746571",\
+                 "4.212672, 4.215065, 4.217211, 4.217616, 4.218856",\
+                 "5.036256, 5.038259, 5.040054, 5.040393, 5.041430",\
+                 "6.563987, 6.565523, 6.566901, 6.567161, 6.567957") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("99.159637, 102.881203, 107.248756, 115.102753, 130.691025",\
+                 "105.896568, 109.618134, 113.985687, 121.839684, 137.427963",\
+                 "116.414856, 120.136421, 124.503967, 132.357971, 147.946243",\
+                 "132.681976, 136.403534, 140.771088, 148.625092, 164.213364",\
+                 "160.276947, 163.998520, 168.366074, 176.220062, 191.808350") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("26.705057, 31.379442, 38.248127, 53.759438, 88.303253",\
+                 "26.705057, 31.379442, 38.248127, 53.759438, 88.303253",\
+                 "26.705057, 31.379442, 38.248127, 53.759438, 88.303253",\
+                 "26.705057, 31.379442, 38.248127, 53.759438, 88.303253",\
+                 "26.705057, 31.379442, 38.248127, 53.759438, 88.303253") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.512441, 2.516453, 2.520047, 2.520726, 2.522801",\
+                 "2.847340, 2.850881, 2.854054, 2.854653, 2.856486",\
+                 "3.452445, 3.455365, 3.457984, 3.458478, 3.459991",\
+                 "4.472069, 4.474324, 4.476346, 4.476728, 4.477897",\
+                 "6.293485, 6.295088, 6.296525, 6.296797, 6.297628") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("116.048454, 119.800400, 123.828156, 132.052567, 147.643311",\
+                 "121.248672, 125.000618, 129.028381, 137.252777, 152.843536",\
+                 "129.851913, 133.603867, 137.631622, 145.856018, 161.446762",\
+                 "143.651428, 147.403381, 151.431137, 159.655533, 175.246277",\
+                 "167.531143, 171.283096, 175.310852, 183.535248, 199.125992") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("28.301384, 32.942249, 39.577595, 55.073055, 89.443756",\
+                 "28.301384, 32.942249, 39.577595, 55.073055, 89.443756",\
+                 "28.301384, 32.942249, 39.577595, 55.073055, 89.443756",\
+                 "28.301384, 32.942249, 39.577595, 55.073055, 89.443756",\
+                 "28.301384, 32.942249, 39.577595, 55.073055, 89.443756") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.951800, 2.955277, 2.955832, 2.958899, 2.960478",\
+                 "3.241165, 3.244332, 3.244837, 3.247632, 3.249070",\
+                 "3.764333, 3.767060, 3.767495, 3.769902, 3.771142",\
+                 "4.643997, 4.646208, 4.646561, 4.648513, 4.649518",\
+                 "6.232611, 6.234258, 6.234521, 6.235976, 6.236725") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxClk" ;
+        timing_type : rising_edge ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("115.985603, 119.707169, 124.074722, 131.928726, 147.517044",\
+                 "121.858017, 125.579575, 129.947128, 137.801147, 153.389450",\
+                 "130.910675, 134.632233, 138.999786, 146.853806, 162.442108",\
+                 "144.196747, 147.918304, 152.285858, 160.139877, 175.728180",\
+                 "166.722229, 170.443787, 174.811340, 182.665359, 198.253662") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("26.705017, 31.379431, 38.248146, 53.759514, 88.303444",\
+                 "26.705017, 31.379431, 38.248146, 53.759514, 88.303444",\
+                 "26.705017, 31.379431, 38.248146, 53.759514, 88.303444",\
+                 "26.705017, 31.379431, 38.248146, 53.759514, 88.303444",\
+                 "26.705017, 31.379431, 38.248146, 53.759514, 88.303444") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("3.020178, 3.023515, 3.026506, 3.027071, 3.028799",\
+                 "3.315782, 3.318822, 3.321547, 3.322061, 3.323636",\
+                 "3.801749, 3.804400, 3.806778, 3.807227, 3.808601",\
+                 "4.559172, 4.561384, 4.563367, 4.563741, 4.564888",\
+                 "5.910755, 5.912460, 5.913990, 5.914279, 5.915164") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("126.239494, 129.991440, 134.019196, 142.243591, 157.834351",\
+                 "132.017319, 135.769272, 139.797012, 148.021423, 163.612183",\
+                 "140.968018, 144.719955, 148.747711, 156.972122, 172.562866",\
+                 "154.020996, 157.772934, 161.800690, 170.025101, 185.615860",\
+                 "175.806702, 179.558640, 183.586395, 191.810806, 207.401566") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("3.074870, 3.078206, 3.078738, 3.081682, 3.083197",\
+                 "3.333178, 3.336256, 3.336747, 3.339463, 3.340862",\
+                 "3.756625, 3.759356, 3.759792, 3.762203, 3.763444",\
+                 "4.409654, 4.411981, 4.412352, 4.414407, 4.415464",\
+                 "5.555913, 5.557760, 5.558055, 5.559686, 5.560526") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxDatAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("100.382446, 104.104019, 108.471588, 116.325645, 131.914108",\
+                 "105.796440, 109.518005, 113.885582, 121.739639, 137.328094",\
+                 "114.930016, 118.651588, 123.019157, 130.873215, 146.461670",\
+                 "128.257278, 131.978851, 136.346420, 144.200485, 159.788940",\
+                 "151.905807, 155.627380, 159.994949, 167.849014, 183.437469") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("26.704855, 31.379391, 38.248241, 53.759827, 88.304222",\
+                 "26.704855, 31.379391, 38.248241, 53.759827, 88.304222",\
+                 "26.704855, 31.379391, 38.248241, 53.759827, 88.304222",\
+                 "26.704855, 31.379391, 38.248241, 53.759827, 88.304222",\
+                 "26.704855, 31.379391, 38.248241, 53.759827, 88.304222") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.512471, 2.516477, 2.520065, 2.520742, 2.522815",\
+                 "2.763939, 2.767581, 2.770844, 2.771460, 2.773345",\
+                 "3.245209, 3.248311, 3.251092, 3.251617, 3.253224",\
+                 "4.063253, 4.065732, 4.067954, 4.068373, 4.069657",\
+                 "5.582486, 5.584290, 5.585908, 5.586214, 5.587149") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("105.049507, 108.801460, 112.829216, 121.053619, 136.644379",\
+                 "110.138229, 113.890182, 117.917938, 126.142342, 141.733093",\
+                 "118.997955, 122.749901, 126.777664, 135.002060, 150.592819",\
+                 "131.442520, 135.194458, 139.222214, 147.446625, 163.037369",\
+                 "152.554581, 156.306534, 160.334290, 168.558685, 184.149445") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("28.301357, 32.942226, 39.577572, 55.073044, 89.443756",\
+                 "28.301357, 32.942226, 39.577572, 55.073044, 89.443756",\
+                 "28.301357, 32.942226, 39.577572, 55.073044, 89.443756",\
+                 "28.301357, 32.942226, 39.577572, 55.073044, 89.443756",\
+                 "28.301357, 32.942226, 39.577572, 55.073044, 89.443756") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.502631, 2.506731, 2.507384, 2.511000, 2.512859",\
+                 "2.756150, 2.759872, 2.760466, 2.763750, 2.765440",\
+                 "3.250397, 3.253554, 3.254058, 3.256844, 3.258278",\
+                 "4.051088, 4.053622, 4.054026, 4.056263, 4.057415",\
+                 "5.489131, 5.491002, 5.491300, 5.492952, 5.493802") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxEn" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("139.606995, 143.328552, 147.696121, 155.550125, 171.138458",\
+                 "146.149796, 149.871353, 154.238907, 162.092926, 177.681244",\
+                 "156.561111, 160.282669, 164.650238, 172.504242, 188.092560",\
+                 "171.718582, 175.440140, 179.807693, 187.661713, 203.250031",\
+                 "197.031097, 200.752655, 205.120209, 212.974228, 228.562546") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("26.705004, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705004, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705004, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705004, 31.379427, 38.248154, 53.759544, 88.303497",\
+                 "26.705004, 31.379427, 38.248154, 53.759544, 88.303497") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("3.819194, 3.821833, 3.824200, 3.824646, 3.826014",\
+                 "4.008547, 4.011062, 4.013317, 4.013743, 4.015046",\
+                 "4.408362, 4.410649, 4.412700, 4.413087, 4.414273",\
+                 "5.152723, 5.154679, 5.156434, 5.156765, 5.157780",\
+                 "6.602476, 6.604003, 6.605373, 6.605632, 6.606424") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("131.172852, 134.924789, 138.952545, 147.176956, 162.767700",\
+                 "137.388550, 141.140503, 145.168259, 153.392670, 168.983414",\
+                 "147.896942, 151.648895, 155.676651, 163.901047, 179.491806",\
+                 "161.666992, 165.418930, 169.446686, 177.671097, 193.261841",\
+                 "183.872116, 187.624069, 191.651825, 199.876236, 215.466980") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756",\
+                 "28.301304, 32.942184, 39.577534, 55.073021, 89.443756") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("3.405614, 3.408627, 3.409107, 3.411766, 3.413135",\
+                 "3.632519, 3.635343, 3.635794, 3.638287, 3.639570",\
+                 "4.116905, 4.119397, 4.119794, 4.121995, 4.123128",\
+                 "4.911043, 4.913133, 4.913466, 4.915311, 4.916261",\
+                 "6.362697, 6.364310, 6.364567, 6.365992, 6.366725") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : negative_unate ;
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("98.855888, 102.563087, 106.572189, 114.678505, 130.079391",\
+                 "105.338760, 109.045959, 113.055061, 121.161377, 136.562256",\
+                 "115.535141, 119.242340, 123.251442, 131.357758, 146.758636",\
+                 "130.474976, 134.182175, 138.191284, 146.297592, 161.698471",\
+                 "156.212875, 159.920074, 163.929169, 172.035492, 187.436371") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("9.928670, 15.845483, 24.080412, 41.625000, 77.260757",\
+                 "9.928670, 15.845483, 24.080412, 41.625000, 77.260757",\
+                 "9.928670, 15.845483, 24.080412, 41.625000, 77.260757",\
+                 "9.928670, 15.845483, 24.080412, 41.625000, 77.260757",\
+                 "9.928670, 15.845483, 24.080412, 41.625000, 77.260757") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.392817, 2.399220, 2.402139, 2.408204, 2.411479",\
+                 "2.631328, 2.637152, 2.639807, 2.645327, 2.648309",\
+                 "3.092472, 3.097429, 3.099690, 3.104393, 3.106934",\
+                 "3.880165, 3.884117, 3.885921, 3.889673, 3.891701",\
+                 "5.331864, 5.334741, 5.336054, 5.338787, 5.340265") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("104.515099, 108.190071, 112.207336, 120.238533, 135.685257",\
+                 "109.590919, 113.265892, 117.283150, 125.314354, 140.761078",\
+                 "118.046753, 121.721725, 125.738991, 133.770187, 149.216919",\
+                 "130.909592, 134.584564, 138.601822, 146.633026, 162.079758",\
+                 "152.517960, 156.192932, 160.210190, 168.241394, 183.688110") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("8.432690, 14.571933, 22.965857, 40.582752, 76.285225",\
+                 "8.432690, 14.571933, 22.965857, 40.582752, 76.285225",\
+                 "8.432690, 14.571933, 22.965857, 40.582752, 76.285225",\
+                 "8.432690, 14.571933, 22.965857, 40.582752, 76.285225",\
+                 "8.432690, 14.571933, 22.965857, 40.582752, 76.285225") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.641639, 2.647198, 2.650073, 2.655311, 2.658268",\
+                 "2.828221, 2.833414, 2.836100, 2.840995, 2.843759",\
+                 "3.191899, 3.196501, 3.198882, 3.203223, 3.205674",\
+                 "3.817235, 3.821084, 3.823077, 3.826709, 3.828762",\
+                 "4.970586, 4.973543, 4.975074, 4.977866, 4.979444") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "ForceAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("83.273087, 86.948090, 90.965370, 98.996552, 114.443245",\
+                 "89.787849, 93.462852, 97.480133, 105.511314, 120.958008",\
+                 "100.015198, 103.690201, 107.707481, 115.738663, 131.185364",\
+                 "115.153809, 118.828804, 122.846085, 130.877274, 146.323959",\
+                 "141.225464, 144.900467, 148.917740, 156.948929, 172.395615") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("8.432973, 14.572147, 22.966007, 40.582802, 76.285103",\
+                 "8.432973, 14.572147, 22.966007, 40.582802, 76.285103",\
+                 "8.432973, 14.572147, 22.966007, 40.582802, 76.285103",\
+                 "8.432973, 14.572147, 22.966007, 40.582802, 76.285103",\
+                 "8.432973, 14.572147, 22.966007, 40.582802, 76.285103") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("1.975852, 1.983284, 1.987122, 1.994107, 1.998045",\
+                 "2.252024, 2.258547, 2.261918, 2.268056, 2.271520",\
+                 "2.761457, 2.766779, 2.769532, 2.774548, 2.777380",\
+                 "3.603912, 3.607992, 3.610104, 3.613953, 3.616127",\
+                 "5.100992, 5.103875, 5.105368, 5.108090, 5.109629") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("98.070343, 101.777557, 105.786667, 113.892975, 129.293854",\
+                 "103.139771, 106.846985, 110.856094, 118.962402, 134.363281",\
+                 "111.587997, 115.295204, 119.304321, 127.410629, 142.811508",\
+                 "124.366280, 128.073486, 132.082611, 140.188919, 155.589798",\
+                 "146.281296, 149.988510, 153.997635, 162.103928, 177.504807") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("9.928960, 15.845694, 24.080549, 41.625092, 77.260765",\
+                 "9.928960, 15.845694, 24.080549, 41.625092, 77.260765",\
+                 "9.928960, 15.845694, 24.080549, 41.625092, 77.260765",\
+                 "9.928960, 15.845694, 24.080549, 41.625092, 77.260765",\
+                 "9.928960, 15.845694, 24.080549, 41.625092, 77.260765") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.256742, 2.263534, 2.266630, 2.273061, 2.276533",\
+                 "2.470582, 2.476788, 2.479617, 2.485497, 2.488673",\
+                 "2.869956, 2.875300, 2.877738, 2.882806, 2.885545",\
+                 "3.533931, 3.538273, 3.540254, 3.544375, 3.546602",\
+                 "4.729264, 4.732510, 4.733991, 4.737073, 4.738740") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxClk" ;
+        timing_type : rising_edge ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("102.479622, 106.154594, 110.171860, 118.203056, 133.649780",\
+                 "108.353951, 112.028931, 116.046196, 124.077385, 139.524109",\
+                 "117.406464, 121.081444, 125.098709, 133.129898, 148.576630",\
+                 "130.692490, 134.367462, 138.384735, 146.415924, 161.862640",\
+                 "153.216583, 156.891571, 160.908829, 168.940033, 184.386749") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("8.432754, 14.571980, 22.965889, 40.582764, 76.285202",\
+                 "8.432754, 14.571980, 22.965889, 40.582764, 76.285202",\
+                 "8.432754, 14.571980, 22.965889, 40.582764, 76.285202",\
+                 "8.432754, 14.571980, 22.965889, 40.582764, 76.285202",\
+                 "8.432754, 14.571980, 22.965889, 40.582764, 76.285202") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.401871, 2.407984, 2.411145, 2.416902, 2.420151",\
+                 "2.646735, 2.652285, 2.655154, 2.660383, 2.663335",\
+                 "3.048241, 3.053061, 3.055554, 3.060099, 3.062665",\
+                 "3.672371, 3.676373, 3.678444, 3.682220, 3.684353",\
+                 "4.782917, 4.785990, 4.787580, 4.790483, 4.792122") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("112.584061, 116.291260, 120.300362, 128.406677, 143.807556",\
+                 "118.363754, 122.070953, 126.080063, 134.186371, 149.587250",\
+                 "127.314316, 131.021515, 135.030624, 143.136932, 158.537827",\
+                 "140.367050, 144.074265, 148.083359, 156.189667, 171.590561",\
+                 "162.152313, 165.859512, 169.868607, 177.974930, 193.375809") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("9.928667, 15.845479, 24.080408, 41.625000, 77.260750",\
+                 "9.928667, 15.845479, 24.080408, 41.625000, 77.260750",\
+                 "9.928667, 15.845479, 24.080408, 41.625000, 77.260750",\
+                 "9.928667, 15.845479, 24.080408, 41.625000, 77.260750",\
+                 "9.928667, 15.845479, 24.080408, 41.625000, 77.260750") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("2.465815, 2.472028, 2.474861, 2.480748, 2.483927",\
+                 "2.678416, 2.684137, 2.686746, 2.692170, 2.695100",\
+                 "3.026484, 3.031549, 3.033859, 3.038664, 3.041260",\
+                 "3.562601, 3.566904, 3.568868, 3.572953, 3.575161",\
+                 "4.502264, 4.505670, 4.507225, 4.510460, 4.512209") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxDatAsync" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("77.505600, 81.180580, 85.197845, 93.229042, 108.675758",\
+                 "84.270264, 87.945244, 91.962517, 99.993713, 115.440430",\
+                 "94.070595, 97.745575, 101.762840, 109.794044, 125.240753",\
+                 "107.693321, 111.368301, 115.385574, 123.416771, 138.863480",\
+                 "131.470337, 135.145309, 139.162582, 147.193787, 162.640503") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("8.432773, 14.571996, 22.965899, 40.582767, 76.285194",\
+                 "8.432773, 14.571996, 22.965899, 40.582767, 76.285194",\
+                 "8.432773, 14.571996, 22.965899, 40.582767, 76.285194",\
+                 "8.432773, 14.571996, 22.965899, 40.582767, 76.285194",\
+                 "8.432773, 14.571996, 22.965899, 40.582767, 76.285194") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("1.760303, 1.768636, 1.772937, 1.780758, 1.785165",\
+                 "2.019079, 2.026348, 2.030103, 2.036937, 2.040791",\
+                 "2.493708, 2.499598, 2.502643, 2.508190, 2.511321",\
+                 "3.279866, 3.284346, 3.286664, 3.290890, 3.293277",\
+                 "4.685620, 4.688756, 4.690381, 4.693343, 4.695017") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("82.267082, 85.974289, 89.983406, 98.089706, 113.490585",\
+                 "88.159012, 91.866219, 95.875336, 103.981636, 119.382515",\
+                 "97.231895, 100.939110, 104.948227, 113.054527, 128.455414",\
+                 "109.173561, 112.880775, 116.889885, 124.996193, 140.397079",\
+                 "128.925064, 132.632278, 136.641388, 144.747696, 160.148575") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("9.928983, 15.845711, 24.080559, 41.625099, 77.260773",\
+                 "9.928983, 15.845711, 24.080559, 41.625099, 77.260773",\
+                 "9.928983, 15.845711, 24.080559, 41.625099, 77.260773",\
+                 "9.928983, 15.845711, 24.080559, 41.625099, 77.260773",\
+                 "9.928983, 15.845711, 24.080559, 41.625099, 77.260773") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("1.793211, 1.801753, 1.805641, 1.813708, 1.818057",\
+                 "2.046210, 2.053699, 2.057111, 2.064195, 2.068018",\
+                 "2.534995, 2.541044, 2.543802, 2.549535, 2.552631",\
+                 "3.294178, 3.298836, 3.300961, 3.305380, 3.307769",\
+                 "4.599526, 4.602863, 4.604387, 4.607556, 4.609270") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+      timing () {
+        min_delay_flag : true ;
+        related_pin : "TxEn" ;
+        timing_type : combinational ;
+        timing_sense : positive_unate ;
+        cell_rise (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("84.693398, 88.368301, 92.385521, 100.416756, 115.863579",\
+                 "90.657585, 94.332497, 98.349709, 106.380951, 121.827774",\
+                 "100.130272, 103.805176, 107.822395, 115.853638, 131.300461",\
+                 "114.618141, 118.293045, 122.310265, 130.341507, 145.788330",\
+                 "138.271088, 141.945999, 145.963211, 153.994461, 169.441269") ;
+        }  /* End cell_rise(f_itrans_ocap) */
+        rise_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("8.431921, 14.571346, 22.965446, 40.582623, 76.285576",\
+                 "8.431921, 14.571346, 22.965446, 40.582623, 76.285576",\
+                 "8.431921, 14.571346, 22.965446, 40.582623, 76.285576",\
+                 "8.431921, 14.571346, 22.965446, 40.582623, 76.285576",\
+                 "8.431921, 14.571346, 22.965446, 40.582623, 76.285576") ;
+        }  /* End rise_transition(f_itrans_ocap) */
+        ocv_sigma_cell_rise (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("1.937683, 1.945240, 1.949143, 1.956246, 1.960250",\
+                 "2.184953, 2.191658, 2.195122, 2.201432, 2.204991",\
+                 "2.648944, 2.654477, 2.657338, 2.662552, 2.665496",\
+                 "3.422397, 3.426681, 3.428898, 3.432941, 3.435224",\
+                 "4.747920, 4.751009, 4.752608, 4.755526, 4.757174") ;
+        }  /* End ocv_sigma_cell_rise(f_itrans_ocap) */
+        cell_fall (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("81.932411, 85.639626, 89.648735, 97.755043, 113.155922",\
+                 "87.732651, 91.439865, 95.448975, 103.555283, 118.956161",\
+                 "96.640327, 100.347542, 104.356651, 112.462959, 127.863838",\
+                 "109.229927, 112.937141, 116.946259, 125.052559, 140.453445",\
+                 "128.524261, 132.231476, 136.240585, 144.346893, 159.747772") ;
+        }  /* End cell_fall(f_itrans_ocap) */
+        fall_transition (f_itrans_ocap) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("9.928985, 15.845713, 24.080559, 41.625099, 77.260773",\
+                 "9.928985, 15.845713, 24.080559, 41.625099, 77.260773",\
+                 "9.928985, 15.845713, 24.080559, 41.625099, 77.260773",\
+                 "9.928985, 15.845713, 24.080559, 41.625099, 77.260773",\
+                 "9.928985, 15.845713, 24.080559, 41.625099, 77.260773") ;
+        }  /* End fall_transition(f_itrans_ocap) */
+        ocv_sigma_cell_fall (f_itrans_ocap) {
+          sigma_type : "early_and_late" ;
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("16.855911, 20.855911, 25.855911, 35.855911, 55.855911") ;
+          values("1.792669, 1.801213, 1.805102, 1.813171, 1.817522",\
+                 "2.049434, 2.056912, 2.060318, 2.067392, 2.071209",\
+                 "2.543651, 2.549680, 2.552429, 2.558142, 2.561227",\
+                 "3.331306, 3.335911, 3.338013, 3.342383, 3.344745",\
+                 "4.642696, 4.646002, 4.647511, 4.650651, 4.652349") ;
+        }  /* End ocv_sigma_cell_fall(f_itrans_ocap) */
+      }  /* End timing() */
+    }  /* End pin(TxCoreloopOut) */
+    pin ("TxDat") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 0.723170 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(0.717946, 0.717946) ;
+      fall_capacitance_range(0.723170, 0.723170) ;
+      timing () {
+        related_pin : "TxClk" ;
+        timing_type : hold_rising ;
+        /* comment : reference path 1, checked path 172, reference path 1, checked path 173; */
+        rise_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("-2.841566, 1.910327, 8.672941, 17.389797, 32.188354",\
+                 "-7.753895, -3.380599, 4.020238, 12.529628, 27.029757",\
+                 "-15.201697, -10.944939, -3.808116, 4.938923, 19.731308",\
+                 "-23.846491, -19.765175, -12.767720, -4.100589, 10.595168",\
+                 "-38.649086, -34.752708, -27.962847, -19.449009, -4.968809") ;
+        }  /* End rise_constraint(f_dtrans_ctrans) */
+        ocv_sigma_rise_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("7.194914, 8.023161, 8.837452, 10.196288, 12.881391",\
+                 "7.150473, 8.273751, 9.305177, 12.532120, 17.277691",\
+                 "7.100170, 7.982193, 9.639859, 12.576922, 16.952461",\
+                 "7.473515, 8.181701, 9.746876, 12.399875, 16.448540",\
+                 "8.569741, 9.026614, 10.386969, 12.543858, 16.008390") ;
+        }  /* End ocv_sigma_rise_constraint(f_dtrans_ctrans) */
+        fall_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("8.257781, 14.214400, 22.839146, 34.749607, 55.457359",\
+                 "3.726246, 9.330091, 18.182524, 30.342134, 51.343952",\
+                 "-2.678861, 2.664260, 11.615794, 23.678440, 44.622189",\
+                 "-10.194771, -4.666735, 4.272666, 16.266544, 37.157402",\
+                 "-22.708731, -16.975813, -8.075654, 3.815938, 24.612047") ;
+        }  /* End fall_constraint(f_dtrans_ctrans) */
+        ocv_sigma_fall_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("1.779618, 1.997811, 2.659428, 3.578256, 5.662093",\
+                 "1.926720, 2.014487, 2.655619, 3.623584, 5.765132",\
+                 "2.262540, 2.394656, 2.749688, 3.837122, 6.112776",\
+                 "3.434088, 3.567703, 3.893162, 4.820238, 6.854173",\
+                 "5.723958, 5.850331, 6.118932, 6.792262, 8.423190") ;
+        }  /* End ocv_sigma_fall_constraint(f_dtrans_ctrans) */
+      }  /* End timing() */
+      timing () {
+        related_pin : "TxClk" ;
+        timing_type : setup_rising ;
+        /* comment : reference path 3, checked path 82, reference path 3, checked path 83; */
+        rise_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("8.150064, 4.465093, -1.875215, -9.005789, -21.752981",\
+                 "13.527220, 9.619877, 3.681233, -3.635525, -16.615974",\
+                 "21.319746, 17.478411, 11.959935, 4.400642, -8.897081",\
+                 "31.609608, 27.439564, 21.635977, 14.198354, 1.012354",\
+                 "49.820259, 45.195126, 38.928181, 31.585714, 18.449497") ;
+        }  /* End rise_constraint(f_dtrans_ctrans) */
+        ocv_sigma_rise_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("1.751693, 2.020519, 2.532910, 3.487356, 5.511053",\
+                 "2.037245, 2.183057, 2.561783, 3.550941, 5.618485",\
+                 "2.568141, 2.580126, 2.696986, 3.748731, 5.889207",\
+                 "3.419843, 3.470929, 3.682095, 4.588952, 6.501369",\
+                 "5.412774, 5.508759, 5.822481, 6.486042, 8.008635") ;
+        }  /* End ocv_sigma_rise_constraint(f_dtrans_ctrans) */
+        fall_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("-0.039279, -5.179182, -13.958765, -26.020987, -47.001823",\
+                 "4.838215, -0.308497, -9.207661, -21.039471, -41.757381",\
+                 "11.994554, 7.081598, -1.326339, -13.290566, -34.232922",\
+                 "22.541859, 17.269360, 8.605865, -3.550552, -24.790514",\
+                 "39.624123, 33.930576, 25.002420, 12.637928, -8.955968") ;
+        }  /* End fall_constraint(f_dtrans_ctrans) */
+        ocv_sigma_fall_constraint (f_dtrans_ctrans) {
+          index_1("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          index_2("1.000000, 10.000000, 25.000000, 50.000000, 100.000000") ;
+          values("1.586166, 1.864049, 2.404073, 3.456677, 5.627000",\
+                 "1.921867, 1.838730, 2.408306, 3.523130, 5.762115",\
+                 "3.058989, 2.749018, 2.542527, 3.749073, 6.085009",\
+                 "4.111207, 3.974509, 3.963660, 4.917620, 6.910350",\
+                 "6.373268, 6.455187, 6.684845, 7.296479, 8.827247") ;
+        }  /* End ocv_sigma_fall_constraint(f_dtrans_ctrans) */
+      }  /* End timing() */
+    }  /* End pin(TxDat) */
+    pin ("TxDatAsync") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 1.483379 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(1.481007, 1.481007) ;
+      fall_capacitance_range(1.483379, 1.483379) ;
+    }  /* End pin(TxDatAsync) */
+    pin ("TxEn") {
+      direction : input ;
+      max_transition : 100.000000 ;
+      capacitance : 1.086351 ;
+      related_power_pin : VDD ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(1.083801, 1.083801) ;
+      fall_capacitance_range(1.086351, 1.086351) ;
+    }  /* End pin(TxEn) */
+    pin ("soft_VQ") {
+      direction : output ;
+      max_capacitance : 48.147484 ;
+      min_capacitance : 9.147483 ;
+      capacitance : 8.147483 ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(8.147483, 8.147483) ;
+      fall_capacitance_range(8.147483, 8.147483) ;
+    }  /* End pin(soft_VQ) */
+    pin ("soft_VSS") {
+      direction : output ;
+      max_capacitance : 47.765381 ;
+      min_capacitance : 8.765382 ;
+      capacitance : 7.765382 ;
+      related_power_pin : VDDQ ;
+      related_ground_pin : VSS ;
+      rise_capacitance_range(7.765382, 7.765382) ;
+      fall_capacitance_range(7.765382, 7.765382) ;
+    }  /* End pin(soft_VSS) */
+  }  /* End cell(dwc_hbmphy_txmd_ew) */
+}  /* End library(dwc_hbmphy_txmd_ew_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z_ssg0p675v0c) */

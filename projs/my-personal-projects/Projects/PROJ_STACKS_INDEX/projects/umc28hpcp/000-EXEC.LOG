@@ -1,0 +1,68 @@
+z00000-adc-sar-12b5m-umc28hpcp-18.txt
+INFO: umc28hpcp 18 rel2.0.0
+INFO: DONE
+
+z3641-adc-sar-12b5m-umc28hpcp-18.txt
+INFO: umc28hpcp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0085-mem-umc28hpcp-um28nph41p11sasrl128s.txt
+INFO: umc28hpcp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g222-mphy-umc28hpcp-18.txt
+INFO: umc28hpcp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x674-ssp-umc28hpcp-18-ns.txt
+INFO: umc28hpcp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l514-std-umc28hpcp-1.8v.txt
+INFO: umc28hpcp 18 rel2.6.0
+INFO: DONE
+
+z00000-tchip-tdcs328-umc28hpcp-18.txt
+INFO: umc28hpcp 18 rel2.0.0
+INFO: DONE
+
+x055-up16-umc28hpcp-18.txt
+INFO: umc28hpcp 18 rel1.11.0
+INFO: DONE
+
+x674-usb2-umc28hpcp-18-ns.txt
+INFO: umc28hpcp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x674-usb3-umc28hpcp-18-ns.txt
+INFO: umc28hpcp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+p012-emclk-umc28hpcp-1.8.txt
+INFO: CCS CCS "c514-umc28hpcp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d547-lpddr4mv2-umc28hpcp18.txt
+INFO: umc28hpcp 18 rel1.8.2
+INFO: DONE
+
+t021-pqv-umc28hpcp-1.8.txt
+INFO: CCS CCS "c514-umc28hpcp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l005-tio-umc28hpcp-1.8v.txt
+INFO: common common "c514-umc28hpcp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x055-tc-umc28hpcp-18.txt
+INFO: umc28hpcp 18 rel1.11.0
+INFO: DONE
+
+w246-nvm-otp-x-umc28hpcp-2.5v.txt
+INFO: umc28hpcp 25 rel1.0.0
+INFO: DONE
+
+w284-nvm-otp-xs-umc28hpcp-1.8v.txt
+INFO: umc28hpcp 18 rel2.6.1
+INFO: DONE
+

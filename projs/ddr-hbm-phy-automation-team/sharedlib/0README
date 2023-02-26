@@ -1,0 +1,45 @@
+3/17/2022                       James Laderoute
+
+This area of perl-modules (aka shared libraries) is to be considered the
+golden source. All others that you find under this GitLab repo would 
+just be snapshots (copies) of the golden one at a certain point in time.
+
+When a release is planned, we assume all tools that make use of the
+shared libs are pointing to the bleeding edge which would be sharedlib/dev
+
+At the point of release, the person doing the release would create a 
+versioned snapshot of what is in dev (ie. see 2022ww11).
+
+And it is this versioned area that would be snapshoted into the release
+areas. The versioned snapshot of Util should have a Util.version file
+that mentions details about where the snapshot came from, which date, which
+revision, who did it, etc...
+
+The purpose of this sharedlib/ area is to prepare to release our 
+perl-modules as it's own tool.
+
+Example:
+    module load ddr_sharedlibs 
+
+The name of the Shelltools tool has not yet been determined. That is still
+up in the air at this point in time.
+
+GitLab/ddr-hbm-phy-automation-team
+    /sharedlib
+
+        /dev                    -- /dev is most recent edits to perl-modules
+            /lib
+                *.pm
+                /Util
+                    *.pm
+            /t
+            /tdata
+            Makefile
+
+
+        /2022ww11               -- /DATESTAMP is a snapshot in time these would
+            /lib                   get copied to release areas.   
+                /Util
+                    *.pm
+
+

@@ -1,0 +1,7 @@
+umc28hpcp-18_1P10M2T0F2A0C_28kRDL /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P10M2T0F2A0C-ICV-DRC-1.5_P1
+umc28hpcp-18_1P7M0T0A0C1U_28kRDL /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P7M0T0A0C1U-ICV-DRC-1.5_P1
+umc28hpcp-18_1P8M0T0F1A0C /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P8M0T0F1A0C-ICV-DRC-1.5_P1
+umc28hpcp-18_1P8M0T0F2A0C /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P8M0T0F2A0C-ICV-DRC-1.5_P1
+umc28hpcp-18_1P8M0T0F2A0C_28kRDL /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P8M0T0F2A0C-ICV-DRC-1.5_P1
+umc28hpcp-18_1P8M0T1A0C1U /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P8M0T1A0C1U-ICV-DRC-1.5_P1
+umc28hpcp-18_1P8M0T1A0C1U_28kRDL /remote/cad-rep/fab/f100-umc/28nm/logic/rules/HPCP/common/icv/drc/ver1.5_P1/orig/G-DF-LOGIC_MIXED_MODE28N-HPC+-1P8M0T1A0C1U-ICV-DRC-1.5_P1

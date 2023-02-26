@@ -1,0 +1,1 @@
+/remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/usage.txt

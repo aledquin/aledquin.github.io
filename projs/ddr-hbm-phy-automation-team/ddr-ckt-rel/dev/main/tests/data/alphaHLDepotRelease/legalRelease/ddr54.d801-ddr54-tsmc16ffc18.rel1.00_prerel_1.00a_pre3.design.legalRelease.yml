@@ -1,0 +1,31 @@
+---
+calibre_verifs: true
+releaseRepeaterMacro: dwc_ddrphy_repeater_cells
+releasePmMailDist: 
+    araratk,warrena,jmangatt,williamm,gtravaj,manukyan,davidgh,davitt,sg-ddr-ckt-release@synopsys.com,cheah,gerard,samy,ddr_di@synopsys.com,elaineh,guttman,julhak
+supply_pins_override: 
+    dwc_ddrphy_bdl: M4
+    dwc_ddrphy_techrevision: M4
+    dwc_ddrphy_lcdl: M4
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: M7
+releaseUtilityMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_vddqclamp_ns
+releaseBranch: rel1.00_prerel_1.00a_pre3
+releaseMailDist: 
+    araratk,warrena,jmangatt,williamm,gtravaj,manukyan,davidgh,davitt,sg-ddr-ckt-release@synopsys.com,cheah,gerard,samy,ddr_di@synopsys.com,elaineh,guttman,julhak
+release_gds_cdl: icv
+metal_stack: 9M_2Xa1Xd_h_3Xe_vhv_2Z
+metal_stack_ip: 7M_2Xa1Xd_h_3Xe_vhv
+layers: M1 M2 M3 M4 M5 M6 M7 OVERLAP
+layout_tag: Prefinal release
+reference_date_time: 30 days ago
+rel: 1.00a_pre3
+utility_name: dwc_ddrphy_utility_cells
+vcrel: 1.00a_pre3
+utility_tag_layers: 63:63 60:63
+p4_release_root: products/ddr54/project/d801-ddr54-tsmc16ffc18
+process: tsmc16ffc18
+

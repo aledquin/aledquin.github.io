@@ -1,0 +1,11 @@
+name,direction,pin_type,related_clock_pin,related_ground_pin,related_power_pin,derating_factor,desc,donot_repeat,is_bus,is_true_core_ground,lsb,max_capacitive_load,max_voltage,min_capacitive_load,msb,nominal_voltage,package_pin,related_select_pin,synlibchecker_waive,cellname,cell_x_dim_um,cell_y_dim_um
+BurnIn,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+IDDQ_mode,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+RxAcVrefDacEn,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+VDD,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+VDD2H,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+VIO_PwrOk,I,general_signal,-,VSS,VDD2H,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+VIO_RxAcVref,O,general_signal,-,VSS,VDD2H,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+VSS,I,primary_ground,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+csrRxAcVrefDac[7:0],I,general_signal,-,VSS,VDD,-,-,-,y,-,0,-,-,-,7,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268
+scan_mode,I,general_signal,-,VSS,VDD,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_lpddr5xphy_rxacvref_ew,16.677,37.268

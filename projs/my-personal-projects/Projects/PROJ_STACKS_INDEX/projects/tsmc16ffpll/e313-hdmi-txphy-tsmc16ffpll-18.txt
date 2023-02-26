@@ -1,0 +1,10 @@
+tsmc16ffpll-18_10M_2Xa1Xd_h_2Xe_vh_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_10M_2Xa1Xd2Xe2Y2R_002.14c.encrypt
+tsmc16ffpll-18_10M_2Xa1Xd_v_2Xe_hv_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_10M_2Xa1Xd2Xe2Y2R_002.14c.encrypt
+tsmc16ffpll-18_11M_2Xa1Xc3Xy2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_11M_2Xa1Xc3Xy2Y2R_002.14c.encrypt
+tsmc16ffpll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_11M_2Xa1Xd3Xe2Y2R_002.14c.encrypt
+tsmc16ffpll-18_11M_2Xa1Xd_v_3Xe_hvh_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_11M_2Xa1Xd3Xe2Y2R_002.14c.encrypt
+tsmc16ffpll-18_12M_1X2Xa2Xy2Y2Yy1Z1R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_12M_1X2Xa2Xy2Y2Yy1Z1R_002.14c.encrypt
+tsmc16ffpll-18_12M_2Xa1Xd_h_4Xe_vhvh_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_12M_2Xa1Xd4Xe2Y2R_002.14c.encrypt
+tsmc16ffpll-18_12M_2Xa1Xd_v_4Xe_hvhv_2Y2R /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMr_DRC/ICVN16FFP_12M_2Xa1Xd4Xe2Y2R_002.14c.encrypt
+tsmc16ffpll-18_9M_2Xa1Xd_h_3Xe_vhv_2Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMz_DRC/ICVN16FFP_9M_2Xa1Xd3Xe2Z_002.14c.encrypt
+tsmc16ffpll-18_9M_2Xa1Xd_v_3Xe_hvh_2Z /remote/cad-rep/fab/f101-tsmc/16nm/logic/FFP/common/rules/common/icv/drc/ver1.4c/orig/LOGIC_TopMz_DRC/ICVN16FFP_9M_2Xa1Xd3Xe2Z_002.14c.encrypt

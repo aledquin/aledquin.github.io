@@ -1,0 +1,33 @@
+SNPS_ERROR  : (PCSQA-VC-1);No VC project releases of project d820-ddr54v2-tsmc5ffp12/rel1.30a_mrvl_sup1 (VC PCS (prefix) version 1.30a_mrvl_sup1)
+SNPS_ERROR  : (PCSQA-REMOTECHECK ca06);Failing connection with site ca06
+SNPS_ERROR  : (PCSQA-REMOTECHECK pt02);Failing connection with site pt02
+SNPS_ERROR  : (PCSQA-REMOTECHECK in19);Failing connection with site in19
+SNPS_ERROR  : (PCSQA-REMOTECHECK ca09);Failing connection with site ca09
+SNPS_ERROR  : (PCSQA-REMOTECHECK de02);Failing connection with site de02
+SNPS_ERROR  : (PCSQA-REMOTECHECK am04);Failing connection with site am04
+SNPS_ERROR  : (PCSQA-REMOTECHECK pl01);Failing connection with site pl01
+SNPS_ERROR  : (PCSQA-REMOTECHECK cn58);Failing connection with site cn58
+SNPS_ERROR  : (PCSQA-REMOTECHECK in01);Failing connection with site in01
+SNPS_ERROR  : (PCSQA-REMOTECHECK us03);Failing connection with site us03
+SNPS_WARNING: (PCSQA-2.1e2 us01);Include file in /remote/proj/cad/c253-tsmc5ff-1.2v/rel9.3.1/cad/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs is not owned by csadmin: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs (azat:sg_techdata_admin)
+SNPS_WARNING: (PCSQA-2.1e2 us01);Include file in /remote/proj/cad/c253-tsmc5ff-1.2v/rel9.3.1/cad/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/lib.defs file does not belong to 65859 (sg_pdks) group ID: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs (azat:100060(sg_techdata_admin))
+SNPS_WARNING: (PCSQA-2.1e2 us01);Refered library in /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs is not owned by csadmin: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/./tsmcN5 (azat:sg_techdata_support)
+SNPS_WARNING: (PCSQA-2.1e2 us01);Refered library in /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs file does not belong to 65859 (sg_pdks) group ID: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/./tsmcN5 (azat:100061(sg_techdata_support))
+SNPS_WARNING: (PCSQA-2.1e2 us01);Refered library in /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs file has not go-w & g+r permissions: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/./tsmcN5 (x75)
+SNPS_WARNING: (PCSQA-2.1e2 us01);Refered library in /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs is not owned by csadmin: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/./tsmcN5/HP_Analog_Lib (azat:sg_techdata_support)
+SNPS_WARNING: (PCSQA-2.1e2 us01);Refered library in /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs file does not belong to 65859 (sg_pdks) group ID: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/./tsmcN5/HP_Analog_Lib (azat:100061(sg_techdata_support))
+SNPS_WARNING: (PCSQA-2.1e2 us01);Refered library in /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/lib.defs file has not go-w & g+r permissions: /remote/cad-rep/fab/f101-tsmc/5nm/iPDK/FF/ver1.2_2p2a1/1P16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_6Y_vhvhvh_2Yy2R/./tsmcN5/HP_Analog_Lib (x75)
+SNPS_WARNING: (PCSQA-2.1e us01);Refered library in /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/design/lib.defs file does not exists: MSIP_PROJ_P4WS_ROOT/projects/cad/c253-tsmc5ff-1.2v/rel5.00/design/lib/gpcells
+SNPS_WARNING: (PCSQA-2.1e us01);Refered library in /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/design/lib.defs file does not exists: MSIP_PROJ_P4WS_ROOT/projects/cad/c253-tsmc5ff-1.2v/rel5.00/design/lib/presets
+SNPS_WARNING: (PCSQA-2.1e3 us01);Refered library in /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/design/lib.defs file does not belong to 66067 (wwcad) group ID: /remote/cad-rep/msip/cd/lib/vflags/tsmc5ff/release/rel1.06/lib/vflags (csadmin:65859(sg_pdks))
+SNPS_WARNING: (PCSQA-2.1e us01);Refered library in /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/design/lib.defs file does not exists: MSIP_PROJ_P4WS_ROOT/projects/cad/c253-tsmc5ff-1.2v/latest/design/lib/sandbox
+SNPS_WARNING: (PCSQA-2.1e us01);Refered library in /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/design/lib.defs file does not exists: MSIP_PROJ_P4WS_ROOT/projects/cad/c253-tsmc5ff-1.2v/latest/design/lib/erc_testcases
+SNPS_WARNING: (PCSQA-2.1e us01);Refered library in /remote/cad-rep/projects/cad/c253-tsmc5ff-1.2v/rel9.3.1/design/lib.defs file does not exists: MSIP_PROJ_P4WS_ROOT/projects/cad/c253-tsmc5ff-1.2v/latest/design/lib/analogCells_samples_ude
+SNPS_WARNING: (PCSQA-2.2a us01);There is additional code in PCS cad/16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R/env.tcl file other than source of CCS env.tcl
+SNPS_WARNING: (PCSQA-2.1k us01);project.env contains internal tools settings with default versions: msip_cd_pcs_pv_api
+SNPS_ERROR  : (PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC calibre' or 'iDRC Interoperable') is defined for DRC_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+SNPS_ERROR  : (PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC ANT calibre' or 'iDRC Interoperable') is defined for ANT_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+SNPS_ERROR  : (PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC icv' or 'iDRC Interoperable') is defined for DRC_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+SNPS_ERROR  : (PCSQA-2.1vv);No deck Revision (for VC Component Name 'DRC ANT icv' or 'iDRC Interoperable') is defined for ANT_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+SNPS_ERROR  : (PCSQA-2.1vv);No deck Revision (for VC Component Name 'LVS calibre' or 'iLVS Interoperable') is defined for LVS_calibre_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+SNPS_ERROR  : (PCSQA-2.1vv);No deck Revision (for VC Component Name 'LVS icv' or 'iLVS Interoperable') is defined for LVS_icv_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R

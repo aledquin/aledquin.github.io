@@ -1,0 +1,21 @@
+#@ # 
+#@ # Running rtm_shell Version Q-2020.09 for linux64 -- Aug 27, 2020
+#@ # Date:   Mon Jul 18 16:13:44 2022
+#@ # Run by: alvaro@us01msemt228
+#@ 
+
+#@ Information: Initializing FLEXlm ....
+#@ Information: Checking out licenses from the server ....
+#@ Internal[901.0]: Info: Tried to checkout license; received message (0): No Errors 
+#@ Information: Successfully checked out license.
+tcl::source /global/apps/lynx_2020.09/rtm_shell/lynx_rtm_2020.09/admin/setup/.synopsys_rtm.setup
+tcl::source ~/.synopsys_rtm.setup
+tcl::source .synopsys_rtm.setup
+tcl::source /slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/scripts_global/conf/sev_values.tcl
+tcl::source /slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/scripts_global/rtm_shell/rtm_init.tcl
+#@ Waiting for Clients on us01msemt228.internal.synopsys.com:33008
+#@ RTM ID:rtm_shell/us01msemt228.internal.synopsys.com/18021
+
+#@ Information: Initializing Variables...
+#@ Information: Initializing Builds...
+source -echo /slowfs/dcopt103/alvaro/sgscratch/pcsqa_beta/pcsqaFile_20220718161326750203_rtm_cmd

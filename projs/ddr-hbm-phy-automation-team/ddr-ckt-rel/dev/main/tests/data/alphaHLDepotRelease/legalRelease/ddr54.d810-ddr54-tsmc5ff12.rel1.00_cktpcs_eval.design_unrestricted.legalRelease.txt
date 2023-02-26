@@ -1,0 +1,49 @@
+## list of settings for present release
+set rel "1.00a_pre2_v1.1dk"
+set reference_date_time "75 days ago"
+set vcrel "0.10a"
+set layout_tag "Initial LEF/LIB release"
+set p4_release_root "products/ddr54/project/d810-ddr54-tsmc5ff12"
+set process "tsmc7ff-18"
+set metal_stack "13M_1Xs_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z"
+set metal_stack_ip "8M_1X_h_1Xa_v_1Ya_h_4Y_vhvh"
+## legal pin layers
+set layers "M0 M1 M2 M3 M4 M5 M6 M7 M8 OVERLAP"
+## legal supply pin layers
+set supply_pins "M8"
+set supply_pins_override(dwc_ddrphy_lcdl) "M6"
+set supply_pins_override(dwc_ddrphy_bdl) "M4"
+set supply_pins_override(dwc_ddrphy_techrevision) "M4"
+## reference GDS files for DI
+set reference_gds(dwc_ddrphy_txrxac_ew) {dwc_ddrphy_txrxac_ew_IntLoadFill.gds.gz dwc_ddrphy_txrxac_ew_InternalLoad.gds.gz dwc_ddrphy_txrxac_ew_LUPblock.gds.gz}
+set reference_gds(dwc_ddrphy_txrxdqs_ew) {dwc_ddrphydbyte_lcdlroutes_ew.gds.gz}
+## days since release files were created, for pin check/timing collateral validation
+#set reference_date_time "14 days ago"
+## release GDS/CDL, default 'calibre'
+##   allows using 'icv' GDS/CDL files for release, **only** applies to TSMC N7 where Calibre is waived
+##   allows using 'HIPRE' GDS/CDL files from GenHiprePkg
+set release_gds_cdl "icv"
+## release GDS of shim macros, default 'drcint'
+#set release_gds_shim "drcint"
+## version for LEF comparison
+#set lef_diff_rel "1.00a"
+## cells to prune from CDL
+set cdl_prune_cells "cvcp* cvpp* vflag*"
+## macros that are PHYV only and can have autogen Verilog/LIB files
+set releasePhyvMacro {dwc_ddrphy_decapvddq_ew dwc_ddrphy_decapvddq_ns dwc_ddrphy_decapvaa dwc_ddrphy_decapvaa_tile dwc_ddrphy_vddqclamp_ew maesdclamp18 dwc_ddrphy_vddclamp dwc_ddrphy_lstx_vddqdecap_ew dwc_ddrphymaster_decapvddq_ew dwc_ddrphy_decapvddq_v2_ew}
+## macros that are only shims, only LEF/GDS
+set releaseShimMacro {dwc_ddrphy_pllshim dwc_ddrphy_memresetshim_ew stdcell_density_gradient stdcell_density_gradient_wide}
+## macros to ignore for CKT release to DI
+set releaseIgnoreMacro {dwc_ddrphymaster_decapvddq_ew dwc_ddrphy_decapvddq_v2_ew dwc_ddrphy_rxac_ew dwc_ddrphy_rxdq_ew dwc_ddrphy_rxdqs_ew dwc_ddrphy_txfe_ew dwc_ddrphy_txfedqs_ew dwc_ddrphy_txbe_ew dwc_ddrphy_bdl dwc_ddrphy_dqsenreplica_ew}
+## name of UTILITY library macro for CKT release to customer, defaults to dwc_ddrphy_utility_cells
+#set utility_name "dwc_ddrphy_utility_cells"
+## contents of UTILITY library macro for CKT release to customer
+set releaseUtilityMacro {dwc_ddrphy_decapvddq_ew dwc_ddrphy_decapvddq_ns}
+## layers to tag in UTILITY library macro for CKT release to customer
+##   Note -tsmc read from 'process' variable, so not necessary for TSMC processes unless needing extra layers
+#set utility_tag_layers "63:63 60:63"
+## email list for CKT release to DI
+set releaseMailDist "jfisher,ujjal,sg-d54-t7-ckt@synopsys.com,d810-ddr54-tsmc5ff12@synopsys.com,sg-ddr-ckt-release@synopsys.com"
+## email list for CKT release of HSPICE, IBIS, and UTILITY release
+set releasePmMailDist "jfisher,sg-d54-t7-ckt@synopsys.com,sg-ddr-ckt-release@synopsys.com"
+set calibre_verifs "true"

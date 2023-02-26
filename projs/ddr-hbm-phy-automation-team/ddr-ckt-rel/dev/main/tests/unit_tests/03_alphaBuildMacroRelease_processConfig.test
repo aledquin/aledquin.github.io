@@ -1,0 +1,90 @@
+#!/depot/tcl8.6.3/bin/tclsh8.6
+##!/depot/tk8.6.1/bin/wish
+# nolint Main
+# nolint utils__script_usage_statistics
+#
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "Ahmed Hesham"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+
+# source the SUT (script under test) to load in all of it's procs
+# Setting global DDR_DA_UNIT_TEST so the script we are sourcing won't actually
+# run the script; it should return before anything actually runs.
+set DDR_DA_UNIT_TEST 1
+source $RealBin/../../bin/alphaBuildMacroRelease.tcl
+
+::tcltest::verbose bpse
+::tcltest::debug 2
+
+
+#######################################################################
+# Create your tests here
+#######################################################################
+
+set output1 [list "tabState(hspice)   = disabled" \
+                  "tabState(ibis)     = disabled" \
+                  "tabState(main)     = normal" \
+                  "tabState(repeater) = disabled" \
+                  "tabState(tc)       = disabled" \
+                  "tabState(utility)  = disabled\n"]
+test alphaBuildMacroRelease-processConfig_t01 { Test: default } \
+    -body { 
+        source $RealBin/../bin/alphaBuildMacroRelease.tcl
+        set file [makeFile {} processConfigFile]
+        global tabState
+        array set tabState [list main stale \
+                                 utility normal \
+                                 ibis normal \
+                                 hspice normal \
+                                 repeater normal \
+                                 tc normal]
+
+        processConfig $file
+
+        parray tabState
+        removeFile $file
+    } \
+    -result {} \
+    -output [join $output1 "\n"]
+
+
+set output2 [list "tabState(hspice)   = normal" \
+                  "tabState(ibis)     = disabled" \
+                  "tabState(main)     = disabled" \
+                  "tabState(repeater) = disabled" \
+                  "tabState(tc)       = disabled" \
+                  "tabState(utility)  = disabled\n"]
+test alphaBuildMacroRelease-processConfig_t02 { Test: hspice } \
+    -body { 
+        source $RealBin/../bin/alphaBuildMacroRelease.tcl
+        set file [makeFile {set ::releaseType hspice} processConfigFile]
+        global tabState
+        array set tabState [list main normal \
+                                 utility normal \
+                                 ibis normal \
+                                 hspice stale \
+                                 repeater normal \
+                                 tc normal]
+
+        processConfig $file
+
+        parray tabState
+        removeFile $file
+    } \
+    -result {} \
+    -output [join $output2 "\n"]
+
+cleanupTests
+
+puts "Done"
+

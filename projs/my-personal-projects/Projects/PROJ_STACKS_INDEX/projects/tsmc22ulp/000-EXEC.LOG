@@ -1,0 +1,164 @@
+z00000-adc-scoping-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-adc-sar-gen4p5-tsmc22ulp-18.txt
+INFO: tchip tchip z00000-tchip-tdcs32b-tsmc22ulp-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-adc-sar-12b5m-tsmc22ulp-18.txt
+INFO: tchip tchip z00000-tchip-tdcs32b-tsmc22ulp-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u121-cmnblks-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-dac-iq-12b640m-tsmc22ulp-18.txt
+INFO: tchip tchip z00000-tchip-tdcs32b-tsmc22ulp-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-dac-12b20m-tsmc22ulp-18.txt
+INFO: tchip tchip z00000-tchip-tdcs32b-tsmc22ulp-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh71p10asdvl01ms.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh71p11sadrl128s.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms.txt
+INFO: tsmc22ulp 18 rel1.13.0
+INFO: DONE
+
+m0099-mem-tsmc22ulp-ts22nuh71p11sasrl128s.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh71p11sassl01ms.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh72p11sadrl128s.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh72p22sadsl01ms.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh72p11sadul128s.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh71p11sadgl128s.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh71p11sadsl02ms.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh01p11cpsrlhpcs.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh72p11sadul01ms.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh01p11dpdrlhpcs.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0099-mem-tsmc22ulp-ts22nuh01p11gpdrlhpcs.txt
+INFO: "em" "em" "m0099-mem-tsmc22ulp-ts22nuh71p11sadul02ms"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e319-hdmi-txphy-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 rel1.8.1
+INFO: DONE
+
+e408-hdmi-mhl-rxphy-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 rel1.4.0
+INFO: DONE
+
+g145-dphy-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 rel1.10.0
+INFO: DONE
+
+g223-mphy-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 rel1.3.0
+INFO: DONE
+
+x679-ssp-tsmc22ulp-18-ns.txt
+INFO: tsmc22ulp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l248-std-tsmc22ulp-1.8v.txt
+INFO: tsmc22ulp 18 rel1.9.0
+INFO: DONE
+
+z00000-tchip-tdcs32b-tsmc22ulp-18.txt
+INFO: tsmc22ulp 18 rel1.8.0
+INFO: DONE
+
+t679-tsmc22ulp-18-ns.txt
+INFO: tsmc22ulp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x051-c8-tsmc22ulp-18-ns.txt
+INFO: tsmc22ulp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x679-usb2-tsmc22ulp-18-ns.txt
+INFO: tsmc22ulp 18 rel1.12.0
+INFO: DONE
+
+x679-usb3-tsmc22ulp-18-ns.txt
+INFO: tsmc22ulp 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x052-e16-tsmc22ulp-18-ns.txt
+INFO:   "c248-tsmc22ulp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+p039-emclk-tsmc22ulp-1.8v.txt
+INFO: CCS CCS "c248-tsmc22ulp-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d517-lpddr4mv2-tsmc22ulp18.txt
+INFO: tsmc22ulp 18 rel1.10.0
+INFO: DONE
+
+w153-nvm-otp-shfg2-tsmc22ulp-1.8v.txt
+INFO: tsmc22ulp 18 rel1.13.0
+INFO: DONE
+
+w000-nvm-otp-commonLibs-tsmc22ulp-1.8v.txt
+INFO: tsmc22ulp 18 rel1.8.1
+INFO: DONE
+
+w266-nvm-otp-x-tsmc22ulp-2.5v.txt
+INFO: tsmc22ulp 25 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w098-nvm-otp-train1-tsmc22ulp-1.8v.txt
+INFO: tsmc22ulp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w099-nvm-otp-train2-tsmc22ulp-1.8v.txt
+INFO: tsmc22ulp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w251-nvm-otp-ops-tsmc22ulp-1.8v.txt
+INFO: tsmc22ulp 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w303-nvm-otp-xs-tsmc22ulp-2.5v.txt
+INFO: tsmc22ulp 25 rel1.1.0
+INFO: DONE
+

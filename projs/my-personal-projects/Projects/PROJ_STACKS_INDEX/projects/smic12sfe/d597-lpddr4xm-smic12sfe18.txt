@@ -1,0 +1,2 @@
+smic12sfe-18_1P8M_DV_3DM_Q1_3Q2_TMa_ALPA2 /remote/cad-rep/fab/f110-smic/12nm/logic/SFe/common/rules/common/icv/drc/ver1.0_REV0_0/orig/DRC/1P8M_DV_3DM_Q1_3Q2_TMa_ALPA2_14SHK.drc
+smic12sfe-18_1P9M_DV_3DM_Q1_3Q2_2TMa_ALPA2 /remote/cad-rep/fab/f110-smic/12nm/logic/SFe/common/rules/common/icv/drc/ver1.0_REV0_0/orig/DRC/1P9M_DV_3DM_Q1_3Q2_2TMa_ALPA2_14SHK.drc

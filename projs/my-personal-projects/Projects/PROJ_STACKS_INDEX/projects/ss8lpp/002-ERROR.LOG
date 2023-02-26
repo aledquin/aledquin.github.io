@@ -1,0 +1,16 @@
+c132-ss8lpp-1.8v_A00 : /remote/cad-rep/projects/em/m0095-mem-ss8lpp-sa08nlg41p11s1dsl512s/rel1.0.0/cad/project.env
+ss8lpp-18_A00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v_A00/rel1.1.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss8lpp-18_A00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v_A00/rel1.1.0/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss8lpp-18_A00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v_A00/rel1.1.0/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+ss8lpp-18_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel3.4.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss8lpp-18_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel3.4.0/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss8lpp-18_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel3.4.0/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+ss8lpp-18_A00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v_A00/rel1.0.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss8lpp-18_A00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v_A00/rel1.0.0/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss8lpp-18_A00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v_A00/rel1.0.0/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+ss8lpp-18_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel2.1.1/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss8lpp-18_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel2.1.1/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss8lpp-18_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel2.1.1/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+ss8lpp-18_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel3.3.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss8lpp-18_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel3.3.0/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss8lpp-18_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c132-ss8lpp-1.8v/rel3.3.0/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl

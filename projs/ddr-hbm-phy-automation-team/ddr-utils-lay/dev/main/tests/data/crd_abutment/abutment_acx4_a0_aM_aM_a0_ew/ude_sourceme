@@ -1,0 +1,3 @@
+module unload msip_cd_pv
+module load msip_cd_pv/2022.05
+setenv RUN_DIR_ROOT /slowfs/us01dwt2p315/mmuker/20220727_patrick/abutment_acx4_a0_aM_aM_a0_ew/pv

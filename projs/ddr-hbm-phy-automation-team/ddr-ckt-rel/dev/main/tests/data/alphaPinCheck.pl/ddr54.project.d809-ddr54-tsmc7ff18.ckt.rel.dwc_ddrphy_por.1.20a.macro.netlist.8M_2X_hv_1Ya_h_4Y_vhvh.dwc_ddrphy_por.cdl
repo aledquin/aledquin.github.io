@@ -1,0 +1,720 @@
+*Custom Compiler Version Q-2020.03-1
+*Sun Jul 12 04:41:01 2020
+
+*.SCALE METER
+*.LDD
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_nd2x1r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_nd2x1r A B VDDQ VSS Z
+*.PININFO A:I B:I VDDQ:I VSS:I Z:O
+Mdmy1 Z VSS VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMNA Z A net21 VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMNB net21 B VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+Mdmy0 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPB Z B VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPA Z A VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+.ends dwc_ddrphy_por_eg_nd2x1r
+
+********************************************************************************
+* Library          : devicestack
+* Cell             : spfinhvud12
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_spfinhvud12_1 D G S B
+*.PININFO D:B G:B S:B B:B
+MN2_1 net4 G S B pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MN1_1 net3 G net4 B pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MN0_1 D G net3 B pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MN2 net2 G S B pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MN1 net1 G net2 B pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MN0 D G net1 B pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+.ends dwc_ddrphy_por_spfinhvud12_1
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : decap_ioana
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_decap_ioana BULK MINUS PLUS
+*.PININFO BULK:I MINUS:I PLUS:I
+xcM0 PLUS MINUS nmoscap_18 m=2 lr=0.18u nfin=12 ppitch=0
+.ends dwc_ddrphy_por_decap_ioana
+
+********************************************************************************
+* Library          : dwc_ddrphy_por
+* Cell             : mal4por_lat_vddrtrack_tcs
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_mal4por_lat_vddrtrack_tcs ClrPORMemReset_VIOX PORMemReset_VIO VDDQ VMEMP_Ok_VIO VSS
+*.PININFO ClrPORMemReset_VIOX:I PORMemReset_VIO:O VDDQ:I VMEMP_Ok_VIO:I VSS:I
+XMP2 por_vio_l int_por_vio_h VDDQ VDDQ dwc_ddrphy_por_spfinhvud12_1
+MMP4DUM1 int_por_vio_h VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMP2DUM por_vio_l VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=2 ppitch=0
+MMP5DUM clr_por_h VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMP4DUM por_vio_l VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=2 ppitch=0
+MMP3DUM PORMemReset_VIO VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=2 ppitch=0
+MMP4DUM2 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=4 ppitch=0
+MMP5DUM1 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=9 ppitch=0
+MMP3DUM1 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=6 ppitch=0
+MMP0DUM VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMP5 clr_por_h ClrPORMemReset_VIOX VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMP3 PORMemReset_VIO por_vio_l VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=6 ppitch=0
+MMP4 int_por_vio_h por_vio_l VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMP0 net87 clr_por_l VDDQ VDDQ pch_18ud12_mac l=0.194u nfin=8 m=6 ppitch=0
+MMP1 por_vio_l clr_por_l net87 VDDQ pch_18ud12_mac l=0.194u nfin=8 m=6 ppitch=0
+XM18[0] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[1] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[2] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[3] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[4] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[5] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[6] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[7] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[8] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[9] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[10] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[11] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[12] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[13] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[14] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[15] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[16] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[17] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[18] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[19] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[20] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[21] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[22] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[23] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[24] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[25] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[26] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[27] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[28] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[29] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[30] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[31] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[32] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[33] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[34] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[35] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[36] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[37] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[38] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[39] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[40] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[41] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[42] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+XM18[43] VSS VSS por_vio_l dwc_ddrphy_por_decap_ioana m=1
+xrpor_l_r[31] por_l_rb[31] por_vio_l VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[30] por_l_rb[30] por_l_rb[31] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[29] por_l_rb[29] por_l_rb[30] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[28] por_l_rb[28] por_l_rb[29] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[27] por_l_rb[27] por_l_rb[28] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[26] por_l_rb[26] por_l_rb[27] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[25] por_l_rb[25] por_l_rb[26] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[24] por_l_rb[24] por_l_rb[25] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[23] por_l_rb[23] por_l_rb[24] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[22] por_l_rb[22] por_l_rb[23] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[21] por_l_rb[21] por_l_rb[22] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[20] por_l_rb[20] por_l_rb[21] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[19] por_l_rb[19] por_l_rb[20] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[18] por_l_rb[18] por_l_rb[19] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[17] por_l_rb[17] por_l_rb[18] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[16] por_l_rb[16] por_l_rb[17] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[15] por_l_rb[15] por_l_rb[16] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[14] por_l_rb[14] por_l_rb[15] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[13] por_l_rb[13] por_l_rb[14] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[12] por_l_rb[12] por_l_rb[13] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[11] por_l_rb[11] por_l_rb[12] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[10] por_l_rb[10] por_l_rb[11] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[9] por_l_rb[9] por_l_rb[10] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[8] por_l_rb[8] por_l_rb[9] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[7] por_l_rb[7] por_l_rb[8] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[6] por_l_rb[6] por_l_rb[7] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[5] por_l_rb[5] por_l_rb[6] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[4] por_l_rb[4] por_l_rb[5] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[3] por_l_rb[3] por_l_rb[4] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[2] por_l_rb[2] por_l_rb[3] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[1] por_l_rb[1] por_l_rb[2] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_l_r[0] VSS por_l_rb[1] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[31] por_h_rb[31] VDDQ VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[30] por_h_rb[30] por_h_rb[31] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[29] por_h_rb[29] por_h_rb[30] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[28] por_h_rb[28] por_h_rb[29] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[27] por_h_rb[27] por_h_rb[28] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[26] por_h_rb[26] por_h_rb[27] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[25] por_h_rb[25] por_h_rb[26] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[24] por_h_rb[24] por_h_rb[25] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[23] por_h_rb[23] por_h_rb[24] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[22] por_h_rb[22] por_h_rb[23] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[21] por_h_rb[21] por_h_rb[22] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[20] por_h_rb[20] por_h_rb[21] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[19] por_h_rb[19] por_h_rb[20] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[18] por_h_rb[18] por_h_rb[19] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[17] por_h_rb[17] por_h_rb[18] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[16] por_h_rb[16] por_h_rb[17] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[15] por_h_rb[15] por_h_rb[16] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[14] por_h_rb[14] por_h_rb[15] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[13] por_h_rb[13] por_h_rb[14] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[12] por_h_rb[12] por_h_rb[13] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[11] por_h_rb[11] por_h_rb[12] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[10] por_h_rb[10] por_h_rb[11] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[9] por_h_rb[9] por_h_rb[10] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[8] por_h_rb[8] por_h_rb[9] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[7] por_h_rb[7] por_h_rb[8] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[6] por_h_rb[6] por_h_rb[7] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[5] por_h_rb[5] por_h_rb[6] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[4] por_h_rb[4] por_h_rb[5] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[3] por_h_rb[3] por_h_rb[4] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[2] por_h_rb[2] por_h_rb[3] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[1] por_h_rb[1] por_h_rb[2] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xrpor_h_r[0] int_por_vio_h por_h_rb[1] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xroppr[3] opprb[3] VDDQ VSS rhim_nw wr=0.36u lr=3.56u m=1
+xroppr[2] opprb[2] opprb[3] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xroppr[1] opprb[1] opprb[2] VSS rhim_nw wr=0.36u lr=3.56u m=1
+xroppr[0] clr_por_l opprb[1] VSS rhim_nw wr=0.36u lr=3.56u m=1
+MMN4DUM clr_por_l VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMN3DUM1 VSS VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=3 ppitch=0
+MMN3DUM por_vio_l VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=2 ppitch=0
+MMN5DUM int_por_vio_h VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMN6DUM1 VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=8 m=6 ppitch=0
+MMN6DUM PORMemReset_VIO VSS VSS VSS nch_18ud12_mac l=72n nfin=8 m=2 ppitch=0
+MMN5DUM1 VSS VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMN0DUM clr_por_l VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=3 ppitch=0
+MMN7DUM VSS VSS VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=4 ppitch=0
+MMN0 clr_por_l VMEMP_Ok_VIO net89 VSS nch_18ud12_mac l=0.194u nfin=8 m=4 ppitch=0
+MMN4 net88 int_por_vio_h VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=2 ppitch=0
+MMN7 clr_por_h ClrPORMemReset_VIOX VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=12 ppitch=0
+MMN1 net89 clr_por_h VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=4 ppitch=0
+MMN6 PORMemReset_VIO por_vio_l VSS VSS nch_18ud12_mac l=72n nfin=8 m=6 ppitch=0
+MMN5 int_por_vio_h por_vio_l VSS VSS nch_18ud12_mac l=0.194u nfin=8 m=1 ppitch=0
+MMN3 por_vio_l clr_por_l net88 VSS nch_18ud12_mac l=0.194u nfin=8 m=2 ppitch=0
+.ends dwc_ddrphy_por_mal4por_lat_vddrtrack_tcs
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : sglong_inx1r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_sglong_inx1r A VDD VSS X
+*.PININFO A:I VDD:I VSS:I X:O
+MMPA X A VDD VDD pch_lvt_mac l=20n nfin=6 m=1 ppitch=0
+MMNA X A VSS VSS nch_lvt_mac l=20n nfin=6 m=1 ppitch=0
+.ends dwc_ddrphy_por_sglong_inx1r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : sglong_inx2r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_sglong_inx2r A VDD VSS X
+*.PININFO A:I VDD:I VSS:I X:O
+MMPA X A VDD VDD pch_lvt_mac l=20n nfin=6 m=2 ppitch=0
+MMNA X A VSS VSS nch_lvt_mac l=20n nfin=6 m=2 ppitch=0
+.ends dwc_ddrphy_por_sglong_inx2r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_inx8r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_inx8r A VDDQ VSS Z
+*.PININFO A:I VDDQ:I VSS:I Z:O
+MMPA Z A VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=8 ppitch=0
+MMNA Z A VSS VSS nch_18ud12_mac l=72n nfin=10 m=8 ppitch=0
+.ends dwc_ddrphy_por_eg_inx8r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_mux2x1r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_mux2x1r D0 D1 S VDDQ VSS Z
+*.PININFO D0:I D1:I S:I VDDQ:I VSS:I Z:O
+Mdmy0 S_B VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+Mdmy2 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPZ_B Z Z_B VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=2 ppitch=0
+MMPD0 D0p_B D0 VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPD1 D1p_B D1 VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPS S_B S VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPTS_B D1p_B S_B Z_B VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPTS D0p_B S Z_B VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+Mdmy3 VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+Mdmy1 S_B VSS VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMND0 D0n_B D0 VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMND1 D1n_B D1 VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMNS S_B S VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMNTS_B D0n_B S_B Z_B VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMNZ_B Z Z_B VSS VSS nch_18ud12_mac l=72n nfin=10 m=2 ppitch=0
+MMNTS D1n_B S Z_B VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+.ends dwc_ddrphy_por_eg_mux2x1r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_inx2r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_inx2r A VDDQ VSS Z
+*.PININFO A:I VDDQ:I VSS:I Z:O
+MMNA Z A VSS VSS nch_18ud12_mac l=72n nfin=10 m=2 ppitch=0
+MMPA Z A VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=2 ppitch=0
+.ends dwc_ddrphy_por_eg_inx2r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_tielow
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_tielow TL VDDQ VSS
+*.PININFO TL:O VDDQ:I VSS:I
+MMN0 TL vpwr VSS VSS nch_18ud12_mac l=72n nfin=10 m=2 ppitch=0
+MMP0 vpwr vpwr VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=2 ppitch=0
+.ends dwc_ddrphy_por_eg_tielow
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_inx12r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_inx12r A VDDQ VSS Z
+*.PININFO A:I VDDQ:I VSS:I Z:O
+MMPA Z A VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=12 ppitch=0
+MMNA Z A VSS VSS nch_18ud12_mac l=72n nfin=10 m=12 ppitch=0
+.ends dwc_ddrphy_por_eg_inx12r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_inx1r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_inx1r A VDDQ VSS Z
+*.PININFO A:I VDDQ:I VSS:I Z:O
+Mdmy1 Z VSS VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMNA Z A VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+Mdmy0 Z VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MMPA Z A VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+.ends dwc_ddrphy_por_eg_inx1r
+
+********************************************************************************
+* Library          : dwc_ddrphy_por
+* Cell             : mal4por_srlatch
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_mal4por_srlatch Reset_VIOX SetDCTSanePulse_VIOX VDDQ VSS sane_l_vio
+*.PININFO Reset_VIOX:I SetDCTSanePulse_VIOX:I VDDQ:I VSS:I sane_l_vio:O
+XI35 SetDCTSanePulse_VIOX DCTsane_VIOX VDDQ VSS DCTSane_VIO dwc_ddrphy_por_eg_nd2x1r
+XI36 DCTSane_VIO Reset_VIOX VDDQ VSS DCTsane_VIOX dwc_ddrphy_por_eg_nd2x1r
+XI34 DCTSane_VIO VDDQ VSS sane_l_vio dwc_ddrphy_por_eg_inx1r
+.ends dwc_ddrphy_por_mal4por_srlatch
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : ps_vdd2vddq
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_ps_vdd2vddq SANE_VIO VDD VDDQ VSS
+*.PININFO SANE_VIO:O VDD:B VDDQ:I VSS:B
+MP44 sane_fbx VDDQ out1 VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP45 sane_fb VDDQ SANE_VIO VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP46 up VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMPFBC d4 sane_fbx d4 VDDQ pch_18ud12_mac l=72n nfin=11 m=11 ppitch=0
+MP0 up up VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP40[0] VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP40[1] VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP42 d4 VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=2 ppitch=0
+MMPINV1 sane_fbx out1 VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP49 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=10 ppitch=0
+MMPINV0 out1 out0 VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMPFB d4 sane_fb VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=11 ppitch=0
+MMPINV2 sane_fb sane_fbx VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMPINV3 SANE_VIO sane_fbx VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN48 VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=11 m=10 ppitch=0
+MMN11 d2 net33 d1 VSS nch_18ud12_mac l=72n nfin=11 m=8 ppitch=0
+MN51 sane_fb VSS SANE_VIO VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN1 tie_low up VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN52 sane_fbx VSS out1 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMNFBC d2 sane_fbx d2 VSS nch_18ud12_mac l=72n nfin=11 m=11 ppitch=0
+MN53 tie_low VSS VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMNINV1 sane_fbx out1 VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMNINV3 SANE_VIO sane_fbx VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[0] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[1] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[2] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[3] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[4] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[5] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[6] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN57[7] d1 tie_low VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMNINV0 out1 out0 VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[0] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[1] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[2] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[3] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[4] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[5] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[6] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN58[7] d1 tie_low d3 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN2 d3 net33 d2 VSS nch_18ud12_mac l=72n nfin=11 m=8 ppitch=0
+MMN1 d2 net33 d1 VSS nch_18ud12_mac l=72n nfin=11 m=8 ppitch=0
+MMN0 d1 net33 VSS VSS nch_18ud12_mac l=72n nfin=11 m=16 ppitch=0
+MMN3 out0 net33 d3 VSS nch_18ud12_mac l=72n nfin=11 m=16 ppitch=0
+MMN21 d3 net33 d2 VSS nch_18ud12_mac l=72n nfin=11 m=8 ppitch=0
+MN41[0] VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN41[1] VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMNINV2 sane_fb sane_fbx VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP47 d2 VSS VSS VSS nch_18ud12_mac l=72n nfin=11 m=2 ppitch=0
+MMNFB d2 sane_fb VSS VSS nch_18ud12_mac l=72n nfin=11 m=11 ppitch=0
+xrR7 d4 net_037 VSS rhim_nw wr=0.4u lr=4u m=1
+xrR8 net_038 d4 VSS rhim_nw wr=0.4u lr=4.3u m=1
+xrR4 net_035 net_042 VSS rhim_nw wr=0.4u lr=4u m=1
+xrR5 net_038 net_043 VSS rhim_nw wr=0.4u lr=4.3u m=1
+xrR6 net_043 net_036 VSS rhim_nw wr=0.4u lr=4.3u m=1
+xrR3 net_042 net_037 VSS rhim_nw wr=0.4u lr=4u m=1
+xrR1 net_045 net_036 VSS rhim_nw wr=0.4u lr=4.3u m=1
+xrR2 net_035 net_044 VSS rhim_nw wr=0.4u lr=4u m=1
+xrR9 VDDQ net_045 VSS rhim_nw wr=0.4u lr=4.3u m=1
+xrR0 net_044 out0 VSS rhim_nw wr=0.4u lr=4u m=1
+MN3 net29 net29 VSS VSS nch_ulvt_mac l=20n nfin=8 m=1 ppitch=0
+MPD0 net33 net29 VDD VDD pch_ulvt_mac l=20n nfin=8 m=1 ppitch=0
+.ends dwc_ddrphy_por_ps_vdd2vddq
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : lsl2h_vdd2vddq_ne1_ns
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_lsl2h_vdd2vddq_ne1_ns A PwrOk_VIO VDD VDDQ VSS X
+*.PININFO A:I PwrOk_VIO:I VDD:B VDDQ:B VSS:B X:O
+Mpa a_ a_x VDD VDD pch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mpax a_x A VDD VDD pch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mnax a_x A VSS VSS nch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mna a_ a_x VSS VSS nch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mpqxbb VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpqxba X PwrOk_VIO VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpqxaa X sto VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpqxab VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpstoa sto a_x stopstk VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mpstoxa sto_x a_ stobpstk VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mpstob stopstk sto_x VDDQ VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mpstoxb stobpstk sto VDDQ VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstoa sto sto_x stonstk VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnqxba X sto qxnstkb VSS nch_18ud12_mac l=72n nfin=6 m=1 ppitch=0
+Mnqxbb qxnstkb PwrOk_VIO VSS VSS nch_18ud12_mac l=72n nfin=6 m=1 ppitch=0
+Mnqxab qxnstka PwrOk_VIO VSS VSS nch_18ud12_mac l=72n nfin=6 m=1 ppitch=0
+Mnqxaa X sto qxnstka VSS nch_18ud12_mac l=72n nfin=6 m=1 ppitch=0
+Mnstob stonstk sto_x VSS VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstoxb stoxnstk sto VSS VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstoxa sto_x sto stoxnstk VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstox sto_x a_ VSS VSS nch_18ud12_mac l=72n nfin=20 m=4 ppitch=0
+Mnsto sto a_x VSS VSS nch_18ud12_mac l=72n nfin=20 m=4 ppitch=0
+.ends dwc_ddrphy_por_lsl2h_vdd2vddq_ne1_ns
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_inx4r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_inx4r A VDDQ VSS Z
+*.PININFO A:I VDDQ:I VSS:I Z:O
+MMPA Z A VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=4 ppitch=0
+MMNA Z A VSS VSS nch_18ud12_mac l=72n nfin=10 m=4 ppitch=0
+.ends dwc_ddrphy_por_eg_inx4r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : lsl2h_vdd2vddq_eq1_dcck
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_lsl2h_vdd2vddq_eq1_dcck A PwrOk_VIO VDD VDDQ VSS Z
+*.PININFO A:I PwrOk_VIO:I VDD:I VDDQ:I VSS:I Z:O
+MMN10 a_buf a_b VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MN0 a_b A VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MP1 a_b A VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP10 a_buf a_b VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN8 STOb STO VSS VSS nch_18ud12_mac l=72n nfin=11 m=3 ppitch=0
+MNdum0 VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN5 o_tridrv STOb VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MNdum1 VSS VSS pwrok_l VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN69 DIN_X PwrOk_VIO a_b VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MNpdql STO_X DIN VSS VSS nch_18ud12_mac l=72n nfin=11 m=20 ppitch=0
+MNpuql STO_X DIN_X VDDQ VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN2 Z o_tridrv VSS VSS nch_18ud12_mac l=72n nfin=11 m=3 ppitch=0
+MN85 VDDQ pwrok_l DIN_X VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MNpdqh STO DIN_X VSS VSS nch_18ud12_mac l=72n nfin=11 m=20 ppitch=0
+MN71 DIN PwrOk_VIO a_buf VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN3 o_tridrv STO_X VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MNpuqh STO DIN VDDQ VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MN68 DIN pwrok_l VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN0 pwrok_l PwrOk_VIO VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP11 STOb VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPdum1 pwrok_l VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPdum2 STO_X VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP7 STOb STO VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP0 pwrok_l PwrOk_VIO VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP2 Z o_tridrv VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=3 ppitch=0
+MP70 a_b pwrok_l DIN_X DIN_X pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP3 o_tridrv STO_X VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqhb STO DIN_X N6 VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPdum0 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqlt N7 STO VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP6 o_tridrv STOb VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MP71 a_buf pwrok_l DIN DIN pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqht N6 STO_X VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqlb STO_X DIN N7 VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+.ends dwc_ddrphy_por_lsl2h_vdd2vddq_eq1_dcck
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : eg_fillx1r
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_eg_fillx1r VDDQ VSS
+*.PININFO VDDQ:I VSS:I
+MI17 VDDQ VDDQ VDDQ VDDQ pch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+MI16 VSS VSS VSS VSS nch_18ud12_mac l=72n nfin=10 m=1 ppitch=0
+.ends dwc_ddrphy_por_eg_fillx1r
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : lsh2l_vddq2vdd_eq0
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_lsh2l_vddq2vdd_eq0 A PwrOk VDD VDDQ VSS Z
+*.PININFO A:I PwrOk:I VDD:I VDDQ:I VSS:I Z:O
+MPpuqht N6 STO_X net16 VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MPpuqlt N7 STO net16 VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP8 net057 pwrok_l VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP6 o_tridrv STOb net060 VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP5 net060 pwrok_l VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP4 net061 pwrok_l VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP2 Z o_tridrv VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP1 pwrok_h pwrok_l VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP7 STOb STO net057 VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP0 pwrok_l PwrOk VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP3 o_tridrv STO_X net061 VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MP8 net15 pwrok_l VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MP7 net16 pwrok_l VDD VDD pch_lvt_mac l=20n nfin=8 m=2 ppitch=0
+MP14 o_tridrv pwrok_h VDD VDD pch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MN15_dummy VSS VSS VSS VSS nch_lvt_mac l=20n nfin=8 m=3 ppitch=0
+MN14_dummy VSS VSS VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MN16_dummy VSS VSS VSS VSS nch_lvt_mac l=20n nfin=8 m=2 ppitch=0
+MMN8 STOb STO net058 VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN7 net058 pwrok_h VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN6 net059 pwrok_h VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN4 net062 pwrok_h VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN2 Z o_tridrv VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN0 pwrok_l PwrOk VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN3 o_tridrv STO_X net062 VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN1 pwrok_h pwrok_l VSS VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMN5 o_tridrv STOb net059 VSS nch_lvt_mac l=20n nfin=8 m=1 ppitch=0
+MMP11 DIN DIN_X VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqhb[0] STO DIN_X N6 VDD pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqhb[1] STO DIN_X N6 VDD pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMP10 DIN_X A VDDQ VDDQ pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqlb[0] STO_X DIN N7 VDD pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MPpuqlb[1] STO_X DIN N7 VDD pch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN12 DIN DIN_X VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MMN11 DIN_X A VSS VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MNpuqh STO DIN net15 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+MNpdql STO_X DIN VSS VSS nch_18ud12_mac l=72n nfin=11 m=2 ppitch=0
+MNpdqh STO DIN_X VSS VSS nch_18ud12_mac l=72n nfin=11 m=2 ppitch=0
+MNpuql STO_X DIN_X net15 VSS nch_18ud12_mac l=72n nfin=11 m=1 ppitch=0
+.ends dwc_ddrphy_por_lsh2l_vddq2vdd_eq0
+
+********************************************************************************
+* Library          : unit_ioana
+* Cell             : lsl2h_vdd2vddq_ne0_ns
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_lsl2h_vdd2vddq_ne0_ns A PwrOk_VIO VDD VDDQ VSS X
+*.PININFO A:I PwrOk_VIO:I VDD:B VDDQ:B VSS:B X:O
+Mpa a_ a_x VDD VDD pch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mpax a_x A VDD VDD pch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mnax a_x A VSS VSS nch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mna a_ a_x VSS VSS nch_lvt_mac l=72n nfin=4 m=1 ppitch=0
+Mnstoa sto sto_x stonstk VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnqxba X PwrOk_VIO VSS VSS nch_18ud12_mac l=72n nfin=6 m=2 ppitch=0
+Mnqxaa X sto VSS VSS nch_18ud12_mac l=72n nfin=6 m=2 ppitch=0
+Mnstob stonstk sto_x VSS VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstoxb stoxnstk sto VSS VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstoxa sto_x sto stoxnstk VSS nch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mnstox sto_x a_ VSS VSS nch_18ud12_mac l=72n nfin=20 m=4 ppitch=0
+Mnsto sto a_x VSS VSS nch_18ud12_mac l=72n nfin=20 m=4 ppitch=0
+Mpqxbb qxpstkb PwrOk_VIO VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpqxba X sto qxpstkb VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpqxaa X sto qxpstka VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpqxab qxpstka PwrOk_VIO VDDQ VDDQ pch_18ud12_mac l=72n nfin=8 m=1 ppitch=0
+Mpstoa sto a_x stopstk VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mpstoxa sto_x a_ stobpstk VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mpstob stopstk sto_x VDDQ VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+Mpstoxb stobpstk sto VDDQ VDDQ pch_18ud12_mac l=72n nfin=4 m=1 ppitch=0
+.ends dwc_ddrphy_por_lsl2h_vdd2vddq_ne0_ns
+
+********************************************************************************
+* Library          : dwc_ddrphy_por
+* Cell             : dwc_ddrphy_por_decap
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por_dwc_ddrphy_por_decap VDDQ VSS
+*.PININFO VDDQ:I VSS:I
+Xdecap[34] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[33] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[32] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[31] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[30] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[29] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[28] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[27] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[26] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[25] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[24] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[23] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[22] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[21] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[20] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[19] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[18] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[17] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[16] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[15] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[14] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[13] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[12] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[11] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[10] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[9] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[8] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[7] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[6] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[5] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[4] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[3] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[2] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[1] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+Xdecap[0] VSS VSS VDDQ dwc_ddrphy_por_decap_ioana
+.ends dwc_ddrphy_por_dwc_ddrphy_por_decap
+
+********************************************************************************
+* Library          : dwc_ddrphy_dml
+* Cell             : dwc_ddrphy_por
+* View             : schematic
+* View Search List : auCdl_open auCdl schematic symbol
+* View Stop List   :
+********************************************************************************
+.subckt dwc_ddrphy_por ClrPORMemReset DCTMemReset DCTSane DFTDatSel MemResetLPullDown_VIO MemResetLPullUp_VIO PORMemReset PwrOkDlyd PwrOkDlyd_VIO PwrOk_VIO PwrOk_VMEMP Reset_X SetDCTSanePulse VDD VDDQ VSS
+*.PININFO ClrPORMemReset:I DCTMemReset:I DCTSane:O DFTDatSel:I MemResetLPullDown_VIO:O MemResetLPullUp_VIO:O PORMemReset:O PwrOkDlyd:I PwrOkDlyd_VIO:O PwrOk_VIO:O PwrOk_VMEMP:I Reset_X:I SetDCTSanePulse:I VDD:I VDDQ:I VSS:I
+XI28 tieLO tieLO VDDQ VSS out_nd_spare1 dwc_ddrphy_por_eg_nd2x1r
+XI29 tieLO tieLO VDDQ VSS out_nd_spare2 dwc_ddrphy_por_eg_nd2x1r
+XI30 tieLO tieLO VDDQ VSS out_nd_spare3 dwc_ddrphy_por_eg_nd2x1r
+Xpor_lat_track ClrPORMemReset_VIOX PORMemReset_VIO VDDQ VMEMP_Ok_VIO VSS dwc_ddrphy_por_mal4por_lat_vddrtrack_tcs
+XI51 PwrOk_VMEMP VDD VSS PwrOk_VMEMPX dwc_ddrphy_por_sglong_inx1r
+XI52 PwrOk_VMEMPX VDD VSS PwrOk_VMEMP_int dwc_ddrphy_por_sglong_inx2r
+XI59[7] net240[0] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[6] net240[1] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[5] net240[0] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[4] net240[1] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[3] net240[0] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[2] net240[1] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[1] net240[0] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI59[0] net240[1] VDDQ VSS PwrOk_VIO dwc_ddrphy_por_eg_inx8r
+XI57[1] net242 VDDQ VSS net240[0] dwc_ddrphy_por_eg_inx8r
+XI57[0] net242 VDDQ VSS net240[1] dwc_ddrphy_por_eg_inx8r
+Xpwrokout POK2_VIOX VDDQ VSS net242 dwc_ddrphy_por_eg_inx8r
+Xpwrokdlydout POKD2_VIOX VDDQ VSS net243 dwc_ddrphy_por_eg_inx8r
+XI13[7] net241[0] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[6] net241[1] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[5] net241[0] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[4] net241[1] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[3] net241[0] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[2] net241[1] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[1] net241[0] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI13[0] net241[1] VDDQ VSS PwrOkDlyd_VIO dwc_ddrphy_por_eg_inx8r
+XI12[1] net243 VDDQ VSS net241[0] dwc_ddrphy_por_eg_inx8r
+XI12[0] net243 VDDQ VSS net241[1] dwc_ddrphy_por_eg_inx8r
+XI21 PORMemReset_VIO DCTMemReset_VIO dct1_por0_vio VDDQ VSS FinalMemReset_VIO dwc_ddrphy_por_eg_mux2x1r
+XI22 DCTMemReset_VIOX VDDQ VSS DCTMemReset_VIO dwc_ddrphy_por_eg_inx2r
+XI58 tieLO VDDQ VSS dwc_ddrphy_por_eg_tielow
+XI16 n2 VDDQ VSS MemResetLPullUp_VIO dwc_ddrphy_por_eg_inx12r
+XI55 n2 VDDQ VSS n3 dwc_ddrphy_por_eg_inx12r
+XI1 n3 VDDQ VSS MemResetLPullDown_VIO dwc_ddrphy_por_eg_inx12r
+Xsrlat Reset_VIOX SetDCTSanePulse_VIOX VDDQ VSS sane_l_vio dwc_ddrphy_por_mal4por_srlatch
+XX4 bsane_h_vio VDDQ VSS DCTSane_VIOX dwc_ddrphy_por_eg_inx2r
+XI17 FinalMemReset_VIO VDDQ VSS n1 dwc_ddrphy_por_eg_inx2r
+XI43 POKD0_VIOX VDDQ VSS POKD1_VIO dwc_ddrphy_por_eg_inx2r
+XX3 sane_l_vio VDDQ VSS bsane_h_vio dwc_ddrphy_por_eg_inx1r
+Xpor_buf PORMemReset_VIO VDDQ VSS PORMemReset_VIOX dwc_ddrphy_por_eg_inx1r
+XX2 Reset_VIO VDDQ VSS Reset_VIOX dwc_ddrphy_por_eg_inx1r
+XI53 VMEMP_Ok_VIO VDD VDDQ VSS dwc_ddrphy_por_ps_vdd2vddq
+XI27 DFTDatSel PwrOk_int_VIO VDD VDDQ VSS DFTDatSel_VIOX dwc_ddrphy_por_lsl2h_vdd2vddq_ne1_ns
+XI34 SetDCTSanePulse PwrOk_int_VIO VDD VDDQ VSS SetDCTSanePulse_VIOX dwc_ddrphy_por_lsl2h_vdd2vddq_ne1_ns
+XI36 Reset_X PwrOk_int_VIO VDD VDDQ VSS Reset_VIO dwc_ddrphy_por_lsl2h_vdd2vddq_ne1_ns
+XI23 ClrPORMemReset PwrOk_int_VIO VDD VDDQ VSS ClrPORMemReset_VIOX dwc_ddrphy_por_lsl2h_vdd2vddq_ne1_ns
+XI19 POK_VIOX VDDQ VSS PwrOk_int_VIO dwc_ddrphy_por_eg_inx4r
+XI15 n1 VDDQ VSS n2 dwc_ddrphy_por_eg_inx4r
+XI44 POKD1_VIO VDDQ VSS POKD2_VIOX dwc_ddrphy_por_eg_inx4r
+XI40 PwrOk_int_VIO VDDQ VSS POK2_VIOX dwc_ddrphy_por_eg_inx4r
+XI0 DFTDatSel_VIOX DCTSane_VIOX VDDQ VSS dct1_por0_vio dwc_ddrphy_por_eg_nd2x1r
+XI50 PwrOkDlyd VMEMP_Ok_VIO VDD VDDQ VSS POKD0_VIOX dwc_ddrphy_por_lsl2h_vdd2vddq_eq1_dcck m=1
+XI54 PwrOk_VMEMP_int VMEMP_Ok_VIO VDD VDDQ VSS POK_VIOX dwc_ddrphy_por_lsl2h_vdd2vddq_eq1_dcck m=1
+Xfillers[7] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[6] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[5] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[4] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[3] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[2] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[1] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+Xfillers[0] VDDQ VSS dwc_ddrphy_por_eg_fillx1r
+XI56 PORMemReset_VIOX PwrOk_VMEMP_int VDD VDDQ VSS PORMemReset dwc_ddrphy_por_lsh2l_vddq2vdd_eq0 m=1
+XI47 DCTSane_VIOX PwrOk_VMEMP_int VDD VDDQ VSS DCTSane dwc_ddrphy_por_lsh2l_vddq2vdd_eq0 m=1
+XI25 DCTMemReset POK2_VIOX VDD VDDQ VSS DCTMemReset_VIOX dwc_ddrphy_por_lsl2h_vdd2vddq_ne0_ns
+Xdecaps VDDQ VSS dwc_ddrphy_por_dwc_ddrphy_por_decap
+.ends dwc_ddrphy_por
+
+

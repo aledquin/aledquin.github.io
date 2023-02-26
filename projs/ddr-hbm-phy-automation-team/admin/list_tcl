@@ -1,0 +1,66 @@
+#!/depot/perl-5.14.2/bin/perl
+#
+# This script is meant to be run in whatever your current working directory is.
+# It will look in your current directory and all directories below it to try
+# and find TCL scripts.
+#
+# Usage:
+#     list_tcl
+#     list_tcl with utils__script_usage
+#     list_tcl without utils__script_usage
+#     
+
+use File::Find;
+
+my @tcl_files;
+my $SKIP_SYMLINKS = 1;
+   # we should skip 3rd party code 
+my @third_party = ( 'bwidget-1.9.15' );
+
+sub process_file {
+    my $fname = $_;
+    my $istcl = 0;
+
+    return if ( $fname =~ m/^-/ );
+
+    if ($SKIP_SYMLINKS and ( -l $File::Find::name) ){
+        return;
+    }
+    
+    $istcl = 1  if ( $fname =~ m/tcl$/ ) ;
+    if ( ! $istcl ) {
+        my $r = `file "$_"`;
+        $istcl = 1 if ( $r =~ m/tclsh.*\s+script|wish.*\s+script/ );
+    }
+
+    my $pathname = "$File::Find::name";
+    foreach my $third_party_dir ( @third_party ){
+        $istcl = 0 if ( $pathname =~ m/$third_party_dir/ );
+    }
+
+    push(@tcl_files, $pathname) if ( $istcl );
+}
+    
+my $action = shift @ARGV;
+my $search = shift @ARGV;
+
+my @DIRLIST = ( '.' );
+
+find(\&process_file, @DIRLIST);
+
+foreach my $tcl_file ( @tcl_files) {
+    if ( $action eq "without" ){
+        my $r = `grep $search $tcl_file`;
+        if ( $r eq '' ) {
+            print("$tcl_file\n");
+        }
+    } elsif ( $action eq "with" ){
+        my $r = `grep $search $tcl_file`;
+        if ( $r ne '' ) {
+            print("$tcl_file\n");
+        }
+    }else{
+        print("$tcl_file\n");
+    }
+}
+

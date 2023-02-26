@@ -1,0 +1,18 @@
+
+## -----------------------------------------------------------------------------
+## START - RTM Generated Code: SEV Variable Definitions                         
+## -----------------------------------------------------------------------------
+
+set SEV(task)          "check_pcs_sites_de02"
+set SEV(src_name)      "gen_env"
+set SEV(dst_name)      "2_check_pcs_sites_de02"
+set SEV(tmp_dir)       "/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.30a_mrvl_sup1/qa_step/2_check_pcs_sites_de02/tmp"
+set SEV(script_file) "scripts_global/qa_scripts/check_pcs_remote.tcl"
+set SEV(flow_name)     "gen_flow_2"
+set SEV(flow_order)    5010001
+
+
+## -----------------------------------------------------------------------------
+## STOP - RTM Generated Code: SEV Variable Definitions                          
+## -----------------------------------------------------------------------------
+

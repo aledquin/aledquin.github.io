@@ -1,0 +1,290 @@
+z00000-adc-sar-gen4p5-gf22fdsoi-18.txt
+INFO: gf22fdsoiext 18 rel2.9.0
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_4Cx_2Bx_2Jx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/10M_2Mx_4Cx_2Bx_2Jx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_5Cx_1Jx_2Qx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/10M_2Mx_5Cx_1Jx_2Qx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_7M_2Mx_4Cx_1Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/7M_2Mx_4Cx_1Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_5Cx_1Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/8M_2Mx_5Cx_1Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_5Cx_1Jx_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_5Cx_1Jx_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_5Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_5Cx_2Ix_LB/env.tcl
+z3643-adc-sar-14b2m-gf22fdsoi-18.txt
+INFO: gf22fdsoiext 18 rel1.5.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_4Cx_2Bx_2Jx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_4Cx_2Bx_2Jx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_5Cx_1Jx_2Qx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_5Cx_1Jx_2Qx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM/env.tcl
+z34891-adc-iq-12b80m-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 rel4.3.2
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.2/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.2/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.2/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.2/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.2/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.2/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+z34993-adc-iq-12b320m-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z34991-adc-iq-12b160m-gf22fdsoi-18.txt
+INFO: gf22fdsoiext 18 rel2.9.0
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_4Cx_2Bx_2Jx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/10M_2Mx_4Cx_2Bx_2Jx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_5Cx_1Jx_2Qx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/10M_2Mx_5Cx_1Jx_2Qx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_7M_2Mx_4Cx_1Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/7M_2Mx_4Cx_1Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_5Cx_1Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/8M_2Mx_5Cx_1Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_5Cx_1Jx_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_5Cx_1Jx_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_5Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel2.9.0/cad/9M_2Mx_5Cx_2Ix_LB/env.tcl
+z3638-adc-sar-12b2m-gr1-gf22fdsoi-33.txt
+INFO: gf22fdsoiext 18 rel1.5.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_4Cx_2Bx_2Jx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_4Cx_2Bx_2Jx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_5Cx_1Jx_2Qx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_5Cx_1Jx_2Qx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM/env.tcl
+n207-c10-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 rel4.3.3
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+n607-dpalt-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 rel4.3.3
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.3/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+u115-cmnblks-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z8562-dac-iq-12b640m-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z8631-dac-12b20m-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 rel4.3.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+t128-esdgoldicv-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoi 18 rel4.0.0
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.0.0/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.0.0/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.0.0/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.0.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+e318-hdmi-txphy-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 rel3.0.0
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel3.0.0/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel3.0.0/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+g167-dphy-gf22fdsoi-18.txt
+INFO: gf22fdsoiext 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g151-dphy-gf22fdsoi-18.txt
+INFO: gf22fdsoiext 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z19607-pll-gf22fdsoi-18.txt
+INFO: gf22fdsoi 18 rel4.3.4
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+x677-ssp-gf22fdsoi-18-ns.txt
+INFO: gf22fdsoi 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l128-std-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoi 18 rel4.5.0
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.5.0/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.5.0/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.5.0/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.5.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.5.0/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+z00000-tchip-tdcs32B-gf22fdsoi-18.txt
+INFO: gf22fdsoiext 18 rel1.5.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_4Cx_2Bx_2Jx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_4Cx_2Bx_2Jx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_5Cx_1Jx_2Qx_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_5Cx_1Jx_2Qx_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoiext-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM : /remote/cad-rep/proj/c142-gf22fdsoiext-1.8v/rel1.5.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB__eMRAM/env.tcl
+x677-usb2-gf22fdsoi-18-ns.txt
+INFO: gf22fdsoi 18 rel4.3.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+d584-lpddr4mv2-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoi 18 rel4.3.4
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_7M_2Mx_3Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/7M_2Mx_3Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.3.4/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+d585-lpddr4mv2-ap-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoiext 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d700-hbm2-gf22fdsoi18.txt
+INFO: gf22fdsoi 18" "rel1.0"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x677-diffbuf-gf22fdsoi-18-ns.txt
+INFO: gf22fdsoi 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w258-nvm-otp-shfg2-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoi 18 rel4.4.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+w009-nvm-otp-commonLibs-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoi 18 rel4.4.1
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_10M_2Mx_6Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/10M_2Mx_6Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/8M_2Mx_4Cx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_8M_2Mx_4Cx_2Ix_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/8M_2Mx_4Cx_2Ix_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB/env.tcl
+ERROR: IcvRunDRC not defined.
+gf22fdsoi-18_9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM : /remote/cad-rep/proj/c128-gf22fdsoi-1.8v/rel4.4.1/cad/9M_2Mx_3Cx_2Bx_1Ix_1Ox_LB_MRAM/env.tcl
+w260-nvm-otp-ops-gf22fdsoi-1.8v.txt
+INFO: gf22fdsoi 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+

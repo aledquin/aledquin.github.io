@@ -1,0 +1,192 @@
+###################################################################
+#echo "alias --> Terminal customs"
+###################################################################
+
+alias refresh "tcsh;exit"
+
+alias mystatus 'setenv show_status 2'
+alias "." "setenv show_status 1"
+
+alias myalias 		'vim $HOME/env/.alias'
+alias smyalias 		'source $HOME/env/.alias'
+alias smycsh 		'source $HOME/.cshrc'
+
+####################################################################
+#
+####################################################################
+
+alias ml    "module unload $1 ; module load $1"
+alias mldev "module unload $1 ; module load $1/dev"
+alias mlist "module list"
+
+####################################################################
+#echo "alias --> Module"
+####################################################################
+
+alias ml    "module unload $1 ; module load $1"
+alias mldev "module unload $1 ; module load $1/dev"
+alias mlist "module list"
+
+####################################################################
+#echo  "alias --> Go to"
+####################################################################
+
+alias cdddr  "cd $GITROOT "
+alias mydisk "cd $HOME/mydisk"
+alias cdu    "cd /u/\!{:1}"
+
+alias gorel       'pushd $GITROOT/ddr-ckt-rel/dev/main/bin'
+alias golay       'pushd $GITROOT/ddr-utils-lay/dev/main/bin'
+alias goibis      'pushd $GITROOT/ibis/dev/main/bin'
+alias gotiming    'pushd $GITROOT/ddr-utils-timing/dev/main/bin'
+alias goin08      'pushd $GITROOT/ddr-utils-in08/dev/main/bin'
+alias goutils     'pushd $GITROOT/ddr-utils/dev/main/bin'
+
+###################################################################
+#echo "alias --> Display XTERM"
+###################################################################
+
+alias dispget 'source ~/.DISPLAY'
+alias dispset 'echo setenv DISPLAY $DISPLAY > ~/.DISPLAY'
+
+alias xterm_shell 'qsh -P iwork -l os_distribution=centos -now n'
+alias entry 'qrsh -P iwork'
+alias qshh 'qsh -P iheavy -display $DISPLAY -l arch=glinux,h_vmem=50G,mem_free=50G'
+
+alias lpra2 'enscript --line-numbers --pretty-print --color --landscape --columns=2 --fancy-header -o \!*.ps  \!*; ps2pdf \!*.ps; rm \!*.ps'
+alias lpra1 'enscript --font=Courier5 --line-numbers --pretty-print --color --landscape --columns=1 --fancy-header -o \!*.ps  \!*; ps2pdf \!*.ps; rm \!*.ps'
+alias term ' gnome-terminal --tab -t "stage" --tab -t "run" --tab -t "reg" --tab -t "inc" --tab -t "verdi" --geometry 120x100'
+
+alias qiw 'qsh -P iwork -l os_distribution=centos -now n'
+alias qil 'qsh -P ilight -l os_distribution=centos -now n'
+alias qih 'qsh -P iheavy -l os_distribution=centos -now n'
+
+###################################################################
+#echo "alias --> Diff analysis"
+###################################################################
+
+alias vdiff   'vimdiff \!{:1}/\!{:3} \!{:2}/\!{:3}'
+alias vimdiff 'vim -d'
+alias gdt     'git difftool \!*'
+
+###################################################################
+#echo "alias --> Useful commands"
+###################################################################
+
+alias p2      "readlink -f"
+
+###################################################################
+#echo "alias --> Perforce"
+###################################################################
+
+alias p4v    'p4v &'
+
+alias p4diff /depot/perforce-2020.2/p4merge
+
+alias p4e "p4 edit \!*"
+alias p4o "p4 opened \!*"
+alias p4s "p4 submit \!*"
+
+###################################################################
+#echo "alias --> Find command"
+###################################################################
+
+alias findfile          'find -name $1' 
+
+alias findintcl         'find -name \*.tcl | xargs grep $1'
+alias findinallfiles	'find -name \* | xargs grep $1'
+alias findin            'find -name \!{:1} | xargs grep \!{:2}'
+
+###################################################################
+#echo "alias --> Abbreviations"
+###################################################################
+
+alias c     "clear"
+alias h     "history"
+alias t     "tail"
+alias g     "grep"
+alias m     "more"
+alias moer  "more"
+alias v     "vim"
+
+###################################################################
+#echo "alias --> Change directory"
+###################################################################
+
+# alias cd 'chdir \!*; echo cd \!*; dir'
+
+alias .. 'cd ..'
+alias cd.. 'cd ..'
+alias ... 'cd ../..'
+alias .... 'cd ../../..'
+alias cd1  'cd ..'
+alias cd2  'cd ../..'
+alias cd3  'cd ../../..'
+alias cd4  'cd ../../../..'
+
+alias cd- 'cd -'
+
+###################################################################
+#echo "alias --> Listing"
+###################################################################
+
+alias lt 'ls -lAtr'
+alias l1 'ls -1'
+alias  l 'ls -sF'
+alias ll 'ls -alAF --color --group-directories-first'
+alias ltr 'ls -ltra'
+alias lh  'ls -lhta'
+alias lm  'ls --color=never'
+
+
+###################################################################
+#echo "alias --> Check disk space"
+###################################################################
+
+alias du0 ' du -h --max-depth=0 --apparent-size '
+alias du1 ' du -h --max-depth=1 --apparent-size '
+alias du2 ' du -h --max-depth=2 --apparent-size '
+alias du1s ' du -m --max-depth=1 --apparent-size | sort -nr '
+
+###################################################################
+#echo "alias --> Grep"
+###################################################################
+
+alias  grep 'grep --color=auto'
+alias egrep 'egrep --color=auto'
+alias fgrep 'fgrep --color=auto'
+alias rgrep 'grep \!* `find`'
+
+###################################################################
+#echo "alias --> Quota Disk Space"
+###################################################################
+
+alias myquota "/depot/local/bin/qdf `pwd`  -u $USER  -h; echo "\n"; /bin/df ."
+alias DU      'less /remote/dcopt087/dcpv_cl01/admin/disk_usage.txt'
+
+###################################################################
+#echo "alias --> TMUX"
+###################################################################
+
+alias tmux_ls  'tmux list-sessions'
+alias tmux_new 'tmux new -s'
+alias tmux_att 'tmux attach -t'
+
+###################################################################
+#echo "alias --> SCRIPTS"
+###################################################################
+
+alias lint 'check_code.csh'
+
+alias hipre  "module load msip_lynx_hipre; hiprelynx -gui &"
+alias vscode '/depotbld/RHEL7.0/VS-Code/VS-Code-1.71/code &'
+
+alias ntM   '/remote/proj/alpha/alpha_common/bin/ntManager.tcl &'
+alias gdsviewer '/remote/cad-rep/msip/tools/CDtools/ad_hoc/2017.06/etc/gdsviewer &'
+
+alias pcsqa_manager "msip_pcs_manager_gui &"
+alias soffice '/depot/openoffice-4.1.2/openoffice4/program/soffice &'
+
+###################################################################
+#echo "alias --> Done!"
+###################################################################

@@ -1,0 +1,10 @@
+check_ude_env_16M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_4Y_vhvh_2Yy2Yx2R
+CHECK PASSED
+PCSQA/module version: 2022.04
+User: alvaro
+Run time: Fri Jul 22 15:41:22 2022
+Execution time: 00:00:01:44
+
+Information: Process ID for tool: 27871
+SNPS_WARNING: (SDL-3) CCS contains no (default) lpplib, lpplib2, lpplib3 or lpplib4 reference
+#############################################

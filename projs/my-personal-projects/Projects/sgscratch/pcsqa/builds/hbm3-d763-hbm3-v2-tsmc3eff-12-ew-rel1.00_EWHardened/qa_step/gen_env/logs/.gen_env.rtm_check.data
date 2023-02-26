@@ -1,0 +1,32 @@
+RtmCheck	1
+PassControl	NO_ERROR_OR_FATAL
+LogFileName	/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/gen_env/logs/gen_env.log
+FailOnMetricsErrors	0
+MustHave	global	SNPS_INFO\s*:\s*METRIC\s*\|\s*TIMESTAMP\s*SYS\.START_TIME	fatal
+MustHave	global	SNPS_INFO\s*:\s*METRIC\s*\|\s*TIMESTAMP\s*SYS\.STOP_TIME	fatal
+MustNotHave	global	^SNPS_ERROR.*sproc_xfer	fatal
+MustNotHave	global	^SNPS_ERROR	error
+MustNotHave	global	^#ERROR-MSG	error
+MustNotHave	global	^SNPS_FATAL	fatal
+MustNotHave	global	^\s*Error\s*:	error
+MustNotHave	global	^\s*ERROR\s*:	error
+MustNotHave	global	^\s*FATAL\s*:	error
+MustNotHave	global	^\s*RM-Error	error
+MustNotHave	global	^\s*RM-error	error
+MustNotHave	global	^\s*SCRIPT-Error\s*:	error
+MustNotHave	global	can't read ".*": no such element in array	error
+MustNotHave	global	can't read ".*": no such variable	error
+MustNotHave	global	wrong # args: should be	error
+MustNotHave	global	^Error: Internal licensing error number -35	fatal
+MustNotHave	global	^Release = .* Architecture = .* Program = .*	fatal
+MustAllow	global	\(CMD-041\)
+MustAllow	global	\(CMD-013\)
+MustNotHave	global	^Fatal	fatal
+MustNotHave	global	^Error-	error
+MustNotHave	global	^\[\S+\]\s+\[ERROR\]	error
+MustNotHave	global	invalid command name	error
+MustNotHave	global	^\*Error\*	fatal
+MustNotHave	global	^-- Error:	fatal
+MustCount	global	^SNPS_WARNING	warning
+MustCount	global	^SNPS_ISSUE	issue
+MustCount	global	^SNPS_NOTE	note

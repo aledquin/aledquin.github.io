@@ -1,0 +1,240 @@
+n218-c10-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 rel4.0.0
+INFO: DONE
+
+u126-cmnblks-tsmc5ffp-12.txt
+INFO: tsmc5ffp 12_palermo 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u130-cmnblks-tsmc5ffp-12.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u150-cmnblks-tsmc5ffp-nv-12.txt
+INFO: tsmc5ffp 12_nv rel2.0.0
+INFO: DONE
+
+m0121-mem-tsmc5ffp-ts05p0g42p11sasul01ms.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g43p21sadrl128s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms.txt
+INFO: tsmc5ff 12 rel9.2.0
+INFO: DONE
+
+m0121-mem-tsmc5ffp-ts05p0g41p10asdvd01ms.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sacrl256s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g42p11sadrl128s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sassl01ms.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sasrl256s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g42p11sacul256s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g42p22sadsl01ms.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g42p11sacrl128s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sagrl256s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sacul256s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sadul02ms.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sadtc80ks.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sadul02mi.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sacul256i.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11cpgrlhpcs.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g42p22sadsl512sa.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11saarl256s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0gl1p11salsl640w.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0gl2p11salrl128w.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-layout.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11dpdrlhpcs.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11gpdrlhpcs.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sarel128s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g42p11sarel128s.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g41p11sabcs03ks.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0121-mem-tsmc5ffp-ts05p0g94p22sadrm18ks.txt
+INFO: em em m0121-mem-tsmc5ffp-ts05p0g41p11sadcl02ms
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e707-hdmi21-rxphy-tsmc5ffp-12.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e322-hdmi-earcrx-tsmc5ffp-12.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g154-dphy-tsmc5ffp-12.txt
+INFO: tsmc5ffp 12_palermo rel2.1.0
+INFO: DONE
+
+g157-dphy-tsmc5ffp-12.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l257-std-tsmc5ffp-1.2v.txt
+INFO: tsmc5ffp 12 rel3.0.0
+INFO: DONE
+
+x699-usb2-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 rel3.1.0
+INFO: DONE
+
+p031-emclk-tsmc5ffp-1.2v.txt
+INFO: CCS CCS "c257-tsmc5ffp-1.2v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d740-hbm2e-tsmc5ffp12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+t039-pqv-tsmc5ffp-1.2v.txt
+INFO: CCS CCS "c257-tsmc5ffp-1.2v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+c257-tsmc5ffp-1.2v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y240-emmc-tsmc5ffp-1.2v.txt
+INFO: tsmc5ffp 12 rel4.1.0
+INFO: DONE
+
+d810-ddr54-tsmc5ffp12.txt
+INFO: tsmc5ff 12 rel8.0.0
+INFO: DONE
+
+d820-ddr54v2-tsmc5ffp12.txt
+INFO: tsmc5ff 12 rel9.3.1
+INFO: DONE
+
+x326-e32-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d850-lpddr54-tsmc5ffp12.txt
+INFO: tsmc5ff 12 rel9.4.0
+INFO: DONE
+
+d890-lpddr54-tsmc5ffp12.txt
+INFO: tsmc5ffp 12 rel4.0.0
+INFO: DONE
+
+d860-lpddr54-cuint-a1-tsmc5ffp12.txt
+INFO: tsmc5ff 12 rel9.4.0
+INFO: DONE
+
+v005-eusb2-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12_palermo rel2.2.0
+INFO: DONE
+
+v009-eusb2-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w273-nvm-otp-xbc-tsmc5ffp-1.2v.txt
+INFO: tsmc5ff 12 rel9.3.0
+INFO: DONE
+
+x581-e112-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n401-c20-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n419-c20-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12_nv rel2.0.0
+INFO: DONE
+
+x221-xsr-tsmc5ffp-12-ns.txt
+INFO: tsmc5ffp 12 rel4.0.0
+INFO: DONE
+
+h102-hbi-x24_aib-tsmc5ffp-ew.txt
+INFO: tsmc5ffp 12 rel4.1.0
+INFO: DONE
+
+d900-lpddr5xm-tsmc5ffp12.txt
+INFO: tsmc5ff 12_amd rel1.2.1
+INFO: DONE
+
+d750-hbm3-tsmc5ffp12.txt
+INFO: tsmc5ffp 12_amd" "rel1.0.0"
+INFO: SKIPPED. NOT RELEASE VESION.
+

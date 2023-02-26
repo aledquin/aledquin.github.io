@@ -1,0 +1,25 @@
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/qa_scripts/check_pcs_remote.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/header_start.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/rtm_shell/rtm_init_public.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/rtm_shell/rtm_init_public.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/sev_values.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/sev_values.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/scripts_build/conf/sev_values.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/scripts_build/conf/sev_values.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/system_setup.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/system_setup.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/scripts_build/conf/svar_values.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/scripts_build/conf/svar_values.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/procs/procs_user.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/procs/procs_user.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/header_start.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/header_stop.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/check_pcs_sites_us03.tev.varfile : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_STOP : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/check_pcs_sites_us03.tev.varfile : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/scripts_build/conf/setup.tcl : Tue Jul 19 12:14:13 2022
+SNPS_INFO   : SCRIPT_START : /remote/cad-rep/msip/tools/Lynxtools/shared/2021.09/conf/procs_user.tcl : Tue Jul 19 12:14:14 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/shared/2021.09/conf/procs_user.tcl : Tue Jul 19 12:14:14 2022
+SNPS_INFO   : SCRIPT_STOP : /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/scripts_build/conf/setup.tcl : Tue Jul 19 12:14:14 2022
+SNPS_INFO   : SCRIPT_STOP : /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2021.09-SP1-1/scripts_global/conf/header_stop.tcl : Tue Jul 19 12:14:14 2022
+RTM-201: SNPS_ERROR  : (PCSQA-REMOTECHECK-2) Permission denied, please try again.
+RTM-201: SNPS_ERROR  : (PCSQA-REMOTECHECK us03) Failing connection with site us03

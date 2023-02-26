@@ -1,0 +1,10 @@
+c127-ss10lpp-1.8v_S00 : /remote/cad-rep/projects/std/l127-std-ss10lpp-1.8v_S00/rel3.1.3/cad/project.env
+ss10lpp-18_S00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss10lpp-18_S00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss10lpp-18_S00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+ss10lpp-18_S00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss10lpp-18_S00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss10lpp-18_S00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel3.1.3/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl
+ss10lpp-18_S00_11M_3Mx_6Dx_1Gx_1Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel4.2.0/cad/11M_3Mx_6Dx_1Gx_1Iz_LB/env.tcl
+ss10lpp-18_S00_12M_3Mx_6Dx_1Gx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel4.2.0/cad/12M_3Mx_6Dx_1Gx_2Iz_LB/env.tcl
+ss10lpp-18_S00_13M_3Mx_6Dx_2Hx_2Iz_LB : /remote/cad-rep/proj/c127-ss10lpp-1.8v_S00/rel4.2.0/cad/13M_3Mx_6Dx_2Hx_2Iz_LB/env.tcl

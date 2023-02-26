@@ -1,0 +1,122 @@
+n109-c10-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+
+n509-dpalt-c10-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+
+n302-c10-tsmc12ffcll-18-ns.txt
+INFO: Reference Reference 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n550-dptx-c10-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+
+n552-dpalt-c10-tsmc12ffcll-18-ns.txt
+INFO: c10 c10 n550-dptx-c10-tsmc12ffcll-18-ns
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u143-cmnblks-tsmc12ffcll-18.txt
+INFO: tsmc12ffcll 18 rel5.12.0
+INFO: DONE
+
+g242-mphy-tsmc12ffcll-18.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+
+g230-mphy-tsmc12ffcll-18.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x670-ssp-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel5.13.1
+INFO: DONE
+
+l243-std-tsmc12ffcll-1.8v.txt
+INFO: tsmc12ffcll 18 rel5.9.0
+INFO: DONE
+
+x670-usb2-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x670-usb3-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x670-usbc3-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d526-ddr43-tsmc12ffcll18.txt
+INFO: tsmc12ffcll 18 rel5.4.0
+ERROR: IcvRunDRC not defined.
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF : /remote/cad-rep/proj/c243-tsmc12ffcll-1.8v/rel5.4.0/cad/11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF/env.tcl
+INFO: DONE
+
+p014-emclk-tsmc12ffcll-1.8.txt
+INFO: CCS CCS "c243-tsmc12ffcll-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d546-lpddr4xm-tsmc12ffcll18.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d536-lpddr4mv2-tsmc12ffcll18.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t023-pqv-tsmc12ffcll-1.8.txt
+INFO: CCS CCS "c243-tsmc12ffcll-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y203-emmc-tsmc12ffcll-1.8v.txt
+INFO: tsmc12ffcll 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d546-lpddr4xm-tsmc12ffcll18.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d596-lpddr4xm-tsmc12ffcll18.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x322-e32-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+
+o109-diffbuf-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel5.2.0
+ERROR: IcvRunDRC not defined.
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF : /remote/cad-rep/proj/c243-tsmc12ffcll-1.8v/rel5.2.0/cad/11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF/env.tcl
+INFO: DONE
+
+x562-e56-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcllrf 18_iPDK 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w169-nvm-otp-sxg2-tsmc12ffcll-1.8v.txt
+INFO: tsmc12ffcll 18 rel5.4.0
+ERROR: IcvRunDRC not defined.
+tsmc12ffcll-18_11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF : /remote/cad-rep/proj/c243-tsmc12ffcll-1.8v/rel5.4.0/cad/11M_2Xa1Xd_h_3Xe_vhv_2Y2R_RF/env.tcl
+INFO: DONE
+
+w007-nvm-otp-commonLibs-tsmc12ffcll-1.8v.txt
+INFO: tsmc12ffcll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w021-nvm-otp-commonLibs-tsmc12ffcll-2.5v.txt
+INFO: tsmc12ffc 25 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n412-c20-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+
+x222-xsr-tsmc12ffcll-18-ns.txt
+INFO: tsmc12ffcll 18 rel6.0.0
+INFO: DONE
+

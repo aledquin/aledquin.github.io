@@ -1,0 +1,1 @@
+/remote/proj/cad/c269-tsmc3eff-1.2v/rel3.2.0

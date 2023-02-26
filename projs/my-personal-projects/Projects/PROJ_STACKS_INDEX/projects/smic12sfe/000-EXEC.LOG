@@ -1,0 +1,108 @@
+n115-c10-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 rel1.4.0
+INFO: DONE
+
+n515-dpalt-c10-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 rel1.4.0
+INFO: DONE
+
+n555-dptx-c10-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 rel1.4.0
+INFO: DONE
+
+u135-cmnblks-smic12sfe-18.txt
+INFO: smic12sfe 18 rel1.3.1
+INFO: DONE
+
+m0131-mem-smic12sfe-sm12n0c42p11sadrl128s.txt
+INFO: smic12sfe 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11sassl01ms.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c42p22sadsl01ms.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11sarel256s.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c42p11sacul128s.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11sadcl02ms.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p10asdg101ms.txt
+INFO: em em m0131-mem-smic12sfe-sm12n0c42p11sadrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11sacrl128s.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11sadel02ms.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11sasrl128s.txt
+INFO: "em" "em" "m0131-mem-smic12sfe-sm12n0c42p11sadrl128s"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11dpdrlhpcs.txt
+INFO: em em m0131-mem-smic12sfe-sm12n0c42p11sadrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11gpdrlhpcs.txt
+INFO: em em m0131-mem-smic12sfe-sm12n0c42p11sadrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0131-mem-smic12sfe-sm12n0c41p11cpsrlhpcs.txt
+INFO: em em m0131-mem-smic12sfe-sm12n0c42p11sadrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g232-mphy-smic12sfe-18.txt
+INFO: smic12sfe 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g308-dphy-cphy-smic12sfe-18.txt
+INFO: smic12sfe 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x709-ssp-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l313-std-smic12sfe-1.8v.txt
+INFO: smic12sfe 18 rel1.4.0
+INFO: DONE
+
+x709-usb2-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 rel1.3.1
+INFO: DONE
+
+x709-usb3-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d516-ddr43-smic12sfe18.txt
+INFO: smic12sfe 18 rel1.4.0
+INFO: DONE
+
+p050-emclk-smic12sfe-1.8v.txt
+INFO: CCS CCS "c313-smic12sfe-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d597-lpddr4xm-smic12sfe18.txt
+INFO: smic12sfe 18 rel1.4.0
+INFO: DONE
+
+x337-e32-smic12sfe-18-ns.txt
+INFO: smic12sfe 18 rel1.5.0
+INFO: DONE
+

@@ -1,0 +1,63 @@
+---
+calibre_verifs: true
+lef_diff_rel: 1.00a_v1.2.3dk
+releasePhyvMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_decapvddqld_ew
+    - dwc_ddrphy_decapvddqld_ns
+    - dwc_ddrphy_vddqclamp_ns
+    - dwc_ddrphy_vaaclamp
+    - dwc_ddrphy_vddclamp
+    - dwc_ddrphy_decapvaa_tile
+    - dwc_ddrphy_decapvdd_tile
+releaseShimMacro: 
+    - dwc_ddrphy_pllshim
+    - dwc_ddrphy_oddSite_shim_odd
+    - dwc_ddrphy_oddSite_shim_even
+    - HDBLVT20_CAPTB17_CA_BREAKER
+    - HDBLVT20_CAPLR6_CA_BREAKER
+    - HDBLVT20_FILL3_CA_BREAKER
+reference_gds: 
+    dwc_ddrphy_memreset_ns: dwc_ddrphy_memreset_ns_analogTestVflag.gds.gz
+    dwc_ddrphy_txrxdqs_ns: dwc_ddrphydbyte_lcdlroutes_ns.gds.gz
+    dwc_ddrphy_txrxac_ns: dwc_ddrphy_txrxac_ns_IntLoadFill.gds.gz dwc_ddrphy_txrxac_ns_InternalLoad.gds.gz dwc_ddrphy_txrxac_ns_LUPblock.gds.gz
+releasePmMailDist: jfisher,guttman,samy,hurst
+supply_pins_override: 
+    sg_fdprbsbqb_right: D3 M6
+    sg_fdprbsbqb_left: D3 M6
+    dwc_ddrphy_techrevision: D1 M4
+    dwc_ddrphy_lcdl: D2 M5
+    sg_fdprbsbqb: D3 M6
+cdl_prune_cells: cvcp* cvpp* vflag*
+supply_pins: D5 M8
+releaseUtilityMacro: 
+    - dwc_ddrphy_decapvddq_ew
+    - dwc_ddrphy_decapvddq_ns
+    - dwc_ddrphy_decapvddqld_ew
+    - dwc_ddrphy_decapvddqld_ns
+    - dwc_ddrphy_vddqclamp_ns
+releaseIgnoreMacro: 
+    - dwc_ddrphy_rxac_ns
+    - dwc_ddrphy_rxdq_ns
+    - dwc_ddrphy_rxdqs_ns
+    - dwc_ddrphy_txfe_ns
+    - dwc_ddrphy_txfedqs_ns
+    - dwc_ddrphy_txbe_ns
+    - dwc_ddrphy_bdl
+    - dwc_ddrphy_dqsenreplica_ns
+releaseBranch: rel1.00_cktpcs_1.01a_v1.2.3dk_rel_
+releaseMailDist: jfisher,guttman,eltokhi,gerard,samy
+release_gds_cdl: icv
+metal_stack: 12M_3Mx_6Dx_1Gx_2Iz_LB
+metal_stack_ip: 8M_3Mx_5Dx
+layers: M1 M2 M3 D1 D2 D3 D4 D5 OVERLAP
+layout_tag: Final.2 release
+reference_date_time: 21 days ago
+rel: 1.01a_v1.2.3dk
+vcrel: 1.00a
+p4_release_root: 
+    - products/ddr54/project/d803-ddr54-ss10lpp18
+    - products/ddr43_lpddr4_v2/project/d523-ddr43-ss10lpp18
+process: ss10lpp-18
+

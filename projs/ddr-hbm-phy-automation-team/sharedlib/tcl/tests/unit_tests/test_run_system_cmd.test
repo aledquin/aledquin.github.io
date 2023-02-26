@@ -1,0 +1,111 @@
+#!/depot/tcl8.6.6/bin/tclsh
+#nolint Main
+#nolint utils__script_usage_statistics
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+
+package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "Alvaro Quintana Carvacho"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+set DA_RUNNING_UNIT_TESTS 1
+# Declare cmdline opt vars here, so they are global
+set opt_fast ""
+set opt_test ""
+set opt_help ""
+set opt_project ""
+
+#lappend auto_path "$RealBin/../bin"
+lappend auto_path "$RealBin/../../lib"
+
+package require Messaging 1.0
+namespace import ::Messaging::*
+
+package require Misc 1.0
+namespace import ::Misc::*
+
+
+
+# -verbose level -> Sets the type of output verbosity desired to level, 
+#                   a list of zero or more of the elements body, pass, 
+#                   skip, start, and error. Default value is {body error}. 
+# Levels are defined as:
+# body (b) -> Display the body of failed tests
+# pass (p) -> Print output when a test passes
+# skip (s) -> Print output when a test is skipped
+# start (t)-> Print output whenever a test starts
+# error (e)-> Print errorInfo and errorCode, if they exist, 
+# when a test return code does not match its expected return code
+# The single letter abbreviations noted above are also recognized so 
+# that [configure -verbose pt] is the same as [configure -verbose {pass start}].
+::tcltest::verbose bpste
+
+header 
+
+test 01_rsc { Test: run_system_cmd "echo hello" } \
+    -body { run_system_cmd "echo hello"    } \
+    -result {hello {} 0}
+
+test 02_rsc { Test: run_system_cmd "cat file" } \
+    -body { run_system_cmd "cat file"    } \
+    -result {{} {cat: file: No such file or directory
+} 1} \
+    -output {-E- child process exited abnormally
+}
+
+test 03_rsc { Test: run_system_cmd "badcmd" "1" with verbosity } \
+    -body { run_system_cmd "bad cmd" "1"    } \
+    -result {{} {couldn't execute "bad": no such file or directory
+    while executing
+"open |$command "r""} 1} \
+    -output {-S- Running system command : 'bad cmd 2>@file11' ...
+-E- couldn't execute "bad": no such file or directory 
+} -constraints knownBug
+
+
+test 04_rsc { Test: run_system_cmd "badcmd" "1" with debug} \
+    -body { 
+        global DEBUG
+        set DEBUG 11100
+        run_system_cmd "bad cmd"   } \
+    -result {{} {} 1} \
+    -output "-D- Hit enter to continue...\n" \
+    -constraints userInteraction
+ 
+test 05_rsc { Test: run_system_cmd "badcmd" "1" with d/v} \
+    -body { global DEBUG
+            set DEBUG 11100
+            run_system_cmd "bad cmd" "1"    } \
+    -result {{} {} 1} \
+    -output "-I- Running system command : 'bad cmd' ...\n-D- Hit enter to continue...\n" \
+    -constraints userInteraction
+
+
+# NOTE: these tests are dependent on the user running it.
+#       need to modify this test so it works for everyone.
+#
+test 06_rsc {Test: run_system_cmd "p4 status" in correct location} \
+    -body { cd ~/p4_ws
+            run_system_cmd "p4 status"} \
+    -result {{} {No file(s) to reconcile.} 0} \
+    -output {} \
+    -constraints userInteraction
+
+test 07_rsc {Test: run_system_cmd "p4 status" in an incorrect location} \
+    -body { cd /slowfs/
+            run_system_cmd "p4 status"} \
+    -result {{} {Path '/slowfs/...' is not under client's root '/slowfs/dcopt103/alvaro/p4_ws'.
+No file(s) to reconcile.} 1} \
+    -output {-E- child process exited abnormally
+}   -constraints knownBug 
+
+
+# To see test statistics (Total/Passed/Skipped/Failed), best put this line in the end:
+cleanupTests

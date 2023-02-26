@@ -1,0 +1,184 @@
+SHELL=/depot/local/bin/tcsh -f
+
+# The top directory for the git repository
+ifndef GITROOT
+GITROOT=/u/$(USER)/GitLab/ddr-hbm-phy-automation-team
+endif
+
+# TOOL={toolname}   This should be set by each Tool's Makefile before including this one
+
+# The version of PERL required
+PERL_EXE=/depot/perl-5.14.2/bin/perl
+# The version of Python required
+PYTHON38_EXE=/depot/Python/Python-3.8.0/bin/python
+TCL_EXE=/depot/tcl8.6.3/bin/tclsh8.6
+
+CHECK=./../../../admin/check_code.csh -short -nosymlink
+
+LINT_PL=./../../../admin/perl_lint.pl -short
+LINT_PY=./../../../admin/python_lint.pl -short
+LINT_TCL=./../../../admin/tcl_lint.pl -short
+
+LIST_TCL=./../../../admin/list_tcl
+LIST_PERL=./../../../admin/list_perl
+LIST_PYTHON=./../../../admin/list_python
+
+FLAKE8_CONFIG=./../../../.flake8
+
+# How to run coverage
+# NOTE: when running coverage you should have already defined DDR_DA_COVERAGE env variable
+COVERIT=/depot/perl-5.14.2/bin/perl -MDevel::Cover=-db,$(GITROOT)/$(TOOL)_cover_db
+PROVE=/depot/perl-5.14.2/bin/prove
+COVERAPP=/depot/perl-5.14.2/bin/cover
+
+RUN_TESTS_PY=./../../../run_tests.py
+
+# Find all the .t files and put them into the TESTS variable
+UNIT_TESTS_PL := $(wildcard $(GITROOT)/$(TOOL)/dev/main/tests/unit_tests/*.t)
+UNIT_TESTS_TCL := $(wildcard $(GITROOT)/$(TOOL)/dev/main/tests/unit_tests/*.test)
+UNIT_TESTS_PY := $(wildcard $(GITROOT)/$(TOOL)/dev/main/tests/unit_tests/unittest*py)
+UNIT_TESTS_PY += $(wildcard $(GITROOT)/$(TOOL)/dev/main/tests/unit_tests/test_*.py)
+FUNC_TESTS    := $(wildcard $(GITROOT)/$(TOOL)/dev/main/tests/functional_tests/run-tests_*)
+FUNC_TESTS_PL := $(wildcard $(GITROOT)/$(TOOL)/dev/main/tests/functional_tests/run-tests_*pl)
+
+# Find all Perl files, add to VAR
+SCRIPTS_PL := $(shell $(LIST_PERL))
+# Find all Python files, add to VAR
+SCRIPTS_PY := $(shell $(LIST_PYTHON))
+# Find all Tcl files, add to VAR
+SCRIPTS_TCL := $(shell $(LIST_TCL))
+
+# Flake8 ignored rules
+FLAKE8_IGNORES="E501,E402,E401" #Ignore long lines
+
+# Targets for admin/check_code.csh
+CHECK_PL  := $(SCRIPTS_PL)
+CHECK_PY  := $(SCRIPTS_PY)
+CHECK_TCL := $(SCRIPTS_TCL)
+
+.PHONY: clean coverage format_py func_tests
+.PHONY: clean_coverage build_coverage_html
+.PHONY: check_all check_pl check_py check_tcl
+.PHONY: lint lint_pl lint_py lint_tcl
+.PHONY: unit_tests unit_tests_pl unit_tests_py
+.PHONY: compile_check
+.PHONY: help
+
+
+test: unit_tests check_all func_tests 
+
+build: check_all
+
+.FORCE:
+
+# Note: by prefixing the action with a '-', it will ignore any errors, and
+# this means that the next target (eg. sh_tests) will get run even if there
+# are t_tests errors spotted.
+
+format_py:
+	@echo "Running autopep8 formatter on $(words $(SCRIPTS_PY)) Python files."	
+	@$(foreach file,$(SCRIPTS_PY), echo "Formatting $(file)"; $(PYTHON38_EXE) -m autopep8 $(file) --in-place;)
+
+# Only check compilation errors: for PERL & PYTHON, but there is no way,
+#    today, for us to run a compile check on TCL code.
+compile_check: check_compile_pl check_compile_py
+
+check_compile_pl:
+	@echo "================================================================================\nRunning 'perl -c' on all perl scripts\n================================================================================\n"
+	@$(foreach file,$(SCRIPTS_PL),$(PERL_EXE) -c $(file);)
+
+check_compile_py:
+	@echo "================================================================================\nRunning 'python -m' on all python scripts\n================================================================================\n"
+	@$(foreach file,$(SCRIPTS_PY),$(PYTHON38_EXE) -m py_compile $(file);)
+
+check_all: check_pl check_py check_tcl
+
+# CHECK app will run linting on perl scripts and python scripts
+check_pl: $(CHECK_PL)
+	@echo "\n================================================================================\n<b>Perl admin/check_code.csh PASSED</b>\n================================================================================\n"
+
+$(CHECK_PL): .FORCE
+	@$(CHECK) -printerrors $@
+
+check_py: $(CHECK_PY)
+	@echo "\n================================================================================\n<b>Python admin/check_code.csh PASSED</b>\n================================================================================\n"
+
+$(CHECK_PY): .FORCE
+	@$(CHECK) -printerrors $@
+
+check_tcl: $(CHECK_TCL)
+	@echo "\n================================================================================\n<b>TCL admin/check_code.csh PASSED</b>\n================================================================================\n"
+
+$(CHECK_TCL): .FORCE
+	@$(CHECK) -printerrors $@
+
+lint: lint_pl lint_py lint_tcl
+
+lint_tcl:
+	@echo "\n================================================================================\n<b>TCL Linter on all tcl scripts.</b>\n================================================================================\n"
+	@$(foreach file,$(SCRIPTS_TCL),$(LINT_TCL) $(file);)
+
+lint_py:
+	@echo "\n================================================================================\n<b>Python Linter on all python scripts</b>\n================================================================================\n"	
+	@$(foreach file,$(SCRIPTS_PY), echo "Linting $(file)"; $(PYTHON38_EXE) -m flake8 $(file) --config $(FLAKE8_CONFIG);)
+
+lint_pl:
+	@echo "\n================================================================================\n<b>Perl Linter on Perl scripts</b>\n================================================================================\n"	
+	@$(foreach file,$(SCRIPTS_PL),$(LINT_PL) $(file);)
+
+unit_tests: unit_tests_pl  unit_tests_py unit_tests_tcl
+
+unit_tests_pl:
+	@echo "\n================================================================================\n<b>Perl Unit Tests</b>\n================================================================================\n"	
+	@$(PROVE) tests/unit_tests
+
+unit_tests_py:
+	@echo "\n================================================================================\n<b>Python Unit Tests</b>\n================================================================================\n"	
+	@$(RUN_TESTS_PY) --tool $(TOOL) --unit_tests
+
+unit_tests_tcl:
+	@echo "\n================================================================================\n<b>TCL Unit Tests</b>\n================================================================================\n"	
+	@$(foreach file,$(UNIT_TESTS_TCL), echo "Test $(file)"; $(file))
+
+# 
+# Note: FUNC_TESTS includes run-tests*.sh and run-tests*.pl
+#
+func_tests:
+	@echo "\n================================================================================\n<b>Functional Tests</b>\n================================================================================\n"	
+	@$(foreach tst,$(FUNC_TESTS), $(tst);)
+	@echo "\n================================================================================\n<b>End Functional Tests</b>\n================================================================================\n"	
+
+func_tests_py:
+	@echo "\n================================================================================\n<b>Python Functional Tests</b>\n================================================================================\n"	
+	@$(RUN_TESTS_PY) --tool $(TOOL) --functional_tests
+
+#
+# The cover_db directory is created when using the COVER option.
+# The default location for this cover_db is the current working directory.
+# 
+coverage: 
+	@echo "\n================================================================================\n<b>Perl Code Coverage</b>\n================================================================================\n"	
+	@echo "DDR_DA_COVERAGE set to '$(DDR_DA_COVERAGE)'"
+	@$(foreach tst,$(UNIT_TESTS_PL),cd $(GITROOT);$(COVERIT) $(tst);)
+	@$(foreach tst,$(FUNC_TESTS_PL),cd $(GITROOT);$(COVERIT) $(tst) -coverage;)
+
+
+#
+# This target expects to find a cover_db folder in the current directory.
+# It will fail otherwise. NOTE: that the cover_db for each tool is now
+# located in the GITROOT folder. So, if you only want coverage for this 
+# specific tool's tests; then you should first run make clean_coverage
+#
+build_coverage_html:
+	cd $(GITROOT); $(COVERAPP)
+
+clean: 
+	-@echo "Clean out generated files"
+
+clean_coverage:
+	-cd $(GITROOT); $(COVERAPP) -delete
+
+help:
+	@echo "The make targets are:"
+	@echo "test\nbuild\nformat_py\ncompile_check\ncheck_compile_pl\ncheck_all\ncheck_pl\ncheck_py\ncheck_tcl\nlint\nlint_pl"
+	@echo "lint_py\nlint_tcl\nunit_tests\nunit_tests_pl\nunit_tests_py\nfunc_tests\ncoverage\nbuild_coverage_html\nclean_coverage\nclean\nhelp"

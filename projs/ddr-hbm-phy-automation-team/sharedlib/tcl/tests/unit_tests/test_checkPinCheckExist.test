@@ -1,0 +1,68 @@
+#!/depot/tcl8.6.6/bin/tclsh
+#nolint Main
+#nolint utils__script_usage_statistics
+
+package require tcltest 2.0
+namespace import -force ::tcltest::*
+
+
+# package require try         ;# Tcllib.
+package require cmdline 1.5 ;# First version with proper error-codes.
+package require fileutil
+
+set DEBUG      0
+set VERBOSITY  0
+set STDOUT_LOG ""
+set AUTHOR     "Haashim Shahzada"
+set RealBin [file dirname [file normalize [info script]] ]
+set RealScript [file tail [file normalize [info script]] ]
+# setenv DA_RUNNING_UNIT_TESTS 1
+# Declare cmdline opt vars here, so they are global
+set opt_fast ""
+set opt_test ""
+set opt_help ""
+set opt_project ""
+
+# lappend auto_path "$RealBin/../../../bin"
+lappend auto_path "$RealBin/../../lib"
+
+package require Messaging 1.0
+namespace import ::Messaging::*
+
+package require Misc 1.0
+namespace import ::Misc::*
+
+::tcltest::verbose bpste
+
+header 
+
+test 01_true { Test: checkPinCheckExist "//depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_utility_cells/1.00a/macro/..." } \
+    -body { checkPinCheckExist "//depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_utility_cells/1.00a/macro/..."    } \
+    -result {EMPTY} \
+    -output {}
+
+test 02_false { Test: checkPinCheckExist //depot/products/lpddr5x_ddr5_phy/lp5x/project/d932-lpddr5x-tsmc4ffp-12/ckt/rel/dwc_lpddr5xphy_ato_ew/1.00a/macro/... } \
+    -body { checkPinCheckExist "//depot/products/lpddr54/project/d890-lpddr54-tsmc5ff12/ckt/rel/dwc_ddrphy_diff_io_ew/1.00a/macro/..."} \
+    -result {FALSE} \
+    -output {}
+
+test 03_fail { Test: checkPinCheckExist "/depot/products/training/project/t134-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_utility_cells/1.00a/macro/..." } \
+    -body { checkPinCheckExist "/depot/products/training/project/t125-training-tsmc7ff-1.8v/ckt/rel/dwc_ddrphy_utility_cells/1.00a/macro/..."    } \
+    -result {NULL_VAL} \
+    -output {}
+
+test 04_empty { Test: checkPinCheckExist "" } \
+    -body { checkPinCheckExist ""    } \
+    -result {NULL_VAL} \
+    -output {}
+
+test 05_noarg { Test: checkPinCheckExist } \
+    -body { checkPinCheckExist } \
+    -returnCodes error \
+    -result {wrong # args: should be "checkPinCheckExist depotPath"} \
+    -output {}
+
+# To see test statistics (Total/Passed/Skipped/Failed), best put this line in the end:
+cleanupTests
+
+footer

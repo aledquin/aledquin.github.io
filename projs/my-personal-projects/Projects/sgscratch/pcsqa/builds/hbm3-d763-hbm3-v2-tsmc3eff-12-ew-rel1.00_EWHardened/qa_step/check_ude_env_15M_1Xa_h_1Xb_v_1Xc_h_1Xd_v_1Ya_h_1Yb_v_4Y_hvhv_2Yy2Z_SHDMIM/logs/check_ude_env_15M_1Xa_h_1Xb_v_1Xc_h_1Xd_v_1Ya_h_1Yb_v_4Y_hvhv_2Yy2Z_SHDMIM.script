@@ -1,0 +1,308 @@
+########################################################
+## check_env_run
+##
+## Purpose: This check opens ude for all the metal stacks in the 
+##          CCS and checks for errors in the ude enviornment as well
+##	    as generates the needed <metalstack>.env files needed for 
+##          all tasks that need UDE env variables.
+## Errors:
+##          (SDL-1) CCS contains no (default) devices reference
+##          **(SDL-2) sdl task fails to create layout view in dummy design at $udework/ccs_lib/ccs_cell/layout
+##          (SDL-3) CCS contains no (default) lpplib, lpplib2, lpplib3 or lpplib4 reference
+##          (SDL-4) CCS contains no (default) techlib reference  ( $stackup )
+##          (SDL-5) The pv environment has not properly read in for metal stack $stackup, caused by:
+##          (SDL-5) Please start up ude for metal stack $stackup and execute invocation after Error to find cause
+##          (SDL-6) $SEV(task) verification has been failed, cdesigner session closed abruptly after $verificationTimeout\s
+##          (SDL-7) ${metalstack}.defs file was not generated sucessfully, please check cdesigner.log for further information
+##          (SDL-8) ${metalstack}.env file was not generated sucessfully, please check cdesigner.log for further information
+##          (SDL-9) $TEV(metalstack) techlib is not correctly attached to a lpplib
+##          (SDL-10) lpplib defined is not compatible with techlib in $TEV(metalstack). Please used $lpplibCCS
+##          (SDL-11) Missing tool in the  "the toolsPriority list
+
+source ../../../../../scripts_global/conf/header_start.tcl
+sproc_source -file $env(MSIP_LYNX_SHARED)/conf/procs_user.tcl
+
+## NAME: TEV(metalstack)
+## TYPE: string
+## INFO:
+## * Metal stack for ude check
+set TEV(metalstack) ""
+
+## NAME: TEV(haspPDK)
+## TYPE: boolean
+## INFO:
+## * Check devices/techlib related checks
+set TEV(haspPDK) "1"
+
+## NAME: TEV(retry)
+## TYPE: integer
+## INFO:
+## * Nr of times UDE will try to run until it get's results
+set TEV(retry) "1"
+
+source ../../../../../scripts_global/conf/header_stop.tcl
+
+proc createRunFiles {} {
+
+   global env SVAR SEV TEV
+   
+   set fid_sourceude [open sourceude w]
+   puts $fid_sourceude "setenv MSIP_PROJ_ROOT $::env(CCSQA_PROJ_ROOT)"
+   puts $fid_sourceude "setenv MSIP_PRODUCT_NAME $SVAR(product_name)"
+   puts $fid_sourceude "setenv UDE_HOME $::env(CCSQA_UDE_HOME)"
+   puts $fid_sourceude "setenv RUN_DIR_ROOT $SEV(dst_dir)"
+   ## since Lynx 2018.06-SP1, SYNOPSYS_CUSTOM_LOCAL needs explicitly be set
+   puts $fid_sourceude "setenv SYNOPSYS_CUSTOM_LOCAL $SEV(dst_dir)"
+
+   ## Added temporarily to enable PERC
+   puts $fid_sourceude "module unload msip_cd_qa_utils"
+   puts $fid_sourceude "module load msip_cd_qa_utils/2019.12"
+
+   ## If SVAR(ver_pvbatch) == CCS use CCS defined msip_cd_pv version else
+   ## use the version set in SVAR(ver_pvbatch)
+   if {!([string toupper $SVAR(ver_pvbatch)] == "CCS")} { 
+      puts $fid_sourceude "module unload msip_cd_pv"
+      puts $fid_sourceude "module load $SVAR(ver_pvbatch)"
+   }
+
+   close $fid_sourceude
+
+   
+   set fid_exit [open exit_force.tcl w]
+   puts $fid_exit "cd $SEV(dst_dir)"
+   puts $fid_exit "source $env(MSIP_LYNX_SHARED)/qa_scripts/CD_scripts/cd_dumpEnv.tcl"
+   puts $fid_exit "exit -force 1"
+   close $fid_exit
+   
+   
+   set fid_launchude [open launchude w]
+   catch { exec $SEV(exec_cmd) -c "chmod +x launchude " } dummy
+   puts $fid_launchude "#!/bin/csh"
+   puts $fid_launchude " source $::env(udecadrep)/etc/.cshrc "
+   puts $fid_launchude " module purge "
+   puts $fid_launchude " module load $SVAR(ude_wrapper)"
+
+   puts $fid_launchude " setenv MSIP_PROJ_ROOT $::env(CCSQA_PROJ_ROOT) "
+   puts $fid_launchude " setenv MSIP_UDE_PROJ_ROOT $::env(CCSQA_PROJ_ROOT) "
+   puts $fid_launchude " setenv UDE_HOME $::env(CCSQA_UDE_HOME)"
+   puts $fid_launchude " unsetenv PASSWORD"
+   puts $fid_launchude " unsetenv CCSQA_PASSWORD"
+   puts $fid_launchude " cd $SEV(dst_dir)"
+   puts $fid_launchude " $SVAR(ude) --projectType $SVAR(product_name) --projectName $SVAR(ccs_name) --releaseName $SVAR(ccs_version) --metalStack $TEV(metalstack) --nogui --no-dos --sourceShellFile $SEV(dst_dir)/sourceude --command \"source $SEV(dst_dir)/exit_force.tcl\" >& udelog &"
+   puts $fid_launchude " echo \$! > pid.file"
+   close $fid_launchude
+
+}
+
+## Variable to define how much time of innactivity in cdesigner.log to wait
+## until killing verification ude task.
+## Default use SVAR value, TEV overrides this value
+if {[info exists TEV(pvrun_timeout)]} {
+   set verificationTimeout $TEV(pvrun_timeout)
+} else {
+   set verificationTimeout $SVAR(pvrun_timeout)
+}
+
+ 
+if { [exec uname] == "SunOS" } {
+  set SEV(exec_cmd) bash
+} else {
+  set SEV(exec_cmd) sh
+}
+
+set run_dir $SEV(dst_dir)
+cd $run_dir
+
+
+
+#set job_cmd ""
+#set back_gnd ""
+#if { $SEV(job_enable) == "1" } {
+#	set job_cmd "qsub -terse -cwd -b y -N monitorpvbatch -P bnormal -l 'arch=glinux, h_rt=00:30:00' -V"
+#} else {
+#	set back_gnd "&"
+#}
+#catch { exec $SEV(exec_cmd) -c "$job_cmd $SEV(gscript_dir)/qa_scripts/monitorpvbatch $SEV(bscript_dir) $SEV(dst) $SEV(task) $veripath $SEV(job_enable)" $back_gnd } monitorjobid
+
+
+
+
+#####################################################################################################
+#####################################################################################################
+## wait until cdesigner.log is available. 
+## If previous task fails and ude is not launched properly, Lynx will fail gracefully after time-out.
+## Time out will occur if cdesigner.log and <pv_tool>.stdout are not modified for "$SVAR(pvrun_timeout)" seconds
+
+for {set i $TEV(retry)} {$i>0} {incr i -1} {
+
+   dst_dirClean
+   createRunFiles
+   catch { exec $SEV(exec_cmd) -c "cd $run_dir && ./launchude " } dummy
+
+   set udetimeout 0
+   after [expr $verificationTimeout * 1000] set udetimeout 1
+   sproc_msg -info "Waiting for cdesigner.log or custom_compiler.log file"
+   while { !$udetimeout && (([file exists cdesigner.log] == 0 || [file size cdesigner.log] == 0 ) &&
+           ( [file exists custom_compiler.log] == 0 || [file size custom_compiler.log] == 0 )) } {
+          after 5000       
+          update
+   }
+
+   set logfile "cdesigner.log"
+   if { [file exists $logfile] == 0 } {
+   	set logfile "custom_compiler.log"
+   }
+ 
+   ## if $udetimeout is 1, ude did not lauch sucessfully, so check should end 
+   if {$udetimeout} {
+      if {$i == 1} {
+         set errors 1
+         sproc_msg -error "(SDL-5) UDE failed to launch, check \"udelog\" file under SEV(dst_dir) for debug"
+         puts "$SEV(dst_dir)/udelog"
+          sproc_msg -info "METRIC | INTEGER CCSQA.ISSUES.$SEV(task) | $errors"
+          sproc_script_stop -exit 
+      } else {
+         continue
+      }
+   }
+
+   set modtime [list 0 0]
+   set prevmodtime 0
+   set counter 0 
+
+   sproc_msg -info "Waiting for verification to run..."
+
+   while { $prevmodtime != $modtime || [expr $verificationTimeout / 5] > $counter} {
+      ## Exit loop if cdesigner is closed.
+      catch { exec $SEV(exec_cmd) -c "grep \"/o Session terminated. Log is at\" $logfile | awk -F \"/o \" '{print \$2}' "} sessionended
+      if { [string match "Session terminated. Log is at $run_dir*" $sessionended] } {
+         sproc_msg -info "UDE Session terminated"
+         break
+      }    
+      after 5000
+      set prevmodtime $modtime
+      set modtime [file mtime $logfile]
+      if {$prevmodtime == $modtime } {		
+         incr counter
+#         puts "$counter out of [expr $verificationTimeout / 5]"
+      } else {		
+         set counter 0
+      }
+
+   }
+#####################################################################################################
+#####################################################################################################
+
+   set errors 0
+
+   ## Grep for exit status ##	
+   set sessionended " Unknown "   
+   catch { exec $SEV(exec_cmd) -c "grep \"/o Session terminated. Log is at\" $logfile | awk -F \"/o \" '{print \$2}' "} sessionended
+   sproc_msg -info "Session terminated with status - $sessionended"
+   if { ![string match "Session terminated. Log is at $run_dir*" $sessionended] } {
+   	sproc_msg -info "(SDL-6) $SEV(task) verification has been failed, cdesigner session closed abruptly after $verificationTimeout\s"
+	   incr errors
+   }  
+
+   catch { exec $SEV(exec_cmd) -c "$SEV(gscript_dir)/qa_scripts/killude udelog" } dummy
+   killude udelog
+   
+   ## If <metalStack>.env and <metalStack>.defs exist, UDE run as expected and we set i 1 to get out of loop.
+   if {[file exists $TEV(metalstack).env] && [file exists $TEV(metalstack).defs]} { set i 1 }
+}
+
+#####################################################################################
+###############################     Check Results   #################################
+#####################################################################################
+
+if { ![file exists $TEV(metalstack).env] } {
+   sproc_msg -error "(SDL-8) $TEV(metalstack).env file was not generated sucessfully, please check $logfile for further information"
+   incr errors
+} 
+
+if { ![file exists $TEV(metalstack).defs] } {
+   sproc_msg -error "(SDL-7) $TEV(metalstack).defs file was not generated sucessfully, please check $logfile for further information"
+   incr errors
+} else {
+   
+   ## If check is run but there is no pPDK, some errors become warnings
+   switch -- $TEV(haspPDK) {
+      1 {set msgType "-error"}
+      0 {set msgType "-warning"}      
+   }
+   
+   if { [catch {exec grep "^DEFINE techlib " $TEV(metalstack).defs} dummy] } {
+      sproc_msg $msgType "(SDL-4) CCS contains no (default) techlib reference"
+      incr errors
+   } else { 
+      if { [catch {exec grep LPPLIBCCSQA $TEV(metalstack).env | awk "{print \$2}" } lpplibCCS] } {	      
+     	 sproc_msg -error "(SDL-9) $TEV(metalstack) techlib is not correctly attached to a lpplib"
+     	 incr errors
+     	 if { ![catch {exec grep "(TECH-025)" $logfile} debugInfo] } {
+     	    puts "$debugInfo"
+     	    sproc_msg -error "(SDL-10) lpplib defined is not compatible with techlib in $TEV(metalstack)"
+     	    }	    
+      } elseif {$lpplibCCS != "ipdk"} {
+     	 if { [catch {exec grep -E "^DEFINE $lpplibCCS " $TEV(metalstack).defs} dummy] } {
+	    sproc_msg -error "(SDL-10) lpplib defined is not compatible with techlib in $TEV(metalstack). Please used $lpplibCCS"           
+	    incr errors
+	 }   
+      } elseif {$lpplibCCS == "ipdk"} { set msgType "-warning" }    
+   }
+    
+   if { [catch {exec grep "^DEFINE devices " $TEV(metalstack).defs} dummy] } {
+      sproc_msg $msgType "(SDL-1) CCS contains no (default) devices reference"
+      incr errors
+   }
+   if { [catch {exec grep -E "^DEFINE lpplib(\[2-4\]| )" $TEV(metalstack).defs} dummy] } {
+      sproc_msg $msgType "(SDL-3) CCS contains no (default) lpplib, lpplib2, lpplib3 or lpplib4 reference"
+      incr errors
+   }
+
+}
+
+
+
+if { ![catch {exec grep Error: $logfile } udeerrors] } {
+   sproc_msg -error "(SDL-5) The pv environment has not properly read in for metal stack $TEV(metalstack), caused by:"   
+   sproc_msg -error "$udeerrors"
+   sproc_msg -error "(SDL-5) Please start up ude for metal stack $TEV(metalstack) and execute invocation after Error to find cause"
+}
+ 
+if { ![catch {exec grep Warning: $logfile | grep "is not present the toolsPriority list" } udeerrors] } {
+   sproc_msg -error "(SDL-11) Missing tool in the  \"the toolsPriority list\""   
+   sproc_msg -error "$udeerrors"
+   sproc_msg -error "(SDL-11) Please start up ude for metal stack $TEV(metalstack) and check cdesigner console to debug"
+}
+
+
+#####################################################################################################
+#####################################################################################################
+## Create links under ../sdl/ for $SEV(metalstack).env/.defs files to keep compatibility with 
+## all the tasks relying on SDL for env information
+
+if { [file exists $SEV(step_dir)/logs] } {
+	set sdlwork  $SEV(step_dir)/work/sdl
+	set taskwork $SEV(step_dir)/work/$SEV(task)
+} else {
+	set sdlwork  $SEV(step_dir)/sdl/work
+	set taskwork $SEV(step_dir)/$SEV(task)/work
+}
+if {![file exists $sdlwork]} { file mkdir $sdlwork }
+cd $sdlwork
+catch { file link -symbolic $TEV(metalstack).env  $taskwork/$TEV(metalstack).env  } dummy
+##puts $dummy
+catch { file link -symbolic $TEV(metalstack).defs $taskwork/$TEV(metalstack).defs } dummy
+##puts $dummy
+puts "#############################################"
+
+
+sproc_msg -info "METRIC | INTEGER CCSQA.ISSUES.$SEV(task) | $errors"
+
+
+
+sproc_script_stop
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo "Information: Process ID for rtm_sh_cmd : $$" > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_touch.tcl us01msemt228.internal.synopsys.com 33799 /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.touch_start >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+
+if [[ $? -eq 0 ]]
+  then
+    echo "Information: Sockets OK" >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+  else
+    echo "Error: Sockets not OK" >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+    touch /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.touch_error
+    exit 1
+fi
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/check_pcs_sites_us03.rtm_shell_cmd >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1 &
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_exec_heartbeat.tcl $! us01msemt228.internal.synopsys.com 33799 /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.heartbeat >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+
+/slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/rtm_shell/rtm_touch.tcl us01msemt228.internal.synopsys.com 33799 /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.touch_stop >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+
+echo "Information: End rtm_sh_cmd" >> /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_us03/logs/.check_pcs_sites_us03.rtm_shell_cmd.log 2>&1
+
+## End of File

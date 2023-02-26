@@ -1,0 +1,21 @@
+#!/bin/sh
+##
+## rtm_shell_cmd -tool tcl_job -log_file /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_in01/logs/check_pcs_sites_in01.log
+##
+
+echo "Information: Process ID for rtm_shell_cmd : $$"
+
+## No trap command
+
+. /global/etc/modules/3.1.6/init/sh
+module unload tcl
+module load tcl/8.6.6
+module list
+
+tclsh /slowfs/dcopt103/alvaro/sgscratch/pcsqa/scripts_global/conf/tool_wrapper.tcl < /dev/null > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_in01/logs/check_pcs_sites_in01.log 2>&1
+
+/global/apps/lynx_2020.09/rtm_shell/lynx_rtm_2020.09/bin/rtm_check /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_in01/logs/.check_pcs_sites_in01.rtm_check.data > /slowfs/dcopt103/alvaro/sgscratch/pcsqa/builds/hbm3-d763-hbm3-v2-tsmc3eff-12-ew-rel1.00_EWHardened/qa_step/2_check_pcs_sites_in01/logs/.check_pcs_sites_in01.rtm_check.log 2>&1
+
+echo "Information: End rtm_shell_cmd"
+
+## End of File

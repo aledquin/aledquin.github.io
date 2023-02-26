@@ -1,0 +1,18 @@
+n202-c10-int22ulpc-18-ns.txt
+INFO: int22ulpc 18 rel1.7.0
+n602-dpalt-c10-int22ulpc-18-ns.txt
+INFO: int22ulpc 18 rel1.7.0
+u110-cmnblks-int22ulpc-18-ns.txt
+INFO: int22ulpc 18 rel11.3.0
+g133-dphy-int22ulpc-18.txt
+INFO: int22ulpc 18 rel2.0.0
+t321-training-int22ulpc-18-ns.txt
+INFO: int22ulpc 18 rel11.3.0
+x662-usb2-int22ulpc-18-ns.txt
+INFO: int22ulpc 18 rel2.0.0
+x675-usb2-int22ulpc-18-ns.txt
+INFO: int22ulpc 18 rel11.3.0
+d561-lpddr4mv2-int22ulpc18.txt
+INFO: int22ulpc 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+

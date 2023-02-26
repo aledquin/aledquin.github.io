@@ -1,0 +1,23 @@
+#!/bin/bash
+tool_name=`basename $0`
+prefix="ddr-da-ddr-utils-timing"
+exec /remote/cad-rep/msip/tools/bin/msip_get_usage_info --tool_name "$prefix$tool_name" --stage main --category ude_ext_1 --tool_path $0 --tool_version "2022ww24"
+
+corner_file=""
+while read line_corner; do
+	if [ ${line_corner:0:1} != "#" ]; then
+		corner_file="$corner_file $line_corner"
+	fi
+done < ./lib_corner_list
+
+IFS=' ' read -a corner_list <<< "$corner_file"
+corner_list_len=$(echo ${#corner_list[*]})
+
+dir=""
+for ((i=0;i<corner_list_len;i++))
+do
+	corner=$(echo ${corner_list[i]})
+	./add_pg_phy ddrphy_bdl_$corner\.lib -lib ddrphy_bdl_$corner\_pg
+done
+
+exit

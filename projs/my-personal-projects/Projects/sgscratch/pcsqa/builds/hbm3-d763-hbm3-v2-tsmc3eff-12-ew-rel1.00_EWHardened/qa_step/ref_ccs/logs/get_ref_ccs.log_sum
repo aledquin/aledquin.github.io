@@ -1,0 +1,12 @@
+get_ref_ccs
+CHECK FAILED
+PCSQA/module version: 2021.09-SP1-1
+User: alvaro
+Run time: Tue Jul 19 12:09:19 2022
+Execution time: 00:00:00:24
+
+Information: Process ID for tool: 51509
+Project Status: In progress
+Reference CCS /remote/proj/cad/c269-tsmc3eff-1.2v/rel3.2.0 found in Porting Spec 1.00a_EWHardened (vici Id: 35150)
+Get reference CCS version from /remote/cad-rep/projects/hbm3/d763-hbm3-v2-tsmc3eff-12-ew/rel1.00_EWHardened/cad/project.env
+SNPS_ERROR  : (PCSQA-2.1z) PCS uses '_beta' release of CCS: /remote/proj/cad/c269-tsmc3eff-1.2v/rel3.2.0

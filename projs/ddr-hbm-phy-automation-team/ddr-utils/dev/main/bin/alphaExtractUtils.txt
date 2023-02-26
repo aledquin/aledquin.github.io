@@ -1,0 +1,157 @@
+Usage:  alpha::lpe::runExtract (help|flat|flatRA|selectedNets) -libName <your-lib-name> -cellName <your-cell-name> [-run (yes|no|batch|interactive)] [other args ...]
+
+	This script is intended to streamline the two main types of extraction used for the alpha projects:  flat and selectedNets
+	Flat extracts are simple, down-to-the-device extracts, producing an hspice-able netlist, typically spf.
+	selectedNets extracts runs the ICV-based black-box-like flow, as outlined in our OneNote page here:
+	  onenote:http://sp-sg/sites/msip-eddr/proj/eddra/ckt/Shared%20OneNote/CircuitsTopLevel14nm/CAD/Extraction.one#Selected%20Nets%20Extraction%20(BBox)&section-id={449B2F79-22B6-41B2-8731-F45B419A2FDF}&page-id={C58E4CD2-642A-49DE-8424-3D7B5193BE3A}&end
+	These manual steps are done automatically:
+	-  Generation of config and equiv files, based on the data contained in /remote/proj/TYPE/PROJ/REL/design/bboxList.txt	
+	-  Hacking of the LVS runset
+	-  Hacking of the RCXT_sourceme file
+	
+	By default, the extraction is run in batch (-run batch).
+	-run interactive will cause the extraction to be run interactively. Little reason to do this.
+	-run (0|no|false) will get the simulation collateral to be set up, but not executed.
+
+	This flow itilizes pvbatch, the cad-supported method by which pv steps can be batched.
+	Collateral is set up in the dir  directory (-rundir arg).
+	  Default: /slowfs/sgscratch/$user/$prodName/$projName/$relName/verification/$stack/$libName/$cellName
+
+Default Arguments:
+	There is a mechamism by which default arguments can be defined at the project level:
+
+	alpha::lpe::setDefaultArg argName argValue
+
+	Example, defining cc and rcc as the default extraction types:
+	alpha::lpe::setDefaultArg xTypes {cc rcc}
+
+	This can go in the project pcs.tcl or env.tcl, as long as it follows the source alphaExtractUtils.tcl.
+	
+Required args:
+	  cellName:  Name of cell.
+	  libName:  Name of lib.
+
+Arguments you probably want to define:
+	  cornerVal: The BEOL corners to extract. Any number may be included.
+	  	   Typical: typical  (default)
+		   Functional corners: FuncCmax, FuncCmin, FuncRCmax, FuncRCmin
+		   3-sigma corners: SigCmax,SigCmin,SigRCmax,SigRCmin
+		   DPT Sigma corners: SigCmaxDP_ErPlus,SigCminDP_ErMinus,SigRCmaxDP_ErPlus,SigRCminDP_ErMinus
+		   DPT Functional corners: FuncCmaxDP_ErPlus,FuncCminDP_ErMinus,FuncRCmaxDP_ErPlusFuncRCminDP_ErMinus
+	  xTypes: List of the extraction types required.  Valid choices: r c cc rc rcc srccpcc sccprcc ccssrcc.  
+	    Case-insensitive. Default "rcc"
+	  operatingTemp:  List of corner/temp pairs, with commas separating the corner/value pairs thus:  
+	        -operatingTemp {typical 85,FuncCmax 0,FuncCmin 110}. 
+	        Corners should match those specified in xCorner.
+	  xtPowerExtract:  YES, NO, DEVICE_LAYERS,  Default: NO (imposed by alpha::lpe)
+
+Arguments you might want to define:
+	  checkName: Use custom PV gui name, not 'RCXT' or RCXTXA. For ex, -checkName RCXTNFG. Supported now only with type=flat (derived from RCXT)   
+	  xReduction: Network reduction; YES/NO.  Default MSIP${pvprefix}reduction 
+	  rundir:  Default /slowfs/sgscratch/$user/$prodName/$projName/$relName/verification/$stack/$libName/$cellName"
+	  gridOpts: Default imposed by alpha::lpe: {-conf /remote/sge/cells/snps/common/settings.sh -dp4 -WS5.0 -quick -wait}.  
+	    Set to "false" to run locally
+	  gridOS: alpha::lpe default: -WS5.0.  Only matters for gridOpts != false
+	  gridProc: alpha::lpe default: -dp4.  Only matters for gridOpts != false
+	  userGDS:  Use this to provide a specific gds.  Defaults to undefined (stream out a fresh gds)
+	  userNetlist: Use this to provide a specific cdl.  Defaults to undefined (stream out a fresh cdl)
+	  xtPowerNets:  Default MSIP${pvprefix}powerNets.  Set in alpha::lpe to {VDD VDDQ VSS} 
+	  virtualConnect: Default ""
+	  xtFormat:  MSIP${pvprefix}xtFormat.  Typically spf 
+	  outDir:  Default $projHome/design/$argArray(stack)/netlist/extract/$argArray(cellName)
+
+Arguments you might feel the need to touch, but probably shouldn't.
+	  extrPreservedConfigFile:  Used in selectedNets flow.
+	  extrPreservedEquivFile 
+	  runset:  from env ${pvprefix}RunsetFile indexed by $type. No need to hack for selectedNets; done for you.  
+	           Only specify if the flow is not working properly
+	  sourceFile:  Same as runset.
+	  xtSelNetsSRCCPCC:  MSIP${pvprefix}selNetsSRCCPCC.  Set ini alpha::lpe to track the supply nets. 
+	  xtSelNetsSCCPRCC :  MSIP${pvprefix}selNetsSCCPRCC.  Set ini alpha::lpe to track the supply nets. 
+	  xtSelNetsCCSSRCC :  MSIP${pvprefix}selNetsCCSSRCCC.  Set ini alpha::lpe to track the supply nets. 
+	  extractedNetlistPProcessor:  Default pref MSIP${pvprefix}extractedNetlistPostProcessEn. Forced to "" for selectedNets
+
+Arguments you don't want to touch unless you know what they do:
+	  tool:  icv, hercules, calibre. 
+	  runFlat:  Boolean. true for flat extracts, false for selectedNets. default value derived from MSIP${pvprefix}runFlat
+	  icvOpts:  default value derived from prefs MSIP${pvpvprefix}ndg, MSIP${pvpvprefix}nho, MSIP${pvprefix}nro
+	  viewSchematicName:  Default schematic
+	  viewSchematicLibName:  Default ""
+	  optionsFile:  from env ${pvprefix}OptionsFile indexed by $type
+	  layermap:  Default pref MSIP${pvprefix}layerMapFile, else env ${pvprefix}LayerMapFile, else env $LayerMapFile
+	  objectLayermap:  Default MSIP${pvprefix}objectLayerMapFile
+	  nettranOptions:  Default {-slash -cdl-p -mprop -cdl-a -cdl-fshort presistor}, MSIP${pvprefix}nettranOptions
+	  verifPostProc: Default false 
+	  calexOpts:  Default {-gds  }, if pref MSIP${pvprefix}runCalibreCalex, then MSIP${pvprefix}CalexGDS, MSIP${pvprefix}CalexMail, MSIP${pvprefix}CalexTestChip, else false
+	  calexFiles: Default {}, pref MSIP${pvprefix}CalexFileList
+	  calexExtraArg: Default ""
+	  stack: Defaults to project stack. $env(METAL_STACK)
+	  netViewSearch:  Default {cdl auCdl schematic symbol}  MSIP${pvprefix}viewSearchList
+	  netViewStop: Default MSIP${pvprefix}viewStopList
+	  userMWDB:  if MSIP${pvprefix}useMWDB, MSIP${pvprefix}MWDB else false
+	  cmdFile:  MSIP${pvprefix}cmdFile
+	  usercmdFile:  Default MSIP${pvprefix}incrementalCmdFile
+	  netlistPProc:  MSIP${pvprefix}netlistPostProcessingScript.  Diisabled (set to {}) for selectedNets
+	  netlister:  Default MSIP${pvprefix}netlister  (CDL typically)
+	  incNetlist: Default MSIP${pvprefix}includeNetlist, "" -> false
+	  TCADgrdFile: tcadgrd file for each corner.  Probably no good reason to touch this.
+	  XTMapFile:  Default MSIP${pvprefix}MapFile 
+	  xFile:  Default MSIP${pvprefix}XdevFile 
+	  rcxtTypes:  MSIP${pvprefix}types  >>>  Need to do something with this one.
+	  xTempSens: MSIP${pvprefix}temperatureSensitivityExtract, YES/NO
+	  xAccuracy: MSIP${pvprefix}accuracy 
+	  xAnalogSymmetricNets:  MSIP${pvprefix}analogSymmetricNets 
+	  xSubExtraction:  MSIP${pvprefix}subExtraction (NO) 
+	  xCrossRef:  MSIP${pvprefix}crossRef 
+	  xInst xSubCkt xCase xrmFloat xrmDangling xHierSeparator 
+	  ## parse_lpeNetlist.pl options
+	  xWidgetsList:   MSIP${pvprefix}widgetsList
+	  xPresmult:   MSIP${pvprefix}presmult
+	  xPcapmult:  MSIP${pvprefix}pcapmult 
+	  xUnflattenNetlist:  MSIP${pvprefix}unflattenNetlist
+	  xAddx:  MSIP${pvprefix}addx
+	  compressedGDS:  MSIP${pvprefix}useCompressedGDS 
+	  netlistBracketChange:  MSIPEnableRegularMapping 
+	  deleteEmptyCell:  MSIPDeleteEmptyCells 
+	  compressedLVSNetlist: MSIP${pvprefix}useCompressedNetlist.  Set internal to alpha::lpe to false to enable selectedNets port-order fix
+	  onlyGDS:  MSIP${pvprefix}onlyGDS 
+	  onlyNetlist: MSIP${pvprefix}onlyNetlist
+	  gdsExportTemplateFile:  MSIP${pvprefix}gdsExportTemplateFile 
+	  runHerculesServer:  Default localhost
+	  runCalibreServer:   Default localhost
+	  runICVServer:   Default localhost
+	  saveReportandData:  pref MSIP${pvprefix}saveReportandData 
+	  intDeliveries: pref MSIP${pvprefix}intDeliveries 
+	  xtGroundNode:  MSIP${pvprefix}groundNode 
+	  xtSeparateExtract: MSIP${pvprefix}separateExtract]
+	  renameType:  Default ""
+	  renameCell: Default ""
+	  targetTopCell: Default ""
+	  excludeCellList: Default ""
+	  excludeCell: Default ""
+	  metalShortingName: MSIP${pvprefix}metalShortingName
+	  toolExtraArg:  MSIP${pvprefix}${tool}ExtraArg 
+	  blackBoxConfigFile:  MSIP${pvprefix}blackboxConfig 
+	  cTemplateFile:  MSIP${pvprefix}blackboxConfig 
+	  lpePreProcFile: Default ""
+	  pinOptionsFile:  $env(${pvprefix}PinOptionsFile
+	  pcsOptionsFile:  $env(${pvprefix}pcsOptionsFile 
+	  xtFormatNet:  MSIP${pvprefix}xtNetNameFormat 
+	  xDpNumCores 
+	  extractViaCaps 
+	  libFilteredList 
+	  listOfDeleteSubs 
+	  selectedNetList 
+	  actionType 
+	  xnetViewSearch 
+	  xnetViewStop 
+	  resultDialogConfirm 
+	  removeJobObject 
+	  importFillLibraryName 
+	  importFillLocation 
+	  fillGDSType 
+	  enableFillCellCopy 
+	  enableFillFlatGDS 
+	  podPostProc 
+	  podPostProcOpt
+	  

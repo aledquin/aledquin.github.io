@@ -1,0 +1,12 @@
+get_ref_ccs
+CHECK PASSED
+PCSQA/module version: 2022.06-beta
+User: alvaro
+Run time: Mon Jul 18 16:14:49 2022
+Execution time: 00:00:00:33
+
+Information: Process ID for tool: 74255
+Project Status: In progress
+Reference CCS /remote/proj/cad/c141-ss5lpe-1.8v_A00/rel2.0.0 found in Porting Spec 0.95a (vici Id: 35965)
+Get reference CCS version from /remote/cad-rep/projects/ddr5/d920-ddr5-ss5lpe-18/rel0.95/cad/project.env
+Rule PCSQA-2.1qqq is not applicable; Creation date of reference CCS: 2022/03/13

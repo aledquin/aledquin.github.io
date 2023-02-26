@@ -1,0 +1,649 @@
+<?xml version="1.0"?><xml>
+
+Release Info
+
+
+
+Project
+d763-hbm3-v2-tsmc3eff-12-ew
+
+
+Project Type
+HBM3
+
+
+Release Version
+1.00a
+
+
+Reason for Release Creation
+LCA Release - Standard Configurable PHY
+
+
+Parent release
+c269-tsmc3eff-1.2v, 3.2.0
+
+
+Release Creation in ViCi
+2021-12-09
+
+
+Release Status
+In progress
+
+Release Participants
+
+
+
+SI/PI Lead
+
+
+SI modeling Lead
+
+
+Release Engineer
+
+
+Project Engineering Manager
+John McCready
+
+
+Product Line Owner
+Tom Dickson
+
+
+Primary CAD Engineer
+Alvaro Quintana
+
+
+Power Analysis Engineer
+
+
+Local CAD Engineer
+Larissa Nitchougovskaia
+
+
+Interop Engineer
+
+
+CAD Manager
+
+
+Build Engineer
+
+Setup CAD Environment from common Parent Project
+
+
+
+Parent selected release
+c269-tsmc3eff-1.2v, 3.2.0
+
+Technology Devices
+
+
+
+Foundry CDL Name
+crtmom_2t
+
+Foundry Model Name For using in Databook
+crtmom_2t
+
+Description
+2T RTMOM
+
+
+Foundry CDL Name
+nch_12_mac
+
+Foundry Model Name For using in Databook
+nch_12_mac
+
+Description
+I/O 1.2V NMOS
+
+
+Foundry CDL Name
+nch_lvt_mac
+
+Foundry Model Name For using in Databook
+nch_lvt_mac
+
+Description
+CORE LVT NMOS
+
+
+Foundry CDL Name
+nch_svt_mac
+
+Foundry Model Name For using in Databook
+nch_svt_mac
+
+Description
+CORE SVT NMOS
+
+
+Foundry CDL Name
+nch_ulvtll_mac
+
+Foundry Model Name For using in Databook
+nch_ulvtll_mac
+
+Description
+CORE ULVT-LL NMOS
+
+
+Foundry CDL Name
+nch_ulvt_mac
+
+Foundry Model Name For using in Databook
+nch_ulvt_mac
+
+Description
+CORE ULVT NMOS
+
+
+Foundry CDL Name
+ndio_12_mac
+
+Foundry Model Name For using in Databook
+ndio_12_mac
+
+Description
+I/O 1.2V N+/PW diode
+
+
+Foundry CDL Name
+ndio_hia12_mac
+
+Foundry Model Name For using in Databook
+ndio_hia12_mac
+
+Description
+I/O 1.2V N-HIA diode
+
+
+Foundry CDL Name
+ndio_mac
+
+Foundry Model Name For using in Databook
+ndio_mac
+
+Description
+CORE N+/PW diode
+
+
+Foundry CDL Name
+pch_12_mac
+
+Foundry Model Name For using in Databook
+pch_12_mac
+
+Description
+I/O 1.2V  PMOS
+
+
+Foundry CDL Name
+pch_lvt_mac
+
+Foundry Model Name For using in Databook
+pch_lvt_mac
+
+Description
+CORE LVT PMOS
+
+
+Foundry CDL Name
+pch_svt_mac
+
+Foundry Model Name For using in Databook
+pch_svt_mac
+
+Description
+CORE SVT PMOS
+
+
+Foundry CDL Name
+pch_ulvtll_mac
+
+Foundry Model Name For using in Databook
+pch_ulvtll_mac
+
+Description
+CORE ULVT-LL PMOS
+
+
+Foundry CDL Name
+pch_ulvt_mac
+
+Foundry Model Name For using in Databook
+pch_ulvt_mac
+
+Description
+CORE ULVT PMOS
+
+
+Foundry CDL Name
+pdio_hia12_mac
+
+Foundry Model Name For using in Databook
+pdio_hia12_mac
+
+Description
+1.2V 2T ESD diode P+/NW
+
+
+Foundry CDL Name
+rhim
+
+Foundry Model Name For using in Databook
+rhim
+
+Description
+High Resistor (TiN)
+
+
+Foundry CDL Name
+rmsp
+
+Foundry Model Name For using in Databook
+rmsp
+
+Description
+M0-AP Net Splitter
+
+PVT Corners
+
+
+
+Corner Type
+Standard Product
+
+Frequency Mb/s
+9600
+
+Case
+FF
+
+Core Voltage (V)
+0.825
+
+PLL Voltage (V)
+1.1
+
+IO Voltage (V)
+0.4 (DDR5)
+
+Temperature (C)
+-40/0/125
+
+Extraction Corner
+cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+
+
+Corner Type
+Standard Product
+
+Frequency Mb/s
+9600
+
+Case
+SS
+
+Core Voltage (V)
+0.675
+
+PLL Voltage (V)
+1.1
+
+IO Voltage (V)
+0.4 (DDR5)
+
+Temperature (C)
+-40/0/125
+
+Extraction Corner
+cworst_CCworst, rcworst_CCworst, cbest_CCbest, rcbest_CCbest
+
+
+Corner Type
+Standard Product
+
+Frequency Mb/s
+9600
+
+Case
+TT
+
+Core Voltage (V)
+0.75
+
+PLL Voltage (V)
+1.1
+
+IO Voltage (V)
+0.4 (DDR5)
+
+Temperature (C)
+25
+
+Extraction Corner
+typical
+
+IP TAG
+
+
+
+Component
+AWORD
+
+_Instance_tag
+dwc_hbmphy_aword_ew
+
+Component
+AWORD
+
+Vendor
+Synopsys Inc.
+
+Component
+AWORD
+
+Product
+dwc_hbm3_tsmc_CLN03FF_0.75_1.2
+
+Component
+AWORD
+
+Version
+1.0
+
+Component
+AWORD
+
+Metric
+Metric value in DDR PHY is calculated automatically by script
+
+Component
+AWORD
+
+_IP_Type
+PHY:HBM3
+
+Pin Version
+
+
+
+Pin product
+hbm3
+
+Pin product version
+ver6.02
+
+Automotive Delivery
+
+
+
+Automotive Delivery
+N/A
+
+Technology Process
+
+
+
+Foundry Metal Option
+15M_1Xa_h_1Xb_v_1Xc_h_1Xd_v_1Ya_h_1Yb_v_4Y_hvhv_2Yy2Z
+
+PHY Metal Option
+
+Site locations
+
+
+Main Design Site
+US01
+
+Alternate design sites
+
+
+Site
+US01
+
+Disk Path
+/remote/us01sgnfs00266
+
+Design Restricted
+No
+
+Sub Projects/Components
+
+
+
+Component
+AWORD
+
+Project name
+d763-hbm3-v2-tsmc3eff12_aword
+
+Release/Version
+1.00a
+
+Version Note
+EW
+
+Path to component Release notes and version
+DI CRR:&#xD;&#xD;RTL CRR:&#xD;&#xD;PWL CRR:&#xD;&#xD;HSPICE CRR:&#xD;&#xD;IBIS CRR:&#xD;
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+DWORD
+
+Project name
+d763-hbm3-v2-tsmc3eff12_dword
+
+Release/Version
+1.00a
+
+Version Note
+EW
+
+Path to component Release notes and version
+DI CRR:&#xD;&#xD;RTL CRR:&#xD;&#xD;PWL CRR:&#xD;&#xD;HSPICE CRR:&#xD;&#xD;IBIS CRR:&#xD;
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+HIP
+
+Project name
+
+Release/Version
+
+Version Note
+N/A
+
+Path to component Release notes and version
+Not Applicable for a Configurable PHY Release
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+MIDSTACK
+
+Project name
+d763-hbm3-v2-tsmc3eff12_midstack
+
+Release/Version
+1.00a
+
+Version Note
+EW
+
+Path to component Release notes and version
+DI CRR:&#xD;&#xD;&#xD;RTL CRR:&#xD;&#xD;&#xD;HSPICE CRR:&#xD;
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+MSCTRL
+
+Project name
+d763-hbm3-v2-tsmc3eff12_msctrl
+
+Release/Version
+1.00a
+
+Version Note
+EW
+
+Path to component Release notes and version
+DI CRR:&#xD;&#xD;&#xD;RTL CRR:&#xD;
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+Utility Cells Library
+
+Project name
+d763-hbm3-v2-tsmc3eff12_utility_cells
+
+Release/Version
+1.00a
+
+Version Note
+EW
+
+Path to component Release notes and version
+CKT CRR:&#xD;
+
+Component tarball
+
+Component Ready
+No
+
+
+Component
+CTB
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+1.00a
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+dfi_shim
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+???
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+Example
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+1.00a
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+interposer
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+N/A
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+MACRO
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+1.00a
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready
+
+
+Component
+Support
+
+Project name
+N/A
+
+Release/Version
+
+Version Note
+1.00a
+
+Path to component Release notes and version
+
+Component tarball
+
+Component Ready

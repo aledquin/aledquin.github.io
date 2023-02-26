@@ -1,0 +1,13 @@
+## Include CCS defined libraries
+INCLUDE ${MSIP_PROJ_ROOT}/cad/${MSIP_CAD_PROJ_NAME}/${MSIP_CAD_REL_NAME}/design/lib.defs
+
+# For nodes > 20nm
+#INCLUDE ${MSIP_PROJ_ROOT}/cad/${MSIP_CAD_PROJ_NAME}/${MSIP_CAD_REL_NAME}/design/lib_common.defs
+
+### Libraries from CAD
+# - For 20nm and smaller nodes, the PCS should not re-define CCS libraries unless a very strong reason exists
+## pPDK libraries temporarily setup in PCS for newer version validation purpose before official released to CCS, then should be removed when available in CCS
+# undefine lpplib2 (or lpplib3)
+# define lpplib2 (or lpplib3) <fullpath>
+##Include metalstack dependant Libraries
+#INCLUDE $PROJ_HOME/cad/$METAL_STACK/lib.defs

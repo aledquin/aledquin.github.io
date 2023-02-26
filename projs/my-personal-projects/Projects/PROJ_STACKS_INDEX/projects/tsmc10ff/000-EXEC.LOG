@@ -1,0 +1,60 @@
+n501-dpalt-c10-tsmc10ff-18-ns.txt
+INFO: CCS CCS 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n104-c10-tsmc10ff-18-ns.txt
+INFO: tsmc10ff 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n504-dpalt-c10-tsmc10ff-18-ns.txt
+INFO: tsmc10ff 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u108-cmnblks-tsmc10ff-18-ns.txt
+INFO: tsmc10ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l004-scl-tsmc10ff-18.txt
+INFO: tsmc10ff 18_atrus" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m002-mem-tsmc10ff-0.75v-1.8v.txt
+INFO: CCS CCS "c233-tsmc10ff-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+h032-hsic-tsmc10ff-0.75v-1.8v-ns.txt
+INFO: tsmc10ff 18_atrus" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g121-dphy-tsmc10ff-18.txt
+INFO: tsmc10ff 18_atrus 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g217-mphy-tsmc10ff-18.txt
+INFO: common common "c238-tsmc10ff-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+l230-std-tsmc10ff-1.8v_atrus.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x642-usb2-tsmc10ff-18-ns.txt
+INFO: tsmc10ff 18_atrus" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x649-usb2-tsmc10ff-18-ns.txt
+INFO: tsmc10ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d515-ddr43-tsmc10ff18.txt
+INFO: tsmc10ff 18" "rel5.0"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+p004-emclk-tsmc10ff-1.8.txt
+INFO: CCS CCS "c238-tsmc10ff-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t016-pqv-tsmc10ff-1.8.txt
+INFO: CCS CCS "c238-tsmc10ff-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+

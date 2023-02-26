@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!-- created by Custom Compiler (TM), build #, on Fri Jul 22 15:43:02 2022
+-->
+<synopsysFile name="synopsysRecentFiles" version="1.1">
+        <recentFiles>
+                <file view="layout" file="maskLayout" library="dummyQALib" cell="emptyCell" mode="write"/>
+        </recentFiles>
+</synopsysFile>

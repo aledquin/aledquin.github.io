@@ -1,0 +1,2135 @@
+#!/depot/perl-5.14.2/bin/perl
+###############################################################################
+#
+# Name    : alphaHLDepotPhyvRelease
+# Author  : John Fisher, Ahmed Hesham(ahmedhes)
+# Date    : 2015-04-28
+# Purpose : This script will copy the generated release files from a 
+#           verification path to the depot release path. It will also call the 
+#           pincheck script for sanity checks.
+#
+# Modification History
+#     000 John Sheridan Fisher, 2015-04-28
+#         Created this script
+#     001 Ahmed Hesham(ahmedhes), 2022-03-30
+#         Refactored this script
+#     002 James Laderoute, 2022-12-01
+#         P10020416-38478 customerMacros  
+#     
+###############################################################################
+use strict;
+use warnings;
+use Getopt::Long;
+use File::Copy;
+use File::Path;
+use File::Basename;
+use Data::Dumper;
+$Data::Dumper::Sortkeys = sub { [sort {$b cmp $a} keys %{$_[0]}] };
+use Date::Parse; 
+use Date::Manip;
+use POSIX qw(strftime);
+use Term::ANSIColor;
+use Pod::Usage;
+
+use Cwd;
+use Cwd     qw( abs_path );
+use Carp    qw( cluck confess croak );
+use FindBin qw( $RealBin $RealScript );
+
+use lib "$RealBin/../lib/perl/";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+use alphaHLDepotRelease;
+
+#--------------------------------------------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $DEBUG        = NONE;
+our $VERBOSITY    = NONE;
+our $DA_TESTING   = undef;     # Is the DDR-DA team running functional tests?
+our $PROGRAM_NAME = $RealScript;
+our $LOGFILENAME  = getcwd() . "/$PROGRAM_NAME.log";
+our $VERSION      = get_release_version();
+#------------------------------------------------------------------------------
+# Global Vars
+#------------------------------------------------------------------------------
+my $p4LogFile            = "$PROGRAM_NAME.p4";
+my $date                 = strftime "%a %b %e %H:%M:%S %Y", localtime;
+my $rel; ## Need depot release version for overriding. Jira P10020416-39944
+
+BEGIN { 
+   our $AUTHOR='jfisher, ahmedhes, juliano'; 
+    #$STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+    $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+   header();
+}
+#Capture warning by perl and print them in a warning format to make finding them easier
+local $SIG{__WARN__} = sub{
+   my $msg = shift;
+   wprint($msg);
+};
+Main();
+END {
+    local $?;   ## adding this will pass the status of failure if the script
+                ## does not compile; otherwise this will always return 0
+    footer();
+    write_stdout_log( $LOGFILENAME );
+}
+
+#------------------------------------------------------------------------------
+#   MAIN
+#------------------------------------------------------------------------------
+sub Main {
+   my @orig_argv = @ARGV;  # keep this here cause GetOpts modifies ARGV
+
+   # Process the arguments passed to the script
+   my( $opt_dryrun, $opt_nousage, $opt_user, $opt_verifpath,
+       $opt_p4ws,   $opt_bracket, $opt_rel ) = process_cmd_line_args();
+   
+   # A call to the usage statistics
+   unless( $DEBUG || $opt_nousage ){
+      utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@orig_argv );
+   }
+   
+   #-------------------------------------------------
+   # Extract project info from the verification path
+   my ( $projType, $proj, $pcsRel, $metalStack, $cdLib, $macro,
+        $verifPathAbs ) = parse_verifpath( $opt_verifpath, $opt_user );
+   #-------------------------------------------------
+   # Set project's path
+   my $projPathAbs = "/remote/cad-rep/projects/$projType/$proj/$pcsRel";
+   $projPathAbs = $verifPathAbs if( defined $DA_TESTING );
+
+   #-------------------------------------------------
+   # Call get_project_file_path to find the first valid location of the input files.
+   # Returns NULL_VAL if none of the paths contain the expected file.
+   my ( $fname_projMacroFile, 
+        $fname_projNtFile,
+        $fname_projRelFile,
+        $fname_projVerifFile ) = get_project_files_path( $projPathAbs, $projType, $proj, $pcsRel );
+
+   my $fname_projEnv = "$projPathAbs/cad/project.env";
+   
+   ## Welcome
+   iprint("Attempting to copy layout verification files from:\n\t'$verifPathAbs'\n");
+   iprint("\tto the release path defined in the project release file:\n".
+          "\t\t'$fname_projRelFile'\n");
+   iprint("Writing '$PROGRAM_NAME.log' log file...\n");
+   
+   ## setup p4 log file 
+   iprint("Setup log file to capture perforce commands issued during this run: '$p4LogFile'\n");
+   my $cmd  = "echo '##output of p4 commands' > $p4LogFile";
+   run_system_cmd( $cmd, $VERBOSITY );
+   
+   # Read project legalRelease file into %legalRelease hash
+   my %legalRelease;
+   # Call process project release file subroutine that reads the legal release for the project
+   # and does additional processing afterwards.
+   processLegalReleaseFile($fname_projRelFile, \%legalRelease);
+   
+   # Check if release_gds_cdl parameter in the legal release is set to 'HIPRE' (default)
+   # Otherwise, warn user and ensure they have approval from CKT PM - Jira P10020416-35797
+   if ($legalRelease{'relGdsCdl'} ne 'HIPRE'){
+      wprint( "Parameter 'release_gds_cdl' not set to default 'HIPRE'. "
+             ."Before proceeding, ensure you have approval from CKT PM.\n"
+            );
+      wprint("Hit ENTER to continue ...\n");
+      # 7/29/2022 ljames
+      # If we are running functional tests of this script and it ends up on 
+      # this line, then the test will be waiting forever; because there is
+      # nobody looking at this who can press ENTER.
+      #
+      unless( defined $DA_TESTING ){
+        <STDIN>;
+      }
+   }
+
+   # Rel version override if $opt_rel provided. Jira P10020416-39944
+   # Need to add the macro to an array since the subroutine takes in an array reference
+   my @macros;
+   push (@macros, $macro);
+   if (defined $opt_rel){
+      $rel = verifyRelVersion($legalRelease{"p4ReleaseRoot"}, $legalRelease{"rel"}, $opt_rel, \@macros);
+   } else {
+      $rel = $legalRelease{"rel"};
+   }
+
+   # Check if the metal stack parsed from the verfication path is a valid metal stack
+   # and set the metalStackIp according to the verifcation metal stack
+   my ( $metalStackIp ) = check_metal_stack($metalStack, \%legalRelease);   
+    
+   # Call 'set_release_path' to define path where each file should be released.
+   # Mapping (source=>destination) of file released is stored in '%fileMap'
+   my ( %relPaths );
+   my $relPathAbs = set_release_path( $macro, $metalStack, $metalStackIp, \%legalRelease,
+                                      \%relPaths, $opt_p4ws, $opt_dryrun
+                    );
+   
+   my ( %fileMap, %sourcePaths );
+   # Create the file map after populating the source files paths and reading the legal verification
+   # file
+   gprint("Verification Area (pre-lim): \$verifPathAbs = $verifPathAbs\n" );
+   ( $verifPathAbs ) = create_file_map(
+       $macro,               $verifPathAbs,  $relPathAbs,  $opt_user,
+       $fname_projVerifFile, $metalStack,    $metalStackIp,
+       $fname_projRelFile,   \%legalRelease, \%fileMap,    \%sourcePaths, 
+       \%relPaths,           $opt_dryrun);
+
+   my $p4filepath = "//depot/".$legalRelease{"p4ReleaseRoot"}
+                  . "/ckt/rel/".$macro."/".$legalRelease{"rel"}."/macro";
+   my $pincheckFlowCheck = checkPinCheckExist( "$p4filepath/..." );
+   my @allStacks = determine_metal_stacks( $macro, $p4filepath, $relPathAbs,
+                                           $pincheckFlowCheck, \%legalRelease,
+   );
+   
+   my ( %lefdiffFiles );
+
+   if ($pincheckFlowCheck == TRUE){
+      foreach my $stack (@allStacks){
+         # Setup the lefdiff files, revert the release lef if it was checked-out
+         setup_lefdiff_files($macro, $pincheckFlowCheck, $relPathAbs, $stack, $metalStackIp, $opt_dryrun, \%legalRelease,
+                           \%sourcePaths, \%relPaths, \%lefdiffFiles);
+      }
+   } else {
+      # Setup the lefdiff files, revert the release lef if it was checked-out
+      setup_lefdiff_files($macro, $pincheckFlowCheck, $relPathAbs, $metalStack, $metalStackIp, $opt_dryrun, \%legalRelease,
+                        \%sourcePaths, \%relPaths, \%lefdiffFiles);
+   }
+
+   #--------------------------------------------------------
+   # Prepare the files and copy them to the release directory. Also, build 
+   # cmd to run alphaPinCheck script on gds/lef/cdl, if available, in pincheckCmd
+   my ( @missingFiles );
+   my $pincheckCmdSegment = copy_files($macro, $metalStack, $verifPathAbs, $relPathAbs,
+                                       $projPathAbs, $fname_projEnv, $opt_dryrun,
+                             \%legalRelease, \%fileMap, \%relPaths, \@missingFiles
+   );
+   
+   my ( $lefdiffDirtysCount,  $lefdiffWarningsCount, $fname_pincheckLogFile,
+        $pincheckDirtysCount, $pincheckWarningsCount );
+
+   if ($pincheckFlowCheck == TRUE){
+      foreach my $stack (@allStacks){
+         # Create the pincheck shell file, including lefdiff, and run it
+         ( $lefdiffDirtysCount,  $lefdiffWarningsCount, $fname_pincheckLogFile,
+           $pincheckDirtysCount, $pincheckWarningsCount ) =
+                    run_pincheck_script(
+                        $macro, $pincheckFlowCheck, $opt_p4ws, $opt_bracket,
+                        $projPathAbs, $relPathAbs, $pincheckCmdSegment, $projType,
+                        $stack, $metalStackIp, $opt_dryrun, \%legalRelease,
+                        \%sourcePaths, \%relPaths, \%lefdiffFiles, \@missingFiles
+                    ); 
+      }
+   } else {
+      # Create the pincheck shell file, including lefdiff, and run it
+      ( $lefdiffDirtysCount,  $lefdiffWarningsCount, $fname_pincheckLogFile,
+        $pincheckDirtysCount, $pincheckWarningsCount ) =
+                  run_pincheck_script(
+                        $macro, $pincheckFlowCheck, $opt_p4ws, $opt_bracket,
+                        $projPathAbs, $relPathAbs, $pincheckCmdSegment,
+                        $projType, $metalStack, $metalStackIp, $opt_dryrun,
+                        \%legalRelease, \%sourcePaths, \%relPaths, \%lefdiffFiles,
+                        \@missingFiles
+                  ); 
+   }
+   
+   # Print the p4 submit command for the macro released
+   print_p4_submit_command($macro, $relPathAbs, $opt_dryrun, \%legalRelease);
+   
+   # Print the dirtys/warning from the pincheck and lefdiff scripts and the list of missing files 
+   print_warnings($macro, $lefdiffDirtysCount, $lefdiffWarningsCount,
+                  $fname_pincheckLogFile,      $pincheckDirtysCount,
+                  $pincheckWarningsCount,     \%legalRelease,
+                  \%lefdiffFiles,             \@missingFiles
+   );
+
+   iprint("All done!\n\n");
+} # End Main
+
+#-----------------------------------------------------------
+#  Decide what metal stacks to include based on
+#     (1) usingi LEGACY vs new pin check flow
+#     (2) macro is *_blocks, a cover cell, _tcoil_replica or a std macro.
+#-----------------------------------------------------------
+sub determine_metal_stacks($$$$$){
+    print_function_header();
+    my $macro              = shift;
+    my $p4filepath         = shift;
+    my $relPathAbs         = shift;
+    my $pincheck_FlowCheck = shift;
+    my %legalRelease       = %{ +shift };
+
+    my @mstacks;
+    if( $pincheck_FlowCheck == FALSE ){
+       wprint("No pincheck folder/files found, defaulting to LEGACY flow\n");
+       if( $macro =~ m/_blocks/){
+           push @mstacks, $legalRelease{"metalStack"};
+       } elsif ($macro =~ /cover/ || $macro =~ /_tcoil_replica/){
+           # P10020416-38355: use metalStackCover for tcoil_replica
+           push @mstacks, $legalRelease{"metalStackCover"};
+       } else {
+           push @mstacks, $legalRelease{"metalStackIp"};
+       }
+    } elsif( $pincheck_FlowCheck == TRUE ){
+       wprint( "Pincheck folder and files found for macro '$macro', "
+              ."defaulting to NEW flow\n" );
+       my ($stdout, $run_status) = run_system_cmd("p4 sync -f $p4filepath/pincheck/...");
+       dprint(HIGH, "P4 sync command return: $stdout");
+       if ($stdout !~ m/refreshing/ && $stdout !~ m/up-to-date/ && $stdout !~ m/added/ || $run_status){
+            fprint("P4 reported the following error: $stdout");
+       }
+       @mstacks = da_findSubdirs("$relPathAbs/$macro/".$legalRelease{"rel"}
+              ."/macro/pincheck");
+    } elsif( $pincheck_FlowCheck == NULL_VAL ){
+       fatal_error( "File path doesn't exist or invalid:\n\t '$p4filepath'\n" );
+    } else {
+       fatal_error( "Something went wrong ... unexpected return value from "
+              ."subroutine. Contact $main::AUTHOR\n" );
+    }
+    print_function_header();
+    return( @mstacks );
+}
+
+#-------------------------------------------------------------------------------
+#  parse the verification path from the arguments
+#-------------------------------------------------------------------------------
+sub parse_verifpath($$){
+   print_function_header();
+   my $verifPath = shift;
+   my $opt_user  = shift;
+      
+   my $verifPathAbs = abs_path($verifPath);
+   
+   my ( $projType, $proj, $cdRel, $metalStack, $cdLib, $macro );
+   
+   if(!-e $verifPath){
+      fatal_error("Verification path '$verifPath' does not exist.\n");
+   }elsif($verifPathAbs =~ m|/$opt_user/(${\NFS})/(${\NFS})/(${\NFS})/verification/
+                             (${\NFS})/(${\NFS})/(${\NFS})/?$|x){
+      $projType   = $1;
+      $proj       = $2;
+      $cdRel      = $3;
+      $metalStack = $4;
+      $cdLib      = $5;
+      $macro      = $6;
+   }elsif($verifPathAbs =~ m|/$opt_user/verification/(${\NFS})/(${\NFS})/(${\NFS})/
+                             (${\NFS})/(${\NFS})/(${\NFS})/?$|x){
+      $projType   = $1;
+      $proj       = $2;
+      $cdRel      = $3;
+      $metalStack = $4;
+      $cdLib      = $5;
+      $macro      = $6;
+   }else{
+      fatal_error("Resolved verification path '$verifPathAbs' is not valid and must end with\n".
+             "\t\t.../${opt_user}/<projSPEC>/verification/".
+                                  "<metal_stack>/<CD_lib>/<macro>\n".
+             "\tor\n".
+             "\t\t.../${opt_user}/verification/<projSPEC>/".
+                                  "<metal_stack>/<CD_lib>/<macro>\n"
+      );
+   }
+   dprint(SUPER, "\$projType   = $projType  \n" ); 
+   dprint(SUPER, "\$proj       = $proj      \n" ); 
+   dprint(SUPER, "\$cdRel      = $cdRel     \n" ); 
+   dprint(SUPER, "\$metalStack = $metalStack\n" ); 
+   dprint(SUPER, "\$cdLib      = $cdLib     \n" ); 
+   dprint(SUPER, "\$macro      = $macro     \n" ); 
+   prompt_before_continue(CRAZY);
+   print_function_footer();
+   return( $projType, $proj, $cdRel, $metalStack, $cdLib, $macro, $verifPathAbs );
+}
+
+#-------------------------------------------------------------------------------
+#  check that the metal stack exists in the legal release file, and set the 
+#  meta stack Ip for the supplied metal stack
+#-------------------------------------------------------------------------------
+sub check_metal_stack($$){
+   print_function_header();
+   my $metalStack        = shift;
+   my $href_legalRelease = shift;
+   
+   my $metalStackIp;
+   # If the metal stack in the verification path does not exist in the list of metal
+   # stacks or the cover stack in the legal release file, print an error but continue
+   my @mStack = split(/\s+/,$href_legalRelease->{'metalStack'});
+   my @cStack = split(/\s+/,$href_legalRelease->{'metalStackCover'});
+   unless( (grep{/$metalStack/} @mStack) ||
+           (grep{/$metalStack/} @cStack)   ){
+      eprint("Verification metal stack '$metalStack' does not ".
+             "match with release metal stack or cover metal stack.\n");
+   }
+   
+   # If the stack hash contains the metal stack, then set the metalStackIp using it
+   if( defined($href_legalRelease->{'stackHash'}->{$metalStack}) ){
+      $metalStackIp = $href_legalRelease->{'stackHash'}->{$metalStack};
+   }else{
+      $metalStackIp = $href_legalRelease->{'metalStackIp'}
+   }
+   hprint( "Setting metal stack IP from legalRelease.txt: '$metalStackIp' \n" );
+   
+   print_function_footer();
+   return ( $metalStackIp );
+}
+
+#-------------------------------------------------------------------------------
+#  set the release path for the release items
+#   my ( $relPathAbs ) = set_release_path($macro, $metalStack, $metalStackIp, \%legalRelease, \%relPaths);
+#-------------------------------------------------------------------------------
+sub set_release_path($$$$$$){
+   print_function_header();
+   my $macro             = shift;
+   my $metalStack        = shift;
+   my $metalStackIp      = shift;
+   my $href_legalRelease = shift;
+   my $href_relPaths     = shift;
+   my $opt_p4ws          = shift;
+   my $opt_dryrun        = shift;
+
+   
+   my $username = get_username();
+   ## set release path
+   ##  check for p4_ws link
+   my $relPathBase = "/u/${username}/p4_ws";
+      $relPathBase = "/u/${username}/$opt_p4ws" if( defined $opt_p4ws );
+
+   unless( -e $relPathBase ){
+      fatal_error("P4 path '$relPathBase' does not exist.\n".
+             "\tPlease ensure that sym-link to the P4 workspace exists: '$opt_p4ws'.\n");
+   }
+   
+   ##  check for depot release path existing
+   my $relPath = "$relPathBase/$href_legalRelease->{'p4ReleaseRoot'}/ckt/rel";
+   unless( -e $relPath ){
+      fatal_error("Release path '$relPath' does not exist.\n".
+             "Please check that this work space 'p4 client' contains\n".
+             "\t//depot/$href_legalRelease->{'p4ReleaseRoot'}/...\n".
+             "\t//msip_cd_${username}/$href_legalRelease->{'p4ReleaseRoot'}/...\n");
+   }
+   
+   ## check for macro release sync
+   my $relPathAbs = abs_path($relPath);
+   unless( -e "${relPathAbs}/${macro}/$rel" ){
+      fatal_error("IP release path '${relPathAbs}/${macro}/$rel' ".
+             "does not exist.\n\tPlease ensure that the circuit lead has seeded the depot ".
+             "for this IP, then sync for this release: \n\t\tp4 sync ".
+             "'${relPathAbs}/${macro}/$rel/...'\n");
+   }
+
+   dprint(HIGH, "\$relPathBase => $relPathBase\n");
+   dprint(HIGH, "\$relPath     => $relPath    \n");
+   dprint(HIGH, "\$relPathAbs  => $relPathAbs \n");
+
+   ## if the macro is a covercell, tcoil_replica, or utility/repeater blocks use the full metal stack
+   ## else use the metal stack ip
+   my $mstack;
+   my $rel_path = "${relPathAbs}/${macro}/$rel/macro";
+   ## setup paths for LEF | GDS | CDL 
+   if( $macro =~ /blocks/i   || $macro =~ /cover/i  || $macro =~ /_tcoil_replica/i){
+      # P10020416-38355: use full metal stack for tcoil_replica
+      $mstack = $metalStack;
+   }else{
+      $mstack = $metalStackIp;
+      $href_relPaths->{'techRev'}  = "$rel_path/netlist/$mstack/techrevision.v";      
+   }
+   $href_relPaths->{'lef'}         = "$rel_path/lef/$mstack/${macro}.lef";
+   $href_relPaths->{'lefMerged'}   = "$rel_path/lef/$mstack/${macro}_merged.lef";
+   $href_relPaths->{'gds'}         = "$rel_path/gds/$mstack/${macro}.gds.gz";
+   $href_relPaths->{'gdsLayerMap'} = "$rel_path/gds/$mstack/layerMap_${metalStack}.txt";
+   $href_relPaths->{'cdl'}         = "$rel_path/netlist/$mstack/$macro.cdl";
+   
+   dprint_dumper(HIGH, "\%relPaths   => " ,$href_relPaths);
+
+   ## Automatically sync views per Jira P10020416-40556
+   hprint("P4 syncing all PHYV views to ensure latest revision is available...\n");
+   if( defined($href_relPaths->{'techRev'}) ){
+      run_p4_cmd($opt_dryrun, "p4 sync -f $href_relPaths->{'techRev'}",     $VERBOSITY);
+   }
+   run_p4_cmd($opt_dryrun, "p4 sync -f $href_relPaths->{'lef'}",         $VERBOSITY);
+   run_p4_cmd($opt_dryrun, "p4 sync -f $href_relPaths->{'lefMerged'}",   $VERBOSITY);
+   run_p4_cmd($opt_dryrun, "p4 sync -f $href_relPaths->{'gds'}",         $VERBOSITY);
+   run_p4_cmd($opt_dryrun, "p4 sync -f $href_relPaths->{'gdsLayerMap'}", $VERBOSITY);
+   run_p4_cmd($opt_dryrun, "p4 sync -f $href_relPaths->{'cdl'}",         $VERBOSITY);
+
+   print_function_footer();
+   return($relPathAbs);
+} # End of set_release_path
+
+#-------------------------------------------------------------------------------
+#  Create the file map linking the verification type and its release path
+#      In other words, figure out the mapping of user's files (verification area)
+#      to destination (//depot) files so we can release/copy them.
+#-------------------------------------------------------------------------------
+sub create_file_map($$$$$$$$$$$$){
+   print_function_header();
+   my $macro               = shift;
+   my $verifPathAbs        = shift;
+   my $relPathAbs          = shift;
+   my $opt_user            = shift;
+   my $fname_projVerifFile = shift;
+   my $metalStack          = shift;
+   my $metalStackIp        = shift;
+   my $fname_legalRelease  = shift;
+   my $href_legalRelease   = shift;
+   my $href_fileMap        = shift;
+   my $href_sourcePaths    = shift;
+   my $href_relPaths       = shift;
+   my $opt_dryrun          = shift;
+
+   my %customerMacroHash;  # will affect calibre reports
+
+   if ( exists $href_legalRelease->{'customerMacro'} ){
+       my $aref_customer_macro = $href_legalRelease->{'customerMacro'};
+       foreach my $customer_macro ( @$aref_customer_macro ){
+           $customerMacroHash{"$customer_macro"} = 1;
+       }
+   }
+
+   ## Setup the path for the verification files
+   ( $verifPathAbs ) = set_verif_paths($macro, $verifPathAbs, $opt_user,
+                                          $href_legalRelease, $href_sourcePaths);
+   vhprint(LOW,"Verification Area determined: \$verifPathAbs = $verifPathAbs\n" );
+
+   # Get verification types from the legalVerifs file
+#   my %legalVerifs = parseLegalVerifFile( $fname_projVerifFile );
+#   dprint_dumper(HIGH,"\%legalVerifs => " ,\%legalVerifs);
+    my %legalVerifs;
+    my $aref_icv_report_list = $href_legalRelease->{'icv_report_list'};
+    foreach my $report ( @$aref_icv_report_list ){
+        $legalVerifs{"icv/$report"} = $report; 
+    }
+
+    my $aref_calibre_report_list = $href_legalRelease->{'calibre_report_list'};
+    foreach my $report ( @$aref_calibre_report_list ){
+        $legalVerifs{"calibre/$report"} = $report; 
+    }
+
+
+   if( ($href_legalRelease->{'relGdsCdl'} ne 'HIPRE')  &&
+       (!defined($legalVerifs{"$href_legalRelease->{'relGdsCdl'}/lvs"})) ){
+      fatal_error("Failed to find verif '$href_legalRelease->{'relGdsCdl'}/lvs' in ".
+             "'$fname_projVerifFile' project verif file, which is required for ".
+             "GDS/CDL file release.");
+   }
+  
+   iprint("Setting file map for PHYV release...\n");   
+   
+   my ( $verifType, $verifRel, $verifSrc );
+   ## build verif paths for each verif in (PCS legalVerifs file)
+   ## P10020416-38478 ; legalVerifs file has been replaced with variables 
+   ##                   in the legalRelease file. 12/1/2022, ljames
+   my $lineNumber=0;
+   foreach my $legalVerif (sort keys %legalVerifs){
+      $lineNumber++;
+      ## for Calibre verifs 
+      if( $legalVerif =~ /^(calibre)\// ){
+          # P10020416-38478 ljames; we only care about calibre reports if the
+          # macro is a customer macro
+         if ( exists $customerMacroHash{"$macro"} ){
+             $verifType = $legalVerifs{$legalVerif};
+             $verifRel  = "${relPathAbs}/${macro}/$rel/macro/".
+                          "calibre/${verifType}/${verifType}_${macro}_${metalStack}.rpt";
+             if( $href_legalRelease->{'relGdsCdl'} eq 'HIPRE' ){
+                $verifSrc = "$verifPathAbs/calibre/${verifType}/".
+                            "${verifType}_${macro}_${metalStack}.rpt";
+             }else{
+                ## for LVS files
+                if( $verifType eq 'lvs' ){
+                   $verifSrc = "$verifPathAbs/${verifType}_calibre/cell.results";
+                ## for ANT files
+                }elsif( $verifType eq 'erc' ){
+                   $verifSrc = "$verifPathAbs/lvs_calibre/erc_summary.report";
+                ## assume all other are DRC type decks
+                }else{
+                   $verifSrc = "$verifPathAbs/${verifType}_calibre/drc_summary.report";
+                }
+             }
+             $href_fileMap->{'calibre'}->{$verifSrc} = $verifRel;
+             iprint("Processing '$legalVerif' for customerMacro '$macro'\n");
+             viprint(LOW,    "\tit is mentioned in the 'customerMacro' setting of the legalRelease file\n");
+             viprint(MEDIUM, "\tThe legalRelease filename is '$fname_legalRelease'\n");
+         } ## end if(exists $customerMacroHash $macro)
+      } ## end  if($legalVerif =~ /^(calibre)\//)
+      ## for ICV verifs
+      elsif( $legalVerif =~ /^(icv)\// ){
+         $verifType = $legalVerifs{$legalVerif};
+         $verifRel = "${relPathAbs}/${macro}/$rel/macro/".
+                     "icv/${verifType}/${verifType}_${macro}_${metalStack}.rpt";
+         if( $href_legalRelease->{'relGdsCdl'} eq 'HIPRE' ){
+               $verifSrc = "$verifPathAbs/icv/${verifType}/".
+                           "${verifType}_${macro}_${metalStack}.rpt";
+         }else{
+            ## for LVS files
+            if( $verifType eq 'lvs' ){
+               $verifSrc = "$verifPathAbs/${verifType}_icv/${macro}.LVS_ERRORS";
+            ## for ERC files
+            }elsif( $verifType eq 'erc' ){
+               $verifSrc = "$verifPathAbs/lvs_icv/${macro}.LAYOUT_ERRORS";
+            ## for LVSINT files
+            }elsif( $verifType eq 'lvsint' ){
+               $verifSrc = "$verifPathAbs/${verifType}_icv/${macro}.LVS_ERRORS";
+            ## for ERCINT files
+            }elsif( $verifType eq 'ercint' ){
+               $verifSrc = "$verifPathAbs/lvsint_icv/${macro}.LAYOUT_ERRORS";
+            ## assume all other are DRC type decks
+            }else{
+               $verifSrc = "$verifPathAbs/${verifType}_icv/${macro}.LAYOUT_ERRORS";
+            }
+         }
+         $href_fileMap->{'icv'}->{$verifSrc} = $verifRel;
+      ## end  elsif($legalVerif =~ /^(icv)\//)
+      }else{
+         fatal_error("Expected verification tools are 'icv' or 'calibre' but ".
+                "'$fname_projVerifFile':$lineNumber project verif file has:\n'$legalVerifs{$legalVerif}'");
+      }
+      ## Automatically sync view as per Jira P10020416-40556
+      run_p4_cmd( $opt_dryrun, "p4 sync -f $verifRel", $VERBOSITY );
+
+   } ## end  foreach $legalVerif
+   
+   ##   reference GDS files
+   if( defined($href_legalRelease->{'referenceGdses'}->{$macro}) ){
+      $href_legalRelease->{'referenceGdses'}->{$macro} =~ s/\s+/ /;
+      foreach my $refFile ( split ' ', $href_legalRelease->{'referenceGdses'}->{$macro} ){
+         if( (grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}}) 
+             || (grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}}) 
+             || $macro =~ /cover|_tcoil_replica/i ){
+               # P10020416-38355: use metalStackCover for tcoil_replica
+            $href_fileMap->{'refgds'}->{"$verifPathAbs/$refFile"} 
+                  = "${relPathAbs}/${macro}/$rel/macro/".
+                    "gds/${metalStack}/$refFile";
+         }else {
+            $href_fileMap->{'refgds'}->{"$verifPathAbs/$refFile"} 
+                  = "${relPathAbs}/${macro}/$rel/macro/".
+                    "gds/${metalStackIp}/$refFile";
+         }
+      }
+   }
+   
+   $href_fileMap->{'lef'}->{$href_sourcePaths->{'lef'}}       = $href_relPaths->{'lef'};
+   $href_fileMap->{'lef'}->{$href_sourcePaths->{'lefMerged'}} = $href_relPaths->{'lefMerged'};
+   $href_fileMap->{'gds'}->{$href_sourcePaths->{'gds'}}       = $href_relPaths->{'gds'};
+   
+   unless( defined($href_legalRelease->{'shimMacros'}->{$macro}) ){
+      $href_fileMap->{'cdl'}->{$href_sourcePaths->{'cdl'}}    = $href_relPaths->{'cdl'};
+   }else{
+      iprint("\tMacro '$macro' is a shim macro, which only have LEF/GDS files and no CDL ".
+             "netlist. Skippping ...\n");
+   }
+   
+   dprint_dumper(MEDIUM, "\%fileMap => " ,$href_fileMap);
+
+   print_function_footer();   
+   return($verifPathAbs);
+   # End of set_verif_paths
+}
+
+
+#-------------------------------------------------------------------------------
+#  set the path for the verfication files
+#-------------------------------------------------------------------------------
+sub set_verif_paths($$$$){
+   print_function_header();
+   my $macro             = shift;
+   my $verifPathAbs      = shift;
+   my $opt_user          = shift;
+   my $href_legalRelease = shift;
+   my $href_sourcePaths  = shift;
+
+   if( $href_legalRelease->{'relGdsCdl'} eq 'HIPRE' ){
+      ( $verifPathAbs ) = get_hipre_path($macro, $verifPathAbs, $opt_user, $href_sourcePaths); 
+   }else{
+      $href_sourcePaths->{'lef'}       = "$verifPathAbs/lef/${macro}_geom.lef";
+      $href_sourcePaths->{'lefMerged'} = "$verifPathAbs/lef/${macro}_both.lef";
+      $href_sourcePaths->{'cdl'}       = "$verifPathAbs/lvs_$href_legalRelease->{'relGdsCdl'}/".
+                                         "${macro}_lvs_$href_legalRelease->{'relGdsCdl'}.raw.cdl";
+      if( defined($href_legalRelease->{'shimMacros'}->{$macro}) ){
+         $href_sourcePaths->{'gds'}    = "$verifPathAbs/$href_legalRelease->{'relGdsShim'}_".
+                                           "$href_legalRelease->{'relGdsCdl'}/${macro}.gds.gz"
+      }else{
+         $href_sourcePaths->{'gds'}    = "$verifPathAbs/lvs_$href_legalRelease->{'relGdsCdl'}/".
+                                         "${macro}.gds.gz";
+      }
+      dprint_dumper(HIGH,"\%sourcePaths => " ,$href_sourcePaths);
+   }
+
+   print_function_footer();
+   return($verifPathAbs);
+}
+
+#-------------------------------------------------------------------------------
+#  Read the XML HiPre preferences file and recalculate the verification files
+#      source path accordingly.
+#-------------------------------------------------------------------------------
+sub get_hipre_path($$$$){
+   print_function_header();
+   my $macro            = shift;
+   my $verifPath        = shift;
+   my $opt_user         = shift;
+   my $href_sourcePaths = shift;
+   
+   my ( $outDir );
+   my ($stack,$lib,$cell) = ($verifPath =~ m|^.*/(\S+)/(\S+)/(\S+)$|i);
+   my $prefs = "$verifPath/HIPRE/MSIP_CD_HIPRE_PREFS.xml";
+   if( -e $prefs ){
+      my @prefs = read_file( "$prefs" );
+      
+      # Remove trailing newlines
+      chomp(@prefs);
+      ## Get output directory from the prefs file
+      $outDir     = get_xml_value("MSIPHIPREOutDir",\@prefs);
+      ## Get release type: DI/Customer
+      my $relType = lc(get_xml_value("MSIPHIPREreleaseType",\@prefs));
+
+      ## Path checking
+      unless( $outDir =~ m|$opt_user/verification/| 
+              || $outDir =~ m|/$opt_user/${\NFS}/${\NFS}/${\NFS}/verification/|) {
+         fatal_error("Resolved hipre path '$outDir' is not valid and must contain\n".
+                "\t.../$opt_user/<project_type>/<project>/<CD_release>/verification\n".
+                "or\n".
+                "\t.../$opt_user/verification/<project_type>/<project>/<CD_release>\n");
+      }
+      ## Get files based on release type as directory structures are different for DI/Customer releases 
+      if( $relType =~ m/di/ ){
+         $outDir                             = "$outDir/${relType}_release/$lib/release/$stack";
+         if( -d $outDir ){
+            $href_sourcePaths->{'lef'}       = firstAvailableFile("$outDir/lef/${macro}.lef",
+                                                                  "$outDir/lef/${macro}_geom.lef");
+            # If none of the file were found, use any one for the error display afterwards
+            if( $href_sourcePaths->{'lef'} eq EMPTY_STR ){
+               $href_sourcePaths->{'lef'} = "$outDir/lef/${macro}.lef";
+            }
+            $href_sourcePaths->{'lefMerged'} = "$outDir/lef/${macro}_merged.lef";
+            $href_sourcePaths->{'gds'}       = firstAvailableFile("$outDir/gds/${macro}.gds.gz",
+                                                                  "$outDir/gds/${macro}.gds");
+            # If none of the file were found, use any one for the error display afterwards
+            if( $href_sourcePaths->{'gds'} eq EMPTY_STR ){
+               $href_sourcePaths->{'gds'} = "$outDir/gds/${macro}.gds.gz";
+            }
+            $href_sourcePaths->{'cdl'}       = "$outDir/netlist/${macro}.cdl";
+         }else{
+            fatal_error("di_release directory '$outDir' does not exist!\n");
+         }
+      }elsif( $relType =~ /customer/ ){
+         $outDir                             = "$outDir/${relType}_release/release/$lib/$cell/macro";
+         if( -d $outDir ){
+            $href_sourcePaths->{'lef'}       = firstAvailableFile("$outDir/lef/$stack/${macro}.lef",
+                                                                  "$outDir/lef/$stack/${macro}_geom.lef");
+            # If none of the file were found, use any one for the error display afterwards
+            if( $href_sourcePaths->{'lef'} eq EMPTY_STR ){
+               $href_sourcePaths->{'lef'} = "$outDir/lef/$stack/${macro}.lef";
+            }
+            $href_sourcePaths->{'lefMerged'} = "$outDir/lef/$stack/${macro}_merged.lef";
+            $href_sourcePaths->{'gds'}       = firstAvailableFile("$outDir/gds/$stack/${macro}.gds.gz",
+                                                                  "$outDir/gds/$stack/${macro}.gds");
+            # If none of the file were found, use any one for the error display afterwards
+            if( $href_sourcePaths->{'gds'} eq EMPTY_STR ){
+               $href_sourcePaths->{'gds'} = "$outDir/gds/$stack/${macro}.gds.gz";
+            }
+            $href_sourcePaths->{'cdl'}       = "$outDir/netlist/$stack/${macro}.cdl";
+         }else{
+            fatal_error("customer_release directory '$outDir' does not exist!\n");
+         }
+      }else{
+         fatal_error("Cannot find output directory for HIPRE run\n");
+      }
+      
+   }else{
+      fatal_error("Cannot find preferences file '$prefs'.\n");
+   }
+   
+   return($outDir);
+}
+
+#-------------------------------------------------------------------------------
+#  Get the values from an xml file
+#-------------------------------------------------------------------------------
+sub get_xml_value($$){
+   print_function_header();
+   my $prefName = shift;
+   my @contents = @{+shift};
+   
+   my $line = ( grep{/$prefName/} @contents )[0];
+   if( !defined($line) ){
+      fatal_error("Failed to find '$prefName' in 'MSIP_CD_HIPRE_PREFS.xml'\n");
+   }
+   my $value;
+   if( $line =~ m|value="(\S+)"| ){
+      $value = $1;
+   }else{
+      fatal_error("Failed to parse to value for '$prefName' from the line\n".
+             "\t$line\nin 'MSIP_CD_HIPRE_PREFS.xml'\n");
+   }
+   print_function_footer();
+   return($value);
+}
+
+#-------------------------------------------------------------------------------
+#  Set the lefdiff path and setup the lef used for comparision in the lefdiff.
+#-------------------------------------------------------------------------------
+sub setup_lefdiff_files($$$$$$$$$){
+   print_function_header();
+   my $macro             = shift;
+   my $flowCheck         = shift;
+   my $relPathAbs        = shift;
+   my $metalStack        = shift;
+   my $metalStackIp      = shift;
+   my $dryrun            = shift;
+   my $href_legalRelease = shift;
+   my $href_sourcePaths  = shift;
+   my $href_relPaths     = shift;
+   my $href_lefdiffFiles = shift;
+   
+   if ($flowCheck == TRUE){
+      $href_lefdiffFiles->{'log'} = "${relPathAbs}/${macro}/$rel/macro/".
+                                 "pincheck/${metalStack}/${macro}.lefdiff";
+   } else {
+      $href_lefdiffFiles->{'log'} = "${relPathAbs}/${macro}/$rel/macro/".
+                                    "${macro}.lefdiff";
+   }
+
+   ##   pincheck -phys, for dryrun use src file
+   if( defined $dryrun ){
+      $href_lefdiffFiles->{'relLef'} = $href_sourcePaths->{'lef'};
+   }else{
+      $href_lefdiffFiles->{'relLef'} = $href_relPaths->{'lef'};
+   }
+
+   ## set file paths for LEF DIFF
+   if( defined($href_legalRelease->{'lefdiffRel'}) ){
+      ## for different lefdiffRel than rel, just use its canonical path
+      if( $href_legalRelease->{'lefdiffRel'} ne $rel ){
+         if( $macro =~ /blocks/i || $macro =~ /cover/i || $macro =~ /_tcoil_replica/i){
+            # P10020416-38355: use full metal stack for tcoil_replica
+            $href_lefdiffFiles->{'diffRelLef'} = "${relPathAbs}/${macro}/".
+                                                 "$href_legalRelease->{'lefdiffRel'}/".
+                                                 "macro/lef/${metalStack}/${macro}.lef";
+         }else{
+            $href_lefdiffFiles->{'diffRelLef'} = "${relPathAbs}/${macro}/".
+                                                 "$href_legalRelease->{'lefdiffRel'}/".
+                                                 "macro/lef/${metalStackIp}/${macro}.lef";
+         }
+      }
+
+      #Revert the release lef file if it was in checked-out to ensure the lef used in the
+      #lefdiff is the one in perforce not
+      unless( defined $dryrun ){
+         revert_if_opened($href_relPaths->{'lef'});
+      }
+      ## only check for patching if LEF is non-zero size
+      unless( -z $href_relPaths->{'lef'} ){
+         ## for dryrun, look at rel LEF file
+         if( defined $dryrun ){
+            $href_lefdiffFiles->{'patchLef'} = $href_relPaths->{'lef'};
+         }
+         ## otherwise copy rel LEF file
+         else{
+            $href_lefdiffFiles->{'patchLef'} = $href_relPaths->{'lef'};
+            $href_lefdiffFiles->{'patchLef'} =~ s|\.lef|_bak\.lef|;
+            da_copy($href_relPaths->{'lef'}, $href_lefdiffFiles->{'patchLef'}) 
+                              || confess("Failed to copy '$href_relPaths->{'lef'}',".
+                                         "'$href_lefdiffFiles->{'patchLef'}': $!\n");
+         }
+      }
+   }
+   
+   print_function_footer();
+   # End of lefdiff_preparation
+}
+
+#-------------------------------------------------------------------------------
+#  Copy the files to be released into the local perforce, submitting them 
+#  afterwards will finalize the release.
+#-------------------------------------------------------------------------------
+sub copy_files($$$$$$$$$$$){
+   print_function_header();
+   my $macro             = shift;
+   my $metalStack        = shift;
+   my $verifPathAbs      = shift;
+   my $relPathAbs        = shift;
+   my $projPathAbs       = shift;
+   my $fname_projEnv     = shift;
+   my $opt_dryrun        = shift;
+   my $href_legalRelease = shift;
+   my $href_fileMap      = shift;
+   my $href_relPaths     = shift;
+   my $aref_missingFiles = shift;
+   
+   ## Set cad home for later use
+   my ( $cadProj, $cadRel, $cadHome );
+   if( defined $DA_TESTING ){
+      $cadHome = $projPathAbs;
+   }else{
+      ( $cadProj, $cadRel, $cadHome ) = getCadHome( $fname_projEnv );
+   }
+   ## Set stream layer map file
+   my $fname_projStreamLayerMapFile = firstAvailableFile(
+         "$projPathAbs/cad/${metalStack}/stream/stream.layermap",
+                 "$cadHome/${metalStack}/stream/stream.layermap",
+                 "$cadHome/${metalStack}/stream/STD/stream.layermap");
+   unless( -e $fname_projStreamLayerMapFile ){
+      fatal_error("Cannot find '$fname_projStreamLayerMapFile' stream layer map file for ".
+             "'$href_legalRelease->{'metalStack'}'.\n");
+   }
+
+   my ( $cmd, $pincheckCmdSegment );
+   
+   hprint( "Migrate verification files to the release directory...\n" );
+   
+   ## loop through verif types
+   foreach my $verifType (sort keys %{$href_fileMap}){
+      ## loop through verif files
+      foreach my $verifFile (sort keys %{$href_fileMap->{$verifType}}){
+         ## name rel file
+         my $relFile = $href_fileMap->{$verifType}->{$verifFile};
+         ## check rel file exists
+         if( !-e $relFile ){
+            eprint( "\tRelease file '$relFile'\n\tdoes not exist (must be seeded in p4 ".
+                         "depot first), so skipping copy...\n");
+         ## check verif file exists
+         }elsif( !-e $verifFile ){
+            eprint("\tsource verif file '$verifFile'\n\tdoes not exist,"
+                  ." so skipping copy...\n");
+            push @$aref_missingFiles, $verifFile;
+         ## prepare and copy file
+         }else{
+            iprint("\tPreparing $verifFile...\n");
+            ## p4 check out rel file
+            viprint(LOW, "\tChecking-out '$relFile' P4 file\n");
+            $cmd = "p4 edit $relFile |& cat >> $p4LogFile";
+            run_p4_cmd( $opt_dryrun, $cmd, $VERBOSITY );
+            unless( -w $relFile ){
+                fatal_error("The '$relFile' release file is not writable."
+                      ." Perhaps p4 edit failed.\n");
+            }
+            ## for 'cdl' files, use alpha CDL prep script
+            if( $verifType eq 'cdl' ){
+               ## prep CDL file
+               viprint(LOW, "\tPreparing CDL netlist for HL from \n\t\t'$verifFile' CDL file \n".
+                            "\tto\n\t\t'$relFile' release CDL file.\n");
+                          ## for 'gds' files, use alpha GDS prep script and alpha layer map scriptPath
+               copy_cdl($macro, $metalStack, $projPathAbs, $cadHome, $verifFile, $relFile,
+                        $opt_dryrun, $href_legalRelease, $href_relPaths);
+            }elsif( $verifType eq 'gds' && ($href_legalRelease->{'relGdsCdl'} ne 'HIPRE') ){
+               ## prep GDS file
+               viprint(LOW, "\tPreparing GDS netlist for HL \n\t\tfrom '$verifFile' GDS file".
+                            "\n\tto\n\t\t'$relFile' prepped GDS file.\n");
+               copy_gds_not_hipre($macro, $metalStack, $projPathAbs, $relPathAbs,
+                                  $verifFile, $relFile, $opt_dryrun,
+                                  $href_legalRelease, $href_relPaths); 
+            }elsif( $verifType eq 'gds' && ($href_legalRelease->{'relGdsCdl'} eq 'HIPRE') ){
+               viprint(LOW, "\tPreparing GDS netlist for HL \n\t\tfrom '$verifFile' GDS file".
+                            "\n\tto\n\t\t'$relFile' prepped GDS file.\n");
+               copy_gds_hipre($macro, $metalStack, $verifPathAbs, $verifFile, $relFile,
+                              $opt_dryrun, $href_legalRelease, $href_relPaths); 
+            ## for other files, just copy
+            }else{
+               viprint(LOW, "\tCopying file\n\t\t'$verifFile'\n\tto\n\t\t'$relFile'\n");
+               unless( defined $opt_dryrun ){
+                  da_copy($verifFile, $relFile) || confess("Failed to copy ".
+                                                       "'$verifFile', '$relFile': $!.\n");
+               }else{ 
+                  viprint(LOW, "\tNo p4 changes or file conversion steps occur in DRYRUN mode.\n");
+               }
+            }
+
+            ## add files to check to pincheck
+            if( ($verifType eq 'lef') || ($verifType eq 'gds') || ($verifType eq 'cdl') ){
+               ## in DRYRUN, use original source files
+               if( defined($opt_dryrun) ){
+                  $pincheckCmdSegment .= "  -$verifType $verifFile \\\n";
+               }else{
+                  $pincheckCmdSegment .= "  -$verifType $relFile \\\n";
+               }
+               # if we have a GDS file, we need the PCS stream map file
+               #     to check supply pin layers
+               if($verifType eq 'gds'){
+                  $pincheckCmdSegment .= "  -streamLayermap "
+                                 ."$fname_projStreamLayerMapFile \\\n";
+               }
+            }
+         } ## end else
+      } ## end foreach $verifFile (sort keys %{$href_fileMap->{$verifType}})
+   } ## end foreach $verifType (sort keys %fileMap)
+   
+   print_function_footer();
+   return ( $pincheckCmdSegment );
+   # End of copy_files
+}
+
+#-------------------------------------------------------------------------------
+#  Copy the cdl file 
+#-------------------------------------------------------------------------------
+sub copy_cdl($$$$$$$$$){
+   print_function_header();
+   my $macro               = shift;
+   my $metalStack          = shift;
+   my $projPathAbs         = shift;
+   my $cadHome             = shift;
+   my $verifFile           = shift;
+   my $relFile             = shift;
+   my $opt_dryrun          = shift;
+   my $href_legalRelease   = shift;
+   my $href_relPaths       = shift;
+   
+   
+   my $fname_projLvsIncludeFile 
+               = firstAvailableFile("$projPathAbs/cad/${metalStack}/template/".
+                                    "lvs.include.cdl",
+                                    "$cadHome/${metalStack}/template/".
+                                    "lvs.include.cdl");
+   unless( -e $fname_projLvsIncludeFile ){
+      fatal_error("Cannot find '$fname_projLvsIncludeFile' LVS include file for ".
+             "'${metalStack}'.\n");
+   }
+  
+   #---------------------------------------------
+   # Run alphaCdlPrep.tcl
+   #---------------------------------------------
+   my $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaCdlPrep.tcl " );
+   my $cmd = "$tool -cdlIn $verifFile  -cdlOut $relFile  ".
+          "-cellName $macro  -forceBracket square  -prepend ${macro}_";
+          
+   ##   option to prune CVCP/VFLAG/etc cells
+   if( defined($href_legalRelease->{'cdlPruneCells'}) ){
+      $cmd .= " -removeSubckt '$href_legalRelease->{'cdlPruneCells'}'";
+   }
+   
+   ##   need to tag and not uniqify top level utility macro
+   if( grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}} ){ 
+      my $releaseUtilityMacro = $href_legalRelease->{'releaseUtilityMacro'};
+      if( defined($href_legalRelease->{'releaseMacro'}->{$macro}) ){
+         $releaseUtilityMacro = $href_legalRelease->{'releaseMacro'}->{$macro};
+      }
+      unless( defined($releaseUtilityMacro) ){
+         eprint("Release utility macro list is not defined for this macro!\n");
+      }else{                   
+         $cmd .= " -skipPrefixList '$releaseUtilityMacro' ".
+                 "-lvsHeader '$fname_projLvsIncludeFile' -includeHeader true";
+      }
+   }
+   
+   ##   need to tag and not uniqify top level repeater macro
+   if( grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}} ){
+      my $releaseRepeaterMacro = $href_legalRelease->{'releaseRepeaterMacro'};
+      if( defined($href_legalRelease->{'releaseMacro'}->{$macro}) ){
+         $releaseRepeaterMacro = $href_legalRelease->{'releaseMacro'}->{$macro};
+      }
+      if( !defined($releaseRepeaterMacro) ){
+         eprint( "Release repeater macro list is not defined for this macro!\n" );
+      }else{
+         $cmd .= " -skipPrefixList '$releaseRepeaterMacro' ".
+                 "-lvsHeader '$fname_projLvsIncludeFile' -includeHeader true";
+      }
+   }
+
+   if( !defined($opt_dryrun) && ($href_legalRelease->{'relGdsCdl'} ne 'HIPRE') ){
+         run_system_cmd( $cmd, $VERBOSITY );
+         unless( -e $relFile ){
+            fatal_error("CDL prep failed to generate '$relFile' release CDL file.\n");
+         }
+   }elsif( !defined($opt_dryrun) && ($href_legalRelease->{'relGdsCdl'} eq 'HIPRE') ){
+      viprint(LOW, "\tCopying file\n\t\t'$verifFile'\n\tto\n\t\t'$relFile'\n");
+      da_copy($verifFile, $relFile) || confess( "Failed to copy '$verifFile', ".
+                                            "'$relFile': $!.\n" );
+   }else{
+      viprint(LOW, "No p4 changes or file conversion steps occur in DRYRUN mode.\n");
+   }
+
+   # Remove absolute paths from the utility/repeater netlist
+   if( !defined($opt_dryrun) ){
+      fix_header_cdl($relFile);
+   }else{
+      viprint(LOW, "No p4 changes or file conversion steps occur in DRYRUN mode.\n");
+   }
+
+   ## Create techrevision file
+   if( $macro =~ /techrevision/i ){
+       viprint(LOW, "\tCreating '$href_relPaths->{'techRev'}' techrevision file\n");
+       viprint(LOW, "\tCheck-out '$href_relPaths->{'techRev'}' p4 file\n");
+       $cmd = "p4 edit $href_relPaths->{'techRev'}";
+       unless( defined($opt_dryrun) ){
+           run_system_cmd( $cmd, $VERBOSITY );
+       }else{
+           viprint(LOW, "No p4 changes or file conversion steps occur in DRYRUN mode.\n"); 
+       }
+       #---------------------------------------------
+       # Run genTechrevFile.pl
+       #---------------------------------------------
+       my $tool = adjust_cmd_for_perl_coverage( "$RealBin/genTechrevFile.pl" );
+       $cmd     = "$tool -cdl $relFile -output $href_relPaths->{'techRev'}";
+       chmod 0755, $href_relPaths->{'techRev'}; # Ensure file is writable
+
+       if( !defined($opt_dryrun) ){
+          run_system_cmd( $cmd, $VERBOSITY );
+          unless( -e $href_relPaths->{'techRev'} ){
+              fatal_error("genTechrevFile failed to generate '$href_relPaths->{'techRev'}'"
+                    ." techrevision file.\n");
+          }
+      }
+   }
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+#  Copy the gds file if not in hipre release mode
+#-------------------------------------------------------------------------------
+sub copy_gds_not_hipre($$$$$$$$$){
+    print_function_header();
+    my $macro               = shift;
+    my $metalStack          = shift;
+    my $projPathAbs         = shift;
+    my $relPathAbs          = shift;
+    my $verifFile           = shift;
+    my $relFile             = shift;
+    my $opt_dryrun          = shift;
+    my $href_legalRelease   = shift;
+    my $href_relPaths       = shift;
+ 
+    ## set utility macro tag file
+    my $fname_projUtilityTagFile = firstAvailableFile(
+                     "$projPathAbs/design/legalUtilityTag.txt",
+                     "$projPathAbs/design_unrestricted/legalUtilityTag.txt"
+    );
+    if( (grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}}) 
+        && (!-e $fname_projUtilityTagFile) ){
+       fatal_error("Cannot find utility macro tag file: '$fname_projUtilityTagFile'.\n");
+    }
+    ## set utility macro cell list file
+    my $fname_relUtilityCellListFile = "$relPathAbs/$macro/$rel/macro/".
+                                       "doc/${macro}_list.txt";
+    if( (grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}}) 
+        && (!-e $fname_relUtilityCellListFile) ){
+        fatal_error("File with list of utility cells doesn't exist: '$fname_relUtilityCellListFile'\n");
+    }
+    ## set repeater macro tag file
+    my $fname_projRepeaterTagFile = firstAvailableFile(
+                     "$projPathAbs/design/legalRepeaterTag.txt",
+                     "$projPathAbs/design_unrestricted/legalRepeaterTag.txt"
+    );
+    if( (grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}}) 
+        && (!-e $fname_projRepeaterTagFile) ){
+       fatal_error("Cannot find repeater macro tag file: '$fname_projRepeaterTagFile'\n");
+    }
+    ## set repeater macro cell list file
+    my $fname_relRepeaterCellListFile = "$relPathAbs/$macro/"
+             ."$rel/macro/doc/${macro}_list.txt";
+    if( (grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}} ) 
+        && (!-e $fname_relRepeaterCellListFile) ){
+       fatal_error("Cannot find repeater macro cell list file: '$fname_relRepeaterCellListFile'.\n");
+    }
+  
+    #-----------------------------------------------------
+    # Setup preliminaries for running 'alphaGdsPrep.pl'
+    #-----------------------------------------------------
+    my $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaGdsPrep.pl" );
+    my $cmd = "$tool -macro $macro  -prefix ${macro}_ ";
+        
+    #-----------------------------------------------------
+    #  deal w/ utility cells
+    #-----------------------------------------------------
+    ##   need to tag and not uniqify top level utility macro
+    if( grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}} ){
+        my $releaseUtilityMacro = $href_legalRelease->{'releaseUtilityMacro'};
+        if( defined($href_legalRelease->{'releaseMacro'}->{$macro}) ){
+            $releaseUtilityMacro = $href_legalRelease->{'releaseMacro'}->{$macro};
+        }
+        $cmd .= " -gfltf $fname_relUtilityCellListFile -tagFile $fname_projUtilityTagFile";
+        unless( defined($releaseUtilityMacro) ){
+            eprint("Release utility macro list is not defined for this macro, running the ".
+                   "script 'alphaGdsPrep.pl' with taglevel 0!\n");
+            $cmd .= " -tagLevel 0";
+        }else{                   
+            $cmd .= " -tagLevel 1";
+        }
+        ##   with TSMC layers if process is tsmcXXX
+        if( $href_legalRelease->{'process'} =~ m/^tsmc/ ){
+            $cmd .= " -tsmc";
+
+        ##############################################################
+        ## In programs with TCOILs, we need to specify the prboundary
+        ## layer when calculating the area of each cell, otherwise we 
+        ## will get inaccurate area numbers coming from the PAD 
+        ## connections that stick out over the boundary. 
+        ## Default values for: TSMC = 108:0, SS/GF = 62:21
+        ## Can be overridden by "set boundary_layer" in legalRelease
+        ## More details can be found in Jira P10020416-40127
+            if( defined $href_legalRelease->{'bndLayer'} ){
+                $cmd .= " -bndLayer $href_legalRelease->{'bndLayer'}";
+            }
+            else{
+                $cmd .= " -bndLayer 108:0";
+            }
+        }
+        elsif( $href_legalRelease->{'process'} =~ m/^(ss|gf)/ ){
+            if( defined $href_legalRelease->{'bndLayer'} ){
+                $cmd .= " -bndLayer $href_legalRelease->{'bndLayer'}";
+            }
+            else{
+                $cmd .= " -bndLayer 62:21";
+            }
+        }
+        ##############################################################
+
+        ##  with other layers if defined
+        if( defined($href_legalRelease->{'utilityMacroTagLayers'}) ){
+            $cmd .= " -tagLayer '$href_legalRelease->{'utilityMacroTagLayers'}".
+                    "$href_legalRelease->{'utilityMacroTagLayers'}'"; 
+        }
+    }
+    #-----------------------------------------------------
+    #  deal w/ repeater cells
+    #-----------------------------------------------------
+    ##   need to tag and not uniqify top level repeater macro
+    if( grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}} ){
+        my $releaseRepeaterMacro = $href_legalRelease->{'releaseRepeaterMacro'};
+        if( defined($href_legalRelease->{'releaseMacro'}->{$macro}) ){
+           $releaseRepeaterMacro = $href_legalRelease->{'releaseMacro'}->{$macro};
+        }
+        if( !defined($releaseRepeaterMacro) ){
+            eprint("Release repeater macro list is not defined for this macro, running the ".
+                   "alphaGdsPrep script with taglevel 0!\n");
+            $cmd .= " -gfltf $fname_relRepeaterCellListFile ".
+                    "-tagFile $fname_projRepeaterTagFile -tagLevel 0";
+        }else{
+            $cmd .= " -gfltf $fname_relRepeaterCellListFile ".
+                    "-tagFile $fname_projRepeaterTagFile -tagLevel 1";
+        }
+        ##   with TSMC layers if process is tsmcXXX
+        if( $href_legalRelease->{'process'} =~ /^tsmc/ ){
+            $cmd .= " -tsmc";
+
+        ##############################################################
+        ## In programs with TCOILs, we need to specify the prboundary
+        ## layer when calculating the area of each cell, otherwise we 
+        ## will get inaccurate area numbers coming from the PAD 
+        ## connections that stick out over the boundary. 
+        ## Default values for: TSMC = 108:0, SS/GF = 62:21
+        ## Can be overridden by "set boundary_layer" in legalRelease
+        ## More details can be found in Jira P10020416-40127
+            if( defined $href_legalRelease->{'bndLayer'} ){
+                $cmd .= " -bndLayer $href_legalRelease->{'bndLayer'}";
+            }
+            else{
+                $cmd .= " -bndLayer 108:0";
+            }
+        }
+        elsif( $href_legalRelease->{'process'} =~ m/^(ss|gf)/ ){
+            if( defined $href_legalRelease->{'bndLayer'} ){
+                $cmd .= " -bndLayer $href_legalRelease->{'bndLayer'}";
+            }
+            else{
+                $cmd .= " -bndLayer 62:21";
+            }
+        }
+        ##############################################################
+
+        ##  with other layers if defined
+        if( defined($href_legalRelease->{'repeaterMacroTagLayers'}) ){
+            $cmd .= " -tagLayer '$href_legalRelease->{'repeaterMacroTagLayers'}".
+                    "$href_legalRelease->{'repeaterMacroTagLayers'}'";
+        }
+    }
+    #-----------------------------------------------------
+    # Run 'alphaGdsPrep.pl'
+    #-----------------------------------------------------
+    $cmd .= " -output $relFile -gds $verifFile";
+    ## Run alphaGdsPrep script
+    if( ! defined $opt_dryrun ){
+        run_system_cmd( $cmd, $VERBOSITY );
+        unless( -e $relFile ){
+            fatal_error("GDS prep failed to generate '$relFile' prepped GDS file.\n");
+        }
+    }else{
+        viprint(LOW, "\tNo p4 changes or file conversion steps occur in DRYRUN mode.\n");
+    }
+ 
+    ## create GDS layer map file
+    viprint(LOW, "\tCreating '$href_relPaths->{'gdsLayerMap'}' layer map file\n".
+                 "\t\tfrom '$relFile' GDS file\n");
+    viprint(LOW, "\tCheck-out '$href_relPaths->{'gdsLayerMap'}' P4 file\n");
+    $cmd = "p4 edit $href_relPaths->{'gdsLayerMap'}";
+    run_p4_cmd( $opt_dryrun, $cmd, $VERBOSITY );
+ 
+    #---------------------------------------------
+    # Run alphaGenHiprelynxLayermap.pl
+    #---------------------------------------------
+    $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaGenHiprelynxLayermap.pl" );
+    $cmd  = "$tool -gds $relFile ".
+            "-tech $href_legalRelease->{'process'}_${metalStack} ".
+            "-output $href_relPaths->{'gdsLayerMap'}";
+    unless( defined $opt_dryrun ){
+        run_system_cmd( $cmd, $VERBOSITY );
+        unless( -e $href_relPaths->{'gdsLayerMap'} ){
+            fatal_error("alphaGenHiprelynxLayermap failed to generate ".
+                   "'$href_relPaths->{'gdsLayerMap'}' release GDS layer map file.\n");
+        }
+        fix_header_layermap($href_relPaths->{'gdsLayerMap'});
+       
+       my $oasisDir = dirname($relFile);
+       $oasisDir =~ s|/gds/|/oasis/|;
+       ## Automatically sync view as per Jira P10020416-40556
+       run_p4_cmd( $opt_dryrun, "p4 sync -f $oasisDir/...", $VERBOSITY);
+
+       ## Create oasis file and layer map if it exists (for the utility and repeater blocks)
+       if( -d $oasisDir ){
+          my ($oasFile) = ($relFile =~ /(.*)\.gds.*/);
+          $oasFile =~ s/\/gds\//\/oasis\//;
+          $oasFile = "$oasFile.oas";
+          my $oasLayer = $href_relPaths->{'gdsLayerMap'};
+          $oasLayer =~ s/\/gds\//\/oasis\//;
+          viprint(LOW, "\tCreating '$oasFile' file\n\t\tfrom '$relFile' ".
+                       "GDS file\n");
+          viprint(LOW, "\tCheck-out '$oasFile' P4 file\n");
+          $cmd = "p4 edit $oasFile";
+          run_p4_cmd( $opt_dryrun, $cmd, $VERBOSITY );
+          unless( defined $opt_dryrun ){
+             gen_oasis($relFile,$oasFile);
+             run_p4_cmd( $opt_dryrun, "p4 edit $oasLayer", $VERBOSITY );
+             ## Copying same layermap to oasis directory
+             da_copy($href_relPaths->{'gdsLayerMap'}, $oasLayer) 
+                         || confess("Failed to copy '$href_relPaths->{'gdsLayerMap'}', ".
+                                    "$oasLayer: $!\n");
+             fix_oasis_layer_title($oasLayer);
+          }
+       }elsif( $macro =~ m/blocks/i ){
+          wprint("Oasis directory '$oasisDir' doesn't exist!\n"
+                ." Skipping generating oasis from GDS.\n");
+       }
+    }
+ 
+    print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+# only run p4 cmd if not in DRY RUN MODE
+#-------------------------------------------------------------------------------
+sub run_p4_cmd($$$){
+    print_function_header();
+    my ($opt_dryrun, $cmd, $VERBOSITY) = @_;
+    unless( defined($opt_dryrun) ){
+        run_system_cmd( $cmd, $VERBOSITY );
+    }else{
+        p4print( "$cmd\n" );
+        viprint(LOW, "\tNo p4 changes or file conversion steps occur in DRYRUN mode.\n");
+    }
+    print_function_footer();
+    return();
+}
+
+#-------------------------------------------------------------------------------
+#  Copy the gds file if in hipre release mode
+#-------------------------------------------------------------------------------
+sub copy_gds_hipre($$$$$$$$){
+   print_function_header();
+   my $macro               = shift;
+   my $metalStack          = shift;
+   my $verifPathAbs        = shift;
+   my $verifFile           = shift;
+   my $relFile             = shift;
+   my $opt_dryrun          = shift;
+   my $href_legalRelease   = shift;
+   my $href_relPaths       = shift;
+
+   my $verifLayerMap;
+   if( $verifPathAbs =~ /di_release/ ){
+      $verifLayerMap = "$verifPathAbs/gds/layerMap_${macro}_".
+                       "${metalStack}.txt";
+   }elsif( $verifPathAbs =~ /customer_release/ ){
+      $verifLayerMap = "$verifPathAbs/gds/${metalStack}/".
+                       "layerMap_${metalStack}.txt";
+   }
+   ## Copy layer map file
+   viprint(LOW, "\tCopying '$href_relPaths->{'gdsLayerMap'}' layer map file\n");
+   viprint(LOW, "\tCheck-out '$href_relPaths->{'gdsLayerMap'}' P4 file\n");
+   my $cmd = "p4 edit $href_relPaths->{'gdsLayerMap'}";
+   viprint(LOW, "\tCopying file\n\t\t'$verifFile'\n\tto\n\t\t'$relFile'\n");
+   run_p4_cmd( $opt_dryrun, $cmd, $VERBOSITY );
+   unless( defined($opt_dryrun) ){
+      # If the gds is compressed, copy it as it is
+      if( $verifFile =~ /gz$/ ){
+         da_copy($verifFile, $relFile) || confess("Failed to copy ".
+                                               "'$verifFile', '$relFile':$!.\n");
+      }
+      # If the gds is not compressed, compress it at its orignal location and move it to the
+      # release directory.
+      else{
+         $cmd = "gzip $verifFile;mv ${verifFile}.gz $relFile";
+         run_system_cmd($cmd, $VERBOSITY);
+      }
+      da_copy($verifLayerMap, $href_relPaths->{'gdsLayerMap'}) 
+                              || confess("Failed to copy '$verifLayerMap',".
+                                         " '$href_relPaths->{'gdsLayerMap'}':$!.\n");
+      unless( defined $opt_dryrun ){
+         fix_header_layermap($href_relPaths->{'gdsLayerMap'});
+      }
+
+      my $oasisDir = dirname($relFile);
+         $oasisDir =~ s|/gds/|/oasis/|;
+      ## Automatically sync view as per Jira P10020416-40556
+      run_p4_cmd( $opt_dryrun, "p4 sync -f $oasisDir/...", $VERBOSITY);
+
+      ## Create oasis file and layer map if it exists (for the utility and repeater blocks)
+      if( -d $oasisDir ){
+         my ($oasFile) = ($relFile =~ /(.*)\.gds.*/);
+         $oasFile =~ s/\/gds\//\/oasis\//;
+         $oasFile = "$oasFile.oas";
+         my $oasLayer = $href_relPaths->{'gdsLayerMap'};
+         $oasLayer =~ s/\/gds\//\/oasis\//;
+         viprint(LOW, "\tCreating '$oasFile' file\n\t\tfrom '$relFile' ".
+                      "GDS file\n");
+         viprint(LOW, "\tCheck-out '$oasFile' P4 file\n");
+         $cmd = "p4 edit $oasFile";
+         run_p4_cmd( $opt_dryrun, $cmd, $VERBOSITY );
+         unless( defined $opt_dryrun ){
+            gen_oasis($relFile,$oasFile);
+            run_p4_cmd( $opt_dryrun, "p4 edit $oasLayer", $VERBOSITY );
+            ## Copying same layermap to oasis directory
+            da_copy($href_relPaths->{'gdsLayerMap'}, $oasLayer) 
+                        || confess("Failed to copy '$href_relPaths->{'gdsLayerMap'}', ".
+                                   "$oasLayer: $!\n");
+            fix_oasis_layer_title($oasLayer);
+         }
+      }elsif( $macro =~ /blocks/i ){
+         eprint("Oasis directory '$oasisDir' doesn't exist!\n Skipping oasis file from the GDS");
+      }
+   }
+            
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+#  Fix the header of the layer map file
+#-------------------------------------------------------------------------------
+sub fix_header_layermap($){
+   print_function_header();
+   my $layermap = shift;
+
+   my @content = read_file( $layermap );
+   
+   $content[0] =~ s/(.* for)\s+.*\/([a-z0-9_\-\.]+)$/$1 $2/ig;
+   write_file( \@content, $layermap );
+}
+
+#-------------------------------------------------------------------------------
+#  Fix cdl header, remove the absolute path from the utility/repeater netlists
+#-------------------------------------------------------------------------------
+sub fix_header_cdl($){
+   print_function_header();
+   my $cdlfile = shift;
+
+   my @content = read_file( "$cdlfile" );
+
+   $content[0] =~ s/(.* lvs header)\s+.*\/([a-z0-9_\-\.]+)$/$1 $2/ig;
+
+   write_file( \@content, $cdlfile );
+}
+
+#-------------------------------------------------------------------------------
+#  Generate the oasis file from the gds file using gds2oasis64bit 
+#-------------------------------------------------------------------------------
+sub gen_oasis($){
+   print_function_header();
+   my $gdsFile = shift;
+   my $oasFile = shift;
+   
+   my $unzippedGds;
+   if( $gdsFile =~ /\.gds\.gz/i ){ 
+      run_system_cmd( "gunzip -f $gdsFile", $VERBOSITY );
+      ($unzippedGds) = ($gdsFile =~ /(.*\.gds)\.gz/);
+   }else{
+      $unzippedGds = $gdsFile;
+   }
+   
+   run_system_cmd( "gds2oasis64bit -input $unzippedGds -output $oasFile", $VERBOSITY );
+   run_system_cmd( "gzip $unzippedGds", $VERBOSITY );
+    
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+## Replaces "gds.gz" with "oas" in title of oasis layermap file
+#-------------------------------------------------------------------------------
+sub fix_oasis_layer_title($){
+   print_function_header();
+   my $file = shift;
+
+   my @lines = read_file( "$file" );
+   foreach(@lines){
+       $_ =~ s/gds(\.gz)?/oas/g;
+   }
+
+   write_file( \@lines, $file );
+
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+#  Create shell file and run it to check the verification files
+#-------------------------------------------------------------------------------
+sub run_pincheck_script($$$$$$$$$$$$$$$$){
+   print_function_header();
+   my $macro              = shift;
+   my $flowCheck          = shift;
+   my $opt_p4ws           = shift;
+   my $opt_bracket        = shift;
+   my $projPathAbs        = shift;
+   my $relPathAbs         = shift;
+   my $pincheckCmdSegment = shift;
+   my $projType           = shift;
+   my $metalStack         = shift;
+   my $metalStackIp       = shift;
+   my $opt_dryrun         = shift;
+   my $href_legalRelease  = shift;
+   my $href_sourcePaths   = shift;
+   my $href_relPaths      = shift;
+   my $href_lefdiffFiles  = shift;
+   my $aref_missingFiles  = shift;
+
+   dprint(CRAZY, " \$macro             => $macro              \n" );
+   dprint(CRAZY, " \$flowCheck         => $flowCheck          \n" );
+   dprint(CRAZY, " \$opt_p4ws          => $opt_p4ws           \n" );
+   dprint(CRAZY, " \$projPathAbs       => $projPathAbs        \n" );
+   dprint(CRAZY, " \$relPathAbs        => $relPathAbs         \n" );
+   dprint(CRAZY, " \$pincheckCmdSegment=> $pincheckCmdSegment \n" );
+   dprint(CRAZY, " \$projType          => $projType           \n" );
+   dprint(CRAZY, " \$metalStack        => $metalStack         \n" );
+   dprint(CRAZY, " \$metalStackIp      => $metalStackIp       \n" );
+   #dprint(CRAZY, " \$opt_dryrun             => $opt_dryrun              \n" );
+   #dprint(CRAZY, " \$href_legalRelease => $href_legalRelease  \n" );
+   dprint(CRAZY, " \$href_sourcePaths  => $href_sourcePaths   \n" );
+   dprint(CRAZY, " \$href_relPaths     => $href_relPaths      \n" );
+   dprint(CRAZY, " \$href_lefdiffFiles => $href_lefdiffFiles  \n" );
+   dprint(CRAZY, " \$aref_missingFiles => $aref_missingFiles  \n" );
+   prompt_before_continue( CRAZY+2 );
+   hprint("Preparing the pincheck shell file...\n");
+   ## pin check files: shell script, log file, and behavioral views that should exist
+
+   my $fname_pincheckShellFile;
+   my $fname_pincheckLogFile;
+
+
+   if ($flowCheck == TRUE){
+      $fname_pincheckShellFile = "${relPathAbs}/${macro}/$rel/macro/".
+                                 "pincheck/${metalStack}/alphaPinCheck.${macro}"; 
+      $fname_pincheckLogFile   = "${relPathAbs}/${macro}/$rel/macro/".
+                                 "pincheck/${metalStack}/${macro}.pincheck";
+   } else {
+      $fname_pincheckShellFile = "${relPathAbs}/${macro}/$rel/macro/".
+                                 "alphaPinCheck.${macro}"; 
+      $fname_pincheckLogFile   = "${relPathAbs}/${macro}/$rel/macro/".
+                                 "${macro}.pincheck";
+   }
+
+   my ( %pincheckFiles );
+   ## Set the pincheck files hash
+   setup_pincheck_files($macro, $projPathAbs, $relPathAbs, \%pincheckFiles, $href_legalRelease);
+   
+   ## determine if macro has a layers override
+   my $layersMacro = $href_legalRelease->{'layers'};
+   if( defined($href_legalRelease->{'layersOverrides'}->{$macro}) ){
+      $layersMacro = $href_legalRelease->{'layersOverrides'}->{$macro};
+   }
+   
+   ## determine if macro has an override supply pin
+   my $supplyPinsMacro = $href_legalRelease->{'supplyPins'};
+   if( defined($href_legalRelease->{'supplyPinsOverrides'}->{$macro}) ){
+      $supplyPinsMacro = $href_legalRelease->{'supplyPinsOverrides'}->{$macro};
+   }
+   
+   ## set datestamp
+   my $datePincheck = UnixDate($href_legalRelease->{'referenceDateTime'}, "%Y-%m-%d %H:%M:%S");
+   
+   ## seed pincheck run
+   my $pincheckCmd;
+   ## allow square brackets for debug GDS/CDL
+   my $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaPinCheck.pl" );
+      $pincheckCmd = "$tool \\\n  -log $fname_pincheckLogFile \\\n"
+                     ."  -macro $macro -tech $href_legalRelease->{'process'} \\\n"
+                     ."  -lefObsLayers '$layersMacro' \\\n"
+                     ."  -lefPinLayers '$layersMacro' \\\n"
+                     ."  -PGlayers '$supplyPinsMacro' \\\n"
+                     ."  -appendlog -since '$datePincheck' -dateRef CDATE -bracket $opt_bracket \\\n";
+   
+   ## Add lef/gds/cdl files to the arguments of the alphaPinCheck script
+   if( defined($pincheckCmdSegment) ){
+      $pincheckCmd .= $pincheckCmdSegment;
+   }
+   
+   foreach my $item (sort keys %pincheckFiles){
+      my $file = $pincheckFiles{$item}->{'file'};
+      my $type = $pincheckFiles{$item}->{'type'};
+      if( !-e $file ){
+         wprint("Cound not find '$file' $type file, ".
+                "so skipping for pin check comparison...\n");
+         push(@$aref_missingFiles, $file);
+      }elsif(-z $file){
+         wprint("Zero size for '$file' $type file, ".
+                "so skipping for pin check comparison...\n");
+         push(@$aref_missingFiles, $file);
+      }else{
+         $pincheckCmd .= "  -$type $file \\\n";
+         viprint(LOW, "\tFound '$file' '$type' file for ".
+                      "pin check comparison\n");
+      }
+   }
+   #$pincheckCmd .= "  |& cat >> $fname_pincheckLogFile\n";
+   
+   my ( $lefdiffCmd );
+   ## add LEF diff to pin check run, if requested and LEF exists 
+   if( defined $href_legalRelease->{'lefdiffRel'} &&
+            -e $href_lefdiffFiles->{'relLef'}         ){
+      vhprint(MEDIUM, "Found 'lef_diff_rel' in legalRelease.txt, and release exists, so adding"
+              ." LEF diff CMD to pin check shell script.\n" );
+      ## Append the lefdiff cmd to the pincheck cmd 
+      my $lefdiffCmd = get_lefdiff_cmd($macro, $href_legalRelease, $href_lefdiffFiles);
+      $pincheckCmd .= $lefdiffCmd;
+   }
+   
+   ## write pincheck shell
+   iprint("\tWriting and executing pin check shell script file...\n".
+          "\t'$fname_pincheckShellFile'\n" );
+   
+   my ( $cmd );
+   ##   check out pin check shell/log if it exists,or add an empty file to seed depot
+   my @files = ($fname_pincheckShellFile, $fname_pincheckLogFile);
+   if( defined($href_legalRelease->{'lefdiffRel'}) && (-e $href_lefdiffFiles->{'relLef'}) ){
+      push @files, $href_lefdiffFiles->{'log'};
+   }
+   foreach my $file (@files){
+      if( -e $file ){
+         $cmd = "p4 edit $file |& cat >> $p4LogFile";
+         run_system_cmd($cmd, $VERBOSITY);
+      }else{
+         $cmd = "touch $file; p4 add $file |& cat >> $p4LogFile";
+         run_system_cmd($cmd, $VERBOSITY);
+      }
+   }
+   
+   #  Open the pincheck shell file and write the commands into it.
+   ## remove pincheck log file, so we can append it, for utility macro cells
+   my @pin_cmds;
+   push(@pin_cmds, "rm $fname_pincheckLogFile\n" );
+   ## Need to check submacros for utility macros for all families, repeater macros if they have subcells
+   if( grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}} ){
+      ## we need to check each level 1 cell, instead of level 0 (top level)
+      foreach my $cell ( @{$href_legalRelease->{'phyvMacros'}->{$macro}} ){
+         ## so swap cell for macro
+         $cmd = $pincheckCmd;
+         ## changes pin check macro name
+         $cmd =~ s/\-macro $macro\b/\-macro $cell/;
+         ## changes pin check vmodule name for debug
+         $cmd =~ s/\-vmodule $macro\b/\-vmodule $cell/;
+         ## changes pin check CSV file to be used to cell version
+         $cmd =~ s/$macro\.csv\b/$cell.csv/;
+         push(@pin_cmds, $cmd . "\n" );
+      }
+      
+      my $gdsCheckFile;
+      ##   tagging check, for debug use src file
+      if( defined($opt_dryrun) ){
+         $gdsCheckFile = $href_sourcePaths->{'gds'}
+      }else{
+         $gdsCheckFile = $href_relPaths->{'gds'}
+      }
+      ## and check tag (done here since we only run this once (not per cell) .. lazy programmer
+      push(@pin_cmds, "echo |& cat >> $fname_pincheckLogFile\n" );
+      push(@pin_cmds, "echo |& cat >> $fname_pincheckLogFile\n" );
+      push(@pin_cmds, "echo msip_layTree -v $gdsCheckFile |& cat >> $fname_pincheckLogFile\n" );
+      push(@pin_cmds, "msip_layTree -v $gdsCheckFile |& cat >> $fname_pincheckLogFile\n" );
+   }
+   elsif( defined $href_legalRelease->{'repeaterSubMacros'}->{$macro} ){
+      foreach my $cell (@{$href_legalRelease->{'repeaterSubMacros'}->{$macro}} ){ 
+         ## so swap cell for macro
+         $cmd = $pincheckCmd;
+         ## changes pin check macro name
+         $cmd =~ s/\-macro $macro\b/\-macro $cell/;
+         ## changes pin check vmodule name for debug
+         $cmd =~ s/\-vmodule $macro\b/\-vmodule $cell/;
+         ## changes pin check CSV file to be used to cell version
+         $cmd =~ s/$macro\.csv\b/$cell.csv/;
+         push(@pin_cmds, $cmd . "\n" );
+      }
+      
+      my $gdsCheckFile;
+      ##   tagging check, for debug use src file
+      if( defined($opt_dryrun) ){
+         $gdsCheckFile = $href_sourcePaths->{'gds'}
+      }else{
+         $gdsCheckFile = $href_relPaths->{'gds'}
+      }
+      ## and check tag (done here since we only run this once (not per cell) .. lazy programmer
+      push(@pin_cmds, "echo |& cat >> $fname_pincheckLogFile\n" );
+      push(@pin_cmds, "echo |& cat >> $fname_pincheckLogFile\n" );
+      push(@pin_cmds, "echo msip_layTree -v $gdsCheckFile |& cat >> $fname_pincheckLogFile\n" );
+      push(@pin_cmds, "msip_layTree -v $gdsCheckFile |& cat >> $fname_pincheckLogFile\n" );
+   
+   }
+   ## for all other macros, just dump the pin check command
+   else{
+      push(@pin_cmds, $pincheckCmd );
+   }
+   ## change pin check paths to user home paths
+   foreach my $line (@pin_cmds){
+      $line =~ s/ \S+\/$opt_p4ws/ \/u\/\$USER\/$opt_p4ws/g;
+   }
+   
+   write_file( \@pin_cmds, $fname_pincheckShellFile );
+   chmod 0755, $fname_pincheckShellFile;
+   
+   ## run pincheck script
+   $cmd = "$fname_pincheckShellFile";
+   if( defined($opt_dryrun) ){
+      wprint( "In DRYRUN mode, pincheck compares source files, not released files\n" );
+   }
+   #------------------------------------------------------
+   # Run alphaPinCheck.pl ... unless in DRYRUN mode
+   #------------------------------------------------------
+   unless( defined $opt_dryrun || defined($DA_TESTING) ){
+      run_system_cmd($cmd, $VERBOSITY);
+   }
+   
+   my ( $pincheckDirtysCount, $pincheckWarningsCount ); 
+   ## interrogate pincheck file for DIRTY checks
+   unless( -e $fname_pincheckLogFile ){
+      wprint("pincheck log file '$fname_pincheckLogFile' does not exist!\n");
+      push(@$aref_missingFiles, $fname_pincheckLogFile);
+   }else{
+      iprint("\tChecking '$fname_pincheckLogFile' pin check log file...\n");
+      ( $pincheckDirtysCount, $pincheckWarningsCount ) 
+                        = countDirtysAndWarnings($fname_pincheckLogFile);
+   }
+
+   my ( $lefdiffDirtysCount, $lefdiffWarningsCount ); 
+   ## interrogate lefdiff file for DIRTY checks
+   if( defined($href_legalRelease->{'lefdiffRel'}) && (-e $href_lefdiffFiles->{'relLef'}) ){
+      unless( -e $href_lefdiffFiles->{'log'} ){
+         wprint("lefdiff log file '$href_lefdiffFiles->{'log'}' does not exist!\n");
+         push(@$aref_missingFiles, $href_lefdiffFiles->{'log'});
+      }else{
+         iprint("\tChecking '$href_lefdiffFiles->{'log'}' pin check log file...\n");
+         ( $lefdiffDirtysCount, $lefdiffWarningsCount ) 
+                        = countDirtysAndWarnings($href_lefdiffFiles->{'log'});
+      }
+   }
+   
+   print_function_footer();
+   return($lefdiffDirtysCount,  $lefdiffWarningsCount, $fname_pincheckLogFile, 
+          $pincheckDirtysCount, $pincheckWarningsCount);
+} # End of run_pincheck_script
+
+#-------------------------------------------------------------------------------
+#  Returns the lefdiff cmd to be appended to the pincheckCmd 
+#-------------------------------------------------------------------------------
+sub get_lefdiff_cmd(){
+   print_function_header();
+   my $macro             = shift;
+   my $href_legalRelease = shift;
+   my $href_lefdiffFiles = shift;
+
+   my $tool = adjust_cmd_for_perl_coverage( "$RealBin/alphaPinCheck.pl" );
+   ## if diff LEF does not exist, warn and still run (to log error)
+   my $lefdiffCmd = "rm $href_lefdiffFiles->{'log'}\n";
+   if( defined $href_lefdiffFiles->{'diffRelLef'} ){
+      if(!-e $href_lefdiffFiles->{'diffRelLef'}){
+         wprint("\t'$href_lefdiffFiles->{'diffRelLef'}' LEF diff file does not exist...\n");
+      }
+      $lefdiffCmd .= "$tool \\\n  -log $href_lefdiffFiles->{'log'} \\\n"
+                    ."  -macro $macro -tech $href_legalRelease->{'process'} -phys \\\n"
+                    ."  -lefObsLayers '$href_legalRelease->{'layers'}' \\\n"
+                    ."  -lef $href_lefdiffFiles->{'relLef'} \\\n"
+                    ."  -lef $href_lefdiffFiles->{'diffRelLef'} "
+                     #"|& cat >> $href_lefdiffFiles->{'log'}\n";
+                    ."  \n";
+   }
+   
+   if( defined $href_lefdiffFiles->{'patchLef'} ){
+      $lefdiffCmd .= "$tool \\\n  -log $href_lefdiffFiles->{'log'} \\\n"
+                    ."  -macro $macro -tech $href_legalRelease->{'process'} -phys \\\n"
+                    ."  -lefObsLayers '$href_legalRelease->{'layers'}' \\\n"
+                    ."  -lef $href_lefdiffFiles->{'relLef'} \\\n"
+                    ."  -lef $href_lefdiffFiles->{'patchLef'} "
+                     #"|& cat >> $href_lefdiffFiles->{'log'}\n";
+                    ."  \n";
+   }
+
+   print_function_footer();
+   return($lefdiffCmd);
+}
+
+#-------------------------------------------------------------------------------
+#  Set the paths to the pincheck files
+#-------------------------------------------------------------------------------
+sub setup_pincheck_files($$$$$){
+   print_function_header();
+   my $macro              = shift;
+   my $projPathAbs        = shift;
+   my $relPathAbs         = shift;
+   my $href_pincheckFiles = shift;
+   my $href_legalRelease  = shift;
+
+   my $filePath;
+   ## no behavioral views for shim macros
+   unless( defined $href_legalRelease->{'shimMacros'}->{$macro} ){
+      ## utility and repeater macros need to use project disk pininfo files 
+      ## because not all cells in utility macro will be released
+      if(    (grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}})
+          || (grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}}) ){
+         $filePath = firstAvailableFile("${projPathAbs}/design/pininfo/".
+                                        "$rel/${macro}.csv",
+                                        "${projPathAbs}/design_unrestricted/pininfo/".
+                                        "$rel/${macro}.csv"); 
+         # If none of the file were found, use any one for the error display afterwards
+         if( $filePath eq EMPTY_STR ){
+            $filePath = "${projPathAbs}/design/pininfo/$rel/${macro}.csv";
+         }
+         $href_pincheckFiles->{'pininfo'}->{'file'} = $filePath;
+         $href_pincheckFiles->{'pininfo'}->{'type'} = 'pinCSV';
+      }else{
+         $filePath = "${relPathAbs}/${macro}/$rel/macro/pininfo/".
+                     "${macro}.csv";
+         $href_pincheckFiles->{'pininfo'}->{'file'} = $filePath;
+         $href_pincheckFiles->{'pininfo'}->{'type'} = 'pinCSV';
+         ## utility cells only have no COSIM files
+         $filePath = "${relPathAbs}/${macro}/$rel/macro/cosim/".
+                     "${macro}.sp";
+         $href_pincheckFiles->{'cosim'}->{'file'} = $filePath;
+         $href_pincheckFiles->{'cosim'}->{'type'} = 'cdl';
+      }
+      ## verilog file
+      $filePath = "${relPathAbs}/${macro}/$rel/macro/".
+                  "behavior/${macro}.v";
+      $href_pincheckFiles->{'behavior'}->{'file'} = $filePath;
+      $href_pincheckFiles->{'behavior'}->{'type'} = 'verilog';
+      ## verilog interface file
+      $filePath = "${relPathAbs}/${macro}/$rel/macro/".
+                  "interface/${macro}_interface.v";
+      $href_pincheckFiles->{'interface'}->{'file'} = $filePath;
+      $href_pincheckFiles->{'interface'}->{'type'} = 'verilog';
+   }  
+   
+   dprint_dumper(HIGH,"\%pincheckFiles => ", $href_pincheckFiles);
+
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+#  Print the submit command
+#-------------------------------------------------------------------------------
+sub print_p4_submit_command($$$$){
+   print_function_header();
+   my $macro             = shift;
+   my $relPathAbs        = shift;
+   my $opt_dryrun        = shift;
+   my $href_legalRelease = shift;
+   
+   ## p4 submit command
+   if( defined $opt_dryrun ){
+      iprint("DEBUG: No p4 files to submit\n");
+   }else{
+      p4print("To complete release deliverables submission to the depot:\n".
+              "\tUse the following command:\n".
+              "\t\tp4 submit -d 'Release $rel of macro $macro ".
+              "PHYV views' ${relPathAbs}/${macro}/$rel".
+              "/macro/...\n".
+              "\tor\n".
+              "\t\tp4 submit -d 'Release $rel of macro $macro ".
+              "PHYV views per JIRA #XXXX, updated to fix XYZ' ".
+              "${relPathAbs}/${macro}/$rel/macro/...\n");
+   }
+      
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+#  Print the warnings from the pincheck shell as well as the missing files.
+#-------------------------------------------------------------------------------
+sub print_warnings($$$$$$$$$){
+   print_function_header();
+   my $macro                 = shift;
+   my $lefdiffDirtysCount    = shift;
+   my $lefdiffWarningsCount  = shift;
+   my $fname_pincheckLogFile = shift;
+   my $pincheckDirtysCount   = shift;
+   my $pincheckWarningsCount = shift;
+   my $href_legalRelease     = shift;
+   my $href_lefdiffFiles     = shift;
+   my @missingFiles          = @{+shift};
+   
+   ## warn to manually check tagging of utility macro
+   if( grep{/$macro/} @{$href_legalRelease->{'utilityMacro'}} ){
+      wprint("The '$macro' utility macro should be tagged, which must be reviewed in log file:\n".
+             "\t'$fname_pincheckLogFile'\n".
+             "\tPlease review the tagging info following the logged 'msip_layTree' ".
+             "command at the end of the file.\n");
+   }
+
+   ## warn to manually check tagging of repeater macro
+   if( grep{/$macro/} @{$href_legalRelease->{'repeaterMacro'}} ){
+      wprint("The '$macro' repeater macro should be tagged, which must be reviewed in log file:\n".
+             "\t'$fname_pincheckLogFile'\n".
+             "\tPlease review the tagging info following the logged 'msip_layTree' ".
+             "command at the end of the file.\n");
+   }
+
+   ## warn about any lefdiff warning
+   if( defined($href_legalRelease->{'lefdiffRel'}) && (-e $href_lefdiffFiles->{'relLef'}) ){
+      if( defined($lefdiffWarningsCount) && $lefdiffWarningsCount > 0 ){
+         wprint("There were '$lefdiffWarningsCount' checks that were 'Warning' in the ".
+               "'$macro' macro lefdiff run.\n".
+               "\tThe warnings are listed in the pin check log file:\n".
+               "\t\t'$href_lefdiffFiles->{'log'}'\n".
+               "\tThese items may be acceptable, but please review them.\n");
+      }
+   }    
+
+   ## warn about any pincheck warning
+   if( defined($pincheckWarningsCount) && $pincheckWarningsCount > 0 ){
+      wprint("There were '$pincheckWarningsCount' checks that were 'Warning' in the ".
+             "'$macro' macro pincheck run.\n".
+             "\tThe warnings are listed in the pin check log file:\n".
+             "\t\t'$fname_pincheckLogFile'\n".
+             "\tThese items may be acceptable, but please review them.\n");
+   }    
+
+   ## warn about any lefdiff dirty/error
+   if( defined($href_legalRelease->{'lefdiffRel'}) && ( -e $href_lefdiffFiles->{'relLef'}) ){
+      if( defined($lefdiffDirtysCount) && $lefdiffDirtysCount > 0 ){
+         wprint("There were '$lefdiffDirtysCount' checks that were 'DIRTY/Error' in the ".
+                "'$macro' macro lefdiff run.\n".
+                "\tThe failed checks are listed in the pin check log file:\n".
+                "\t\t'$href_lefdiffFiles->{'log'}'\n".
+                "\tThese items may be acceptable, but please review them.\n");
+      }
+   }    
+
+   ## warn about any pincheck dirty/error
+   if( defined($pincheckDirtysCount) && $pincheckDirtysCount > 0 ){
+      eprint("There were '$pincheckDirtysCount' checks that were 'DIRTY/Error' in the ".
+             "'$macro' macro pincheck run.\n".
+             "\tThe failed checks are listed in the pin check log file:\n".
+             "\t\t'$fname_pincheckLogFile'\n".
+             "\tPlease fix all DIRTY checks, or get waivers from the CKT lead.\n");
+   }    
+
+   ## warn about any missing files
+   if( @missingFiles ){
+      eprint("There were missing source behavioral files:\n\t\t".
+             join("\n\t\t",@missingFiles).
+             "\n\tPlease create the missing source files, or get waivers from the CKT lead.\n");
+   }
+   
+   print_function_footer();
+   # End of print_warnings
+}
+
+#-------------------------------------------------------------------------------
+# Check if the file is opened in p4, if so revert it. 
+#-------------------------------------------------------------------------------
+sub revert_if_opened($){
+   print_function_header();
+   my $file = shift;
+   
+   my $cmd = "p4 opened $file";
+   my ( $stdout, $retval ) = run_system_cmd($cmd, $VERBOSITY-1);
+   if( $stdout =~ /file\(s\) not opened/){
+      viprint(LOW, "The file '$file' is not checked-out!\n");
+   }else{
+      $cmd = "p4 revert $file |& cat >> $p4LogFile";
+      run_system_cmd($cmd, $VERBOSITY);
+      viprint(LOW, "Reverted the file '$file'!\n");
+   }
+   
+   print_function_footer();
+}
+
+#-------------------------------------------------------------------------------
+#  parse the verification path from the arguments
+#-------------------------------------------------------------------------------
+sub process_cmd_line_args() {
+    ## get specified args
+    my(
+       $opt_p4ws,     $opt_dryrun, $opt_verifpath, $opt_user,
+       $opt_nousage,  $opt_help,   $opt_debug,     $opt_verbosity,
+       $opt_bracket,  $opt_rel  
+      );
+
+    my $success = GetOptions(
+       "help!"       => \$opt_help,
+       "p=s"         => \$opt_verifpath,
+       "p4ws=s"      => \$opt_p4ws,
+       "user:s"      => \$opt_user,
+       "dryrun!"     => \$opt_dryrun,
+       "nousage"     => \$opt_nousage,
+       "debug=i"     => \$opt_debug,
+       "verbosity=i" => \$opt_verbosity,
+       "bracket=s"   => \$opt_bracket,
+       "rel=s"       => \$opt_rel,
+    );
+
+    $main::VERBOSITY  = $opt_verbosity if( defined $opt_verbosity );
+    $main::DEBUG      = $opt_debug     if( defined $opt_debug     );
+    $main::DA_TESTING = 1              if( exists( $ENV{'DDR_DA_TESTING'} ));
+
+    ## quit with usage message, if usage not satisfied
+    &usage(0) if $opt_help;
+    &usage(1) unless( $success );
+    &usage(1) unless( defined $opt_verifpath );
+
+    $opt_p4ws    = "p4_ws"  unless( defined($opt_p4ws   ) );
+    $opt_bracket = "square" unless( defined($opt_bracket) );
+    &usage(1) unless( $opt_bracket eq 'square' ||
+                      $opt_bracket eq 'any' );
+     
+    &usage(1) unless( defined $opt_verifpath );
+
+    $opt_user = get_username() unless( defined $opt_user );
+    return( $opt_dryrun, $opt_nousage, $opt_user, $opt_verifpath,
+            $opt_p4ws,   $opt_bracket, $opt_rel );
+}
+# End of process_cmd_line_args
+
+#------------------------------------------------------------------------------
+#  script usage message
+#------------------------------------------------------------------------------
+sub usage($) {
+    my $exit_status = shift;
+
+    print << "EOP" ;
+Description
+
+USAGE : $PROGRAM_NAME [options] -p <verif_path> 
+
+------------------------------------
+Required Args:
+------------------------------------
+-p  <verif_path>      Path to the user's ICV/caliber verification files 
+
+------------------------------------
+Optional Args:
+------------------------------------
+-p4ws        <arg>    Overrides path to your personal Perforce work area (default: \$HOME/p4_ws)
+-bracket [square|any] Value passed to alphaPinCheck cmd. (default: square)
+-rel         <arg>    Overrides the release version for older instances
+-dryrun               Do not execute p4 commands (other than status/opened) or create files
+-verbosity   <#>      Requires integer argument. Higher values results in more informational user messages (e.g. -v 2)
+-debug       <#>      Requires integer argument. Higher values results in more debug messages (e.g. -d 3)
+-user        <str>    Override user name in flows.
+-nousage              Don't record usage in database.
+-help                 Print this screen
+
+EOP
+
+    exit $exit_status ;
+} # usage()
+__END__
+
+=head1 NAME
+
+ alphaHLDepotPhyvRelease
+
+=head1 VERSION
+
+ 2022.11
+
+=head1 ABSTRACT
+
+ This script will copy the generated release files from a verification path to
+ the depot release path. It will also call the pincheck script for sanity checks.
+
+=head1 Description
+
+ This script will copy the release files generated from the layout view from a CD
+ verification path:
+   /slowfs/sgscratch/$USER/verification/<projSPEC>/<metal_stack>/<CD_lib>/<macro> 
+ -or-
+   /remote/scratch/$USER/<projSPEC>/verification/<metal_stack>/<CD_lib>/<macro>
+
+ to the depot release path defined from variables in the project release file:
+   /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/legalRelease.txt
+
+ for the macros in the project macro file:
+   /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/legalVerifs.txt
+
+These files include:
+
+=over 4
+
+=item B<LEF views> 
+ 
+ <macro>_geom.lef to <macro>.lef and <macro>_both.lef to <macro>_merged.lef.
+
+=item B<GDS view> 
+ 
+ uniquified and angle brackets converted to square, as well as creating HL 
+ required GDS layer map file.
+
+=item B<CDL view> 
+ 
+ uniquified and angle brackets converted to square.
+
+=item B<Verif report files>
+
+=back
+
+=head1 USAGE
+
+ module load ddr-ckt-rel 
+ alphaHLDepotPhyvRelease [options] verificationPath 
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-help> 
+
+ Print this screen.
+
+=item B<-user>
+ 
+ User name to override source path user (does not
+ affect the release path). Default = $ENV{'USER'}
+
+=item B<-verbosity> B<#>
+
+ Print additional messages... Includes details of system calls, etc..
+ Must provid integer argument where higher values increase verbosity.
+
+=item B<-debug> B<#>
+
+ Print debug messages... Requires integer argument. Higher values results 
+ in more debug messages (e.g. -debug 3)
+
+=item B<-dryrun>
+
+ Do not execute p4 commands (other than status/opened) or file conversion steps.
+
+=back
+
+=head1 Requirements
+
+=over 4
+
+=item -The depot has to be seeded with blank or old files, so that all files 
+       exist and can be checked-out using 'p4 edit'.
+
+=item -LEF files are created in a directory called 'lef' parallel to Calibre 
+       runs.
+
+=back
+
+=head1 Testing
+
+=over 4
+
+=item B<DDR_DA_TESTING>
+
+ By setting this environment variable some special things happen in the code
+ so that the script can be tested by the DA team. Don't run 
+ alphaGenHiprelynxLayermap.pl/alpha{GdsPrep.pl/CdlPrep.tcl}. Use the verif 
+ path to find project files..
+
+=back
+
+=cut
+

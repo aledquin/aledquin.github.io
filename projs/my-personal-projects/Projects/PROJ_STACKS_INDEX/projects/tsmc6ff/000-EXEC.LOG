@@ -1,0 +1,312 @@
+n217-c10-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18_amd rel1.3.0
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel1.3.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z/env.tcl
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel1.3.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM/env.tcl
+n221-c10-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.8.0
+INFO: DONE
+
+u132-cmnblks-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.8.0
+INFO: DONE
+
+m0119-mem-tsmc6ff-ts06n0g41p11sadcl02ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p10asdvd01ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11sasrl256s.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g42p11sacul256s.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g42p11sasul01ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11sacrl256s.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11sadul02ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11sassl01ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g42p11sadrl128s.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g42p22sadsl01ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11cpsrlhpcs.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11dpdrlhpcs.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11gpdrlhpcs.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11sadtc80ks.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g41p11sarel256s.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+m0119-mem-tsmc6ff-ts06n0g41p10assvd01ms.txt
+INFO: em em m0119-mem-tsmc6ff-ts06n0g42p11sacrl128s
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e709-hdmi21-rxphy-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+e323-hdmi-earcrx-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.3.0
+INFO: DONE
+
+e709-hdmi21-earctx-tsmc6ff-18.txt
+INFO: hdmi hdmi e709-hdmi21-rxphy-tsmc6ff-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e709-hdmi21-audiopll-tsmc6ff-18.txt
+INFO: hdmi hdmi e709-hdmi21-rxphy-tsmc6ff-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g158-dphy-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.7.0
+INFO: DONE
+
+g305-dphy-cphy-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.8.0
+INFO: DONE
+
+g312-dphy-cphy-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.7.2
+INFO: DONE
+
+l260-std-tsmc6ff-1.8v_amd.txt
+INFO: tsmc6ff 18_amd rel1.1.0
+INFO: DONE
+
+l260-std-tsmc6ff-1.8v.txt
+INFO: tsmc6ff 18 rel2.7.0
+INFO: DONE
+
+x706-usb2-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.9.0
+INFO: DONE
+
+x706-usb2-tsmc6ff-18-ns-5port.txt
+INFO: tsmc6ff 18 rel2.1.0
+INFO: DONE
+
+x706-usb2-tsmc6ff-6port-18-ns.txt
+INFO: tsmc6ff 18 rel2.7.2
+INFO: DONE
+
+d542-ddr43-tsmc6ff18.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x161-e16-lp-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.9.0
+INFO: DONE
+
+x161-e16-lpcuint-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.2.1
+INFO: DONE
+
+p041-emclk-tsmc6ff-1.8v.txt
+INFO: CCS CCS "c260-tsmc6ff-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d717-hbm2e-tsmc6ff-18.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t046-pqv-tsmc6ff-1.8v.txt
+INFO: CCS CCS "c260-tsmc6ff-1.8v"
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y223-emmc-tsmc6ff-1.8v.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x092-e25-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.8.0
+INFO: DONE
+
+d812-ddr54-cuamd-tsmc6ff18.txt
+INFO: tsmc6ff 18_amd rel1.3.0
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel1.3.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z/env.tcl
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel1.3.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM/env.tcl
+d842-ddr54v2-tsmc6ff18.txt
+INFO: tsmc6ff 18 rel2.9.0
+INFO: DONE
+
+d832-ddr54v2-cuamd-tsmc6ff18.txt
+INFO: tsmc6ff 18_amd rel2.3.0
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel2.3.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z/env.tcl
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel2.3.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM/env.tcl
+x332-e32-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.8.0
+INFO: DONE
+
+x335-e32-ldo-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.5.0
+INFO: DONE
+
+x342-e32-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.5.0
+INFO: DONE
+
+x343-e32-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x340-e32-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.7.2
+INFO: DONE
+
+o706-diffbuf-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.7.2
+INFO: DONE
+
+d862-lpddr54-cuamd-tsmc6ff18.txt
+INFO: tsmc6ff 18_amd 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d852-lpddr54-tsmc6ff18.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+d872-lpddr54-cuamd-tsmc6ff-18.txt
+INFO: tsmc6ff 18_amd 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t123-pcsmngqa-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.5.0
+INFO: DONE
+
+v011-eusb2-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel1.1.0
+INFO: DONE
+
+v013-eusb2-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+w022-nvm-otp-commonLibs-tsmc6ff-1.8v.txt
+INFO: tsmc6ff 18 rel2.7.2
+INFO: DONE
+
+w299-nvm-otp-shfg4xpm-tsmc6ff-1.8v.txt
+INFO: tsmc6ff 18 rel2.7.2
+INFO: DONE
+
+x582-e112-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x586-e112-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+n406-c20-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.9.0
+INFO: DONE
+
+n404-c20-tsmc6ff-18-ns.txt
+INFO: program program p260-program-amd_navi4c-tsmc6ff-18
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n402-c20-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.2.1
+INFO: DONE
+
+x225-xsr-tsmc6ff-18-ns.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+d752-hbm3-tsmc6ff18.txt
+INFO: tsmc6ff 18_amd rel2.2.2
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel2.2.2/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z/env.tcl
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel2.2.2/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z_SHDMIM/env.tcl
+f516-gpio-tsmc6ff-1.8v.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+s001-pms-5137tstd-tsmc6ff-18.txt
+INFO: tsmc6ff 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+s001-pms-5140dts-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+s001-pms-5143cat-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.7.0
+INFO: DONE
+
+s001-pms-5137td-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.7.0
+INFO: DONE
+
+s001-pms-5141pvtc-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.7.0
+INFO: DONE
+
+s001-pms-5138vm-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.7.0
+INFO: DONE
+
+s001-pms-5139pd-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.10.0
+INFO: DONE
+
+s001-pms-5177tchip-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.9.0
+INFO: DONE
+
+s001-pms-5182dts2-tsmc6ff-18.txt
+INFO: tsmc6ff 18 rel2.9.0
+INFO: DONE
+
+p260-program-amd_navi4c-tsmc6ff-18.txt
+INFO: tsmc6ff 18_amd rel2.4.0
+ERROR: IcvRunDRC not defined.
+tsmc6ff-18_amd_13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z : /remote/cad-rep/proj/c260-tsmc6ff-1.8v_amd/rel2.4.0/cad/13M_1X_h_1Xa_v_1Ya_h_5Y_vhvhv_2Yy2Z/env.tcl
+n221-c10-tsmc6ff-18-ns.txt
+INFO: c10 c10 n221-c10-tsmc6ff-18-ns
+INFO: SKIPPED. NOT RELEASE VESION.
+

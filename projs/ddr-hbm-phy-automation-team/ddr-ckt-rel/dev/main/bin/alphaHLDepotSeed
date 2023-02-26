@@ -1,0 +1,1253 @@
+#!/depot/perl-5.14.2/bin/perl
+##
+## PERL libs
+use strict;
+use warnings;
+use Test2::Bundle::More;
+use Getopt::Long;
+use Data::Dumper;
+use File::Copy;
+use File::Compare;
+use File::Basename;
+use File::Path;
+use List::MoreUtils qw(uniq);
+use Term::ANSIColor;
+use Cwd;
+use Cwd qw(abs_path);
+use POSIX qw(strftime);
+use Clone 'clone';
+use Carp    qw( cluck confess croak );
+use FindBin qw($RealBin $RealScript);
+
+use lib "$RealBin/../lib/perl/";
+use Util::CommonHeader;
+use Util::Misc;
+use Util::Messaging;
+use alphaHLDepotRelease;
+
+#----------------------------------#
+# Defining constants for the milestone argument
+use constant INITIAL  => 0;
+use constant PRELIM   => 1;
+use constant PREFINAL => 2;
+use constant FINAL    => 3;
+#----------------------------------#
+our $STDOUT_LOG; # Initiailized in the BEGIN block
+our $DEBUG               = NONE;
+our $VERBOSITY           = NONE;
+our $TESTMODE            = undef;
+our $PROGRAM_NAME        = $RealScript;
+our $LOGFILENAME         = getcwd() . "/$PROGRAM_NAME.log";
+our $VERSION             = get_release_version();
+our $AUTO_APPEND_NEWLINE = 1;
+#----------------------------------#
+## defaults
+our $utilityMacroDefault  = 'dwc_ddrphy_utility_cells';
+our $repeaterMacroDefault = 'dwc_ddrphy_repeater_cells';
+
+BEGIN {
+    our $AUTHOR='bchalla, jfisher, juliano, ljames';
+    #$STDOUT_LOG  = undef;     # undef       : Log msg to var => OFF
+    $STDOUT_LOG   = EMPTY_STR; # Empty String: Log msg to var => ON
+    header();
+}
+&Main();
+END {
+    local $?;   ## adding this will pass the status of failure if the script
+                ## does not compile; otherwise this will always return 0
+    footer();
+    write_stdout_log( $LOGFILENAME );
+}
+
+sub Main(){
+    my @orig_argv = @ARGV;  # keep this here cause GetOpts modifies ARGV
+    my ($opt_projSPEC, $opt_nousage, $opt_nocosim, $opt_macros, $opt_hspice,
+        $opt_ibis, $opt_p4ws, $opt_milestone)
+        = &process_cmd_line_args();
+
+    $opt_p4ws = 'p4_ws' unless( defined $opt_p4ws );
+    unless( $main::DEBUG or $opt_nousage) {
+        utils__script_usage_statistics( $PROGRAM_NAME, $VERSION, \@orig_argv);
+    }
+
+    ## start log file
+    my $logFile = $PROGRAM_NAME.'.log';
+
+    ## welcome
+    iprint("Attempting to seed HL directories with blank files for projSPEC '$opt_projSPEC' ...\n");
+    iprint("  Writing log file...'$logFile'\n");
+    iprint("  Skipping CoSim file generation...\n") if($opt_nocosim);
+
+    ## local vars
+    my ($date, $pininfoFile, $macro, $vmodule, $file, $filePath, $fileLink );
+    my ($cmd, $createdFiles, $foundFiles, $createdLinks);
+    my ($projStreamLayerMapFile, $projLvsIncludeFile);
+    my ($isRelUtil, $isRelRep, $foundLinks, $errorFound );
+    my (@macrosSuccess, @macrosFail, @corners, @files );
+    my (@metalStacks, @metalStacksIp );
+    my (%links, %hspiceContent, %ibisContent);
+   
+    my ($projType, $proj, $pcsRel) =  parse_project_spec( $opt_projSPEC, \&usage );
+    my $projPathAbs   = "/remote/cad-rep/projects/$projType/$proj/$pcsRel";
+    my ( $projMacroFile, 
+         $projNtFile,
+         $projRelFile,
+         $projVerifFile ) = get_project_files_path( $projPathAbs, $projType, $proj, $pcsRel );
+
+    my $projEnv    = "$projPathAbs/cad/project.env";
+    my ( $cadproj, $cadrel, $cadhome ) = getCadHome( $projEnv );
+
+    ##################################
+    # Parse TopCells File
+    ##################################
+    my %legalMacros = readTopCells( $projMacroFile );
+    my @macros = check_if_macros_are_legal( \%legalMacros, $opt_macros );
+
+    ##################################
+    # Parse legalVerifs File
+    ##################################
+    #  my %legalVerifs = parseLegalVerifFile( $projVerifFile );
+    #  dprint_dumper(HIGH,"\%legalVerifs => " , \%legalVerifs);
+
+    ##################################
+    # Parse alphaNT File
+    ##################################
+    my( $aref_pvt_corners, $href_params ) = readNtFile( $projNtFile );
+    my @corners_ckt = @$aref_pvt_corners;
+    if ( $main::DEBUG >= SUPER ) {
+        dprint(SUPER, "PVT Corners extracted from project NT file:\n\t$projNtFile\n"
+                     .scalar(Dumper $aref_pvt_corners). "\n" 
+                     .scalar(Dumper $href_params). "\n" );
+     }
+
+
+    dprint_dumper(SUPER, "PVT Corners extracted from project NT file:\n\t$projNtFile\n", \@corners_ckt );
+    prompt_before_continue(SUPER);
+
+    ## Using tech name for hspice_appnote/tcoil file seeding
+    my @projNameSplit = split('-', $proj);
+    my $tech = $projNameSplit[1];
+
+
+
+    ##################################
+    # Parse Legal Release File
+    ##################################
+    my ( $rel, $p4ReleaseRoot, $referenceDateTime, $process, 
+         $metalStack, $metalStackIp, $metalStackCover, $href_stackHash,
+         $layers, $href_layersOverrides, $supplyPins, $href_supplyPinsOverrides,
+         $href_areaOverrides, $href_bndLayer, $releaseShimMacro, $releasePhyvMacro, 
+         $releaseUtilityMacro, $releaseRepeaterMacro, $projDiskArchiveLibFiles,
+         $coverStackExists, 
+         $releaseDefMacro, 
+         $autoMatch, 
+         $href_shimMacros, 
+         $href_phyvMacros,
+         $href_releaseMacro,
+         $href_repeaterSubMacros,
+         $aref_timingLibs,
+         $href_referenceGdses,
+         $aref_utilityMacro,
+         $aref_ctlMacs,
+         $aref_repeaterMacro,
+         $aref_allowedTiming,
+         $calibre_verifs,
+         $verif_remove,
+         $verif_addi,
+         $aref_customerMacro,
+         $aref_icv_report_list,
+         $aref_calibre_report_list
+     ) = readLegalRelease( $projRelFile);
+    prompt_before_continue(SUPER);
+
+    my %customerMacroHash;
+    foreach my $customer_macro ( @$aref_customerMacro ) {
+        $customerMacroHash{"$customer_macro"} = 1;
+    }
+
+    my @utilityMacro  = @$aref_utilityMacro;
+    my @repeaterMacro = @$aref_repeaterMacro; 
+    my @timingLibs    = @$aref_timingLibs;   
+    my ( $relUtilityCellListFile, $relRepeaterCellListFile );
+
+    ## ensure release variables set
+    if( !@timingLibs ){
+        eprint("Failed to find 'timing_libs' timing libs types in $projRelFile project release file.");
+        iprint("Valid timing types: ".join (",",@$aref_allowedTiming,"\n"));
+        exit 1;
+    }
+
+    my %shimMacros;
+    if( !defined $releaseShimMacro ){
+        wprint("Failed to find 'releaseShimMacro' shim macro list in $projRelFile project release file.");
+    }
+    # get list of shim macros
+    else{
+        my @fields = split( /\s+/, $releaseShimMacro );
+        foreach my $field ( @fields ){
+            $shimMacros{$field} = [$field];
+            $legalMacros{$field}++;
+        }
+    } 
+
+    @metalStacks   = split(/\s+/,$metalStack);
+    @metalStacksIp = split(/\s+/,$metalStackIp);
+#    if( $autoMatch ){
+#        stackMatch( \@metalStacks, \@metalStacksIp, $href_stackHash );
+#    }
+    my ( @allStacks, @metalStacksCover );
+    push(@allStacks,@metalStacks);
+    if(defined $metalStackCover) {
+        @metalStacksCover = split(/\s+/,$metalStackCover);
+        coverStackCheck( \@metalStacksCover, \@allStacks );
+    }else{ 
+        @metalStacksCover = @{clone(\@metalStacks)}; 
+    }
+
+    my %phyvMacros = %$href_phyvMacros;
+
+    ## check required files from other scripts
+    iprint("  Checking technology files and other project files used in other release scripts...\n");
+    foreach my $metalStack ( @metalStacks ){
+        my @mapfiles;
+        push(@mapfiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.stream.layermap") if ( defined $ENV{'DDR_DA_MAIN'} );
+        push(@mapfiles, "$projPathAbs/cad/$metalStack/stream/stream.layermap");
+        push(@mapfiles, "$cadhome/$metalStack/stream/stream.layermap");
+        push(@mapfiles, "$cadhome/$metalStack/stream/STD/stream.layermap");
+        $projStreamLayerMapFile = firstAvailableFile( @mapfiles);
+        if( !-e $projStreamLayerMapFile ){
+           veprint(LOW, "The \$cadhome variable could not be determined. So two of the mapfiles we are looking for may have an invalid dirpath\n") if ( ! $cadhome );
+           fatal_error( "Cannot find $projStreamLayerMapFile stream layer map file for $metalStack",1 );
+        }
+        $projLvsIncludeFile = firstAvailableFile(
+                 "$projPathAbs/cad/$metalStack/template/lvs.include.cdl",
+                 "$cadhome/$metalStack/template/lvs.include.cdl");
+        if(!-e $projLvsIncludeFile){
+           fatal_error("Cannot find $projLvsIncludeFile LVS include file for $metalStack.",1);
+        }
+    }
+
+    ## set release path
+    my $username   = get_username();
+    my $p4PathBase = "/u/${username}/$opt_p4ws";
+    my $p4path = "$p4PathBase/$p4ReleaseRoot/ckt/rel";
+    my $p4client = $ENV{P4CLIENT};
+
+    verify_perforce_setup( $p4PathBase, $p4ReleaseRoot, $p4path, $p4client );
+    my $p4PathAbs = abs_path($p4path);
+
+    ## Check the milestone argument Jira: P10020416-29820
+    ## The other flags will only be altered if they were not defined before.
+    ($opt_milestone, $opt_hspice, $opt_ibis, $opt_nocosim)
+        = check_milestone($opt_milestone, $opt_hspice, $opt_ibis, $opt_nocosim, $rel);
+
+    ## set DEF macro cells if any
+    if( $opt_milestone >= PRELIM && defined $releaseDefMacro ){
+        my @splitDefs = split(/\s+/,$releaseDefMacro);
+        foreach my $eachDef (@splitDefs) {
+            my ($defMacro, $defCell) = split(/\//,$eachDef);
+            push(@files, "$p4PathAbs/floorplans/$rel/$defCell.def");
+        }
+    }
+
+    if( $opt_hspice ){
+        my ($preRoot) = ($p4ReleaseRoot =~ /(.*)\/project/);
+        my $prefix    = "//depot/$preRoot/common/qms/templates";
+        my $p4path    = firstP4Path( "$prefix/HSPICE_IBIS_list",
+                                     "$prefix/HSPICE_IBIS_TCOIL_list");
+        if ($p4path eq ''){
+            wprint("HSPICE seeding not supported for $tech... skipping HSPICE\n");
+        }
+        else {
+            my $templatePath = checkP4Mapping( $p4path );
+            my $hspice_fname = uc($projType) . "_HSPICE_list.txt";
+            my $hspice_spec  = "$templatePath/$hspice_fname";
+            my ($stdout, $retval) = run_system_cmd( "p4 sync -f $hspice_spec", $VERBOSITY );
+            if( $retval ){
+               eprint("'$hspice_fname' doesn't exist: $hspice_spec");
+            }
+            %hspiceContent = createHspiceStructure( "$hspice_spec" );
+
+            ## Check if tcoil list template exists, if yes, seed tcoil files
+            my $tcoil_fname = uc($tech) . "_TCOIL_list.txt";
+            my $tcoil_spec = "$templatePath/$tcoil_fname";
+            my ($output, $exit_val) = run_system_cmd("p4 -F %depotFile% files $tcoil_spec", $VERBOSITY);
+            if ($output ne EMPTY_STR && $output ne "\n"){
+                iprint("  Found tcoil list $tcoil_spec ... Attempting to seed tcoil files");
+                $cmd = "p4 sync -f $tcoil_spec >> $logFile";
+                logger("    \$ $cmd\n");
+                run_system_cmd($cmd, $VERBOSITY);
+                if (defined $metalStackCover){
+                    my @tcoil_files = read_file($tcoil_spec);
+                    foreach my $tcoil_file (@tcoil_files){
+                        chomp($tcoil_file);
+                        next if($tcoil_file eq "");
+                        foreach my $stack (@metalStacksCover){
+                            $filePath = "$p4PathAbs/tcoil_models/$rel/sparam/$stack";
+                            push @files, "$filePath/$tcoil_file";
+                        }
+                    }
+                }
+                else{
+                    wprint("Failed to find metal_stack_cover for tcoil files... Skipping\n");
+                }
+            }
+        }
+    }
+
+    if( $opt_ibis ){
+
+        my ($preRoot) = ($p4ReleaseRoot =~ /(.*)\/project/);
+        my $prefix    = "//depot/$preRoot/common/qms/templates";
+        my $p4path    = firstP4Path( "$prefix/HSPICE_IBIS_list",
+                                     "$prefix/HSPICE_IBIS_TCOIL_list");
+        if ($p4path eq ''){
+            wprint("IBIS seeding not supported for $tech... skipping IBIS\n");
+        }
+        else {
+            my $templatePath = checkP4Mapping($p4path);
+            my $ibis_fname = uc($projType) . "_IBIS_list.txt";
+            my $ibis_spec  = "$templatePath/$ibis_fname";
+            my ($stdout, $retval) = run_system_cmd( "p4 sync -f $ibis_spec", $VERBOSITY );
+            if( $retval ){
+               eprint("'$ibis_fname' doesn't exist: $ibis_spec");
+            }
+            %ibisContent = createIbisStructure( "$ibis_spec" );
+        }
+    }
+
+MACRO_LOOP:
+    ## loop through each macro
+    foreach my $macro ( sort @macros ){
+        iprint("  Creating files for $macro macro...\n");
+        ## set macro corners
+        ##   use default timing corners for all but utility/repeater cells library macro
+        if( !(grep{/$macro/} @utilityMacro) && !(grep{/$macro/} @repeaterMacro) ){
+            @corners = @corners_ckt;
+        }
+        ##   use copy of VC page corners for utility/repeater cells library macro
+        else{
+            ## use VC corners
+            my $relCornersHeaderBase = "Corner Type\tCase\tCore Voltage (V)\tPLL Voltage (V)\tIO Voltage (V)\tTemperature (C)\tExtraction Corner";
+            @corners = readCornersFromLegalVcCorners( $relCornersHeaderBase , $projPathAbs);
+
+        } ## end  else if($macro ne $utilityMacro)
+
+        ## reset counters
+        $foundFiles   = 0;
+        $createdFiles = 0;
+        $foundLinks   = 0;
+        $createdLinks = 0;
+        undef %links;
+
+        ## seed only if macro pininfo file exists; check pininfo for submacros if any (P10020416-33934)
+        if (defined $phyvMacros{$macro}){
+            foreach my $subMacro (@{$phyvMacros{$macro}}){
+                my @csvfiles;
+                push(@csvfiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.pininfo.${subMacro}.csv") if ( defined $ENV{'DDR_DA_MAIN'});
+                push(@csvfiles, "$projPathAbs/design/pininfo/$rel/${subMacro}.csv");
+                push(@csvfiles, "$projPathAbs/design_unrestricted/pininfo/$rel/${subMacro}.csv");
+                $pininfoFile = firstAvailableFile( @csvfiles);
+                if (!-e $pininfoFile){
+                    push @macrosFail, $macro;
+                    wprint("Failed to find source pininfo file for $macro... Skipping seeding");
+                    next MACRO_LOOP;
+                }
+            }
+            ## Add the pininfo for phyv macros if it exists (optional)
+            my @csvfiles;
+            push(@csvfiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.pininfo.${macro}.csv") if ( defined $ENV{'DDR_DA_MAIN'});
+            push(@csvfiles, "$projPathAbs/design/pininfo/$rel/${macro}.csv");
+            push(@csvfiles, "$projPathAbs/design_unrestricted/pininfo/$rel/${macro}.csv");
+            $pininfoFile = firstAvailableFile( @csvfiles);
+            if (-e $pininfoFile){
+                push @files, "$p4PathAbs/$macro/$rel/macro/pininfo/${macro}.csv";
+            }
+        }
+        elsif (defined $href_repeaterSubMacros->{$macro}){
+            foreach my $subMacro (@{$href_repeaterSubMacros->{$macro}}){
+                my @csvfiles;
+                push(@csvfiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.pininfo.${subMacro}.csv") if ( defined $ENV{'DDR_DA_MAIN'});
+                push(@csvfiles, "$projPathAbs/design/pininfo/$rel/${subMacro}.csv");
+                push(@csvfiles, "$projPathAbs/design_unrestricted/pininfo/$rel/${subMacro}.csv");
+                $pininfoFile = firstAvailableFile( @csvfiles);
+                if (!-e $pininfoFile){
+                    push @macrosFail, $macro;
+                    wprint("Failed to find source pininfo file for $macro... Skipping seeding");
+                    next MACRO_LOOP;
+                }
+            }
+        }
+        else{
+            my @csvfiles;
+            push(@csvfiles, "$ENV{DDR_DA_MAIN}/tests/data/$RealScript/$projType.$proj.$pcsRel.pininfo.${macro}.csv") if ( defined $ENV{'DDR_DA_MAIN'});
+            push(@csvfiles, "$projPathAbs/design/pininfo/$rel/${macro}.csv" );
+            push(@csvfiles, "$projPathAbs/design_unrestricted/pininfo/$rel/${macro}.csv" );
+            $pininfoFile = firstAvailableFile( @csvfiles );
+            if (!-e $pininfoFile && (!defined $shimMacros{$macro})){
+                push @macrosFail, $macro;
+                wprint("Failed to find source pininfo file for $macro... Skipping seeding");
+                next;
+            }
+            else{
+                push @files, "$p4PathAbs/$macro/$rel/macro/pininfo/${macro}.csv";
+            }
+        }
+
+        push (@files,
+            "$p4PathAbs/$macro/$rel/macro/interface/${macro}_interface.v",);
+
+        if($macro !~ /cover/i) {
+            ## grab vmodule from macro name
+        #    $vmodule = $macro;
+        #    $vmodule =~ s/(_ew|_ns)$//i; ## trim EW/NS suffix
+            ## create list of files
+            ## behavioral views
+            push (@files,"$p4PathAbs/$macro/$rel/macro/behavior/${macro}.v",
+                   );
+            if( $opt_milestone >= PREFINAL && grep{/^$macro$/} @$aref_ctlMacs ){
+                push(@files,"$p4PathAbs/$macro/$rel/macro/atpg/ctl/${macro}.ctl");
+            }
+            ## no cosim views for utility and repeater macro
+            if(!( grep{/$macro/} @utilityMacro) && !( grep{/$macro/} @repeaterMacro) && !$opt_nocosim){
+                push @files, "$p4PathAbs/$macro/$rel/macro/cosim/${macro}.sp";
+                push @files, "$p4PathAbs/$macro/$rel/macro/cosim/corners.inc";
+            }
+            ## need a cell list view for utility macro
+            elsif( (grep{/$macro/} @utilityMacro) && !( grep{/$macro/} @repeaterMacro) ){
+                $relUtilityCellListFile = "$p4PathAbs/$macro/$rel/macro/doc/${macro}_list.txt";
+                push @files, $relUtilityCellListFile;
+            }
+            ## need a cell list view for repeater macro
+            elsif( grep{/$macro/} @repeaterMacro ){
+                $relRepeaterCellListFile = "$p4PathAbs/$macro/$rel/macro/doc/${macro}_list.txt";
+                push @files, $relRepeaterCellListFile;
+            }
+        }
+        # P10020416-38355: use full metal stack for tcoil_replica
+        foreach my $theStack (@allStacks) {
+            my $tempStack = $theStack;
+            if($tempStack =~ /(.*)_both/) {
+                my $matchedStack = $1;
+                if ($macro =~ /cover/ || $macro =~ /_blocks/ || $macro =~ /_tcoil_replica/) {
+                    $metalStack = $matchedStack;
+                    $metalStackIp = $metalStack;
+                } else {
+                    $metalStack = $matchedStack;
+                    $metalStackIp = $href_stackHash->{$metalStack};
+                }
+            }
+            elsif ($tempStack =~ /(.*)_cover/) {
+                $metalStack = $1;
+                $metalStackIp = $metalStack;
+                if($macro !~ /cover/ && $macro !~ /_blocks/ && $macro !~ /_tcoil_replica/) { next; }
+            }
+            else {
+                if(($macro =~ /cover/ || $macro =~ /_blocks/ || $macro =~ /_tcoil_replica/) && $coverStackExists) { next; }
+                elsif ($macro =~ /cover/ || $macro =~ /_blocks/ || $macro =~ /_tcoil_replica/) {
+                    $metalStack = $theStack;
+                    $metalStackIp = $theStack;
+                } else {
+                    $metalStack = $theStack;
+                    $metalStackIp = $href_stackHash->{$metalStack};
+                }
+            }
+
+            #create the pincheck folders
+            if( $opt_milestone >= PRELIM ){
+                if ($macro =~ /_blocks/ || $macro =~ /cover/ || $macro =~ /_tcoil_replica/){ 
+                    # P10020416-38355: use full metal stack for tcoil_replica
+                    $filePath = "$p4PathAbs/$macro/$rel/macro";
+                    my $alphaPinCheckFile = "pincheck/$metalStack/alphaPinCheck.$macro";
+                    my $pinCheckFile = "pincheck/$metalStack/$macro.pincheck";
+                    my $lefDiffFile  = "pincheck/$metalStack/$macro.lefdiff";
+                    my $pincheckSummary = "$macro"."_pincheck_summary.txt";
+                    push @files, "$filePath/$alphaPinCheckFile";
+                    push @files, "$filePath/$pinCheckFile";
+                    push @files, "$filePath/$lefDiffFile";
+                    push @files, "$filePath/$pincheckSummary";
+                } else {
+                    $filePath = "$p4PathAbs/$macro/$rel/macro";
+                    my $alphaPinCheckFile = "pincheck/$metalStackIp/alphaPinCheck.$macro";
+                    my $pinCheckFile = "pincheck/$metalStackIp/$macro.pincheck";
+                    my $lefDiffFile = "pincheck/$metalStackIp/$macro.lefdiff";
+                    my $pincheckSummary = "$macro"."_pincheck_summary.txt";
+                    push @files, "$filePath/$alphaPinCheckFile";
+                    push @files, "$filePath/$pinCheckFile";
+                    push @files, "$filePath/$lefDiffFile";
+                    push @files, "$filePath/$pincheckSummary";
+                }
+            }
+
+            #------------------
+            # Add HSPICE files
+            if( $opt_hspice ){
+                if( defined(@{$hspiceContent{$macro}}) ){
+                    foreach my $hspiceFile ( @{$hspiceContent{$macro}} ){
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/hspice";
+                        $file = "${metalStackIp}/$hspiceFile";
+                        push @files, "$filePath/$file";
+                    }
+                }
+                if( defined(@{$hspiceContent{'HSPICE_model_app_note'}}) ){
+                    $filePath = "$p4PathAbs/HSPICE_model_app_note/$rel";
+                    foreach my $hspiceFile (@{$hspiceContent{'HSPICE_model_app_note'}} ){
+                        push @files, "$filePath/$hspiceFile";
+                    }
+                }
+                ## Add appnote and calcode files
+                $filePath = "$p4PathAbs/HSPICE_model_app_note/$rel";
+                ## Need tech in appnote file name
+                $file = "HSPICE_model_app_note_$tech.docx";
+                push @files, "$filePath/$file";
+                $file = "HSPICE_model_app_note_$tech.pdf";
+                push @files, "$filePath/$file";
+                ## calcode
+                $file = "cal_code.txt";
+                push @files, "$filePath/$file";
+            }
+
+            #------------------
+            # Add IBIS files
+            if( $opt_ibis ){
+                if( defined @{$ibisContent{$macro}} ){
+                    foreach my $ibisFile ( @{$ibisContent{$macro}} ){
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/ibis";
+                        $file = $ibisFile;
+                        push @files, "$filePath/$file";
+                    }
+                }
+
+            }
+
+            #Netlist/verif views
+            if( $opt_milestone >= PRELIM ){
+                if( $macro !~ /_blocks/i && $macro !~ /cover/i && $macro !~ /_tcoil_replica/i){
+                    # P10020416-38355: use full metal stack for tcoil_replica
+                    ## netlist file
+                    ##   directories/links
+                    $filePath = "$p4PathAbs/$macro/$rel/macro/netlist";
+                    $file     = "${metalStackIp}";
+                    $fileLink = "${metalStack}";
+                    $links{"$filePath/$fileLink"} = $file;
+                    ##   files/links
+                    $file = "${metalStackIp}/${macro}.cdl";
+                    push @files, "$filePath/$file";
+                    ## Seeding techrevision file for techrevision
+                    push(@files, "$filePath/${metalStackIp}/techrevision.v") if($macro =~ /techrevision/i);
+
+                    ## verif views: icv or calibre
+                    foreach my $verif ( "icv", "calibre" ) { #sort keys %legalVerifs )
+                        ##   directories/links
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/$verif";
+                        ##   files/links
+                        if ( $verif eq "calibre" ){
+                            # P10020416-38478 only process calibre when the macro is in the customerMacro list
+                            if ( exists $customerMacroHash{"$macro"} ){
+                                # where report could be: ant, drc, erc, lvs...
+                                foreach my $report ( @$aref_calibre_report_list ){
+                                    $file     = "${report}_${macro}_${metalStack}.rpt";
+                                    push @files, "$filePath/${report}/$file";
+                                    $fileLink = "${report}_${macro}_${metalStackIp}.rpt";
+                                    $links{"$filePath/${report}/$fileLink"} = $file;
+                                }
+                                iprint("Processing '$verif' for customerMacro '$macro'\n");
+                                viprint(LOW,    "\tit is mentioned in the 'customerMacro' setting of the legalRelease file\n");
+                                viprint(MEDIUM, "\tThe legalRelease filename is '$projRelFile'\n");
+                            } # end if macro is a customer macro
+                        }
+                        if ( $verif eq "icv" ){
+                            foreach my $report ( @$aref_icv_report_list ){
+                                $file     = "${report}_${macro}_${metalStack}.rpt";
+                                push @files, "$filePath/${report}/$file";
+                                $fileLink = "${report}_${macro}_${metalStackIp}.rpt";
+                                $links{"$filePath/$report/$fileLink"} = $file;
+                            }
+                        }
+                    }
+                } else {
+                    ## netlist file
+                    ##   directories/links
+                    $filePath = "$p4PathAbs/$macro/$rel/macro/netlist";
+                    $file = "${metalStack}";
+                    ##   files/links
+                    $file = "${metalStack}/${macro}.cdl";
+                    push @files, "$filePath/$file";
+
+                    ## verif views
+                    foreach my $verif ( "icv", "calibre" ) { #sort keys %legalVerifs)
+                        next if( $verif =~ /calibre/ && $macro =~ /cover/i );
+                        ##   directories/links
+                        if ( $verif eq "icv" ) {
+                            foreach my $report ( @$aref_icv_report_list ) {
+                                $filePath = "$p4PathAbs/$macro/$rel/macro/$verif";
+                                $file = "${report}_${macro}_${metalStack}.rpt";
+                                push @files, "$filePath/$report/$file";
+                            }
+                        }
+                        if ( $verif eq "calibre" ) {
+                            foreach my $report ( @$aref_calibre_report_list ) {
+                                $filePath = "$p4PathAbs/$macro/$rel/macro/$verif";
+                                $file = "${report}_${macro}_${metalStack}.rpt";
+                                push @files, "$filePath/$report/$file";
+                            }
+                        }
+                    }
+                }
+            }
+            if( $macro !~ /cover/i ){
+                ## add lib/db per corner to list of files
+                foreach my $corner (sort @corners){
+                ##   directories/links for std/lvf/ccsn based on timing_libs variable in legalRelease.yml or legalRelease.txt (not both)
+                if( @timingLibs ){
+                    foreach my $timingLib ( @timingLibs ){
+                        my $addon;
+                        if($timingLib eq "nldm") { $addon = "";}
+                        else { $addon = "_${timingLib}"; }
+                        ## timing files
+                        ##   directories/links
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/timing";
+                        if($macro !~ /_blocks/i && $macro !~ /_tcoil_replica/i) {
+                            # P10020416-38355: use full metal stack for tcoil_replica
+                            $file = "${metalStackIp}";
+                            $fileLink = "${metalStack}";
+                            $links{"$filePath/$fileLink"} = $file;
+                            ##   files/links
+                            $file = "${metalStackIp}/lib_pg${addon}/README.txt";
+                            push @files, "$filePath/$file";
+                            $file = "${metalStackIp}/lib${addon}/README.txt";
+                            push @files, "$filePath/$file";
+                            $file = "${metalStackIp}/lib_pg${addon}/compile.log";
+                            push @files, "$filePath/$file";
+                            $file = "${metalStackIp}/lib${addon}/compile.log";
+                            push @files, "$filePath/$file";
+                            $filePath = "$p4PathAbs/$macro/$rel/macro/timing/${metalStackIp}/lib${addon}";
+                        } else {
+                            $file = "${metalStack}";
+                            ##   files/links
+                            $file = "${metalStack}/lib_pg${addon}/README.txt";
+                            push @files, "$filePath/$file";
+                            $file = "${metalStack}/lib${addon}/README.txt";
+                            push @files, "$filePath/$file";
+                            $file = "${metalStack}/lib_pg${addon}/compile.log";
+                            push @files, "$filePath/$file";
+                            $file = "${metalStack}/lib${addon}/compile.log";
+                            push @files, "$filePath/$file";
+                            $filePath = "$p4PathAbs/$macro/$rel/macro/timing/${metalStack}/lib${addon}";
+                        }
+                        ##   files/links, but utility and repeater macro is not allowed to have metal stack in file name (which is okay since the files are fake LIB files
+                        if(!(grep{/$macro/} @utilityMacro) && !(grep{/$macro/} @repeaterMacro) && ($macro !~ /_blocks/i)){
+                            $file = "${macro}_${metalStack}_${corner}.db";
+                            $fileLink = "${macro}_${corner}.db";
+                            $links{"$filePath/$fileLink"} = $file;
+                        }
+                        else{
+                            $file = "${macro}_${corner}.db";
+                        }
+                        push @files, "$filePath/$file";
+                        ##   files/links, but utility and repeater macro is not allowed to have metal stack in file name (which is okay since the files are fake LIB files
+                        if(!(grep{/$macro/} @utilityMacro ) && !(grep{/$macro/} @repeaterMacro) && ($macro !~ /_blocks/i)){
+                            $file = "${macro}_${metalStack}_${corner}.lib.gz";
+                            $fileLink = "${macro}_${corner}.lib.gz";
+                            $links{"$filePath/$fileLink"} = $file;
+                        }
+                        else{
+                            $file = "${macro}_${corner}.lib.gz";
+                        }
+                        push @files, "$filePath/$file";
+
+                        # P10020416-38355: use full metal stack for tcoil_replica
+                        if ($macro !~ /_blocks/i && $macro !~ /_tcoil_replica/i) { $filePath = "$p4PathAbs/$macro/$rel/macro/timing/${metalStackIp}/lib_pg${addon}"; }
+                        else { $filePath = "$p4PathAbs/$macro/$rel/macro/timing/${metalStack}/lib_pg${addon}"; }
+                        ##   files/links, but utility and repeater macro is not allowed to have metal stack in file name (which is okay since the files are fake LIB files
+                        if(!(grep{/$macro/} @utilityMacro ) && !(grep{/$macro/} @repeaterMacro ) && ($macro !~ /_blocks/i)){
+                            $file = "${macro}_${metalStack}_${corner}_pg.db";
+                            $fileLink = "${macro}_${corner}_pg.db";
+                            $links{"$filePath/$fileLink"} = $file;
+                        }
+                        else{
+                            $file = "${macro}_${corner}_pg.db";
+                        }
+                        push @files, "$filePath/$file";
+                        ##   files/links, but utility and repeater macro is not allowed to have metal stack in file name (which is okay since the files are fake LIB files
+                        if(!(grep{/$macro/} @utilityMacro ) && !(grep{/$macro/} @repeaterMacro ) && ($macro !~ /_blocks/i)){
+                            $file = "${macro}_${metalStack}_${corner}_pg.lib.gz";
+                            $fileLink = "${macro}_${corner}_pg.lib.gz";
+                            $links{"$filePath/$fileLink"} = $file;
+                        }
+                        else{
+                            $file = "${macro}_${corner}_pg.lib.gz";
+                        }
+                        push @files, "$filePath/$file";
+                    }
+                }
+                } ## end  foreach $corner (sort @corners)
+            }
+            ## A special hack to only all seeding GDS/LEF files
+            ##   Undefine other views, and only setup GDS/LEF views from here
+            if(defined $shimMacros{$macro}){
+                logger("    Identified $macro as shim macro...\n");
+                undef %links;
+                undef @files;
+            }
+
+            ## GDS files
+            ##   directories/links
+            if ($macro !~ /_blocks/i && $macro !~ /cover/i && $macro !~ /_tcoil_replica/i) {
+                # P10020416-38355: use full metal stack for tcoil_replica
+                if( $opt_milestone >= PRELIM ){
+                    $filePath = "$p4PathAbs/$macro/$rel/macro/gds";
+                    $file = "${metalStackIp}";
+                    $fileLink = "${metalStack}";
+                    $links{"$filePath/$fileLink"} = $file;
+                    ##   files/links
+                    $filePath = "$p4PathAbs/$macro/$rel/macro/gds/${metalStackIp}";
+                    $file = "${macro}.gds.gz";
+                    push @files, "$filePath/$file";
+                    $file = "layerMap_${metalStack}.txt";
+                    push @files, "$filePath/$file";
+                    $fileLink = "layerMap_${metalStackIp}.txt";
+                    $links{"$filePath/$fileLink"} = $file;
+
+                    if( (grep{/$macro/} @utilityMacro) || (grep{/$macro/} @repeaterMacro) ){
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/oasis";
+                        $file = "${metalStackIp}";
+                        $fileLink = "${metalStack}";
+                        $links{"$filePath/$fileLink"} = $file;
+                        ##   files/links
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/oasis/${metalStackIp}";
+                        $file = "${macro}.oas";
+                        push @files, "$filePath/$file";
+                        $file = "layerMap_${metalStack}.txt";
+                        push @files, "$filePath/$file";
+                        $fileLink = "layerMap_${metalStackIp}.txt";
+                        $links{"$filePath/$fileLink"} = $file;
+                    }
+
+                    ##   reference GDS files
+                    if(defined $href_referenceGdses->{$macro}){
+                        $href_referenceGdses->{$macro} =~ s/\s+/ /;
+                        foreach my $filename (split ' ', $href_referenceGdses->{$macro}){
+                            push @files, "$filePath/$filename";
+                        }
+                    }
+                }
+                ## LEF files
+                ##   directories/links
+                $filePath = "$p4PathAbs/$macro/$rel/macro/lef";
+                $file = "${metalStackIp}";
+                $fileLink = "${metalStack}";
+                ##   files/links
+                $links{"$filePath/$fileLink"} = $file;
+                $file = "${metalStackIp}/${macro}.lef";
+                push @files, "$filePath/$file";
+                $file = "${metalStackIp}/${macro}_merged.lef";
+                push @files, "$filePath/$file";
+            } else {
+                if( $opt_milestone >= PRELIM ){
+                    $filePath = "$p4PathAbs/$macro/$rel/macro/gds";
+                    $file = "${metalStack}";
+                    ##   files/links
+                    $filePath = "$p4PathAbs/$macro/$rel/macro/gds/${metalStack}";
+                    $file = "${macro}.gds.gz";
+                    push @files, "$filePath/$file";
+                    $file = "layerMap_${metalStack}.txt";
+                    push @files, "$filePath/$file";
+
+                    if($macro =~ /_blocks/i) {
+                        ##   files/links
+                        $filePath = "$p4PathAbs/$macro/$rel/macro/oasis/${metalStack}";
+                        $file = "${macro}.oas";
+                        push @files, "$filePath/$file";
+                        $file = "layerMap_${metalStack}.txt";
+                        push @files, "$filePath/$file";
+                    }
+
+                    ##   reference GDS files
+                    if(defined $href_referenceGdses->{$macro}){
+                        $href_referenceGdses->{$macro} =~ s/\s+/ /;
+                        foreach my $filename (split ' ', $href_referenceGdses->{$macro}){
+                            push @files, "$filePath/$filename";
+                        }
+                    }
+                }
+                ## LEF files
+                ##   directories/links
+                $filePath = "$p4PathAbs/$macro/$rel/macro/lef";
+                $file = "${metalStack}";
+                $file = "${metalStack}/${macro}.lef";
+                push @files, "$filePath/$file";
+                $file = "${metalStack}/${macro}_merged.lef";
+                push @files, "$filePath/$file";
+            }
+        }
+        if( $main::DEBUG >= INSANE ){
+            dprint_dumper(INSANE, "\@files => ", \@files);
+        }
+        ## loop through per macro list of files
+        foreach my $file ( @files ){
+            ## if file does not exist, create it
+            if( !-e $file ){
+                ## create directory if it does not exist
+                if( !-d dirname($file) ){
+                    ## unless this file is pininfo and the source does not exist
+                    if( !(($file =~ /csv$/i) && !(-e $pininfoFile)) ){
+                        if( defined $TESTMODE ){logger("DEBUG: mkpath".dirname($file)."\n");}
+                        else{
+                        mkpath(dirname($file)) || (wprint("\nWARNING: Failed to mkpath ".dirname($file).". Skipping...") && exit 1);
+                        }
+                    }
+                }
+                ## README files need dummy content
+                if( $file =~ /readme/i ){
+                    $cmd = "echo  'Dummy readme to satisfy hiprelynx' > $file";
+                    if(defined $TESTMODE){logger("DEBUG: $cmd\n");}
+                    else{logger("    \$ $cmd\n"); run_system_cmd( $cmd, $VERBOSITY );}
+                }
+                ## PININFO files are copied
+                elsif( $file =~ /csv$/i ){
+                    if( -e $pininfoFile ){
+                        if( defined $TESTMODE ){logger("DEBUG: copy $pininfoFile, $file\n");}
+                        else{
+                            logger("    Copy $pininfoFile, $file\n");
+                            my ($pininfoMac) = ($pininfoFile =~ /[\/\.]([0-9a-z\_\-]+)\.csv$/);
+                            my ($fileMac) = ($file =~ /[\/\.]([0-9a-z\_\-]+)\.csv$/);
+                            next if("$pininfoMac" ne "$fileMac");
+                            da_copy($pininfoFile, $file) || confess("\nFailed to copy $pininfoFile, $file: $!.\n");
+                        }
+                    }
+                    else{
+                        wprint("Failed to find $pininfoFile source pininfo file required for seeding.");
+                    }
+                }
+                ## other files just need touched
+                else{
+                    $cmd = "touch $file";
+                    if( defined $TESTMODE ){ logger("DEBUG: $cmd\n"); }
+                    else{logger( "    \$ $cmd\n"); run_system_cmd( $cmd, $VERBOSITY-1 );}
+                }
+                ## add to p4
+                if( -e $file ){
+                    if ( ($file =~ /pdf$/i) || ($file =~ /docx$/i) || ($file =~ /xlsx$/i) ){
+                        $cmd = "p4 add -t binary $file >> $logFile";
+                    }
+                    else{
+                        $cmd = "p4 add $file >> $logFile";
+                    }
+                    if( defined $TESTMODE ){ logger( "DEBUG: $cmd\n"); }
+                    else{logger("    \$ $cmd\n"); run_system_cmd( $cmd, $VERBOSITY-1 );}
+                }
+                ## count created
+                $createdFiles++;
+            }
+            ## warn if skipping
+            else{
+                ## PININFO files are updated, if needed
+                if( ($file =~ /csv$/i) && (-e $pininfoFile) && compare($file,$pininfoFile) ){
+                    my ($pininfoMac) = ($pininfoFile =~ /\/([0-9a-z\_\-]+)\.csv$/);
+                    my ($fileMac) = ($file =~ /\/([0-9a-z\_\-]+)\.csv$/);
+                    next if("$pininfoMac" ne "$fileMac");
+                    iprint(" $pininfoFile source pininfo file is different from $file depot pininfo file, so re-copying...\n");
+                    if( defined $TESTMODE ){ logger("DEBUG: copy $pininfoFile, $file\n");}
+                    else{
+                        $cmd = "p4 edit $file >> $logFile";
+                        logger("    \$ $cmd\n");
+                        run_system_cmd( $cmd, $VERBOSITY );
+                        logger("    Copy $pininfoFile, $file\n");
+                        da_copy($pininfoFile, $file)
+                        || confess("Failed to copy $pininfoFile, $file: $!.\n");
+                    }
+                    ## count created
+                    $createdFiles++;
+                }
+                ## skip it...
+                else{
+                    logger("    Found: $file file. Skipping...\n");
+                    ## count found
+                    $foundFiles++;
+                }
+            }
+        } ## end  foreach $file (@files)
+
+        ## make links from IP/foundry metal stack
+        foreach my $file ( sort keys %links ){
+            if( !-e $file ){
+                $cmd = "ln -s $links{$file} $file";
+                if( defined $TESTMODE ){ logger("DEBUG: $cmd\n"); }
+                else{logger("    \$ $cmd\n"); run_system_cmd( $cmd, $VERBOSITY-1 );}
+                $cmd = "p4 add $file >> $logFile";
+                if( defined $TESTMODE ){ logger( "DEBUG: $cmd\n"); }
+                else{logger("    \$ $cmd\n"); run_system_cmd( $cmd, $VERBOSITY-1 );}
+                $createdLinks++;
+            }
+            else{
+                logger( "    Found: $file link. Skipping...\n");
+                ## count found
+                $foundLinks++;
+            }
+        }
+
+        ## make HL ${rel}_data, Latest_qadata, Latest
+        #$file = "$p4PathAbs/$macro/${rel}_qadata";
+        #if(!-e $file){
+        #if(defined $TESTMODE){print LOG "DEBUG: mkdir $file\n";}
+        #else{mkpath($file) || (wprint("\nWARNING: Failed to mkpath $file. Skipping...\n") && exit 1);}
+        #}
+
+        #$file = "$p4PathAbs/$macro/Latest_qadata";
+        #if(-e $file){
+        #if(defined $TESTMODE){print LOG "DEBUG: unlink $file\n";}
+        #else{unlink $file || (wprint("\nWARNING: Failed to unlink $file. Skipping...\n") && exit 1);}
+        #}
+        #$cmd = "ln -s ${rel}_qadata $file";
+        #if(defined $TESTMODE){print LOG "DEBUG: $cmd\n";}
+        #else{print LOG "    \$ $cmd\n"; system($cmd);}
+
+        $file = "$p4PathAbs/$macro/Latest";
+        if( -e $file ){
+            if( defined $TESTMODE ){logger("DEBUG: unlink $file\n");}
+            else{ unlink $file || (wprint("Failed to unlink $file. Skipping...\n") && exit 1);}
+        }
+        $cmd = "ln -s ${rel} $file";
+        if( defined $TESTMODE ){ logger("DEBUG: $cmd\n"); }
+        else{ logger("    \$ $cmd\n"); run_system_cmd( $cmd, $VERBOSITY-1 );}
+
+        ## create cell list file for utility cell name
+        if( grep{/$macro/} @utilityMacro ){
+            ## skip for debug
+            if( defined $TESTMODE ){
+                iprint("DEBUG:    Skipping writing $relUtilityCellListFile utility macro $macro cell list file\n");
+            }
+            ## actually write the cell list
+            else{
+                ## set datestamp
+                $date = strftime "%a %b %e %H:%M:%S %Y", localtime;
+                my @lines;
+                push(@lines, "## Cell list of $macro utility macro on $date\n" );
+                ## write each cell name, one per line
+                foreach my $cell ( @{$phyvMacros{$macro}} ){
+                    push(@lines, "$cell" );
+                }
+                logger("    Writing $relUtilityCellListFile utility macro $macro cell list file\n");
+                write_file( \@lines, $relUtilityCellListFile );
+                chmod 0755,$relUtilityCellListFile;
+            }
+
+            ## count created
+            $createdFiles++;
+        } ## end  if(grep(/$macro/,@utilityMacro)
+
+        ## create cell list file for repeater cell name if any
+        if( grep{/$macro/} @repeaterMacro ){
+            ## skip for debug
+            if(defined $TESTMODE){
+                iprint("DEBUG:    Skipping writing $relRepeaterCellListFile repeater macro $macro cell list file\n");
+            }
+            ## actually write the cell list
+            else{
+                logger("    Writing $relRepeaterCellListFile repeater macro $macro cell list file\n");
+                chmod 0755,$relRepeaterCellListFile;
+                ## set datestamp
+                $date = strftime "%a %b %e %H:%M:%S %Y", localtime;
+                my @lines;
+                push(@lines, "## Cell list of $macro repeater macro on $date" );
+                ## write each cell name, one per line
+                foreach my $cell ( @{$phyvMacros{$macro}} ){
+                    push(@lines, "$cell" );
+                }
+                write_file( \@lines, $relRepeaterCellListFile );
+            }
+
+            ## count created
+            $createdFiles++;
+        }
+        ## Report links/files
+        if( defined $TESTMODE ){ iprint("DEBUG: "); }
+        iprint("    Macro $macro summary: Found links = $foundLinks. Created links = $createdLinks. Found files = $foundFiles. Created files = $createdFiles.\n");
+
+        push @macrosSuccess, $macro;
+    } ## end  foreach $macro (sort @macros)
+
+    ## All done
+    iprint("All done.\n\n");
+
+    ## p4 submit command
+    if( defined $TESTMODE ){ iprint("DEBUG: No p4 files to submit\n"); }
+    else{
+        hprint("To check-in seeded files to the depot:");
+        foreach my $macro ( @macrosSuccess ){
+            p4print("p4 submit -d 'Seeded files for $rel of macro "
+                  ."$macro release' ${p4PathAbs}/${macro}/${rel}/...");
+        }
+        if( defined $releaseDefMacro ){
+           p4print("p4 submit -d 'Seeded files for $rel DEF views' "
+                  ."${p4PathAbs}/floorplans/${rel}/...");
+        }
+        if( @macrosFail ){
+            wprint("\nThe following macro(s) have not been seeded successfully:");
+            foreach my $macro (@macrosFail){
+                wprint("\t$macro");
+            }
+        }
+    }
+    ## close log file
+    #close(LOG);
+
+} #end Main
+
+
+#-------------------------------------------------------------------------------
+sub createHspiceStructure {
+    print_function_header();
+    my $file = shift;
+
+    my %list_href;
+    my @lines = read_file( $file );
+
+    foreach my $line ( @lines ){
+        next if( $line eq "" );
+        my ($macro,$fileName) = split(/\//, $line);
+        if( $macro eq "" || $fileName eq "" ){
+           wprint( "In file '$file', macro or file not captured ... skipping line:\n\t'$line'\n" );
+           next;
+        }
+        my @orientations = ("","_ew","_ns");
+        foreach my $orient ( @orientations ){
+            my $tempMac = $macro;
+            my $tempName = $fileName;
+            $tempMac =~ s/\${orientation}/$orient/g;
+            $tempName =~ s/\$\{orientation\}/$orient/g;
+            push(@{$list_href{$tempMac}}, $tempName);
+        }
+    }
+    return( %list_href );
+}
+
+#-------------------------------------------------------------------------------
+sub createIbisStructure {
+    print_function_header();
+    my $file = shift;
+    my %list_href;
+
+    my @lines = read_file( $file );
+    foreach my $line (@lines) {
+        chomp($line);
+        next if($line eq "");
+        my($macro,$dirName,$fileName);
+        ($macro,$dirName,$fileName) = split(/\//,$line);
+        $fileName = "" unless defined $fileName;
+
+        if($fileName eq "") { ($macro,$fileName) = split(/\//,$line); $dirName = "";}
+        if( $macro eq "" || $fileName eq "" ){
+           wprint( "In file '$file', macro or file not captured ... skipping line:\n\t'$line'\n" );
+           next;
+        }
+
+        my @orientations = ("","_ew","_ns");
+        foreach my $orient (@orientations) {
+            my $tempMac = $macro;
+            my $tempDir = $dirName;
+            my $tempName = $fileName;
+            $tempMac  =~ s/\${orientation}/$orient/g;
+            $tempName =~ s/\$\{orientation\}/$orient/g;
+
+            if($tempDir eq "") {
+                push(@{$list_href{$tempMac}}, $tempName);
+            }
+            else{
+                $tempDir =~ s/\${orientation}/$orient/g;
+                push(@{$list_href{$tempMac}}, "$tempDir/$tempName");
+            }
+        }
+    }
+    return( %list_href );
+}
+
+#-------------------------------------------------------------------------------
+sub checkP4Mapping {
+    print_function_header();
+    my $p4path = shift;
+    my $cmd = "p4 where $p4path/...";
+    my($p4where,$exitval) = run_system_cmd( "p4 where $p4path/...", $VERBOSITY);
+    if( $exitval ){
+        my $p4client = $ENV{P4CLIENT};
+        my ($noSlash) = ($p4path =~ /\/\/(.*)/);
+        my $addView = "$p4path/... //$p4client/$noSlash/...";
+        ($p4where,$exitval) = run_system_cmd( "p4 --field \"View+=$addView\" client -o $p4client | p4 client -i ", $VERBOSITY);
+        ($p4where,$exitval) = run_system_cmd( $cmd, $VERBOSITY);
+    }
+    chomp($p4where);
+    $p4where =~ s/\S+\s\S+\s(.*)\/\.\.\./$1/;
+
+    return($p4where);
+}
+
+#-------------------------------------------------------------------------------
+sub firstP4Path {
+    print_function_header();
+    my @paths = @_;
+    my $availablePath;
+
+    foreach my $path ( @paths ){
+        my $cmd = "p4 files -e $path/...";
+        my ($output, $exit_val) = run_system_cmd($cmd, $VERBOSITY);
+        if (($output !~ /no such file/i) && ($output ne EMPTY_STR && $output ne "\n")){
+            return $path;
+        }
+    }
+    eprint ("None of these paths exist: \n\t". join("\n\t",@paths) ."\n" );
+    return "";
+}
+
+#-------------------------------------------------------------------------------
+# The subroutine checks if the milestone argument was defined or not. If not, it
+# sets the milestone to FINAL to release everything. Otherwise, it will update
+# the values for the hspice/ibis/nocosim flags if they are undefiend.
+# The milestones arranged in ascending order: INITIAL, PRELIM, PREFINAL, FINAL
+# If the milestones argument was left emtpy then the release name will be parsed
+# to decide the milestone.
+#-------------------------------------------------------------------------------
+sub check_milestone($$$$$){
+    print_function_header();
+    my $opt_milestone = shift;
+    my $opt_hspice    = shift;
+    my $opt_ibis      = shift;
+    my $opt_nocosim   = shift;
+    my $rel           = shift;
+
+    my %milestoneMap = (INITIAL,  "INITIAL",
+                        PRELIM,   "PRELIM",
+                        PREFINAL, "PREFINAL",
+                        FINAL,    "FINAL");
+    unless( defined($opt_milestone) ){
+        $opt_milestone = FINAL;
+    }elsif( $opt_milestone eq EMPTY_STR ){
+        if( $rel =~ /_pre1$/ ){
+            $opt_milestone = INITIAL;
+        }elsif( $rel =~ /_pre2$/ ){
+            $opt_milestone = PRELIM;
+        }elsif( $rel =~ /_pre3$/ ){
+            $opt_milestone = PREFINAL;
+        }else{
+            $opt_milestone = FINAL;
+        }
+        hprint("The milestone was set to $milestoneMap{$opt_milestone} based on".
+               " the release name '$rel' since the milestone was not specified.");
+    }elsif( lc($opt_milestone) eq "initial" ){
+        $opt_milestone = INITIAL;
+        hprint("The milestone $milestoneMap{$opt_milestone} was selected.");
+    }elsif( lc($opt_milestone) eq "prelim" ){
+        $opt_milestone = PRELIM;
+        hprint("The milestone $milestoneMap{$opt_milestone} was selected.");
+    }elsif( lc($opt_milestone) eq "prefinal" ){
+        $opt_milestone = PREFINAL;
+        hprint("The milestone $milestoneMap{$opt_milestone} was selected.");
+    }elsif( lc($opt_milestone) eq "final" ){
+        $opt_milestone = FINAL;
+        hprint("The milestone $milestoneMap{$opt_milestone} was selected.");
+    }else{
+        fatal_error("Illegal milestone specified: '$opt_milestone'.\n".
+                    "Legal milestones are: initial, prelim, prefinal, final\n".
+                    "Or you can leave it empty and the milestone will be ".
+                    "selected according to the release name.");
+    }
+    # Update the hspice/ibis/cosim flags depending on the milestone if they are undefined.
+    if( $opt_milestone eq FINAL ){
+        $opt_hspice  = TRUE unless(defined($opt_hspice));
+        $opt_ibis    = TRUE unless(defined($opt_ibis));
+    }
+    if( $opt_milestone < PREFINAL ){
+        $opt_nocosim = TRUE unless(defined($opt_nocosim));
+    }
+    print_function_footer();
+    return( $opt_milestone, $opt_hspice, $opt_ibis, $opt_nocosim );
+}
+
+#------------------------------------------------------------------------------
+# 
+#------------------------------------------------------------------------------
+sub process_cmd_line_args() {
+    ## get specified args
+    my($opt_p4ws,     $opt_nocosim, $opt_macros, $opt_dryrun, $opt_hspice, $opt_ibis,
+       $opt_projSPEC, $opt_nousage, $opt_help,   $opt_debug,  $opt_verbosity, $opt_milestone);
+
+    my $success = GetOptions(
+       "help!"       => \$opt_help,
+       "p=s"         => \$opt_projSPEC,
+       "macros=s"    => \$opt_macros,
+       "p4ws=s"      => \$opt_p4ws,
+       "nocosim"     => \$opt_nocosim,
+       "dryrun!"     => \$opt_dryrun,
+       "hspice"      => \$opt_hspice,
+       "ibis"        => \$opt_ibis,
+       "milestone:s" => \$opt_milestone,
+       "nousage"     => \$opt_nousage,
+       "debug=i"     => \$opt_debug,
+       "verbosity=i" => \$opt_verbosity,
+    );
+
+    $main::VERBOSITY = $opt_verbosity if( defined $opt_verbosity );
+    $main::DEBUG     = $opt_debug     if( defined $opt_debug     );
+    $main::TESTMODE  = 1              if( defined $opt_dryrun    );
+
+    ## quit with usage message, if usage not satisfied
+    &usage(0) if $opt_help;
+    &usage(1) unless( $success );
+    &usage(1) unless( defined $opt_projSPEC );
+
+    return( $opt_projSPEC, $opt_nousage, $opt_nocosim, $opt_macros, $opt_hspice,
+            $opt_ibis, $opt_p4ws, $opt_milestone );
+}
+
+#------------------------------------------------------------------------------
+#  script usage message
+#------------------------------------------------------------------------------
+sub usage($) {
+    my $exit_status = shift;
+
+    print << "EOP" ;
+Description
+  A script to seed the HL depot, defined from variables in the project release file:
+    /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/legalRelease.yml or
+    /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/legalRelease.txt
+  for the macros in the project macro file:
+    /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/topcells.txt
+  and the verifications in the project verif file:
+    /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/legalVerifs.txt
+  and the corners in the project NT timing file:
+    /remote/cad-rep/projects/<projSPEC>/design/timing/nt/ntFiles/alphaNT.config
+  For the $utilityMacroDefault (default name) utility macro library, the VC corner files
+    /remote/cad-rep/projects/<projSPEC>/design[_unrestricted]/legalVcCorners.csv
+
+USAGE : $PROGRAM_NAME [options] -p <projSPEC>
+
+------------------------------------
+Required Args:
+------------------------------------
+-p  <projSPEC>    project SPEC (i.e. <project_type>/<project>/<CD_rel> )
+
+
+------------------------------------
+Optional Args:
+------------------------------------
+-help           Print this screen
+-macros  <arg>  Sub-set of legal macros to seed, comma-separated (instead of full legal macro list from project file)
+-p4ws    <arg>  Overrides path to your personal Perforce work area (default: \$HOME/p4_ws)
+-dryrun         Do not execute p4 commands (other than status/opened) or create files
+-nocosim        Will not create cosim files
+-hspice         Seed hspice views
+-ibis           Seed ibis views
+-milestone  <arg>  Creates only the files required by the milestone passed. If the milestone was
+                   not specifed then the script will select the milestone based on the release name.
+                   Milestone list: initial, prelim, prefinal, final
+-verbosity  <#>    print additional messages ... includes details of system calls etc. 
+                   Must provide integer argument -> higher values increases verbosity.
+-debug      <#>    print additional diagnostic messagess to debug script
+                   Must provide integer argument -> higher values increases messages.
+
+EOP
+
+    exit $exit_status ;
+} # usage()
+
+1;

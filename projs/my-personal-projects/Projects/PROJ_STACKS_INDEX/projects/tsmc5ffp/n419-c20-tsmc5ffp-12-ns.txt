@@ -1,0 +1,1 @@
+tsmc5ffp-12_nv_16M_3Xs_hvh_1Xt_v_1Ya_h_1Yb_v_7Y_hvhvhvh_2Z /remote/cad-rep/fab/f101-tsmc/5nm/logic/FFP_NV/common/rules/icv/drc/ver1.1a/orig/LOGIC_TopMz_DRC/ICVN5LO_16M_3Xs1Xt1Ya1Yb7Y2Z_017.11a.encrypt

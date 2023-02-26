@@ -1,0 +1,159 @@
+<file type="gen_group">
+  <attribute name="flow_name" value="gen_flow"/>
+  <package type="tasks">
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_p4_us01"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_p4_us01"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_am04"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_am04"/>
+        <attribute name="variable" value="|TEV(site)|am04"/>
+        <attribute name="variable" value="|TEV(host)|am04ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_de02"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_de02"/>
+        <attribute name="variable" value="|TEV(site)|de02"/>
+        <attribute name="variable" value="|TEV(host)|de02msemtcron001.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_us01"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_us01"/>
+        <attribute name="variable" value="|TEV(site)|us01"/>
+        <attribute name="variable" value="|TEV(host)|us01ctxsub2.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_in01"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_in01"/>
+        <attribute name="variable" value="|TEV(site)|in01"/>
+        <attribute name="variable" value="|TEV(host)|in01ctxsub2.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_in19"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_in19"/>
+        <attribute name="variable" value="|TEV(site)|in19"/>
+        <attribute name="variable" value="|TEV(host)|in19ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_ca06"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_ca06"/>
+        <attribute name="variable" value="|TEV(site)|ca06"/>
+        <attribute name="variable" value="|TEV(host)|ca06sgsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_ca09"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_ca09"/>
+        <attribute name="variable" value="|TEV(site)|ca09"/>
+        <attribute name="variable" value="|TEV(host)|ca09ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_us03"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_us03"/>
+        <attribute name="variable" value="|TEV(site)|us03"/>
+        <attribute name="variable" value="|TEV(host)|us03ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_pl01"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_pl01"/>
+        <attribute name="variable" value="|TEV(site)|pl01"/>
+        <attribute name="variable" value="|TEV(host)|pl01ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_pt02"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_pt02"/>
+        <attribute name="variable" value="|TEV(site)|pt02"/>
+        <attribute name="variable" value="|TEV(host)|pt02ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  <package type="tool_task">
+      <attribute name="name" value="check_pcs_sites_cn58"/>
+      <attribute name="tool" value="tcl_job"/>
+      <attribute name="script_file" value="$SEV(gscript_dir)/qa_scripts/check_pcs_remote.tcl"/>
+      <attribute name="step" value="qa_step"/>
+      <attribute name="src" value="gen_env"/>
+      <attribute name="dst" value="2_check_pcs_sites_cn58"/>
+        <attribute name="variable" value="|TEV(site)|cn58"/>
+        <attribute name="variable" value="|TEV(host)|cn58ctxsub1.internal.synopsys.com"/>
+        <attribute name="variable" value="|TEV(user)|alvaro"/>
+      <attribute name="pass_control" value="no_fatal"/>
+  </package>
+
+  </package>
+</file>

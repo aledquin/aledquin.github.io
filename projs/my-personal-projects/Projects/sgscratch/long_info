@@ -1,0 +1,78 @@
+[0m[1m-I- Running with PCS MANAGER version '2022.03' the following command: msip_pcs_ude3_migrateCadSetup ddr54 d820-ddr54v2-tsmc5ffp12 rel1.10_mrvl_sup2 c253-tsmc5ff-1.2v rel9.3.1 -star P10023532-44342 -submit [0m
+[0m[1m-I-[0m  Script will submit the changed files to p4 using specified star on description field.
+[0m[1m-I-[0m  Script will submit automatically all the changes made on the specified PCS.
+-I- msip_pcs_ude3_migrateCadSetup: Logs will be stored at: us01msemt751@/tmp/pcs_ude3_migrateCadSetup_alvaro_06_29_22_15h30m53s
+-I- msip_pcs_ude3_migrateCadSetup: Enter csadmin password:
+[0m[1m-I-[0m Checking P4 Login
+[0m[1m-I-[0m Script will generate a temporary p4 client.
+-I- msip_pcs_ude3_migrateCadSetup: Deleting old temporary client...
+Client tmpClientmsip_pcs_ude3_migrateCadSetupalvaro saved.
+-I- Checking if project is mapped in the specified client.
+[0m[1m-W-[0m Following project is not mapped in the specified client. Mapping...
+-I- Adding mapping to the client: 	//wwcad/msip/projects/ddr54/d820-ddr54v2-tsmc5ffp12/rel1.10_mrvl_sup2/pcs/... //tmpClientmsip_pcs_ude3_migrateCadSetupalvaro/wwcad/msip/projects/ddr54/d820-ddr54v2-tsmc5ffp12/rel1.10_mrvl_sup2/...
+[0m[1m-I-[0m Identifying client root: /tmp/alvaro/msip_pcs_ude3_migrateCadSetup/wwcad/msip/projects/ddr54/d820-ddr54v2-tsmc5ffp12/rel1.10_mrvl_sup2
+[0m[1m-I- Specified project is using a CCS as CAD SETUP environment.
+[0m[1m-W- Specified CAD SETUP is already being used on specified PCS..
+Go to http://vici/site/index
+ This part is manual work.
+PCSQA: going to working directory /slowfs/dcopt103/alvaro/sgscratch/alvaro
+PCSQA: remove existing template links
+PCSQA: create template links
+Block List:
+  ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2
+
+The dir_specs are:
+/remote/cad-rep/msip/tools/Lynxtools/pcsqa/2022.04/builds/common_build/scripts_build/conf	builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2/scripts_build/conf
+
+From: /remote/cad-rep/msip/tools/Lynxtools/pcsqa/2022.04/builds/common_build/scripts_build/conf
+To  : builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2/scripts_build/conf
+
+
+---------------------------------------------------
+To REMOVE links just created, use the '-rm' option.
+---------------------------------------------------
+
+
+                    Lynx Design System: Runtime Manager (TM)
+
+                 Version Q-2020.09 for linux64 - Aug 27, 2020 
+
+                    Copyright (c) 2010 - 2020 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+            or distribution of this software is strictly prohibited.
+
+Information: Initializing FLEXlm ....
+Information: Checking out licenses from the server ....
+Information: Successfully checked out license.
+Information: Initializing Variables...
+Information: Initializing Builds...
+
+Information: Starting Script
+
+set_flow_options -task_limit 0
+set id [new_session -build_name ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2]
+Loading Session...
+ ...Checking Flow (Part 1)                             [  0%] 33%] 66%]100%]100%]
+ ...Loading ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2 Flow Files [  0%] 10%] 20%] 30%] 40%] 50%] 60%] 70%] 80%] 90%]100%]
+ ...Checking Flow (Part 2)                             [  0%] 16%] 33%] 50%] 66%] 83%]100%]100%]
+ ...Graphing Flows                                     [  0%] 50%]100%]100%]
+ ...Insert Flows (Part 1)                              [  0%]100%]100%]
+ ...Adding Tasks to Library                            [  0%] 10%] 20%] 30%] 40%] 50%] 60%] 70%] 80%] 90%]100%]110%]100%]
+ ...Adding Edges to Graph                              [  0%] 10%] 20%] 30%] 40%] 50%] 60%] 70%] 80%] 90%]100%]110%]120%]130%]140%]150%]100%]
+ ...Checking Flow (Cycle Check)                        [  0%]100%]100%]
+ ...Insert Generator Files                             [  0%] 10%] 20%] 30%] 40%] 50%] 60%] 70%] 80%] 90%]100%]100%]
+ ...Checking Flow (Part 3)                             [  0%] 16%] 33%] 50%] 66%] 83%]100%]100%]
+ ...Initialize File Cache                              [  0%]  3%]  7%] 10%] 14%] 17%] 21%] 25%] 28%] 32%] 35%] 39%] 42%] 46%] 50%] 53%] 57%] 60%] 64%] 67%] 71%] 75%] 78%] 82%] 85%] 89%] 92%] 96%]100%]100%]
+ ...Refresh Model                                      [  0%] 14%] 28%] 42%] 57%] 71%] 85%]100%]100%]
+Done
+run_flow -id $id -obj tf_pcs_qa/evaluate_status  -background 0 -job_enable 1
+Information: Finished ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2/1: Master-Goal.
+Error: Task finished with errors: Flow: ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2/1 - Task: ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2/tf_pcs_qa/get_p4_content.
+See builds/ddr54-d820-ddr54v2-tsmc5ffp12-rel1.10_mrvl_sup2/qa_step/get_p4_content/logs/get_p4_content.log for more info.
+exit
+
+Thank you...
+Exit Lynx Design System: Runtime Manager!
+pcsqa /slowfs/dcopt103/alvaro/sgscratch/alvaro/pcsqa_file-1

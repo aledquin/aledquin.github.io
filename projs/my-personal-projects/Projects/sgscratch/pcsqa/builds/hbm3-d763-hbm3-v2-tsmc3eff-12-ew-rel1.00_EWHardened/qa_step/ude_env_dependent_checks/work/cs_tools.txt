@@ -1,0 +1,16 @@
+calibre 2022.1-38.18
+cc 2021.09-SP2
+cck_xa 2021.09-SP2-1
+finesim 2022.06
+hspice 2022.06
+icv 2022.03-SP2
+lc 2022.03-SP2
+nt 2022.03-SP2
+primesim 2022.06
+primesim_emir 
+primewave 2021.09-SP2
+pt 2022.03-SP2
+sis 2022.03-SP2
+starrcxt 2020.09-SP5-4-VAL-20220524
+ude_os 7.3.1611
+xa 2021.09-SP2-1

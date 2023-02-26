@@ -1,0 +1,1 @@
+../../../../python/bin/get_vici_info.py

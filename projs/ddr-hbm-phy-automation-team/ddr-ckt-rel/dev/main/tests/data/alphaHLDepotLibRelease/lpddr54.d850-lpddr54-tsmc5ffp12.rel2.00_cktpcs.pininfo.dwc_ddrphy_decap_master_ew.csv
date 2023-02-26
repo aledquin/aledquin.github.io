@@ -1,0 +1,5 @@
+name,direction,pin_type,related_clock_pin,related_ground_pin,related_power_pin,derating_factor,desc,donot_repeat,is_bus,is_true_core_ground,lsb,max_capacitive_load,max_voltage,min_capacitive_load,msb,nominal_voltage,package_pin,related_select_pin,synlibchecker_waive,cellname,cell_x_dim_um,cell_y_dim_um
+VDD,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_decap_master_ew,29.019,319.2
+VDD2H,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_decap_master_ew,29.019,319.2
+VDDQ,I,primary_power,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_decap_master_ew,29.019,319.2
+VSS,I,primary_ground,-,-,-,-,-,-,n,-,-,-,-,-,-,-,-,-,-,dwc_ddrphy_decap_master_ew,29.019,319.2

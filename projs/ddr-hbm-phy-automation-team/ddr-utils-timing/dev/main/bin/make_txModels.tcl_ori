@@ -1,0 +1,41 @@
+#!/usr/local/bin/tclsh 
+proc get_model {hspicemodel} {
+set i 0
+set j 0
+if  [catch {set RDnetlist [open $hspicemodel "r"]}] {puts "Error:  Cannot open $hspicemodel for read\n"}
+while {[gets $RDnetlist line] >= 0 } {
+	if {[regexp -nocase {^.model\s+(.*).*\s+nmos.*lmin} $line int model ]} {
+		set ntransistor($j) $model
+		if {[regexp -nocase {lmin\s*=\s*(.*)\s*lmax} $line int length ]} {
+		set nlengthtransistor($j) $length
+		}
+		set j [expr $j+1]	
+		
+		
+		}	
+	if {[regexp -nocase {^.model\s+(.*).*\s+pmos.*lmin} $line int model ]} {
+		set ptransistor($i) $model
+		puts $line
+		if {[regexp -nocase {lmin\s*=\s*(.*)\s*lmax} $line int length ]} {
+		set plengthtransistor($i) $length
+		}
+		set i [expr $i+1]
+		}	
+			}
+	
+close $RDnetlist
+
+if  [catch {set userfile [open userFile "w"]}] {puts "Error:  Cannot open userFile for read\n"}
+for {set i 0} {$i < [array size ptransistor]} {incr i} {
+puts $userfile "$ptransistor($i)  $plengthtransistor($i)"
+}
+for {set i 0} {$i < [array size ntransistor]} {incr i} {
+puts $userfile "$ntransistor($i)  $nlengthtransistor($i)"
+}
+
+
+close $userfile
+
+}
+
+get_model [lindex $argv 0]

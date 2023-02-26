@@ -1,0 +1,23 @@
+The stuff in this directory was downloaded from https://sourceforge.net/projects/gds2/
+It provides pair of nifty utilities for converting gds to gdt (a human-readable gds format) and back.
+It also is a very handy reference for the method of reading gds files.
+
+John Clouser
+7/25/2016
+
+Original README:
+------------------------------------------------------------
+Use the BUILD.csh file to compile the code.
+You may have to tweak the CCFLAGS and CC settings
+
+Use perldoc, pos2man, and pod2html to create
+various help formats from gds2gdt.C and gdt2gds.C
+
+See Examples directory for how to call
+from Perl.
+
+See gds2gdt and gdt2gds wrapper scripts for one way
+to support cross-platform use
+
+Starting in GDT-4.0 you can read and write properties.
+

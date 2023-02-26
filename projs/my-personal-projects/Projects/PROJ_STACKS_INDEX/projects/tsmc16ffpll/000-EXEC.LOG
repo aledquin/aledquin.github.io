@@ -1,0 +1,160 @@
+z34891-adc-iq-12b80m-tsmc16ffpll-18.txt
+INFO: tsmc16ffpll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z3641-adc-sar-12b5m-tsmc16ffpll-18.txt
+INFO: tsmc16ffpll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z00000-adc-sar-gen4-tsmc16ffpll-18.txt
+INFO: CCS CCS 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+z2920-tmon-10b-tsmc16ffpll-18.txt
+INFO: CCS CCS c228-tsmc16ffpll-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y002-alpha-i2c-tsmc16ffpll-33.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y003-alpha-tmon-tsmc16ffpll-18.txt
+INFO: tsmc16ffc 18_a341" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y009-alpha-emc-tsmc16ffpll-18.txt
+INFO: tsmc16ffpll 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y010-alpha-esdlib-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y011-alpha-esdmac-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y013-alpha-rtc-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y016-alpha-gpio-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y017-alpha-pgro-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y018-alpha-sddrphy-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n100-c10-tsmc16ffpll-18-ns.txt
+INFO: tsmc16ffpll 18 rel7.0.0
+INFO: DONE
+
+x040-c10-tsmc16ffpll-18-ns.txt
+INFO: c10 tsmc16ffpll 2014/03/25
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n500-dpalt-c10-tsmc16ffpll-18-ns.txt
+INFO: CCS CCS 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+n200-c10-tsmc16ffpll-18-ns.txt
+INFO: tsmc16ffpll 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+u105-cmnblks-tsmc16ffpll-18.txt
+INFO: tsmc16ffpll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d620-ddr4m-tsmc16ffpll18.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+r101-dptxphy-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e501-hdmi-mhl-rxphy-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+e313-hdmi-txphy-tsmc16ffpll-18.txt
+INFO: tsmc16ffpll 18 rel7.4.0
+INFO: DONE
+
+h030-hsic-tsmc16ffpll-0.8v-1.8v.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d502-lpddr4m-tsmc16ffpll18.txt
+INFO: tsmc16ffpll 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d509-lpddr4m-tsmc16ffpll18.txt
+INFO: lpddr4m tsmc16ffpll18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g117-dphy-tsmc16ffpll-18.txt
+INFO: common common 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+g218-mphy-tsmc16ffpll-18.txt
+INFO: tsmc16ffpll 18 rel7.0.0
+INFO: DONE
+
+x634-ssp-tsmc16ffpll-18-ns.txt
+INFO: tsmc16ffpll 18 rel7.1.0
+INFO: DONE
+
+l228-std-tsmc16ffpll-1.8v.txt
+INFO: tsmc16ffpll 18 rel7.7.0
+INFO: DONE
+
+x634-usb2-tsmc16ffpll-18-ns.txt
+INFO: tsmc16ffpll 18 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x634-usb3-tsmc16ffpll-18-ns.txt
+INFO: tsmc16ffpll 18 rel7.4.0
+INFO: DONE
+
+x634-usbc3-tsmc16ffpll-18-ns.txt
+INFO: CCS CCS 
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d512-ddr43-tsmc16ffpll18.txt
+INFO: common common c228-tsmc16ffpll-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d522-ddr43-tsmc16ffpll18.txt
+INFO: common common c228-tsmc16ffpll-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+x045-e16-tsmc16ffpll-18-ns.txt
+INFO: CCS CCS to
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d532-lpddr4mv2-tsmc16ffpll18.txt
+INFO: common common c228-tsmc16ffpll-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d720-hbm2-tsmc16ffpll-1.8v.txt
+INFO: common common c228-tsmc16ffpll-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+d720-hbm2-tsmc16ffpll-1.8v-hardened.txt
+INFO: common common c228-tsmc16ffpll-1.8v
+INFO: SKIPPED. NOT RELEASE VESION.
+
+t100-typec-usb3.1-dpalt-tsmc16ffpll-18-ns.txt
+INFO:   
+INFO: SKIPPED. NOT RELEASE VESION.
+
+y201-emmc-tsmc16ffpll-1.8v.txt
+INFO: tsmc16ffpll 18" 
+INFO: SKIPPED. NOT RELEASE VESION.
+

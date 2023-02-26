@@ -1,0 +1,5 @@
+tsmc16ffpgl : rel7.8.0 : 18 : d510-ddr43-tsmc16ffpgl18
+tsmc16ffpgl : rel7.1.0 : 18 : e314-hdmi-txphy-tsmc16ffpgl-18
+tsmc16ffpgl : rel7.0.0 : 18 : g215-mphy-tsmc16ffpgl-18
+tsmc16ffpgl : rel4.4 : 18 : n103-c10-tsmc16ffpgl-18-ns
+tsmc16ffpgl : rel4.4 : 18 : e309-hdmi-mhl-txphy-tsmc16ffpgl-18
