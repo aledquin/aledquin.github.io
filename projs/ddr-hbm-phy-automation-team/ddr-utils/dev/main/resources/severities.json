@@ -1,4 +1,0 @@
-{
-    "hspice_enc": {"main::get_verdict_enc_check": "HIGH"},
-    "hspice_ic":  {"main::get_verdict_ic_verif": "HIGH"}
-}

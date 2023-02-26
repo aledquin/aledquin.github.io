@@ -1,3 +1,0 @@
-// {"cellname", "netname", layer, datatype, x, y},...
-{"topcell", "net1", 131, 0, 0.2, 0.9},
-{"topcell", "net2", 132, 0, 1, 0.4}

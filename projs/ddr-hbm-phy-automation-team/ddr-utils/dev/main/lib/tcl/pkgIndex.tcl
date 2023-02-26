@@ -1,1 +1,0 @@
-../../../../../sharedlib/tcl/lib/pkgIndex.tcl

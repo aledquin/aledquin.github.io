@@ -1,1 +1,0 @@
-../../../../perl/scripts/get_vici_info.pl

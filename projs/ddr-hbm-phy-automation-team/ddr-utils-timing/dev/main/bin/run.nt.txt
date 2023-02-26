@@ -1,9 +1,0 @@
---------------------------------------
-| run.nt /run_etm.nt update log file |
---------------------------------------
-** 2015-03-09 
-	% change VIO voltage to 1.20v with new PVT
-** 2015-02-24 v1p1 
-	% Dual Voltage support VIO=1.35v
-	% add Metal_Stack into LIB naming
-	% 

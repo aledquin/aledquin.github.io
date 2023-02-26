@@ -1,2 +1,0 @@
-['Description', 'Type_of_lib', 'Lib_file_name', 'Pin', 'Value', 'Previous_value']
-['Pin type mismatch', 'lib_pg', 'dwc_ddrphy_por_18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB_fsg0p675vn40c_pg.lib', 'VDD', 'power', '']

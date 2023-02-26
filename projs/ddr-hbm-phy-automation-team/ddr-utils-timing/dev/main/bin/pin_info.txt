@@ -1,5 +1,0 @@
-<cellname>
-<cell_x_dim_um>
-<cell_y_dim_um>
-<pins>
-| direction | name | bus | related_pwr_pin | related_gnd_pin | 

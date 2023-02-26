@@ -1,2 +1,0 @@
-['Description', 'Type_of_lib', 'Lib_file_name', 'Pin', 'Value', 'Previous_Value']
-['Pin type mismatch', 'lib_pg_lvf', 'dwc_lpddr5xphy_txrxdq_ew_15M_1X_h_1Xb_v_1Xe_h_1Ya_v_1Yb_h_5Y_vhvhv_2Yy2Z_ffgnp0p715v0c_pg.lib', 'VDDQ', 'power', '']

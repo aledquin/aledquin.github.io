@@ -1,4 +1,0 @@
-Description,Type_of_lib,Lib_file_name,Pin,Value,Previous_value
-Related power mismatch,lib_pg_lvf,dwc_ddrphy_txrxdq_ns_18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB_fsg0p675v125c_pg.lib,CsrTxStrenEqLo120Pu[3],missing,
-Related ground mismatch,lib_pg_lvf,dwc_ddrphy_txrxdq_ns_18M_4Mx_4Dx_4Hx_2Bx_2Gx_2UTM_ILB_fsg0p675v125c_pg.lib,dqrxamptst0,missing,
-Area inconsistency,lef,dwc_ddrphy_txrxdq_ns_merged.lef,,11333.52,11331.45936

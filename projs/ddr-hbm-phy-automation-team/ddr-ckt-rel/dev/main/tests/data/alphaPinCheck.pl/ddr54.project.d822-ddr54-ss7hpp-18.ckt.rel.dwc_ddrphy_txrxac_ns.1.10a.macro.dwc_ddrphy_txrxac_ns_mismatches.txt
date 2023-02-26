@@ -1,2 +1,0 @@
-['Description', 'Type_of_lib', 'Lib_file_name', 'Pin', 'Value', 'Previous_value']
-['Bracket inconsistency', 'lef', 'dwc_ddrphy_txrxac_ns_merged.lef', 'TxPowerdown[1]', 'curly', 'square']

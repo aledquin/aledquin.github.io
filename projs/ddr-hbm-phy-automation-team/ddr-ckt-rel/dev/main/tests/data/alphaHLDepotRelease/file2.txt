@@ -1,3 +1,0 @@
-setenv MSIP_CAD_PROJ_NAME fake_proj_name 
-setenv MSIP_CAD_REL_NAME  fake_rel_version 
-

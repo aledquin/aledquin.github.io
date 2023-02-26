@@ -1,3 +1,0 @@
-Description,Type_of_lib,Lib_file_name,Pin,Value,Previous_value
-Pin mismatch,lib_pg_lvf,dwc_ddrphy_vrefglobal_15M_2X_hv_1Ya_h_5Y_vhvhv_2Yy2Yx2R_ffg0p935vn40c_pg.lib,AnalogIn,missing,
-Pin mismatch,lib_pg_lvf,dwc_ddrphy_vrefglobal_15M_2X_hv_1Ya_h_5Y_vhvhv_2Yy2Yx2R_ffg0p935vn40c_pg.lib,Csr_VrefDAC[0],missing,

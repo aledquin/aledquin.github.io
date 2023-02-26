@@ -1,3 +1,0 @@
-Corner Type	Case	Core Voltage (V)	PLL Voltage (V)	IO Voltage (V)	Temperature (C)	Extraction Corner
-Standard Product	FF	0.935	1.98	0.57 (LPDDR5)	-40 / 0 / 125	cbest_CCbest, cworst_CCworst, rcbest_CCbest, rcworst_Ccworst
-Standard Product	TT	0.75	1.80	0.50 (LPDDR5)	25	typical
