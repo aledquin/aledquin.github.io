@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery &mdash; Alvaro Quintana</title>
+  <meta name="description" content="Photo gallery &mdash; moments from life, travels, and things Alvaro enjoys.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo">alvaro<span>.</span></a>
+      <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li><a href="/" class="nav__link">Home</a></li>
+          <li><a href="/about.html" class="nav__link">About</a></li>
+          <li><a href="/cocktails/" class="nav__link">Cocktails</a></li>
+          <li><a href="/recipes/" class="nav__link">Recipes</a></li>
+          <li><a href="/coding.html" class="nav__link">Coding</a></li>
+          <li><a href="/gallery.html" class="nav__link">Gallery</a></li>
+          <li><a href="/contact.html" class="nav__link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <span class="section__subtitle">Photos</span>
+      <h1>Gallery</h1>
+      <p>Moments, food, drinks, and places. Photos from Instagram and beyond.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="gallery-placeholder fade-in">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <p><strong>Photos coming soon</strong></p>
+        <p>This gallery will be populated with photos from <a href="https://instagram.com/aledquin" target="_blank" rel="noopener">@aledquin</a> on Instagram.</p>
+        <p style="font-size:0.85rem;">To add photos: download them from Instagram and place the image files in <code>images/gallery/</code>, then update this page.</p>
+      </div>
+
+      <!-- 
+        When images are available, replace the placeholder above with a grid like this:
+
+        <div class="gallery-grid fade-in">
+          <div class="gallery-item">
+            <img src="images/gallery/photo-01.jpg" alt="Description" loading="lazy">
+          </div>
+          <div class="gallery-item">
+            <img src="images/gallery/photo-02.jpg" alt="Description" loading="lazy">
+          </div>
+        </div>
+      -->
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__links">
+        <a href="https://github.com/aledquin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://instagram.com/aledquin" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://linkedin.com/in/aledquin" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <p>&copy; 2026 Alvaro Quintana Carvacho</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
