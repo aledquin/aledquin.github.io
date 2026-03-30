@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Translation pipeline — Progressive Reader</title>
+    <style>
+      :root {
+        --bg: #0f1419;
+        --fg: #e7e9ea;
+        --muted: #8b98a5;
+        --accent: #1d9bf0;
+        --card: #16181c;
+        --border: #2f3336;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+        margin: 0;
+        padding: 1.5rem clamp(1rem, 4vw, 2.5rem) 3rem;
+        max-width: 58rem;
+        margin-inline: auto;
+      }
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 650;
+        margin-bottom: 0.35rem;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+      }
+      h2 {
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        padding-bottom: 0.35rem;
+        border-bottom: 1px solid var(--border);
+      }
+      h3 {
+        font-size: 1.05rem;
+        margin-top: 1.25rem;
+      }
+      a {
+        color: var(--accent);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        margin: 1rem 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 0.5rem 0.65rem;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #1a1f24;
+      }
+      code,
+      pre {
+        font-family: ui-monospace, 'Cascadia Code', monospace;
+        font-size: 0.85em;
+      }
+      pre {
+        background: #0a0c0e;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+        overflow-x: auto;
+      }
+      .mermaid {
+        background: #fafafa;
+        color: #111;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      ul.check {
+        list-style: none;
+        padding: 0;
+      }
+      ul.check li {
+        padding-left: 1.2rem;
+        position: relative;
+        margin: 0.35rem 0;
+      }
+      ul.check li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #00ba7c;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Translation &amp; blending pipeline</h1>
+    <p class="sub">
+      How the web app turns English EPUB blocks into progressive Spanish mixing and optional
+      full-sentence Spanish. This page is static; open from the dev server at
+      <code>/docs/translation-pipeline.html</code>.
+    </p>
+
+    <div class="card">
+      <strong>Source files</strong>
+      <ul>
+        <li>
+          Markdown: <code>apps/web/docs/translation-pipeline.md</code>
+        </li>
+        <li>
+          Tests + snapshot report:
+          <code>apps/web/src/lib/translationPipeline.integration.test.ts</code> ·
+          <code>npm run test:translation-pipeline</code>
+        </li>
+        <li>
+          Harness: <code>apps/web/src/lib/translationPipelineHarness.ts</code>
+        </li>
+      </ul>
+    </div>
+
+    <h2>High-level flow</h2>
+    <pre class="mermaid">
+flowchart TD
+  A[EPUB bytes] --> B[extractEpub]
+  B --> C[ContentBlock]
+  D[Spanish EPUB] --> E[attachCompanion]
+  C --> E
+  E --> F[blocks plus plainEs]
+  F --> G[Progressive blend]
+  G --> H[Inline lang es spans]
+  H --> I{Sentence mode?}
+  I -->|Off or tap| J[Save blendedHtml]
+  I -->|Replace| K{Selective?}
+  K -->|No| L[sentenceLayer]
+  K -->|Yes| M[selectiveSentenceBlend]
+  L --> N[pr-sentence-mt seg]
+  M --> N
+  N --> J
+    </pre>
+
+    <h2>Decision: which sentence path?</h2>
+    <pre class="mermaid">
+flowchart LR
+  S[Settings] --> T{Sentence on?}
+  T -->|No| P[Progressive only]
+  T -->|Yes| U{Style}
+  U -->|tap| P
+  U -->|replace par or sent from start| V[sentenceLayer]
+  U -->|sent after sightings| W[selective blend]
+  U -->|par after sightings| V
+    </pre>
+
+    <h2>Selective sentence logic (per lemma)</h2>
+    <p style="color: var(--muted); font-size: 0.92rem">
+      Only when <strong>Replace sentence</strong> and <strong>After lexicon sightings</strong> are on. Bundled
+      Spanish is used for sentences that qualify; API is skipped when <code>plainEs</code> aligns.
+    </p>
+    <pre class="mermaid">
+flowchart TD
+  R[Scan book order] --> S[Split sentences]
+  S --> T[Count lemma hits]
+  T --> Q{Any lemma in sentence at least N times?}
+  Q -->|No| B[Progressive sentence]
+  Q -->|Yes| X[Bundled ES or API]
+  B --> N[Join paragraph]
+  X --> N
+    </pre>
+
+    <h2>Fixture sample (no API in tests)</h2>
+    <p>
+      The repo ships <code>reader-feature-sample.blocks.json</code> (20 blocks, all with
+      <code>plainEs</code>). Vitest asserts markup classes and Spanish content for every bundled
+      scenario. Regenerate with:
+    </p>
+    <pre><code>cd apps/web
+npm run epub:feature-sample</code></pre>
+
+    <h2>Latest snapshot metrics (regenerate tests to update)</h2>
+    <p style="color: var(--muted); font-size: 0.9rem">
+      Values below mirror a passing run; the snapshot file is the source of truth in CI.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario ID</th>
+          <th>pr-sentence-mt blocks</th>
+          <th>pr-sentence-seg blocks</th>
+          <th>pr-first-l2 blocks</th>
+          <th>lang=&quot;es&quot; occurrences</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>progressive_only</code></td>
+          <td>0</td>
+          <td>0</td>
+          <td>17</td>
+          <td>50</td>
+        </tr>
+        <tr>
+          <td><code>tap_to_reveal</code></td>
+          <td>0</td>
+          <td>0</td>
+          <td>17</td>
+          <td>50</td>
+        </tr>
+        <tr>
+          <td><code>replace_paragraph_from_beginning_bundled</code></td>
+          <td>20</td>
+          <td>0</td>
+          <td>0</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td><code>replace_sentence_from_beginning_bundled</code></td>
+          <td>20</td>
+          <td>20</td>
+          <td>0</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td><code>replace_sentence_after_sightings_bundled</code></td>
+          <td>5</td>
+          <td>5</td>
+          <td>16</td>
+          <td>42</td>
+        </tr>
+        <tr>
+          <td><code>replace_paragraph_after_sightings_bundled</code></td>
+          <td>20</td>
+          <td>0</td>
+          <td>0</td>
+          <td>20</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>What is not covered in CI</h2>
+    <ul class="check">
+      <li>MyMemory, LibreTranslate, Google Cloud translation (network + keys)</li>
+      <li>epubjs <code>extractEpub</code> in Vitest (use real import in the browser; JSON fixture used instead)</li>
+      <li>Web Worker progressive blend in integration test (sync <code>blendProgressiveHtml</code> mock)</li>
+    </ul>
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'
+      mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'strict' })
+    </script>
+  </body>
+</html>
