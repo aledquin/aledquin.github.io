@@ -1,104 +1,179 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1a1a1a" />
-    <meta
-      name="description"
-      content="Progressive Reader — EPUB reader with gradual second-language blending (PWA, offline)."
-    />
-    <title>Progressive Reader · aledquin.github.io</title>
-    <style>
-      :root {
-        color-scheme: light dark;
-        --bg: #faf8f3;
-        --fg: #1a1a1a;
-        --muted: #5c5c5c;
-        --accent: #2d6a4f;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #121212;
-          --fg: #f0ebe3;
-          --muted: #a8a29e;
-          --accent: #6abf8a;
-        }
-      }
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0;
-        min-height: 100dvh;
-        font-family:
-          system-ui,
-          -apple-system,
-          Segoe UI,
-          Roboto,
-          Ubuntu,
-          Cantarell,
-          sans-serif;
-        background: var(--bg);
-        color: var(--fg);
-        line-height: 1.55;
-      }
-      main {
-        max-width: 40rem;
-        margin: 0 auto;
-        padding: clamp(1.5rem, 5vw, 3rem);
-      }
-      h1 {
-        font-size: clamp(1.5rem, 4vw, 2rem);
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        margin: 0 0 0.5rem;
-      }
-      p {
-        margin: 0 0 1rem;
-        color: var(--muted);
-      }
-      .repo {
-        font-size: 0.9rem;
-        word-break: break-all;
-      }
-      a.button {
-        display: inline-block;
-        margin-top: 0.75rem;
-        padding: 0.65rem 1.25rem;
-        background: var(--accent);
-        color: #fff;
-        text-decoration: none;
-        border-radius: 0.5rem;
-        font-weight: 600;
-      }
-      a.button:hover {
-        filter: brightness(1.08);
-      }
-      a.inline {
-        color: var(--accent);
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Progressive Reader</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alvaro Quintana &mdash; Cocktails, Recipes &amp; Code</title>
+  <meta name="description" content="Personal site of Alvaro Quintana Carvacho. Cocktails, recipes, coding projects, and more.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo">alvaro<span>.</span></a>
+      <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li><a href="/" class="nav__link nav__link--active">Home</a></li>
+          <li><a href="about/index.html" class="nav__link">About</a></li>
+          <li><a href="cocktails/index.html" class="nav__link">Cocktails</a></li>
+          <li><a href="recipes/index.html" class="nav__link">Recipes</a></li>
+          <li><a href="coding/index.html" class="nav__link">Coding</a></li>
+          <li><a href="reader/" class="nav__link">Reader</a></li>
+          <li><a href="gallery/index.html" class="nav__link">Gallery</a></li>
+          <li><a href="contact/index.html" class="nav__link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__decoration hero__decoration--1"></div>
+    <div class="hero__decoration hero__decoration--2"></div>
+    <div class="hero__content">
+      <h1>Welcome to Alvaro's&hellip; <em>everything</em></h1>
       <p>
-        Open-source web app (PWA): read EPUBs with progressive English→Spanish blending, offline
-        storage, and bundled lexicon support.
+        Cocktails I've mixed, recipes I love, things I code, and a little bit of everything in between.
+        A place for sharing what I enjoy &mdash; one sip, one bite, one commit at a time.
       </p>
-      <p>
-        <a class="button" href="reader/">Open the app</a>
-      </p>
-      <p class="repo">
-        Source:
-        <a
-          class="inline"
-          href="https://github.com/aledquin/read_books_translate_learning_app"
-          rel="noopener noreferrer"
-          >aledquin/read_books_translate_learning_app</a
-        >
-      </p>
-    </main>
-  </body>
+      <div>
+        <a href="cocktails/index.html" class="btn btn--primary">Explore cocktails</a>
+        <a href="about/index.html" class="btn btn--outline" style="margin-left: 0.5rem;">About me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section cards -->
+  <section class="section">
+    <div class="container">
+      <div class="section__header fade-in">
+        <span class="section__subtitle">Explore</span>
+        <h2>What you'll find here</h2>
+      </div>
+
+      <div class="nav-cards fade-in">
+        <a href="cocktails/index.html" class="nav-card">
+          <div class="nav-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"/><path d="M12 11v11"/><path d="m19 3-7 8-7-8h14z"/></svg>
+          </div>
+          <h3 class="nav-card__title">Cocktails</h3>
+          <p class="nav-card__desc">Original mixes and classic drinks</p>
+        </a>
+
+        <a href="recipes/index.html" class="nav-card">
+          <div class="nav-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" y1="17" x2="18" y2="17"/></svg>
+          </div>
+          <h3 class="nav-card__title">Recipes</h3>
+          <p class="nav-card__desc">Food I love cooking and sharing</p>
+        </a>
+
+        <a href="coding/index.html" class="nav-card">
+          <div class="nav-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3 class="nav-card__title">Coding</h3>
+          <p class="nav-card__desc">Projects &amp; things I build</p>
+        </a>
+
+        <a href="reader/" class="nav-card">
+          <div class="nav-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <h3 class="nav-card__title">Progressive Reader</h3>
+          <p class="nav-card__desc">EPUB reader with progressive English&rarr;Spanish blending</p>
+        </a>
+
+        <a href="gallery/index.html" class="nav-card">
+          <div class="nav-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <h3 class="nav-card__title">Gallery</h3>
+          <p class="nav-card__desc">Photos from life and travels</p>
+        </a>
+
+        <a href="contact/index.html" class="nav-card">
+          <div class="nav-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <h3 class="nav-card__title">Contact</h3>
+          <p class="nav-card__desc">Get in touch or find me online</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest additions -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section__header fade-in">
+        <span class="section__subtitle">Latest</span>
+        <h2>Recently shared</h2>
+      </div>
+
+      <div class="card-grid fade-in">
+        <a href="cocktails/capira.html" class="card" style="text-decoration:none;color:inherit;">
+          <div class="card__image">
+            <div class="card__image-placeholder">&#127864;</div>
+            <span class="card__tag">Cocktail</span>
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">Capira</h3>
+            <p class="card__description">A Martini-style cocktail mixed, with Dry Gin, Cappelletti, and Blood Orange juice.</p>
+            <div class="card__footer">
+              <span class="card__link">Read more</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="cocktails/pisco-sour.html" class="card" style="text-decoration:none;color:inherit;">
+          <div class="card__image">
+            <div class="card__image-placeholder">&#127867;</div>
+            <span class="card__tag">Cocktail</span>
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">Pisco Sour</h3>
+            <p class="card__description">A traditional Chilean cocktail, the way my dad makes it. Pisco, lime, egg white, and a touch of bitters.</p>
+            <div class="card__footer">
+              <span class="card__link">Read more</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="recipes/guacamole.html" class="card" style="text-decoration:none;color:inherit;">
+          <div class="card__image">
+            <div class="card__image-placeholder">&#129361;</div>
+            <span class="card__tag card__tag--accent">Recipe</span>
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">Guak(amole)</h3>
+            <p class="card__description">My version of guacamole in a sauce bottle &mdash; with capers, green olives, and a whole lot of love for tacos.</p>
+            <div class="card__footer">
+              <span class="card__link">Read more</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__links">
+        <a href="https://github.com/aledquin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://instagram.com/aledquin" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://linkedin.com/in/aledquin" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <p>&copy; 2026 Alvaro Quintana Carvacho</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
 </html>
