@@ -9,7 +9,8 @@ To make it available at **www.aledquin.com**, follow the steps below.
 ## Step 1: Verify GitHub Pages Settings
 
 1. Go to https://github.com/aledquin/aledquin.github.io/settings/pages
-2. Under **Source**, make sure it says **GitHub Actions**
+2. Under **Build and deployment → Source**, choose **Deploy from a branch** (not artifact-only mode). Set **Branch** to **`main`** and **Folder** to **`/ (root)`**.  
+   The site files (including `index.html` and the **`reader/`** app from the `read_books_translate_learning_app` deploy workflow) live on **`main`**; GitHub Pages must publish **that branch** so paths like `/reader/` work.
 3. Under **Custom domain**, enter `www.aledquin.com` and click Save
 4. Check the box **Enforce HTTPS** once it becomes available
 
