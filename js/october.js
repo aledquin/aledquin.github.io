@@ -263,6 +263,7 @@ var OCTOBER_HORROR_MOVIES = [
   var STORAGE_KEY = 'octoberHorror';
   var SCHEMA_VERSION = 1;
   var PICK_COUNT = 3;
+  var FILMS_PER_DAY = 8;
   var MAX_SEARCH_LENGTH = 100;
   var MAX_BATCHES_PER_DAY = 200;
 
@@ -817,11 +818,35 @@ var OCTOBER_HORROR_MOVIES = [
     heading.appendChild(imdb);
     card.appendChild(heading);
 
+    var labels = el(doc, 'div', 'oh-movie__labels');
+    var tags = el(doc, 'ul', 'oh-tags');
+    tags.setAttribute('aria-label', 'Genres');
+    movie.genres.forEach(function (genre) { tags.appendChild(el(doc, 'li', 'oh-tag', genre)); });
+    labels.appendChild(tags);
+    labels.appendChild(intensityBadge(doc, movie.intensity));
+    card.appendChild(labels);
+
+    var n = ++uid;
+    var bodyId = 'oh-' + opts.context + '-' + movie.id + '-body-' + n;
+    var expanded = !!opts.expanded;
+    var toggle = el(doc, 'button', 'oh-movie__more');
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    toggle.setAttribute('aria-controls', bodyId);
+    toggle.appendChild(el(doc, 'span', 'oh-movie__more-label', 'Details'));
+    toggle.appendChild(hiddenText(doc, ': ' + movieLabel(movie)));
+    toggle.appendChild(svgIcon(doc, [['path', { d: 'm6 9 6 6 6-6' }]], 'oh-movie__chevron', '0 0 24 24'));
+    card.appendChild(toggle);
+
+    var body = el(doc, 'div', 'oh-movie__body');
+    body.id = bodyId;
+    body.hidden = !expanded;
+
     var meta = el(doc, 'p', 'oh-movie__meta');
     meta.appendChild(el(doc, 'span', '', String(movie.year)));
     if (movie.version) meta.appendChild(el(doc, 'span', '', movie.version));
     meta.appendChild(el(doc, 'span', '', 'Scheduled Oct ' + movie.calendarDay));
-    card.appendChild(meta);
+    body.appendChild(meta);
 
     var rtLine = el(doc, 'p', 'oh-movie__rt');
     var rt = el(doc, 'a', '', links.rt.direct ? 'Rotten Tomatoes' : 'Search Rotten Tomatoes');
@@ -831,19 +856,13 @@ var OCTOBER_HORROR_MOVIES = [
     rt.appendChild(externalIcon(doc));
     rt.appendChild(hiddenText(doc, ' for ' + movieLabel(movie) + ' (opens in a new tab)'));
     rtLine.appendChild(rt);
-    card.appendChild(rtLine);
+    body.appendChild(rtLine);
 
-    card.appendChild(el(doc, 'p', 'oh-movie__blurb', movie.blurb));
-
-    var tags = el(doc, 'ul', 'oh-tags');
-    tags.setAttribute('aria-label', 'Genres');
-    movie.genres.forEach(function (genre) { tags.appendChild(el(doc, 'li', 'oh-tag', genre)); });
-    card.appendChild(tags);
-    card.appendChild(intensityBadge(doc, movie.intensity));
+    body.appendChild(el(doc, 'p', 'oh-movie__blurb', movie.blurb));
 
     var track = el(doc, 'div', 'oh-movie__track');
     [['selected', 'Want to watch'], ['watched', 'Watched']].forEach(function (pair) {
-      var id = 'oh-' + opts.context + '-' + movie.id + '-' + pair[0] + '-' + (++uid);
+      var id = 'oh-' + opts.context + '-' + movie.id + '-' + pair[0] + '-' + n;
       var input = doc.createElement('input');
       input.type = 'checkbox';
       input.id = id;
@@ -858,7 +877,8 @@ var OCTOBER_HORROR_MOVIES = [
       label.appendChild(hiddenText(doc, ': ' + movieLabel(movie)));
       track.appendChild(label);
     });
-    card.appendChild(track);
+    body.appendChild(track);
+    card.appendChild(body);
     return card;
   }
 
@@ -884,6 +904,7 @@ var OCTOBER_HORROR_MOVIES = [
     var followToday = today.inOctober;
     var preview = null;
     var current = { ids: [], signature: null };
+    var expandedCards = {};
     var $ = function (sel) { return root.querySelector(sel); };
 
     function showNotice(key) {
@@ -948,9 +969,9 @@ var OCTOBER_HORROR_MOVIES = [
       $('#oh-filters-active').textContent = active ? active + ' active' : 'none active';
     }
 
-    function setFiltersOpen(open) {
-      $('#oh-filters-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
-      $('#oh-filters-body').hidden = !open;
+    function setSectionOpen(toggle, open) {
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      doc.getElementById(toggle.getAttribute('aria-controls')).hidden = !open;
     }
 
     function buildGenreControls() {
@@ -987,12 +1008,59 @@ var OCTOBER_HORROR_MOVIES = [
 
     function renderCards(container, ids, context, headingLevel) {
       container.textContent = '';
+      container.setAttribute('data-context', context);
       var t = tracked();
       ids.forEach(function (id) {
         var item = el(doc, 'li', 'oh-list__item');
-        item.appendChild(renderMovieCard(doc, MOVIE_BY_ID[id], { context: context, headingLevel: headingLevel, tracked: t }));
+        item.appendChild(renderMovieCard(doc, MOVIE_BY_ID[id], {
+          context: context,
+          headingLevel: headingLevel,
+          tracked: t,
+          expanded: !!expandedCards[context + '|' + id]
+        }));
         container.appendChild(item);
       });
+    }
+
+    function toggleCard(button) {
+      var card = button.closest('.oh-movie');
+      var context = button.closest('[data-context]').getAttribute('data-context');
+      var open = button.getAttribute('aria-expanded') !== 'true';
+      var key = context + '|' + card.getAttribute('data-movie-id');
+      if (open) expandedCards[key] = true;
+      else delete expandedCards[key];
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+      doc.getElementById(button.getAttribute('aria-controls')).hidden = !open;
+    }
+
+    // ── Tabs ──
+
+    function tabs() {
+      return Array.prototype.slice.call(root.querySelectorAll('.oh-tab'));
+    }
+
+    function selectTab(tab, focus) {
+      tabs().forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        doc.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      if (focus) tab.focus();
+    }
+
+    function onTabKey(event) {
+      var list = tabs();
+      var index = list.indexOf(event.target);
+      var next = {
+        ArrowRight: (index + 1) % list.length,
+        ArrowLeft: (index - 1 + list.length) % list.length,
+        Home: 0,
+        End: list.length - 1
+      }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      selectTab(list[next], true);
     }
 
     function renderPicks() {
@@ -1003,6 +1071,7 @@ var OCTOBER_HORROR_MOVIES = [
       var active = activeSignature();
       var pending = active !== null && active !== currentSignature(state, today.year);
       heading.textContent = today.inOctober ? 'Tonight’s picks' : 'Preview picks';
+      $('#oh-tab-picks').textContent = heading.textContent;
       intro.textContent = today.inOctober
         ? formatLocalDate(today)
         : formatLocalDate(today) + ' — it isn’t October, so these previews are never saved to your October history.';
@@ -1037,7 +1106,13 @@ var OCTOBER_HORROR_MOVIES = [
       var list = $('#oh-cal-days');
       list.textContent = '';
       var offset = octoberWeekday(year, 1);
+      var filtered = filtersActive();
+      var matchesByDay = {};
+      filterMovies(MOVIES, state.filters, season().watchedIds).forEach(function (m) {
+        (matchesByDay[m.calendarDay] = matchesByDay[m.calendarDay] || []).push(m.id);
+      });
       for (var day = 1; day <= 31; day++) {
+        var matchCount = (matchesByDay[day] || []).length;
         var item = el(doc, 'li', 'oh-cal__cell');
         if (day === 1) item.style.gridColumnStart = String(offset + 1);
         var button = el(doc, 'button', 'oh-cal__day');
@@ -1057,38 +1132,63 @@ var OCTOBER_HORROR_MOVIES = [
             ['rect', { x: '7.2', y: '2', width: '1.6', height: '3', rx: '0.8' }]
           ], 'oh-cal__pumpkin', '0 0 16 16'));
         }
+        if (filtered && !matchCount) button.classList.add('oh-cal__day--none');
         button.setAttribute('aria-label', formatOctoberDate(year, day) +
-          (day === 31 ? ' (Halloween)' : '') + (isToday ? ' (today)' : ''));
+          (day === 31 ? ' (Halloween)' : '') + (isToday ? ' (today)' : '') +
+          (filtered ? ', ' + matchCount + ' of ' + FILMS_PER_DAY + ' films match' : ''));
         item.appendChild(button);
         list.appendChild(item);
       }
       $('#oh-day-heading').textContent = formatOctoberDate(year, selectedDay);
-      var ids = MOVIES.filter(function (m) { return m.calendarDay === selectedDay; }).map(function (m) { return m.id; });
+      var ids = matchesByDay[selectedDay] || [];
+      $('#oh-day-status').textContent = filtered
+        ? ids.length + ' of ' + FILMS_PER_DAY + ' scheduled films match your filters.'
+        : FILMS_PER_DAY + ' scheduled films.';
       renderCards($('#oh-day-list'), ids, 'day', 'h4');
+      $('#oh-day-empty').hidden = ids.length !== 0;
+    }
+
+    function filtersActive() {
+      var f = state.filters;
+      return !!(f.search.trim() || f.genres.length || f.intensities.length || f.hideWatched);
     }
 
     function renderCatalog() {
       var matches = sortMovies(filterMovies(MOVIES, state.filters, season().watchedIds), state.sort);
       $('#oh-catalog-count').textContent = 'Showing ' + matches.length + ' of ' + MOVIES.length + ' movies.';
+      $('#oh-catalog-summary').textContent = matches.length === MOVIES.length
+        ? MOVIES.length + ' movies'
+        : matches.length + ' of ' + MOVIES.length + ' match';
       renderCards($('#oh-catalog-list'), matches.map(function (m) { return m.id; }), 'cat', 'h3');
       $('#oh-catalog-empty').hidden = matches.length !== 0;
     }
 
+    function scheduledOrder(ids) {
+      return sortMovies(ids.map(function (id) { return MOVIE_BY_ID[id]; }), 'scheduled').map(function (m) { return m.id; });
+    }
+
     function renderMine() {
-      var s = season();
-      var ids = sortMovies(s.selectedIds.map(function (id) { return MOVIE_BY_ID[id]; }), 'scheduled')
-        .map(function (m) { return m.id; });
-      $('#oh-mine-season').textContent = 'Season ' + today.year;
-      $('#oh-watched-count').textContent = 'Watched this season: ' + s.watchedIds.length + ' of ' + MOVIES.length + '.';
-      renderCards($('#oh-mine-list'), ids, 'mine', 'h4');
+      var ids = scheduledOrder(season().selectedIds);
+      $('#oh-tab-mine-count').textContent = String(ids.length);
+      renderCards($('#oh-mine-list'), ids, 'mine', 'h3');
       $('#oh-mine-empty').hidden = ids.length !== 0;
     }
 
+    function renderWatched() {
+      var ids = scheduledOrder(season().watchedIds);
+      $('#oh-tab-watched-count').textContent = String(ids.length);
+      $('#oh-watched-count').textContent = 'Watched this season: ' + ids.length + ' of ' + MOVIES.length + '.';
+      renderCards($('#oh-watched-list'), ids, 'watched', 'h3');
+      $('#oh-watched-empty').hidden = ids.length !== 0;
+    }
+
     function renderAll() {
+      root.querySelectorAll('.oh-season-year').forEach(function (node) { node.textContent = String(today.year); });
       renderPicks();
       renderCalendar();
       renderCatalog();
       renderMine();
+      renderWatched();
     }
 
     function syncTrackInputs(kind, id, value) {
@@ -1103,31 +1203,40 @@ var OCTOBER_HORROR_MOVIES = [
       readFilters();
       renderFilterSummary();
       persist();
+      renderCalendar();
       renderCatalog();
       renderPicks();
     }
 
+    var FOCUS_AFTER_REMOVAL = {
+      '#oh-day-list': '#oh-day-heading',
+      '#oh-catalog-list': '#oh-catalog-toggle',
+      '#oh-mine-list': '#oh-mine-heading',
+      '#oh-watched-list': '#oh-watched-heading'
+    };
+
     function onTrackChange(input) {
       var kind = input.getAttribute('data-track');
       var id = input.getAttribute('data-movie-id');
-      var inCatalog = !!input.closest('#oh-catalog-list');
+      var listSel = Object.keys(FOCUS_AFTER_REMOVAL).filter(function (sel) { return input.closest(sel); })[0];
       setTracked(state, today.year, kind, id, input.checked);
       persist();
       syncTrackInputs(kind, id, input.checked);
       if (kind === 'selected') renderMine();
-      else $('#oh-watched-count').textContent = 'Watched this season: ' + season().watchedIds.length + ' of ' + MOVIES.length + '.';
+      else renderWatched();
       if (kind === 'watched' && state.filters.hideWatched) {
+        renderCalendar();
         renderCatalog();
         renderPicks();
-        if (inCatalog && !input.isConnected) $('#oh-catalog-heading').focus();
       }
-      if (kind === 'selected' && !input.isConnected) $('#oh-mine-heading').focus();
+      if (listSel && !input.isConnected) $(FOCUS_AFTER_REMOVAL[listSel]).focus();
     }
 
     function clearFilters() {
       state.filters = defaultFilters();
       syncFilterControls();
       persist();
+      renderCalendar();
       renderCatalog();
       renderPicks();
     }
@@ -1178,14 +1287,16 @@ var OCTOBER_HORROR_MOVIES = [
     root.addEventListener('click', function (event) {
       if (event.target.closest('.oh-jump')) {
         event.preventDefault();
-        setFiltersOpen(true);
+        setSectionOpen($('#oh-filters-toggle'), true);
         $('#oh-filters-toggle').focus();
         return;
       }
       var target = event.target.closest('button');
       if (!target) return;
-      if (target.id === 'oh-filters-toggle') {
-        setFiltersOpen(target.getAttribute('aria-expanded') !== 'true');
+      if (target.matches('.oh-tab')) selectTab(target, false);
+      else if (target.matches('.oh-movie__more')) toggleCard(target);
+      else if (target.matches('.oh-toggle')) {
+        setSectionOpen(target, target.getAttribute('aria-expanded') !== 'true');
       } else if (target.matches('.oh-clear')) {
         clearFilters();
         if (target.closest('#oh-picks-empty')) updatePicks();
@@ -1200,6 +1311,9 @@ var OCTOBER_HORROR_MOVIES = [
         if (again) again.focus();
       }
     });
+    $('.oh-tabs').addEventListener('keydown', function (event) {
+      if (event.target.matches('.oh-tab')) onTabKey(event);
+    });
     win.addEventListener('focus', checkDate);
     doc.addEventListener('visibilitychange', function () {
       if (doc.visibilityState === 'visible') checkDate();
@@ -1207,7 +1321,8 @@ var OCTOBER_HORROR_MOVIES = [
     win.setInterval(checkDate, 60000);
 
     buildGenreControls();
-    setFiltersOpen(false);
+    setSectionOpen($('#oh-filters-toggle'), false);
+    setSectionOpen($('#oh-catalog-toggle'), false);
     syncFilterControls();
     if (loaded.problem) showNotice(loaded.problem);
     initialPicks();

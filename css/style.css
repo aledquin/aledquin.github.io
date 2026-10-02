@@ -1119,12 +1119,6 @@ p {
   background: linear-gradient(180deg, var(--color-bg-alt) 0%, rgba(180, 82, 26, 0.06) 60%, var(--color-bg) 100%);
 }
 
-.oh-header .oh-header__note {
-  margin-top: 0.75rem;
-  font-size: 0.92rem;
-  color: var(--color-text-secondary);
-}
-
 .oh-section.section {
   padding: 3rem 0;
 }
@@ -1421,8 +1415,59 @@ p {
 
 .oh-movie__title {
   font-size: 1.15rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   overflow-wrap: anywhere;
+}
+
+.oh-movie__labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+}
+
+.oh-movie__labels .oh-tags {
+  margin-bottom: 0;
+}
+
+.oh-movie__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-start;
+  min-height: 2.75rem;
+  margin-top: auto;
+  padding: 0.5rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.oh-movie__more:hover {
+  color: var(--color-primary);
+}
+
+.oh-movie__chevron {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--transition);
+}
+
+.oh-movie__more[aria-expanded="true"] .oh-movie__chevron {
+  transform: rotate(180deg);
+}
+
+.oh-movie__body {
+  padding-top: 0.25rem;
 }
 
 .oh-movie__imdb {
@@ -1485,7 +1530,6 @@ p {
 }
 
 .oh-movie__blurb {
-  flex: 1;
   font-size: 0.92rem;
   line-height: 1.6;
   margin-bottom: 0.75rem;
@@ -1578,8 +1622,92 @@ p {
   text-transform: uppercase;
 }
 
+.oh-cal__day--none:not([aria-pressed="true"]) {
+  opacity: 0.55;
+}
+
 .oh-day__heading {
   margin-bottom: 0.25rem;
+}
+
+/* Tabs */
+
+.oh-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.oh-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.45rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.oh-tab:hover {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+.oh-tab[aria-selected="true"] {
+  color: #1a0f05;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.oh-tab__count {
+  min-width: 1.5rem;
+  padding: 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  text-align: center;
+  color: var(--color-text);
+  background: var(--color-border-light);
+  border-radius: 100px;
+}
+
+.oh-tab[aria-selected="true"] .oh-tab__count {
+  color: var(--color-primary);
+  background: #1a0f05;
+}
+
+@media (max-width: 600px) {
+  .oh-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    margin-right: -1rem;
+    padding-right: 1rem;
+  }
+
+  .oh-tab {
+    flex-shrink: 0;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.9rem;
+  }
+}
+
+.oh-panel:focus-visible {
+  outline: 3px solid var(--color-primary-dark);
+  outline-offset: 4px;
+}
+
+.oh-filters__body .oh-lead {
+  margin-top: 0.5rem;
 }
 
 /* Catalog & My October */
