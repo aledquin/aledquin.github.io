@@ -24,7 +24,7 @@
     "Critic percentages are dated positive-review shares, not live scores or average ratings.",
     "Reception is unreviewed where no current research snapshot was recorded; this does not indicate poor quality.",
     "Original festival-release years can differ from U.S. release years on reference sites.",
-    "Blurbs, genre tags, languages, and runtimes are omitted because they were not systematically supplied or verified."
+    "Blurbs and genre tags for titles carried over from the prior editorial catalog; new international additions may omit them until supplied."
   ],
   "verifiedCoverage": {
     "productionCountries": 4,
@@ -83,7 +83,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "gothic",
+        "supernatural"
+      ],
+      "blurb": "A squeamish New York constable travels upriver to investigate a string of beheadings blamed on a legendary headless horseman."
     },
     {
       "id": "crimson-peak-2015",
@@ -121,7 +126,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "gothic",
+        "ghost"
+      ],
+      "blurb": "A young author marries into a crumbling English mansion where red clay seeps through the walls and the past refuses to stay buried."
     },
     {
       "id": "the-woman-in-black-2012",
@@ -159,7 +169,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "gothic"
+      ],
+      "blurb": "A widowed lawyer settles a dead client’s estate at a remote marsh house and glimpses a figure the villagers fear."
     },
     {
       "id": "beetlejuice-1988",
@@ -197,7 +212,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "ghost"
+      ],
+      "blurb": "A recently deceased couple hires a chaotic bio-exorcist to scare the new owners out of their beloved country home."
     },
     {
       "id": "the-skeleton-key-2005",
@@ -235,7 +255,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "thriller"
+      ],
+      "blurb": "A hospice nurse takes a job at a Louisiana bayou mansion and becomes curious about a locked attic room."
     },
     {
       "id": "the-awakening-2011",
@@ -273,7 +298,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "gothic"
+      ],
+      "blurb": "In 1921 England, an author who debunks hoaxes is invited to a boarding school to investigate sightings of a ghostly child."
     },
     {
       "id": "bram-stoker-s-dracula-1992",
@@ -311,7 +341,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "gothic"
+      ],
+      "blurb": "A lavish, operatic retelling of the Transylvanian count’s voyage to London and his obsession with a young solicitor’s fiancée."
     },
     {
       "id": "suspiria-1977",
@@ -349,7 +384,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "An American dancer joins a prestigious German ballet academy as a series of gruesome deaths begins. Vivid color, pounding score."
     },
     {
       "id": "cronos-1993",
@@ -387,7 +427,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/cronos",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "scream-1996",
@@ -425,7 +467,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "thriller"
+      ],
+      "blurb": "A year after her mother’s murder, a teenager and her small town are stalked by a masked killer obsessed with horror movies."
     },
     {
       "id": "i-know-what-you-did-last-summer-1997",
@@ -463,7 +510,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "thriller"
+      ],
+      "blurb": "Four friends cover up a deadly roadside accident; a year later, someone sends them a message that they know."
     },
     {
       "id": "urban-legend-1998",
@@ -501,7 +553,11 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/urban_legend",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "College students realize a killer is staging murders inspired by the campus folklore they love to retell."
     },
     {
       "id": "happy-death-day-2017",
@@ -539,7 +595,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "comedy"
+      ],
+      "blurb": "A self-absorbed college student relives her birthday again and again, murdered each time by a masked killer she must unmask."
     },
     {
       "id": "totally-killer-2023",
@@ -577,7 +638,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "comedy",
+        "sci-fi"
+      ],
+      "blurb": "A teenager travels back to 1987 hoping to stop a masked serial killer before his infamous spree begins."
     },
     {
       "id": "happy-birthday-to-me-1981",
@@ -615,7 +682,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "Members of an elite private-school clique start disappearing in the days before a troubled student’s eighteenth birthday."
     },
     {
       "id": "black-christmas-1974",
@@ -653,7 +724,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "Sorority sisters staying on campus over winter break receive increasingly threatening phone calls as the house empties out."
     },
     {
       "id": "alice-sweet-alice-1976",
@@ -691,7 +766,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "psychological"
+      ],
+      "blurb": "After a girl is killed at her First Communion, suspicion falls on her moody older sister in this grim, Catholic-tinged mystery."
     },
     {
       "id": "the-lure-2015",
@@ -729,7 +809,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/the_lure_2017",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-cabin-in-the-woods-2012",
@@ -767,7 +849,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "supernatural"
+      ],
+      "blurb": "Five college friends head to a remote cabin for the weekend, unaware that their trip is not at all what it seems."
     },
     {
       "id": "the-final-girls-2015",
@@ -805,7 +892,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "slasher"
+      ],
+      "blurb": "A grieving teen and her friends are pulled into the 1980s summer-camp slasher film that starred her late mother."
     },
     {
       "id": "behind-the-mask-the-rise-of-leslie-vernon-2006",
@@ -843,7 +935,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "comedy",
+        "found-footage"
+      ],
+      "blurb": "A documentary crew follows an aspiring slasher villain as he cheerfully explains how he plans his upcoming massacre."
     },
     {
       "id": "the-blackening-2022",
@@ -881,7 +979,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "slasher"
+      ],
+      "blurb": "Seven Black friends reunite at a cabin for Juneteenth weekend and find themselves trapped in a deadly, horror-savvy game."
     },
     {
       "id": "freaky-2020",
@@ -919,7 +1022,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "slasher"
+      ],
+      "blurb": "A bullied high schooler swaps bodies with a notorious serial killer and has twenty-four hours to switch back."
     },
     {
       "id": "better-watch-out-2016",
@@ -957,7 +1065,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "comedy"
+      ],
+      "blurb": "A babysitter looking after a twelve-year-old on a snowy suburban night before Christmas faces what seems to be a home invasion."
     },
     {
       "id": "barbarian-2022",
@@ -995,7 +1108,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller"
+      ],
+      "blurb": "A woman arrives at her Detroit rental to find it double-booked by a stranger, and the house holds more than one surprise."
     },
     {
       "id": "malignant-2021",
@@ -1033,7 +1150,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "slasher"
+      ],
+      "blurb": "A woman begins having vivid visions of brutal murders, then learns they are really happening. Gleefully over the top."
     },
     {
       "id": "dead-snow-2-red-vs-dead-2014",
@@ -1071,7 +1193,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/dead_snow_2_red_vs_dead",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Sequel; graphic gore despite its comic tone."
+      "viewingNote": "Sequel; graphic gore despite its comic tone.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "shaun-of-the-dead-2004",
@@ -1109,7 +1233,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "An aimless London shop worker tries to win back his girlfriend, patch things up with his mum, and survive a zombie uprising."
     },
     {
       "id": "zombieland-2009",
@@ -1147,7 +1276,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "A nervous college student follows strict survival rules while road-tripping across a zombie-overrun America with unlikely companions."
     },
     {
       "id": "warm-bodies-2013",
@@ -1185,7 +1319,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "A lovesick zombie begins to feel human again after meeting a living girl, in this gentle romantic take on the apocalypse."
     },
     {
       "id": "fido-2006",
@@ -1223,7 +1362,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "In a 1950s-style suburb where tamed zombies work as servants, a lonely boy befriends his family’s new undead helper."
     },
     {
       "id": "night-of-the-living-dead-1968",
@@ -1261,7 +1405,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie"
+      ],
+      "blurb": "Strangers barricade themselves inside a Pennsylvania farmhouse as the recently dead rise and surround them."
     },
     {
       "id": "the-girl-with-all-the-gifts-2016",
@@ -1299,7 +1447,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "sci-fi"
+      ],
+      "blurb": "After a fungal plague, a gifted young girl held at a military base may be the key to humanity’s survival."
     },
     {
       "id": "train-to-busan-2016",
@@ -1337,7 +1490,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "thriller"
+      ],
+      "blurb": "A workaholic father and his young daughter board a high-speed train just as a zombie outbreak sweeps across South Korea."
     },
     {
       "id": "28-days-later-2002",
@@ -1375,7 +1533,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "sci-fi"
+      ],
+      "blurb": "A bicycle courier wakes from a coma to find London deserted after a rage-inducing virus has torn through Britain."
     },
     {
       "id": "juan-of-the-dead-2011",
@@ -1413,7 +1576,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/juan_of_the_dead_2011",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-others-2001",
@@ -1451,7 +1616,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "gothic"
+      ],
+      "blurb": "On a fog-bound island after World War II, a devout mother keeps her light-sensitive children in darkness as strange events unfold."
     },
     {
       "id": "the-orphanage-2007",
@@ -1489,7 +1659,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "A woman reopens the seaside orphanage where she grew up, and her young son begins talking about invisible new friends."
     },
     {
       "id": "the-devil-s-backbone-2001",
@@ -1527,7 +1702,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "gothic"
+      ],
+      "blurb": "During the Spanish Civil War, a boy left at a remote orphanage encounters the ghost of a former pupil."
     },
     {
       "id": "the-frighteners-1996",
@@ -1565,7 +1745,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "comedy"
+      ],
+      "blurb": "A psychic con man who teams up with ghost friends to scam homeowners stumbles onto a genuinely deadly supernatural force."
     },
     {
       "id": "the-innocents-1961",
@@ -1603,7 +1788,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "gothic",
+        "psychological"
+      ],
+      "blurb": "A governess caring for two children on a grand English estate becomes convinced they are visited by former servants who died."
     },
     {
       "id": "the-haunting-1963",
@@ -1641,7 +1832,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "psychological"
+      ],
+      "blurb": "A paranormal researcher gathers a small group at Hill House, a mansion with a long reputation for being unwelcoming."
     },
     {
       "id": "the-entity-1982",
@@ -1679,7 +1875,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A single mother is repeatedly attacked by an invisible force, while her doctors insist the cause must be in her mind."
     },
     {
       "id": "the-sentinel-1977",
@@ -1717,7 +1918,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "gothic"
+      ],
+      "blurb": "A fashion model moves into a Brooklyn brownstone whose odd neighbors and reclusive blind priest upstairs hint at something sinister."
     },
     {
       "id": "tigers-are-not-afraid-2017",
@@ -1755,7 +1961,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/tigers_are_not_afraid",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-ring-2002",
@@ -1793,7 +2001,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "A journalist investigates a mysterious videotape rumored to kill its viewers seven days after they watch it."
     },
     {
       "id": "the-grudge-2004",
@@ -1831,7 +2044,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "An American care worker in Tokyo becomes caught up in a curse born in a house where a terrible crime occurred."
     },
     {
       "id": "shutter-2004",
@@ -1869,7 +2087,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "After a hit-and-run on a dark road, a young photographer and his girlfriend notice strange shapes appearing in his pictures."
     },
     {
       "id": "drag-me-to-hell-2009",
@@ -1907,7 +2130,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "comedy"
+      ],
+      "blurb": "A loan officer refuses an elderly woman an extension and is cursed, unleashing a gleefully gross demonic torment."
     },
     {
       "id": "ringu-1998",
@@ -1945,7 +2173,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "A reporter looking into her niece’s sudden death traces it to a cursed videotape. The Japanese original behind The Ring."
     },
     {
       "id": "dark-water-2002",
@@ -1983,7 +2216,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "psychological"
+      ],
+      "blurb": "A mother in the middle of a custody battle moves into a rundown apartment with a persistent leak in the ceiling."
     },
     {
       "id": "ju-on-the-grudge-2002",
@@ -2021,7 +2259,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "Told in overlapping episodes, people who enter a cursed Tokyo house fall prey to the vengeful spirits within."
     },
     {
       "id": "incantation-2022",
@@ -2059,7 +2302,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "supernatural"
+      ],
+      "blurb": "Through recovered footage, a mother recounts how breaking a religious taboo years ago placed a curse on her daughter."
     },
     {
       "id": "satan-s-slaves-2017",
@@ -2097,7 +2345,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/satans_slaves",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-sixth-sense-1999",
@@ -2135,7 +2385,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "psychological"
+      ],
+      "blurb": "A child psychologist tries to help a frightened young boy who says he can see dead people."
     },
     {
       "id": "the-changeling-1980",
@@ -2173,7 +2428,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost"
+      ],
+      "blurb": "A grieving composer rents a vast old Seattle mansion and begins hearing noises that point to a decades-old secret."
     },
     {
       "id": "a-tale-of-two-sisters-2003",
@@ -2211,7 +2470,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "psychological"
+      ],
+      "blurb": "Two sisters return home from a psychiatric hospital to a cold stepmother and an increasingly unsettling house."
     },
     {
       "id": "paranorman-2012",
@@ -2249,7 +2513,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "spooky-adventure",
+        "ghost"
+      ],
+      "blurb": "A misunderstood boy who can talk to ghosts must save his town from a centuries-old witch’s curse. Stop-motion animation."
     },
     {
       "id": "stir-of-echoes-1999",
@@ -2287,7 +2557,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "psychological"
+      ],
+      "blurb": "After being hypnotized at a party, a Chicago phone lineman starts experiencing disturbing visions of a ghost."
     },
     {
       "id": "mama-2013",
@@ -2325,7 +2600,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "Two girls found living alone in a forest cabin after five years are taken in by their uncle, but something followed them."
     },
     {
       "id": "his-house-2020",
@@ -2363,7 +2643,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "psychological"
+      ],
+      "blurb": "A refugee couple who fled South Sudan are placed in a rundown English house, where something evil seems to live in the walls."
     },
     {
       "id": "lake-mungo-2008",
@@ -2401,7 +2686,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "found-footage"
+      ],
+      "blurb": "A mock documentary follows an Australian family after their daughter drowns and unexplained images surface in photos and video."
     },
     {
       "id": "la-llorona-2019",
@@ -2444,7 +2734,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/la_llorona_2019",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Jayro Bustamante's film; not The Curse of La Llorona (2019)."
+      "viewingNote": "Jayro Bustamante's film; not The Curse of La Llorona (2019).",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "alien-1979",
@@ -2482,7 +2774,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "creature"
+      ],
+      "blurb": "The crew of a commercial towing spaceship answers a distress signal and brings something deadly aboard."
     },
     {
       "id": "event-horizon-1997",
@@ -2520,7 +2817,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "supernatural"
+      ],
+      "blurb": "A rescue crew sent to recover a missing experimental spaceship finds it has returned from somewhere terrible."
     },
     {
       "id": "pandorum-2009",
@@ -2558,7 +2860,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "creature"
+      ],
+      "blurb": "Two crew members wake from hypersleep aboard a dark, seemingly abandoned ship with no memory of their mission."
     },
     {
       "id": "killer-klowns-from-outer-space-1988",
@@ -2596,7 +2903,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "sci-fi",
+        "creature"
+      ],
+      "blurb": "Alien clowns land outside a small town and start collecting residents in cotton-candy cocoons. Gleefully absurd."
     },
     {
       "id": "pitch-black-2000",
@@ -2634,7 +2947,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "creature"
+      ],
+      "blurb": "Stranded on a sun-scorched planet, crash survivors must rely on a dangerous convict when an eclipse brings creatures out of the dark."
     },
     {
       "id": "europa-report-2013",
@@ -2672,7 +2990,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "found-footage"
+      ],
+      "blurb": "Recovered mission footage chronicles a privately funded crew’s journey to Jupiter’s moon Europa in search of life."
     },
     {
       "id": "life-2017",
@@ -2710,7 +3033,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "creature"
+      ],
+      "blurb": "Astronauts aboard the International Space Station study a Martian life form that proves far more capable than expected."
     },
     {
       "id": "sunshine-2007",
@@ -2748,7 +3076,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "A crew carrying an enormous bomb travels toward the dying sun on a last-chance mission to reignite it."
     },
     {
       "id": "aniara-2018",
@@ -2786,7 +3119,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/aniara",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Bleak existential science fiction rather than conventional monster horror."
+      "viewingNote": "Bleak existential science fiction rather than conventional monster horror.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-thing-1982",
@@ -2824,7 +3159,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "sci-fi",
+        "body-horror"
+      ],
+      "blurb": "An Antarctic research team is infiltrated by a shape-shifting organism that can perfectly imitate any living thing."
     },
     {
       "id": "the-fly-1986",
@@ -2862,7 +3203,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "body-horror",
+        "sci-fi"
+      ],
+      "blurb": "An eccentric scientist’s teleportation experiment goes wrong when a housefly slips into the pod with him."
     },
     {
       "id": "color-out-of-space-2019",
@@ -2900,7 +3246,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "body-horror"
+      ],
+      "blurb": "A meteorite lands on a remote New England farm and begins to change the land, the animals, and the family. Lovecraft adaptation."
     },
     {
       "id": "the-blob-1958",
@@ -2938,7 +3289,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "sci-fi"
+      ],
+      "blurb": "A teenager struggles to convince his small town that a growing, jelly-like mass from space is devouring people."
     },
     {
       "id": "invasion-of-the-body-snatchers-1978",
@@ -2976,7 +3332,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "San Francisco health inspectors notice that people are being replaced by emotionless duplicates grown from strange pods."
     },
     {
       "id": "the-faculty-1998",
@@ -3014,7 +3375,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "creature"
+      ],
+      "blurb": "A group of high school misfits suspects their teachers have been taken over by parasitic aliens."
     },
     {
       "id": "the-blob-1988",
@@ -3052,7 +3418,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "body-horror",
+        "sci-fi"
+      ],
+      "blurb": "A remake that sends a far nastier, flesh-dissolving ooze through a small town, with gory practical effects."
     },
     {
       "id": "the-void-2016",
@@ -3090,7 +3462,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "body-horror",
+        "supernatural"
+      ],
+      "blurb": "A small-town deputy and a skeleton hospital staff are besieged by hooded figures outside while grotesque things emerge inside."
     },
     {
       "id": "raw-2016",
@@ -3128,7 +3505,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/raw_2017",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-descent-2005",
@@ -3166,7 +3545,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "thriller"
+      ],
+      "blurb": "Six friends on a caving expedition in the Appalachians become trapped in an uncharted cave system with something living in it."
     },
     {
       "id": "as-above-so-below-2014",
@@ -3204,7 +3588,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "supernatural"
+      ],
+      "blurb": "A team of explorers ventures into the catacombs beneath Paris in search of a legendary alchemical artifact."
     },
     {
       "id": "the-ruins-2008",
@@ -3242,7 +3631,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "body-horror"
+      ],
+      "blurb": "Vacationing friends visit a remote Mayan temple in Mexico and become stranded on top of it."
     },
     {
       "id": "the-monster-squad-1987",
@@ -3280,7 +3674,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "spooky-adventure",
+        "comedy",
+        "creature"
+      ],
+      "blurb": "A gang of monster-obsessed kids must stop Dracula and his classic monster allies from seizing a powerful amulet."
     },
     {
       "id": "47-meters-down-2017",
@@ -3318,7 +3718,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "creature"
+      ],
+      "blurb": "Two sisters on vacation in Mexico are trapped in a shark cage on the ocean floor with dwindling air."
     },
     {
       "id": "crawl-2019",
@@ -3356,7 +3761,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "thriller"
+      ],
+      "blurb": "During a major Florida hurricane, a swimmer searching for her father becomes trapped with alligators in a flooding house."
     },
     {
       "id": "the-hills-have-eyes-2006",
@@ -3394,7 +3804,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "thriller"
+      ],
+      "blurb": "A family’s car breaks down in the New Mexico desert, near territory held by a violent clan. A remake."
     },
     {
       "id": "green-room-2015",
@@ -3432,7 +3847,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller"
+      ],
+      "blurb": "A struggling punk band witnesses a crime at a remote neo-Nazi club and must fight their way out of the back room."
     },
     {
       "id": "inside-2007",
@@ -3470,7 +3889,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/inside_2007",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Especially graphic and disturbing."
+      "viewingNote": "Especially graphic and disturbing.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "tucker-dale-vs-evil-2010",
@@ -3508,7 +3929,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "slasher"
+      ],
+      "blurb": "Two good-natured hillbillies fixing up their vacation cabin are mistaken for killers by a group of panicking college students."
     },
     {
       "id": "what-we-do-in-the-shadows-2014",
@@ -3546,7 +3972,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "vampire"
+      ],
+      "blurb": "A documentary crew follows four vampire flatmates in Wellington as they bicker over chores and navigate modern nightlife."
     },
     {
       "id": "housebound-2014",
@@ -3584,7 +4015,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "ghost"
+      ],
+      "blurb": "Sentenced to home detention at her mother’s house, a sullen young woman starts to suspect the place is haunted."
     },
     {
       "id": "young-frankenstein-1974",
@@ -3622,7 +4058,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "gothic"
+      ],
+      "blurb": "The grandson of the infamous Victor Frankenstein travels to Transylvania and reluctantly takes up the family business."
     },
     {
       "id": "an-american-werewolf-in-london-1981",
@@ -3660,7 +4101,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "Two American backpackers are attacked on the Yorkshire moors, and the survivor fears what will happen at the next full moon."
     },
     {
       "id": "the-burbs-1989",
@@ -3698,7 +4144,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "thriller"
+      ],
+      "blurb": "A suburbanite spending his week off at home becomes obsessed with his strange new neighbors and their nightly activities."
     },
     {
       "id": "re-animator-1985",
@@ -3736,7 +4187,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "body-horror",
+        "comedy"
+      ],
+      "blurb": "A medical student’s arrogant new roommate develops a serum that brings the dead back to life, with very messy results."
     },
     {
       "id": "from-beyond-1986",
@@ -3774,7 +4230,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "body-horror",
+        "sci-fi"
+      ],
+      "blurb": "Scientists build a machine that awakens a hidden sense, opening their perception to monstrous beings from another dimension."
     },
     {
       "id": "humanist-vampire-seeking-consenting-suicidal-person-2023",
@@ -3812,7 +4273,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/humanist_vampire_seeking_consenting_suicidal_person",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Addresses suicide despite its gentler tone."
+      "viewingNote": "Addresses suicide despite its gentler tone.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-lost-boys-1987",
@@ -3850,7 +4313,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "comedy"
+      ],
+      "blurb": "Two brothers move to a California beach town and discover that a local gang of motorbiking teens are vampires."
     },
     {
       "id": "fright-night-1985",
@@ -3888,7 +4356,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "comedy"
+      ],
+      "blurb": "A teenage horror fan becomes convinced his charming new neighbor is a vampire and recruits a TV horror host for help."
     },
     {
       "id": "30-days-of-night-2007",
@@ -3926,7 +4399,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire"
+      ],
+      "blurb": "As an Alaskan town plunges into a month of darkness, a pack of vampires descends on the residents who stayed behind."
     },
     {
       "id": "renfield-2023",
@@ -3964,7 +4441,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "comedy"
+      ],
+      "blurb": "Dracula’s long-suffering servant joins a support group and tries to escape his toxic boss in modern New Orleans."
     },
     {
       "id": "let-the-right-one-in-2008",
@@ -4002,7 +4484,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "psychological"
+      ],
+      "blurb": "A bullied boy in a snowy Stockholm suburb befriends the mysterious girl who has moved in next door."
     },
     {
       "id": "byzantium-2012",
@@ -4040,7 +4527,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "gothic"
+      ],
+      "blurb": "Two women with a centuries-old secret arrive in a faded English seaside town, where the younger one longs to tell her story."
     },
     {
       "id": "from-dusk-till-dawn-1996",
@@ -4078,7 +4570,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "thriller",
+        "comedy"
+      ],
+      "blurb": "Two criminal brothers take a family hostage and flee to a Mexican bar that proves far more dangerous than the law."
     },
     {
       "id": "stake-land-2010",
@@ -4116,7 +4614,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "thriller"
+      ],
+      "blurb": "After a vampire epidemic collapses society, an orphaned teen and a hardened hunter travel north in search of a safe haven."
     },
     {
       "id": "thirst-2009",
@@ -4154,7 +4657,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/10011304-thirst",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "a-nightmare-on-elm-street-1984",
@@ -4192,7 +4697,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "supernatural"
+      ],
+      "blurb": "Teenagers on one suburban street are stalked in their dreams by a burned man wearing a bladed glove."
     },
     {
       "id": "oculus-2013",
@@ -4230,7 +4740,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A young woman sets out to prove that an antique mirror caused her family’s tragedy, with her recently released brother in tow."
     },
     {
       "id": "jacob-s-ladder-1990",
@@ -4268,7 +4783,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "A Vietnam veteran working in New York experiences increasingly disturbing hallucinations as his reality seems to come apart."
     },
     {
       "id": "little-monsters-1989",
@@ -4306,7 +4825,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "spooky-adventure"
+      ],
+      "blurb": "A boy discovers a world of mischievous monsters living under the bed and befriends one of them."
     },
     {
       "id": "before-i-wake-2016",
@@ -4344,7 +4868,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural"
+      ],
+      "blurb": "A couple fostering an eight-year-old boy discover that his dreams take physical form, and so do his nightmares."
     },
     {
       "id": "paperhouse-1988",
@@ -4382,7 +4910,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "supernatural"
+      ],
+      "blurb": "A feverish girl finds that, in her dreams, she can visit a house she has drawn and the lonely boy she drew inside."
     },
     {
       "id": "in-the-mouth-of-madness-1994",
@@ -4420,7 +4953,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "supernatural"
+      ],
+      "blurb": "An insurance investigator searches for a missing horror novelist whose books seem to drive readers insane."
     },
     {
       "id": "possessor-2020",
@@ -4458,7 +4996,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "body-horror",
+        "psychological"
+      ],
+      "blurb": "A corporate agent uses brain-implant technology to take over other people’s bodies and carry out assassinations."
     },
     {
       "id": "perfect-blue-1997",
@@ -4496,7 +5040,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/perfect_blue_1999",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Adult animated psychological thriller."
+      "viewingNote": "Adult animated psychological thriller.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "it-follows-2014",
@@ -4534,7 +5080,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural"
+      ],
+      "blurb": "After a sexual encounter, a young woman is pursued by a slow, relentless entity that can look like anyone."
     },
     {
       "id": "smile-2022",
@@ -4572,7 +5122,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A psychiatrist witnesses a disturbing incident involving a patient and starts experiencing frightening things she cannot explain."
     },
     {
       "id": "final-destination-2000",
@@ -4610,7 +5165,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "thriller"
+      ],
+      "blurb": "After a premonition saves a group of students from a plane explosion, death seems determined to collect them anyway."
     },
     {
       "id": "the-house-with-a-clock-in-its-walls-2018",
@@ -4648,7 +5208,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "spooky-adventure",
+        "comedy"
+      ],
+      "blurb": "An orphaned boy moves in with his warlock uncle and learns a mysterious clock is ticking somewhere inside their mansion’s walls."
     },
     {
       "id": "lights-out-2016",
@@ -4686,7 +5251,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "A young woman and her little brother confront an entity that appears only when the lights go off."
     },
     {
       "id": "the-boogeyman-2023",
@@ -4724,7 +5294,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "creature"
+      ],
+      "blurb": "A grieving teenager and her younger sister are menaced by a creature that preys on suffering families. Based on a Stephen King story."
     },
     {
       "id": "smile-2-2024",
@@ -4762,7 +5337,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A pop star preparing for a comeback world tour begins experiencing terrifying events she cannot explain."
     },
     {
       "id": "it-2017",
@@ -4800,7 +5380,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "creature"
+      ],
+      "blurb": "Bullied kids in Derry, Maine, band together against a shape-shifting entity that often appears as a clown."
     },
     {
       "id": "pulse-2001",
@@ -4838,7 +5423,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/pulse_2005",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "get-out-2017",
@@ -4876,7 +5463,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A young Black photographer visits his white girlfriend’s family estate for a weekend and senses that something is deeply wrong."
     },
     {
       "id": "us-2019",
@@ -4914,7 +5506,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A family’s beach vacation turns into a nightmare when menacing doppelgängers appear in their driveway."
     },
     {
       "id": "the-stepford-wives-1975",
@@ -4952,7 +5549,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "sci-fi",
+        "thriller"
+      ],
+      "blurb": "A photographer moves to an idyllic Connecticut suburb and grows suspicious of its eerily perfect, submissive housewives."
     },
     {
       "id": "little-shop-of-horrors-1986",
@@ -4990,7 +5593,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "creature"
+      ],
+      "blurb": "A nerdy florist’s assistant raises an exotic plant with a bloodthirsty appetite in this rock-musical comedy."
     },
     {
       "id": "the-invitation-2015",
@@ -5028,7 +5636,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A man attends a dinner party at the home of his ex-wife and her new partner and grows suspicious of their intentions."
     },
     {
       "id": "coherence-2013",
@@ -5066,7 +5679,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "A passing comet sets off strange events during a dinner party among friends. Low-budget and puzzling."
     },
     {
       "id": "the-invisible-man-2020",
@@ -5104,7 +5722,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "A woman escapes her controlling partner, then becomes convinced he is still stalking her despite news of his death."
     },
     {
       "id": "speak-no-evil-2022",
@@ -5142,7 +5766,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "thriller"
+      ],
+      "blurb": "A Danish family accepts an invitation to visit a Dutch couple they met on vacation, and politeness becomes a trap."
     },
     {
       "id": "under-the-shadow-2016",
@@ -5186,7 +5815,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/under_the_shadow",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-conjuring-2013",
@@ -5224,7 +5855,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "Paranormal investigators Ed and Lorraine Warren help a family terrorized by a dark presence in their Rhode Island farmhouse."
     },
     {
       "id": "insidious-2010",
@@ -5262,7 +5898,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "A couple’s young son falls into an inexplicable coma, and their home becomes the center of disturbing activity."
     },
     {
       "id": "poltergeist-1982",
@@ -5300,7 +5941,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "A suburban family’s house becomes host to playful spirits that soon turn menacing and target their youngest daughter."
     },
     {
       "id": "ghostbusters-1984",
@@ -5338,7 +5984,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "ghost",
+        "spooky-adventure"
+      ],
+      "blurb": "Three disgraced parapsychologists start a ghost-catching business in New York just as spectral activity surges."
     },
     {
       "id": "house-1985",
@@ -5376,7 +6028,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "supernatural"
+      ],
+      "blurb": "A horror novelist moves into his late aunt’s house to write a Vietnam memoir and finds monsters in the closets."
     },
     {
       "id": "the-amityville-horror-1979",
@@ -5414,7 +6071,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "A family moves into a Long Island house where a mass murder took place, and strange occurrences begin almost immediately."
     },
     {
       "id": "the-conjuring-2-2016",
@@ -5452,7 +6114,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "possession"
+      ],
+      "blurb": "The Warrens travel to London to help a single mother and her children plagued by a malevolent spirit in their home."
     },
     {
       "id": "annabelle-creation-2017",
@@ -5490,7 +6157,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "possession"
+      ],
+      "blurb": "Years after their daughter’s death, a dollmaker and his wife welcome a nun and several orphans into their isolated home."
     },
     {
       "id": "the-devil-s-bath-2024",
@@ -5528,7 +6200,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/the_devils_bath",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "rec-2007",
@@ -5566,7 +6240,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "zombie"
+      ],
+      "blurb": "A TV reporter and her cameraman follow firefighters into a Barcelona apartment building that authorities suddenly seal off."
     },
     {
       "id": "gonjiam-haunted-asylum-2018",
@@ -5604,7 +6283,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "ghost"
+      ],
+      "blurb": "A horror web-series crew livestreams an overnight exploration of an abandoned Korean psychiatric hospital."
     },
     {
       "id": "hell-house-llc-2015",
@@ -5642,7 +6326,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "supernatural"
+      ],
+      "blurb": "A documentary revisits the crew behind a haunted-house attraction whose opening night ended in tragedy."
     },
     {
       "id": "deadstream-2022",
@@ -5680,7 +6369,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "comedy",
+        "ghost"
+      ],
+      "blurb": "A disgraced internet personality livestreams a night alone in a haunted house to win back his followers."
     },
     {
       "id": "the-visit-2015",
@@ -5718,7 +6413,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "thriller"
+      ],
+      "blurb": "Two kids film their week-long stay with grandparents they have never met, whose behavior grows increasingly odd."
     },
     {
       "id": "creep-2014",
@@ -5756,7 +6456,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "psychological"
+      ],
+      "blurb": "A videographer answers an online ad to film a day in the life of a man with an unusual request."
     },
     {
       "id": "grave-encounters-2011",
@@ -5794,7 +6499,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "ghost"
+      ],
+      "blurb": "A ghost-hunting reality show crew locks itself inside an abandoned psychiatric hospital for the night."
     },
     {
       "id": "the-poughkeepsie-tapes-2007",
@@ -5832,7 +6542,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "thriller"
+      ],
+      "blurb": "A mock documentary built around a trove of videotapes left behind by a serial killer. Extremely bleak."
     },
     {
       "id": "the-borderlands-2013",
@@ -5870,7 +6585,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/the_borderlands",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "ready-or-not-2019",
@@ -5908,7 +6625,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "thriller"
+      ],
+      "blurb": "A new bride’s wedding night becomes a deadly game of hide-and-seek with her wealthy in-laws."
     },
     {
       "id": "you-re-next-2011",
@@ -5946,7 +6668,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "slasher"
+      ],
+      "blurb": "A family reunion at a remote vacation home is interrupted by masked attackers, but one guest proves unexpectedly resourceful."
     },
     {
       "id": "the-menu-2022",
@@ -5984,7 +6711,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "comedy"
+      ],
+      "blurb": "A young couple travels to a remote island to dine at an exclusive restaurant where the celebrity chef has prepared surprises."
     },
     {
       "id": "vampires-vs-the-bronx-2020",
@@ -6022,7 +6754,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "vampire",
+        "comedy"
+      ],
+      "blurb": "Teens in a gentrifying Bronx neighborhood discover that the newcomers buying up local businesses are vampires."
     },
     {
       "id": "escape-room-2019",
@@ -6060,7 +6797,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller"
+      ],
+      "blurb": "Six strangers accept an invitation to an immersive escape room and discover that the puzzles are lethal."
     },
     {
       "id": "circle-2015",
@@ -6098,7 +6839,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "Fifty strangers wake up in a dark room, arranged in a circle, and must vote on who dies next."
     },
     {
       "id": "saw-2004",
@@ -6136,7 +6883,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "body-horror"
+      ],
+      "blurb": "Two men wake up chained in a filthy bathroom, pawns in a sadistic game devised by a mysterious killer."
     },
     {
       "id": "would-you-rather-2012",
@@ -6174,7 +6926,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller"
+      ],
+      "blurb": "A woman desperate to help her sick brother accepts a wealthy man’s invitation to a dinner-party game with brutal stakes."
     },
     {
       "id": "battle-royale-2000",
@@ -6212,7 +6968,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/battle_royale",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-autopsy-of-jane-doe-2016",
@@ -6250,7 +7008,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural"
+      ],
+      "blurb": "A father-and-son team of coroners examines an unidentified woman’s body overnight and uncovers increasingly bizarre findings."
     },
     {
       "id": "1408-2007",
@@ -6288,7 +7050,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A skeptical writer of haunted-hotel guides checks into a New York hotel room that the manager insists is evil."
     },
     {
       "id": "last-shift-2014",
@@ -6326,7 +7093,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "A rookie police officer is assigned to guard a closing police station alone on its final night."
     },
     {
       "id": "extra-ordinary-2019",
@@ -6364,7 +7136,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "An Irish driving instructor with a gift for talking to spirits reluctantly helps a widower whose daughter is targeted by a has-been rock star."
     },
     {
       "id": "devil-2010",
@@ -6402,7 +7180,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "thriller"
+      ],
+      "blurb": "Five strangers trapped in a stalled Philadelphia elevator begin to suspect that one of them may not be human."
     },
     {
       "id": "pontypool-2008",
@@ -6440,7 +7223,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "zombie"
+      ],
+      "blurb": "A shock jock at a small-town Ontario radio station receives reports of a strange outbreak spreading through the area."
     },
     {
       "id": "the-vigil-2019",
@@ -6478,7 +7266,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural"
+      ],
+      "blurb": "A man paid to sit overnight with the body of a deceased member of his former Orthodox Jewish community confronts a malevolent presence."
     },
     {
       "id": "the-eyes-of-my-mother-2016",
@@ -6516,7 +7308,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "A lonely young woman on an isolated farm grows up shaped by a childhood trauma. Stark black-and-white and deeply disturbing."
     },
     {
       "id": "the-coffee-table-2022",
@@ -6554,7 +7350,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/the_coffee_table",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Especially disturbing; its dark-comedy label does not indicate light intensity."
+      "viewingNote": "Especially disturbing; its dark-comedy label does not indicate light intensity.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-witch-2015",
@@ -6592,7 +7390,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "supernatural"
+      ],
+      "blurb": "In 1630s New England, a Puritan family exiled to the edge of a forest begins to unravel after their baby vanishes."
     },
     {
       "id": "midsommar-2019",
@@ -6630,7 +7433,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "psychological"
+      ],
+      "blurb": "A grieving young woman joins her boyfriend’s trip to a remote Swedish commune for its midsummer festival."
     },
     {
       "id": "the-wicker-man-1973",
@@ -6668,7 +7476,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "thriller"
+      ],
+      "blurb": "A devout police sergeant travels to a remote Scottish island to investigate a missing girl and finds unusual pagan customs."
     },
     {
       "id": "the-witches-1990",
@@ -6706,7 +7519,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "spooky-adventure",
+        "comedy"
+      ],
+      "blurb": "A young boy staying at a seaside hotel with his grandmother stumbles onto a convention of child-hating witches."
     },
     {
       "id": "the-hallow-2015",
@@ -6744,7 +7562,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "creature"
+      ],
+      "blurb": "A conservationist moves his young family to a remote Irish forest and disturbs creatures from local legend."
     },
     {
       "id": "gretel-hansel-2020",
@@ -6782,7 +7605,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "supernatural"
+      ],
+      "blurb": "A dark, atmospheric retelling of the fairy tale, following two siblings who search for food and work in a forbidding wood."
     },
     {
       "id": "apostle-2018",
@@ -6820,7 +7648,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "thriller"
+      ],
+      "blurb": "In 1905, a man travels to a remote Welsh island to rescue his sister from the religious cult holding her for ransom."
     },
     {
       "id": "kill-list-2011",
@@ -6858,7 +7691,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A former soldier turned hitman takes a new contract with his old partner, and the job grows increasingly strange."
     },
     {
       "id": "tumbbad-2018",
@@ -6896,7 +7735,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/tumbbad",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-wailing-2016",
@@ -6934,7 +7775,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "possession",
+        "folk"
+      ],
+      "blurb": "A police officer in a rural Korean village investigates a wave of violent illnesses that locals blame on a mysterious stranger."
     },
     {
       "id": "cure-1997",
@@ -6972,7 +7819,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "thriller"
+      ],
+      "blurb": "A Tokyo detective investigates a string of murders committed by different people who cannot explain their motives."
     },
     {
       "id": "noroi-the-curse-2005",
@@ -7010,7 +7862,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "supernatural"
+      ],
+      "blurb": "A paranormal researcher’s documentary connects a series of seemingly unrelated strange incidents across Japan."
     },
     {
       "id": "one-cut-of-the-dead-2017",
@@ -7048,7 +7905,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "zombie"
+      ],
+      "blurb": "A low-budget crew shooting a zombie movie in an abandoned facility gets more than it bargained for. Stick with it."
     },
     {
       "id": "house-1977",
@@ -7088,7 +7950,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "A schoolgirl and six friends visit her aunt’s countryside home in this surreal, wildly inventive Japanese cult film."
     },
     {
       "id": "the-host-2006",
@@ -7126,7 +7994,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "A monster emerges from Seoul’s Han River, and a bumbling family sets out to rescue its youngest member."
     },
     {
       "id": "terrified-2017",
@@ -7166,7 +8039,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "Paranormal investigators look into terrifying occurrences plaguing several houses on one Buenos Aires street."
     },
     {
       "id": "when-evil-lurks-2023",
@@ -7204,7 +8082,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "Two brothers in rural Argentina find a man infected by a demon and try, disastrously, to get rid of him."
     },
     {
       "id": "exhuma-2024",
@@ -7242,7 +8125,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/exhuma",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-babadook-2014",
@@ -7280,7 +8165,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "supernatural"
+      ],
+      "blurb": "A widowed mother struggling with her troubled son finds a sinister pop-up book that neither of them can get rid of."
     },
     {
       "id": "relic-2020",
@@ -7318,7 +8208,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "supernatural"
+      ],
+      "blurb": "A woman and her daughter return to the family home after her elderly mother goes missing, and find the house changed."
     },
     {
       "id": "the-night-house-2020",
@@ -7356,7 +8251,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "ghost"
+      ],
+      "blurb": "A newly widowed teacher alone in the lakeside home her husband built begins uncovering his disturbing secrets."
     },
     {
       "id": "frankenweenie-2012",
@@ -7394,7 +8294,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "spooky-adventure"
+      ],
+      "blurb": "A young filmmaker uses science to bring his beloved dog back to life. Black-and-white stop-motion animation."
     },
     {
       "id": "the-monster-2016",
@@ -7432,7 +8337,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "psychological"
+      ],
+      "blurb": "A troubled mother and her daughter are stranded on a dark, rain-soaked road while something stalks them from the woods."
     },
     {
       "id": "a-dark-song-2016",
@@ -7470,7 +8380,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A grieving woman hires an occultist to perform a months-long ritual inside an isolated Welsh house."
     },
     {
       "id": "saint-maud-2019",
@@ -7508,7 +8423,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "A pious young hospice nurse becomes obsessed with saving the soul of her dying patient."
     },
     {
       "id": "goodnight-mommy-2014",
@@ -7546,7 +8465,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "Twin boys begin to suspect that the woman who returned from surgery with a bandaged face is not their mother."
     },
     {
       "id": "huesera-the-bone-woman-2022",
@@ -7590,7 +8513,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/huesera_the_bone_woman",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "talk-to-me-2022",
@@ -7628,7 +8553,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "Teens discover how to conjure spirits using an embalmed hand and become hooked on the thrill."
     },
     {
       "id": "ouija-origin-of-evil-2016",
@@ -7666,7 +8596,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "In 1967 Los Angeles, a widowed mother who runs a séance scam adds a Ouija board to her act."
     },
     {
       "id": "host-2020",
@@ -7704,7 +8639,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "found-footage"
+      ],
+      "blurb": "Six friends hold a séance over a video call during lockdown and invite something in. Told entirely on screen."
     },
     {
       "id": "coraline-2009",
@@ -7742,7 +8682,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/coraline",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Lighter relative to adult horror; imagery can still be frightening."
+      "viewingNote": "Lighter relative to adult horror; imagery can still be frightening.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-black-phone-2021",
@@ -7780,7 +8722,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "thriller"
+      ],
+      "blurb": "An abducted boy trapped in a basement receives calls on a disconnected phone from the kidnapper’s previous victims."
     },
     {
       "id": "veronica-2017",
@@ -7818,7 +8765,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "In 1991 Madrid, a teenager uses a Ouija board during a solar eclipse and draws in a dark presence."
     },
     {
       "id": "the-medium-2021",
@@ -7856,7 +8808,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "found-footage",
+        "folk"
+      ],
+      "blurb": "A documentary crew follows a shaman in rural Thailand whose niece starts behaving strangely."
     },
     {
       "id": "the-cleansing-hour-2019",
@@ -7894,7 +8852,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "Two friends who livestream staged exorcisms face a real demon during one of their broadcasts."
     },
     {
       "id": "impetigore-2019",
@@ -7932,7 +8895,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/impetigore",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "hereditary-2018",
@@ -7970,7 +8935,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "After the family matriarch dies, her daughter’s family begins uncovering unsettling secrets about their ancestry."
     },
     {
       "id": "the-dark-and-the-wicked-2020",
@@ -8008,7 +8978,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural"
+      ],
+      "blurb": "Siblings return to their family’s rural Texas farm to say goodbye to their dying father, and an evil presence awaits."
     },
     {
       "id": "sinister-2012",
@@ -8046,7 +9020,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural"
+      ],
+      "blurb": "A true-crime writer finds a box of home movies in his new house that document a series of disturbing murders."
     },
     {
       "id": "scouts-guide-to-the-zombie-apocalypse-2015",
@@ -8084,7 +9062,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "Three scouts on the eve of their last campout team up with a cocktail waitress to save their town from zombies."
     },
     {
       "id": "the-gift-2000",
@@ -8122,7 +9105,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "supernatural"
+      ],
+      "blurb": "A widowed psychic in small-town Georgia becomes entangled in the disappearance of a young woman."
     },
     {
       "id": "the-mothman-prophecies-2002",
@@ -8160,7 +9148,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "thriller"
+      ],
+      "blurb": "After his wife’s death, a reporter is drawn to a West Virginia town where residents report sightings of a winged figure."
     },
     {
       "id": "the-blackcoat-s-daughter-2015",
@@ -8198,7 +9191,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "Two girls left behind at a Catholic boarding school over winter break sense an evil presence closing in."
     },
     {
       "id": "suspiria-2018",
@@ -8236,7 +9234,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "A young American dancer joins a renowned Berlin dance company in 1977 as a divided city simmers outside. A remake."
     },
     {
       "id": "the-wolf-house-2018",
@@ -8282,7 +9285,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/the_wolf_house",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-shining-1980",
@@ -8320,7 +9325,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "supernatural"
+      ],
+      "blurb": "A writer takes a winter caretaker job at an isolated mountain hotel with his wife and psychic young son."
     },
     {
       "id": "the-lodge-2019",
@@ -8358,7 +9368,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "A soon-to-be stepmother is snowed in with her partner’s two children at a remote winter cabin."
     },
     {
       "id": "the-lighthouse-2019",
@@ -8396,7 +9410,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "Two lighthouse keepers on a remote New England island in the 1890s slowly lose their grip. Shot in black-and-white."
     },
     {
       "id": "werewolves-within-2021",
@@ -8434,7 +9452,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "creature"
+      ],
+      "blurb": "A new forest ranger arrives in a small Vermont town just as a snowstorm traps its squabbling residents with a possible werewolf."
     },
     {
       "id": "session-9-2001",
@@ -8472,7 +9495,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "An asbestos-removal crew working inside an abandoned mental hospital begins to unravel under a tight deadline."
     },
     {
       "id": "the-vanishing-1988",
@@ -8510,7 +9537,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A young man spends years searching for his girlfriend after she disappears from a busy highway rest stop."
     },
     {
       "id": "misery-1990",
@@ -8548,7 +9580,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A famous novelist injured in a car crash is rescued by his self-proclaimed number one fan."
     },
     {
       "id": "possum-2018",
@@ -8586,7 +9623,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological"
+      ],
+      "blurb": "A disgraced children’s puppeteer returns to his childhood home and tries to get rid of a hideous puppet."
     },
     {
       "id": "november-2017",
@@ -8624,7 +9665,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/november_2018",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-exorcist-1973",
@@ -8662,7 +9705,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "When a twelve-year-old girl begins behaving violently and strangely, her desperate mother turns to two priests."
     },
     {
       "id": "the-exorcism-of-emily-rose-2005",
@@ -8700,7 +9748,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "thriller"
+      ],
+      "blurb": "A lawyer defends a priest accused of negligence after a young woman dies following an exorcism."
     },
     {
       "id": "the-taking-of-deborah-logan-2014",
@@ -8738,7 +9791,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "possession"
+      ],
+      "blurb": "A documentary crew filming an elderly woman with Alzheimer’s begins witnessing things that defy medical explanation."
     },
     {
       "id": "my-best-friend-s-exorcism-2022",
@@ -8776,7 +9834,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "possession"
+      ],
+      "blurb": "In 1988, a high schooler suspects her best friend has become possessed after a night in the woods."
     },
     {
       "id": "the-last-exorcism-2010",
@@ -8814,7 +9877,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "possession"
+      ],
+      "blurb": "A disillusioned evangelical minister invites a documentary crew to film what he plans to be his last, staged exorcism."
     },
     {
       "id": "the-possession-2012",
@@ -8852,7 +9920,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "A divorced father watches his younger daughter grow obsessed with an antique wooden box she bought at a yard sale."
     },
     {
       "id": "the-exorcist-iii-1990",
@@ -8890,7 +9963,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "thriller"
+      ],
+      "blurb": "A Georgetown detective investigates a series of murders bearing the hallmarks of an executed serial killer."
     },
     {
       "id": "the-devil-s-candy-2015",
@@ -8928,7 +10006,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "thriller"
+      ],
+      "blurb": "A struggling painter and his family move into a rural Texas home, where he begins hearing voices."
     },
     {
       "id": "baskin-2015",
@@ -8966,7 +10049,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/baskin",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Especially graphic and disturbing."
+      "viewingNote": "Especially graphic and disturbing.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-blair-witch-project-1999",
@@ -9004,7 +10089,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "found-footage",
+        "folk"
+      ],
+      "blurb": "Three student filmmakers hike into the Maryland woods to document a local legend. Their footage is all that remains."
     },
     {
       "id": "the-ritual-2017",
@@ -9042,7 +10132,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "folk",
+        "creature"
+      ],
+      "blurb": "Four old friends take a shortcut through a Swedish forest on a hiking trip and become hopelessly lost."
     },
     {
       "id": "dog-soldiers-2002",
@@ -9080,7 +10175,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "A squad of British soldiers on a training exercise in the Scottish Highlands is hunted by werewolves."
     },
     {
       "id": "ernest-scared-stupid-1991",
@@ -9118,7 +10218,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "spooky-adventure"
+      ],
+      "blurb": "Bumbling Ernest accidentally frees a troll that has been trapped beneath a tree for centuries."
     },
     {
       "id": "the-watcher-in-the-woods-1980",
@@ -9156,7 +10261,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "spooky-adventure"
+      ],
+      "blurb": "An American family rents an English country house, and their teenage daughter senses a presence in the surrounding woods."
     },
     {
       "id": "the-village-2004",
@@ -9194,7 +10304,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "folk"
+      ],
+      "blurb": "A tight-knit, isolated village lives by strict rules to keep peace with creatures said to dwell in the surrounding woods."
     },
     {
       "id": "the-wind-2018",
@@ -9232,7 +10347,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "psychological",
+        "supernatural"
+      ],
+      "blurb": "A frontierswoman left alone on the 1800s American plains grows convinced an evil presence haunts the land."
     },
     {
       "id": "the-witch-in-the-window-2018",
@@ -9270,7 +10390,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost"
+      ],
+      "blurb": "A father renovating an old Vermont farmhouse with his son discovers the house’s previous owner never left."
     },
     {
       "id": "trollhunter-2010",
@@ -9308,7 +10432,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/trollhunter",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-return-of-the-living-dead-1985",
@@ -9346,7 +10472,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "Two warehouse workers accidentally release a military gas that reanimates the dead. Punk-rock attitude to spare."
     },
     {
       "id": "tremors-1990",
@@ -9384,7 +10515,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "Two handymen in a tiny Nevada town discover that giant underground creatures are hunting the residents."
     },
     {
       "id": "slither-2006",
@@ -9422,7 +10558,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "body-horror",
+        "comedy"
+      ],
+      "blurb": "An alien parasite crash-lands near a small South Carolina town and infects its wealthiest resident."
     },
     {
       "id": "gremlins-1984",
@@ -9460,7 +10602,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "A boy receives an unusual pet that comes with three important rules, and breaking them unleashes chaos on his town at Christmas."
     },
     {
       "id": "critters-1986",
@@ -9498,7 +10645,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy",
+        "sci-fi"
+      ],
+      "blurb": "Furry, ravenous alien creatures land on a Kansas farm, followed by a pair of shape-shifting bounty hunters."
     },
     {
       "id": "eight-legged-freaks-2002",
@@ -9536,7 +10689,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "Toxic waste turns the spiders around a struggling Arizona mining town into giants."
     },
     {
       "id": "splinter-2008",
@@ -9574,7 +10732,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "body-horror"
+      ],
+      "blurb": "A couple and an escaped convict are trapped in a gas station by a parasite that transforms its hosts."
     },
     {
       "id": "the-mist-2007",
@@ -9612,7 +10775,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "thriller"
+      ],
+      "blurb": "After a storm, a thick mist rolls into a Maine town, trapping shoppers in a supermarket with something lurking outside."
     },
     {
       "id": "the-day-of-the-beast-1995",
@@ -9650,7 +10818,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/el_dia_de_la_bestia",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "halloween-1978",
@@ -9688,7 +10858,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "Fifteen years after a childhood murder, Michael Myers escapes and returns to his hometown on Halloween night."
     },
     {
       "id": "friday-the-13th-1980",
@@ -9726,7 +10900,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "Counselors reopening Camp Crystal Lake, despite its grim history, are picked off one by one by an unseen killer."
     },
     {
       "id": "the-texas-chain-saw-massacre-1974",
@@ -9764,7 +10942,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "Five friends visiting a family grave in rural Texas cross paths with a household of cannibals."
     },
     {
       "id": "club-dread-2004",
@@ -9802,7 +10984,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "slasher"
+      ],
+      "blurb": "Staff at an island party resort run by a washed-up rock star realize a masked killer is on the loose."
     },
     {
       "id": "child-s-play-1988",
@@ -9840,7 +11027,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "supernatural"
+      ],
+      "blurb": "A single mother buys her son a talking doll, unaware that a serial killer’s soul is trapped inside it."
     },
     {
       "id": "psycho-1960",
@@ -9878,7 +11070,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "thriller",
+        "psychological"
+      ],
+      "blurb": "A secretary on the run with stolen money checks into a remote motel run by a young man under his mother’s thumb."
     },
     {
       "id": "candyman-1992",
@@ -9916,7 +11113,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "slasher"
+      ],
+      "blurb": "A Chicago graduate student researching urban legends investigates a hook-handed figure said to appear when his name is repeated."
     },
     {
       "id": "x-2022",
@@ -9954,7 +11156,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "In 1979, a small film crew rents a guesthouse on an elderly couple’s rural Texas farm to shoot an adult film."
     },
     {
       "id": "audition-1999",
@@ -9992,7 +11198,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/audition_1999",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": "Especially disturbing."
+      "viewingNote": "Especially disturbing.",
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "trick-r-treat-2007",
@@ -10030,7 +11238,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "comedy"
+      ],
+      "blurb": "Four interwoven Halloween tales in one small town, watched over by a tiny trick-or-treater who enforces the holiday’s rules."
     },
     {
       "id": "halloween-iii-season-of-the-witch-1982",
@@ -10068,7 +11281,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "supernatural"
+      ],
+      "blurb": "A doctor investigates a novelty company whose Halloween masks are flying off shelves ahead of a big televised promotion."
     },
     {
       "id": "scary-stories-to-tell-in-the-dark-2019",
@@ -10106,7 +11324,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "spooky-adventure"
+      ],
+      "blurb": "In 1968, teens find a book of scary stories in a haunted house, and new tales begin writing themselves."
     },
     {
       "id": "hocus-pocus-1993",
@@ -10144,7 +11367,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "spooky-adventure"
+      ],
+      "blurb": "A new kid in Salem accidentally resurrects three seventeenth-century witch sisters on Halloween night."
     },
     {
       "id": "ginger-snaps-2000",
@@ -10182,7 +11410,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "body-horror"
+      ],
+      "blurb": "The bond between two morbid teenage sisters is tested after the elder is bitten by a mysterious creature."
     },
     {
       "id": "pumpkinhead-1988",
@@ -10220,7 +11453,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "creature",
+        "supernatural"
+      ],
+      "blurb": "A grieving father seeks out a backwoods witch to summon a vengeance demon against the teens responsible for his son’s death."
     },
     {
       "id": "haunt-2019",
@@ -10258,7 +11496,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher",
+        "thriller"
+      ],
+      "blurb": "Friends out on Halloween night visit an extreme haunted-house attraction that promises to feed on their darkest fears."
     },
     {
       "id": "hell-fest-2018",
@@ -10296,7 +11539,11 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "slasher"
+      ],
+      "blurb": "A group of friends at a traveling horror-themed amusement park is stalked by a masked killer."
     },
     {
       "id": "rare-exports-a-christmas-tale-2010",
@@ -10334,7 +11581,9 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/rare_exports",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     },
     {
       "id": "the-evil-dead-1981",
@@ -10372,7 +11621,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "possession"
+      ],
+      "blurb": "Five friends at a remote Tennessee cabin find a book and a tape recording that unleash demonic forces."
     },
     {
       "id": "evil-dead-ii-1987",
@@ -10410,7 +11664,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "comedy",
+        "possession"
+      ],
+      "blurb": "Ash returns to the cabin in the woods for a frantic, slapstick-tinged battle against the demons of the Necronomicon."
     },
     {
       "id": "evil-dead-rise-2023",
@@ -10448,7 +11708,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "A visit between estranged sisters in a Los Angeles apartment building turns violent after a dark discovery in the basement."
     },
     {
       "id": "army-of-darkness-1992",
@@ -10486,7 +11751,13 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "comedy",
+        "spooky-adventure",
+        "supernatural"
+      ],
+      "blurb": "Hurled back to the Middle Ages, Ash must recover the Necronomicon and battle an army of the dead to get home."
     },
     {
       "id": "night-of-the-demons-1988",
@@ -10524,7 +11795,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "possession"
+      ],
+      "blurb": "Teenagers throw a Halloween party at an abandoned funeral parlor and accidentally awaken a demon."
     },
     {
       "id": "the-fog-1980",
@@ -10562,7 +11838,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "On its centennial, a California coastal town is engulfed by a glowing fog that carries vengeful figures."
     },
     {
       "id": "evil-dead-2013",
@@ -10600,7 +11881,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "possession",
+        "supernatural"
+      ],
+      "blurb": "Friends help a young woman detox at a remote cabin and discover a book that unleashes a demon. A reimagining of the original."
     },
     {
       "id": "hellraiser-1987",
@@ -10638,7 +11924,12 @@
         "sourceUrl": null,
         "checkedAt": null
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [
+        "supernatural",
+        "body-horror"
+      ],
+      "blurb": "A man’s search for forbidden pleasure through a mysterious puzzle box draws his family into a gruesome nightmare."
     },
     {
       "id": "onibaba-1964",
@@ -10676,7 +11967,11 @@
         "sourceUrl": "https://www.rottentomatoes.com/m/onibaba",
         "checkedAt": "2026-10-02"
       },
-      "viewingNote": null
+      "viewingNote": null,
+      "genres": [],
+      "blurb": ""
     }
-  ]
+  ],
+  "blurbCoverage": 247,
+  "genreCoverage": 247
 }

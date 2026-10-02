@@ -11,6 +11,10 @@
   var MAX_SEARCH_LENGTH = 100;
   var DEFAULT_CATALOG_URL = 'movies.json';
 
+  var GENRES = [
+    'supernatural', 'ghost', 'possession', 'slasher', 'creature', 'vampire', 'zombie', 'psychological',
+    'folk', 'sci-fi', 'body-horror', 'found-footage', 'comedy', 'gothic', 'thriller', 'spooky-adventure'
+  ];
   var INTENSITIES = ['light', 'moderate', 'intense'];
   var INTENSITY_RANK = { light: 0, moderate: 1, intense: 2 };
   var INTENSITY_LABELS = {
@@ -43,10 +47,12 @@
       calendarDay: Number(raw.calendarDay) || 0,
       dayOrder: Number(raw.dayOrder) || (index + 1),
       intensity: INTENSITIES.indexOf(raw.intensity) !== -1 ? raw.intensity : 'moderate',
-      genres: [],
+      genres: Array.isArray(raw.genres)
+        ? uniqueStrings(raw.genres).filter(function (g) { return GENRES.indexOf(g) !== -1; })
+        : [],
       culturalFocus: typeof raw.culturalFocus === 'string' ? raw.culturalFocus : null,
-      viewingNote: typeof raw.viewingNote === 'string' ? raw.viewingNote : null,
-      blurb: typeof raw.viewingNote === 'string' ? raw.viewingNote : '',
+      viewingNote: typeof raw.viewingNote === 'string' && raw.viewingNote ? raw.viewingNote : null,
+      blurb: typeof raw.blurb === 'string' ? raw.blurb : '',
       imdbUrl: typeof imdb.url === 'string' ? imdb.url : null,
       imdbType: imdb.type === 'movie' || imdb.type === 'title' ? 'direct' : 'search',
       rottenTomatoesUrl: typeof rt.url === 'string' ? rt.url : null,
@@ -137,7 +143,7 @@
   // ── Filters ─────────────────────────────────────────────────
 
   function defaultFilters() {
-    return { search: '', intensities: [], hideWatched: false };
+    return { search: '', genres: [], intensities: [], hideWatched: false };
   }
 
   function foldText(text) {
@@ -164,6 +170,9 @@
     var filters = defaultFilters();
     if (!raw || typeof raw !== 'object') return filters;
     if (typeof raw.search === 'string') filters.search = raw.search.slice(0, MAX_SEARCH_LENGTH);
+    if (Array.isArray(raw.genres)) {
+      filters.genres = uniqueStrings(raw.genres).filter(function (g) { return GENRES.indexOf(g) !== -1; });
+    }
     if (Array.isArray(raw.intensities)) {
       filters.intensities = INTENSITIES.filter(function (level) { return raw.intensities.indexOf(level) !== -1; });
     } else if (raw.maxIntensity === 'light' || raw.maxIntensity === 'moderate') {
@@ -174,12 +183,15 @@
   }
 
   function movieSearchText(movie) {
-    return [movie.title].concat(movie.aliases || [], movie.version ? [movie.version] : [], movie.culturalFocus ? [movie.culturalFocus] : []).join(' ');
+    return [movie.title].concat(movie.aliases || [], movie.version ? [movie.version] : [], movie.culturalFocus ? [movie.culturalFocus] : [], movie.genres || []).join(' ');
   }
 
   function movieMatches(movie, filters, watchedLookup) {
     var query = foldText(filters.search.trim());
     if (query && foldText(movieSearchText(movie)).indexOf(query) === -1) return false;
+    if (filters.genres.length && !(movie.genres || []).some(function (g) { return filters.genres.indexOf(g) !== -1; })) {
+      return false;
+    }
     if (filters.intensities.length && filters.intensities.indexOf(movie.intensity) === -1) return false;
     if (filters.hideWatched && watchedLookup[movie.id]) return false;
     return true;
@@ -200,6 +212,7 @@
     var parts = {
       v: catalogVersion || catalogMeta.version,
       q: filters.search.trim().toLowerCase(),
+      g: (filters.genres || []).slice().sort(),
       i: filters.intensities.length === INTENSITIES.length ? [] : INTENSITIES.filter(function (level) {
         return filters.intensities.indexOf(level) !== -1;
       }),
@@ -535,6 +548,12 @@
     card.appendChild(top);
 
     var labels = el(doc, 'div', 'oh-movie__labels');
+    if (movie.genres && movie.genres.length) {
+      var tags = el(doc, 'ul', 'oh-tags');
+      tags.setAttribute('aria-label', 'Genres');
+      movie.genres.forEach(function (genre) { tags.appendChild(el(doc, 'li', 'oh-tag', genre)); });
+      labels.appendChild(tags);
+    }
     labels.appendChild(intensityBadge(doc, movie.intensity));
     if (movie.culturalFocus) labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--focus', movie.culturalFocus));
     if (movie.reception && movie.reception.status === 'well-reviewed' && movie.reception.criticPercent != null) {
@@ -549,6 +568,9 @@
     var meta = el(doc, 'p', 'oh-movie__meta');
     meta.appendChild(el(doc, 'span', '', String(movie.year)));
     if (movie.version) meta.appendChild(el(doc, 'span', '', movie.version));
+    if (movie.aliases && movie.aliases.length) {
+      meta.appendChild(el(doc, 'span', '', 'Also known as ' + movie.aliases.join(', ')));
+    }
     meta.appendChild(el(doc, 'span', '', 'Scheduled Oct ' + movie.calendarDay));
     body.appendChild(meta);
 
@@ -575,6 +597,7 @@
     body.appendChild(refs);
 
     if (movie.blurb) body.appendChild(el(doc, 'p', 'oh-movie__blurb', movie.blurb));
+    if (movie.viewingNote) body.appendChild(el(doc, 'p', 'oh-movie__note', movie.viewingNote));
 
     var track = el(doc, 'div', 'oh-movie__track');
     [['selected', 'Want to watch'], ['watched', 'Watched']].forEach(function (pair) {
@@ -651,6 +674,9 @@
     function syncFilterControls() {
       var f = state.filters;
       $('#oh-search').value = f.search;
+      root.querySelectorAll('input[name="oh-genre"]').forEach(function (box) {
+        box.checked = f.genres.indexOf(box.value) !== -1;
+      });
       root.querySelectorAll('input[name="oh-intensity"]').forEach(function (box) {
         box.checked = f.intensities.indexOf(box.value) !== -1;
       });
@@ -661,7 +687,7 @@
 
     function renderFilterSummary() {
       var f = state.filters;
-      var active = (f.search.trim() ? 1 : 0) + f.intensities.length + (f.hideWatched ? 1 : 0);
+      var active = (f.search.trim() ? 1 : 0) + f.genres.length + f.intensities.length + (f.hideWatched ? 1 : 0);
       $('#oh-filters-active').textContent = active ? active + ' active' : 'none active';
     }
 
@@ -670,11 +696,33 @@
       doc.getElementById(toggle.getAttribute('aria-controls')).hidden = !open;
     }
 
+    function buildGenreControls() {
+      var box = $('#oh-genres');
+      if (!box || box.getAttribute('data-built') === '1') return;
+      GENRES.forEach(function (genre) {
+        var id = 'oh-genre-' + genre;
+        var label = el(doc, 'label', 'oh-check oh-chip');
+        label.htmlFor = id;
+        var input = doc.createElement('input');
+        input.type = 'checkbox';
+        input.name = 'oh-genre';
+        input.id = id;
+        input.value = genre;
+        label.appendChild(input);
+        label.appendChild(doc.createTextNode(' ' + genre));
+        box.appendChild(label);
+      });
+      box.setAttribute('data-built', '1');
+    }
+
     function readFilters() {
+      var genres = [];
+      root.querySelectorAll('input[name="oh-genre"]:checked').forEach(function (box) { genres.push(box.value); });
       var intensities = [];
       root.querySelectorAll('input[name="oh-intensity"]:checked').forEach(function (box) { intensities.push(box.value); });
       state.filters = normalizeFilters({
         search: $('#oh-search').value,
+        genres: genres,
         intensities: intensities,
         hideWatched: $('#oh-hide-watched').checked
       });
@@ -825,7 +873,7 @@
 
     function filtersActive() {
       var f = state.filters;
-      return !!(f.search.trim() || f.intensities.length || f.hideWatched);
+      return !!(f.search.trim() || f.genres.length || f.intensities.length || f.hideWatched);
     }
 
     function renderCatalog() {
@@ -992,6 +1040,7 @@
     });
     win.setInterval(checkDate, 60000);
 
+    buildGenreControls();
     setSectionOpen($('#oh-filters-toggle'), false);
     setSectionOpen($('#oh-catalog-toggle'), false);
     syncFilterControls();
@@ -1064,6 +1113,7 @@
     get CATALOG_VERSION() { return catalogMeta.version; },
     get FILMS_PER_DAY() { return catalogMeta.filmsPerDay; },
     STORAGE_KEY: STORAGE_KEY,
+    GENRES: GENRES,
     INTENSITIES: INTENSITIES,
     INTENSITY_LABELS: INTENSITY_LABELS,
     MOVIES: MOVIES,

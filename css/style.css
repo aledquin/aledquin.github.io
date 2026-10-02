@@ -1547,6 +1547,13 @@ p {
   margin-bottom: 0.75rem;
 }
 
+.oh-movie__note {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: -0.35rem 0 0.75rem;
+  color: var(--color-text-secondary);
+}
+
 .oh-tags {
   display: flex;
   flex-wrap: wrap;

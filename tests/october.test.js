@@ -112,15 +112,28 @@ test('direct reference URLs are only accepted for exact HTTPS film pages on expe
 
 // ── Filters & signatures ──
 
-test('filters: case/accent-insensitive search, intensity selection, hide watched', () => {
+test('filters: case/accent-insensitive search, genres, intensity, hide watched', () => {
   const f = OH.defaultFilters();
   assert.equal(OH.filterMovies(OH.MOVIES, f, []).length, 279);
-  assert.ok(!('genres' in f));
+  assert.deepEqual(f.genres, []);
   assert.deepEqual(OH.filterMovies(OH.MOVIES, { ...f, search: '  CORALINE ' }, []).map((m) => m.id), ['coraline-2009']);
+  const ghost = OH.filterMovies(OH.MOVIES, { ...f, genres: ['ghost'] }, []);
+  assert.ok(ghost.length > 0);
+  assert.ok(ghost.every((m) => m.genres.includes('ghost')));
   const intenseOnly = OH.filterMovies(OH.MOVIES, { ...f, intensities: ['intense'] }, []);
   assert.equal(intenseOnly.length, OH.MOVIES.filter((m) => m.intensity === 'intense').length);
   const hidden = OH.filterMovies(OH.MOVIES, { ...f, hideWatched: true }, ['alien-1979']);
   assert.equal(hidden.length, 278);
+});
+
+test('most catalog titles keep editorial blurbs and genre tags in Details data', () => {
+  const withBlurb = OH.MOVIES.filter((m) => m.blurb);
+  const withGenres = OH.MOVIES.filter((m) => m.genres.length);
+  assert.ok(withBlurb.length >= 240, 'expected blurbs on carried-over titles, got ' + withBlurb.length);
+  assert.ok(withGenres.length >= 240, 'expected genres on carried-over titles, got ' + withGenres.length);
+  const sleepy = byId['sleepy-hollow-1999'];
+  assert.match(sleepy.blurb, /headless horseman/i);
+  assert.deepEqual(sleepy.genres, ['gothic', 'supernatural']);
 });
 
 test('legacy maxIntensity filters are converted to intensity selections', () => {
@@ -238,10 +251,10 @@ test('loadState handles missing, corrupt, unsupported and blocked storage', () =
   assert.equal(blocked.problem, 'unavailable');
 });
 
-test('sanitizeState drops unknown ids and ignores legacy genre filters', () => {
+test('sanitizeState drops unknown ids and keeps valid genre filters', () => {
   const raw = {
     schemaVersion: 1,
-    filters: { search: 42, genres: ['ghost'], intensities: ['extreme', 'intense'], hideWatched: 'yes' },
+    filters: { search: 42, genres: ['ghost', 'not-a-genre'], intensities: ['extreme', 'intense'], hideWatched: 'yes' },
     sort: 'random',
     seasons: {
       '2026': {
@@ -253,7 +266,7 @@ test('sanitizeState drops unknown ids and ignores legacy genre filters', () => {
   };
   const { state, problem } = OH.sanitizeState(raw);
   assert.equal(problem, null);
-  assert.deepEqual(state.filters, { search: '', intensities: ['intense'], hideWatched: false });
+  assert.deepEqual(state.filters, { search: '', genres: ['ghost'], intensities: ['intense'], hideWatched: false });
   assert.deepEqual(state.seasons, { '2026': { selectedIds: ['alien-1979'], watchedIds: [] } });
 });
 

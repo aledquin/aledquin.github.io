@@ -94,8 +94,13 @@
           <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
             <div class="oh-field oh-field--search">
               <label for="oh-search">Search titles</label>
-              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Title, alias, or country focus">
+              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Title, alias, genre, or country focus">
             </div>
+
+            <fieldset class="oh-fieldset">
+              <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
+              <div id="oh-genres" class="oh-chips"></div>
+            </fieldset>
 
             <fieldset class="oh-fieldset">
               <legend>Intensity <span class="oh-hint">(none selected means all)</span></legend>
@@ -229,7 +234,7 @@
           </div>
           <ul id="oh-catalog-list" class="oh-list"></ul>
           <div id="oh-catalog-empty" class="oh-empty" hidden>
-            <p>No movies match these filters. Try a shorter search or another intensity.</p>
+            <p>No movies match these filters. Try a shorter search, more genres, or another intensity.</p>
             <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
           </div>
         </div>
