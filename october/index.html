@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>October Horror &mdash; Alvaro Quintana</title>
+  <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar with eight scheduled options per night, daily picks, and personal watch tracking.">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/main.js" defer></script>
+  <script src="../js/october.js" defer></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <a href="../index.html" class="logo">alvaro<span>.</span></a>
+      <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li><a href="../index.html" class="nav__link">Home</a></li>
+          <li><a href="../about/index.html" class="nav__link">About</a></li>
+          <li><a href="../cocktails/index.html" class="nav__link">Cocktails</a></li>
+          <li><a href="../recipes/index.html" class="nav__link">Recipes</a></li>
+          <li><a href="../coding/index.html" class="nav__link">Coding</a></li>
+          <li><a href="../reader/" class="nav__link">Reader</a></li>
+          <li><a href="index.html" class="nav__link nav__link--active" aria-current="page">October</a></li>
+          <li><a href="../gallery/index.html" class="nav__link">Gallery</a></li>
+          <li><a href="../contact/index.html" class="nav__link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="october-horror" class="oh">
+
+    <section class="page-header oh-header" aria-labelledby="oh-title">
+      <div class="container">
+        <svg class="oh-header__art" viewBox="0 0 64 40" aria-hidden="true" focusable="false">
+          <path d="M44 6a12 12 0 1 0 12 15A10 10 0 0 1 44 6z" class="oh-header__moon"/>
+          <path d="M14 22c-5 0-8 4-8 9s4 8 9 8c2 0 3-1 4-1s2 1 4 1c5 0 9-3 9-8s-3-9-8-9c-2 0-3 1-5 1s-3-1-5-1z" class="oh-header__pumpkin"/>
+          <path d="M19 22c0-3 1-5 3-6" class="oh-header__stem"/>
+        </svg>
+        <span class="section__subtitle">Seasonal</span>
+        <h1 id="oh-title">October Horror</h1>
+        <p>A horror movie for every night from October 1 through Halloween. Choose among the eight films scheduled for each night, or let the page suggest three personalized picks each day.</p>
+        <p class="oh-header__note">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
+      </div>
+    </section>
+
+    <noscript>
+      <div class="container">
+        <p class="oh-notice">The calendar, catalog, daily picks, and watch tracking on this page need JavaScript. Please enable it to choose your October movies.</p>
+      </div>
+    </noscript>
+
+    <div class="container">
+      <p id="oh-notice" class="oh-notice" role="status" hidden></p>
+    </div>
+
+    <section class="section oh-section" aria-labelledby="oh-filters-heading">
+      <div class="container">
+        <h2 id="oh-filters-heading" class="oh-h2">Filters</h2>
+        <p class="oh-lead">Filters narrow the full catalog and decide which movies can be recommended. They never change the scheduled calendar.</p>
+        <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
+          <div class="oh-field oh-field--search">
+            <label for="oh-search">Search titles</label>
+            <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false">
+          </div>
+
+          <fieldset class="oh-fieldset">
+            <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
+            <div id="oh-genres" class="oh-chips"></div>
+          </fieldset>
+
+          <fieldset class="oh-fieldset">
+            <legend>Maximum intensity</legend>
+            <div class="oh-chips">
+              <label class="oh-check oh-chip" for="oh-max-light"><input type="radio" name="oh-max" id="oh-max-light" value="light"> Light</label>
+              <label class="oh-check oh-chip" for="oh-max-moderate"><input type="radio" name="oh-max" id="oh-max-moderate" value="moderate"> Moderate</label>
+              <label class="oh-check oh-chip" for="oh-max-intense"><input type="radio" name="oh-max" id="oh-max-intense" value="intense" checked> Any</label>
+            </div>
+          </fieldset>
+
+          <div class="oh-filters__row">
+            <label class="oh-check oh-chip" for="oh-hide-watched"><input type="checkbox" id="oh-hide-watched" name="hideWatched"> Hide watched</label>
+            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+          </div>
+        </form>
+
+        <div class="oh-legend" aria-labelledby="oh-legend-title">
+          <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
+          <ul class="oh-legend__list">
+            <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
+            <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
+            <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
+          </ul>
+          <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt oh-section" aria-labelledby="oh-picks-heading">
+      <div class="container">
+        <h2 id="oh-picks-heading" class="oh-h2">Tonight&rsquo;s picks</h2>
+        <p id="oh-picks-date" class="oh-lead"></p>
+        <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
+        <div class="oh-picks__bar">
+          <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
+          <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
+        </div>
+        <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
+        <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
+        <div id="oh-picks-empty" class="oh-empty" hidden>
+          <p>Nothing matches these filters, so there are no picks to show.</p>
+          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section oh-section" aria-labelledby="oh-cal-heading">
+      <div class="container">
+        <h2 id="oh-cal-heading" class="oh-h2">October calendar</h2>
+        <p class="oh-lead"><span id="oh-cal-year"></span> &mdash; pick a night to browse its eight scheduled films. Browsing doesn&rsquo;t change your picks or history.</p>
+        <div class="oh-cal">
+          <div class="oh-cal__weekdays" aria-hidden="true">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <ol id="oh-cal-days" class="oh-cal__days" aria-label="Days of October"></ol>
+        </div>
+        <div class="oh-day">
+          <h3 id="oh-day-heading" class="oh-day__heading"></h3>
+          <p class="oh-hint">Scheduled options &mdash; unaffected by filters.</p>
+          <ul id="oh-day-list" class="oh-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt oh-section" aria-labelledby="oh-catalog-heading">
+      <div class="container">
+        <h2 id="oh-catalog-heading" class="oh-h2" tabindex="-1">Full catalog</h2>
+        <div class="oh-catalog__bar">
+          <p id="oh-catalog-count" class="oh-status" aria-live="polite"></p>
+          <a href="#oh-filters-heading" class="oh-jump">Edit filters</a>
+          <div class="oh-field oh-field--inline">
+            <label for="oh-sort">Sort by</label>
+            <select id="oh-sort">
+              <option value="scheduled">Scheduled day</option>
+              <option value="title">Title</option>
+              <option value="year">Year</option>
+              <option value="intensity">Intensity</option>
+            </select>
+          </div>
+        </div>
+        <ul id="oh-catalog-list" class="oh-list"></ul>
+        <div id="oh-catalog-empty" class="oh-empty" hidden>
+          <p>No movies match these filters. Try a shorter search, more genres, or a higher intensity.</p>
+          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section oh-section" aria-labelledby="oh-mine-heading">
+      <div class="container">
+        <h2 id="oh-mine-heading" class="oh-h2" tabindex="-1">My October</h2>
+        <p class="oh-lead"><span id="oh-mine-season"></span> &middot; <span id="oh-watched-count"></span></p>
+        <h3 class="oh-h3">Want to watch</h3>
+        <ul id="oh-mine-list" class="oh-list"></ul>
+        <p id="oh-mine-empty" class="oh-empty" hidden>Nothing here yet. Tick &ldquo;Want to watch&rdquo; on any movie to add it.</p>
+        <div class="oh-reset">
+          <button type="button" id="oh-reset" class="btn btn--ghost">Reset my October</button>
+          <p class="oh-hint">Clears this season&rsquo;s recommendation history and watch lists, and restores default filters.</p>
+          <p id="oh-mine-status" class="oh-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__links">
+        <a href="https://github.com/aledquin" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://instagram.com/aledquin" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://linkedin.com/in/aledquin" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <p>&copy; 2026 Alvaro Quintana Carvacho</p>
+    </div>
+  </footer>
+
+</body>
+</html>
