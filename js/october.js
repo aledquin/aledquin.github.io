@@ -1050,8 +1050,15 @@ var OCTOBER_HORROR_MOVIES = [
           button.classList.add('oh-cal__day--today');
           button.setAttribute('aria-current', 'date');
           button.appendChild(el(doc, 'span', 'oh-cal__today', 'Today'));
+        } else if (day === 31) {
+          button.classList.add('oh-cal__day--halloween');
+          button.appendChild(svgIcon(doc, [
+            ['ellipse', { cx: '8', cy: '9.5', rx: '6.5', ry: '5.5' }],
+            ['rect', { x: '7.2', y: '2', width: '1.6', height: '3', rx: '0.8' }]
+          ], 'oh-cal__pumpkin', '0 0 16 16'));
         }
-        button.setAttribute('aria-label', formatOctoberDate(year, day) + (isToday ? ' (today)' : ''));
+        button.setAttribute('aria-label', formatOctoberDate(year, day) +
+          (day === 31 ? ' (Halloween)' : '') + (isToday ? ' (today)' : ''));
         item.appendChild(button);
         list.appendChild(item);
       }

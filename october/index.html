@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#141011">
+  <meta name="theme-color" content="#0c0912">
   <title>October Horror &mdash; Alvaro Quintana</title>
   <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar with eight scheduled options per night, daily picks, and personal watch tracking.">
   <link rel="stylesheet" href="../css/style.css">
@@ -40,12 +40,32 @@
 
     <section class="page-header oh-header" aria-labelledby="oh-title">
       <div class="container">
-        <svg class="oh-header__art" viewBox="0 0 64 40" aria-hidden="true" focusable="false">
-          <path d="M44 6a12 12 0 1 0 12 15A10 10 0 0 1 44 6z" class="oh-header__moon"/>
-          <path d="M14 22c-5 0-8 4-8 9s4 8 9 8c2 0 3-1 4-1s2 1 4 1c5 0 9-3 9-8s-3-9-8-9c-2 0-3 1-5 1s-3-1-5-1z" class="oh-header__pumpkin"/>
-          <path d="M19 22c0-3 1-5 3-6" class="oh-header__stem"/>
+        <svg class="oh-web oh-web--left" viewBox="0 0 150 150" aria-hidden="true" focusable="false"><path d="M0 0L150 0M0 0L143 46M0 0L121 88M0 0L88 121M0 0L46 143M0 0L0 150M28 0Q24 4 27 9Q21 11 23 16Q17 17 16 23Q11 21 9 27Q4 24 0 28M56 0Q48 8 53 17Q43 22 45 33Q34 34 33 45Q22 43 17 53Q8 48 0 56M86 0Q73 12 82 27Q66 34 70 51Q52 52 51 70Q34 66 27 82Q12 73 0 86M118 0Q100 16 112 36Q90 46 95 69Q72 72 69 95Q46 90 36 112Q16 100 0 118"/></svg>
+        <svg class="oh-web oh-web--right" viewBox="0 0 150 150" aria-hidden="true" focusable="false"><path d="M0 0L150 0M0 0L143 46M0 0L121 88M0 0L88 121M0 0L46 143M0 0L0 150M28 0Q24 4 27 9Q21 11 23 16Q17 17 16 23Q11 21 9 27Q4 24 0 28M56 0Q48 8 53 17Q43 22 45 33Q34 34 33 45Q22 43 17 53Q8 48 0 56M86 0Q73 12 82 27Q66 34 70 51Q52 52 51 70Q34 66 27 82Q12 73 0 86M118 0Q100 16 112 36Q90 46 95 69Q72 72 69 95Q46 90 36 112Q16 100 0 118"/></svg>
+        <svg class="oh-scene" viewBox="0 -18 240 110" aria-hidden="true" focusable="false">
+          <defs>
+            <radialGradient id="oh-moon-glow">
+              <stop offset="0" stop-color="#ffecc8" stop-opacity="0.35"/>
+              <stop offset="1" stop-color="#ffecc8" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="188" cy="28" r="44" fill="url(#oh-moon-glow)"/>
+          <circle cx="188" cy="28" r="19" class="oh-scene__moon"/>
+          <circle cx="181" cy="23" r="3.5" class="oh-scene__crater"/>
+          <circle cx="194" cy="35" r="2.5" class="oh-scene__crater"/>
+          <circle cx="192" cy="20" r="1.8" class="oh-scene__crater"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(150 22) scale(1.1)"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(212 50) scale(0.8)"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(58 26) scale(1.3)"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(84 12) scale(0.7)"/>
+          <ellipse cx="120" cy="88" rx="40" ry="4" class="oh-scene__shadow"/>
+          <ellipse cx="120" cy="72" rx="22" ry="16" class="oh-scene__pumpkin"/>
+          <path d="M112 57q-6 15 0 30M128 57q6 15 0 30M120 56v32" class="oh-scene__rib"/>
+          <path d="M120 57q0-6 5-8" class="oh-scene__stem"/>
+          <path d="M107 69l5-7 5 7zM123 69l5-7 5 7zM118 74l2-3 2 3z" class="oh-scene__face"/>
+          <path d="M106 77q14 9 28 0l-3 4-3-2-3 3-5-2-5 2-3-3-3 2z" class="oh-scene__face"/>
         </svg>
-        <span class="section__subtitle">Seasonal</span>
+        <span class="section__subtitle">Halloween season</span>
         <h1 id="oh-title">October Horror</h1>
         <p>A horror movie for every night from October 1 through Halloween. Choose among the eight films scheduled for each night, or let the page suggest three personalized picks each day.</p>
         <p class="oh-header__note">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
