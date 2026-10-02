@@ -1054,7 +1054,7 @@ var OCTOBER_HORROR_MOVIES = [
         .map(function (m) { return m.id; });
       $('#oh-mine-season').textContent = 'Season ' + today.year;
       $('#oh-watched-count').textContent = 'Watched this season: ' + s.watchedIds.length + ' of ' + MOVIES.length + '.';
-      renderCards($('#oh-mine-list'), ids, 'mine', 'h3');
+      renderCards($('#oh-mine-list'), ids, 'mine', 'h4');
       $('#oh-mine-empty').hidden = ids.length !== 0;
     }
 
