@@ -62,66 +62,6 @@
       <p id="oh-notice" class="oh-notice" role="status" hidden></p>
     </div>
 
-    <section class="section oh-section" aria-labelledby="oh-filters-heading">
-      <div class="container">
-        <h2 id="oh-filters-heading" class="oh-h2">Filters</h2>
-        <p class="oh-lead">Filters narrow the full catalog and decide which movies can be recommended. They never change the scheduled calendar.</p>
-        <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
-          <div class="oh-field oh-field--search">
-            <label for="oh-search">Search titles</label>
-            <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false">
-          </div>
-
-          <fieldset class="oh-fieldset">
-            <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
-            <div id="oh-genres" class="oh-chips"></div>
-          </fieldset>
-
-          <fieldset class="oh-fieldset">
-            <legend>Maximum intensity</legend>
-            <div class="oh-chips">
-              <label class="oh-check oh-chip" for="oh-max-light"><input type="radio" name="oh-max" id="oh-max-light" value="light"> Light</label>
-              <label class="oh-check oh-chip" for="oh-max-moderate"><input type="radio" name="oh-max" id="oh-max-moderate" value="moderate"> Moderate</label>
-              <label class="oh-check oh-chip" for="oh-max-intense"><input type="radio" name="oh-max" id="oh-max-intense" value="intense" checked> Any</label>
-            </div>
-          </fieldset>
-
-          <div class="oh-filters__row">
-            <label class="oh-check oh-chip" for="oh-hide-watched"><input type="checkbox" id="oh-hide-watched" name="hideWatched"> Hide watched</label>
-            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-          </div>
-        </form>
-
-        <div class="oh-legend" aria-labelledby="oh-legend-title">
-          <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
-          <ul class="oh-legend__list">
-            <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
-            <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
-            <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
-          </ul>
-          <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--alt oh-section" aria-labelledby="oh-picks-heading">
-      <div class="container">
-        <h2 id="oh-picks-heading" class="oh-h2">Tonight&rsquo;s picks</h2>
-        <p id="oh-picks-date" class="oh-lead"></p>
-        <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
-        <div class="oh-picks__bar">
-          <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
-          <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
-        </div>
-        <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
-        <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
-        <div id="oh-picks-empty" class="oh-empty" hidden>
-          <p>Nothing matches these filters, so there are no picks to show.</p>
-          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-        </div>
-      </div>
-    </section>
-
     <section class="section oh-section" aria-labelledby="oh-cal-heading">
       <div class="container">
         <h2 id="oh-cal-heading" class="oh-h2">October calendar</h2>
@@ -136,6 +76,74 @@
           <h3 id="oh-day-heading" class="oh-day__heading"></h3>
           <p class="oh-hint">Scheduled options &mdash; unaffected by filters.</p>
           <ul id="oh-day-list" class="oh-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt oh-section" aria-labelledby="oh-filters-heading">
+      <div class="container">
+        <h2 id="oh-filters-heading" class="oh-h2 oh-h2--toggle">
+          <button type="button" id="oh-filters-toggle" class="oh-toggle" aria-expanded="true" aria-controls="oh-filters-body">
+            <span>Filters</span>
+            <span id="oh-filters-active" class="oh-toggle__count"></span>
+            <svg class="oh-toggle__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </h2>
+        <p class="oh-lead">Filters narrow the full catalog and decide which movies can be recommended. They never change the scheduled calendar.</p>
+        <div id="oh-filters-body" class="oh-filters__body">
+          <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
+            <div class="oh-field oh-field--search">
+              <label for="oh-search">Search titles</label>
+              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false">
+            </div>
+
+            <fieldset class="oh-fieldset">
+              <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
+              <div id="oh-genres" class="oh-chips"></div>
+            </fieldset>
+
+            <fieldset class="oh-fieldset">
+              <legend>Intensity <span class="oh-hint">(none selected means all)</span></legend>
+              <div class="oh-chips">
+                <label class="oh-check oh-chip" for="oh-intensity-light"><input type="checkbox" name="oh-intensity" id="oh-intensity-light" value="light"> Light</label>
+                <label class="oh-check oh-chip" for="oh-intensity-moderate"><input type="checkbox" name="oh-intensity" id="oh-intensity-moderate" value="moderate"> Moderate</label>
+                <label class="oh-check oh-chip" for="oh-intensity-intense"><input type="checkbox" name="oh-intensity" id="oh-intensity-intense" value="intense"> Intense</label>
+              </div>
+            </fieldset>
+
+            <div class="oh-filters__row">
+              <label class="oh-check oh-chip" for="oh-hide-watched"><input type="checkbox" id="oh-hide-watched" name="hideWatched"> Hide watched</label>
+              <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="oh-legend" aria-labelledby="oh-legend-title">
+          <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
+          <ul class="oh-legend__list">
+            <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
+            <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
+            <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
+          </ul>
+          <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section oh-section" aria-labelledby="oh-picks-heading">
+      <div class="container">
+        <h2 id="oh-picks-heading" class="oh-h2">Tonight&rsquo;s picks</h2>
+        <p id="oh-picks-date" class="oh-lead"></p>
+        <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
+        <div class="oh-picks__bar">
+          <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
+          <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
+        </div>
+        <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
+        <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
+        <div id="oh-picks-empty" class="oh-empty" hidden>
+          <p>Nothing matches these filters, so there are no picks to show.</p>
+          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
         </div>
       </div>
     </section>

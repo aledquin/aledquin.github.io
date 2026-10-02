@@ -1149,6 +1149,48 @@ p {
   margin: 1.5rem 0 1rem;
 }
 
+.oh-toggle {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.oh-toggle__count {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.oh-toggle__chevron {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--transition);
+}
+
+.oh-toggle[aria-expanded="true"] .oh-toggle__chevron {
+  transform: rotate(180deg);
+}
+
+.oh-toggle:hover {
+  color: var(--color-primary);
+}
+
 .oh-lead {
   font-size: 1.02rem;
   margin-bottom: 0.75rem;
