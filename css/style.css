@@ -1929,6 +1929,14 @@ p {
   background: rgba(199, 166, 255, 0.12);
 }
 
+.oh-tag--focus {
+  color: var(--color-primary-dark);
+}
+
+.oh-tag--score {
+  color: var(--color-text-secondary);
+}
+
 .oh-dark .oh-intensity__mark {
   stroke: var(--color-card);
 }
