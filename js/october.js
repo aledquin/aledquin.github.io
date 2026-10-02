@@ -965,12 +965,13 @@ var OCTOBER_HORROR_MOVIES = [
 
     function renderFilterSummary() {
       var f = state.filters;
-      var active = (f.search.trim() ? 1 : 0) + f.genres.length + f.intensities.length + (f.hideWatched ? 1 : 0);      $('#oh-filters-active').textContent = active ? active + ' active' : 'none active';
+      var active = (f.search.trim() ? 1 : 0) + f.genres.length + f.intensities.length + (f.hideWatched ? 1 : 0);
+      $('#oh-filters-active').textContent = active ? active + ' active' : 'none active';
     }
 
-    function setFiltersOpen(open) {
-      $('#oh-filters-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
-      $('#oh-filters-body').hidden = !open;
+    function setSectionOpen(toggle, open) {
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      doc.getElementById(toggle.getAttribute('aria-controls')).hidden = !open;
     }
 
     function buildGenreControls() {
@@ -1155,6 +1156,9 @@ var OCTOBER_HORROR_MOVIES = [
     function renderCatalog() {
       var matches = sortMovies(filterMovies(MOVIES, state.filters, season().watchedIds), state.sort);
       $('#oh-catalog-count').textContent = 'Showing ' + matches.length + ' of ' + MOVIES.length + ' movies.';
+      $('#oh-catalog-summary').textContent = matches.length === MOVIES.length
+        ? MOVIES.length + ' movies'
+        : matches.length + ' of ' + MOVIES.length + ' match';
       renderCards($('#oh-catalog-list'), matches.map(function (m) { return m.id; }), 'cat', 'h3');
       $('#oh-catalog-empty').hidden = matches.length !== 0;
     }
@@ -1206,7 +1210,7 @@ var OCTOBER_HORROR_MOVIES = [
 
     var FOCUS_AFTER_REMOVAL = {
       '#oh-day-list': '#oh-day-heading',
-      '#oh-catalog-list': '#oh-catalog-heading',
+      '#oh-catalog-list': '#oh-catalog-toggle',
       '#oh-mine-list': '#oh-mine-heading',
       '#oh-watched-list': '#oh-watched-heading'
     };
@@ -1283,7 +1287,7 @@ var OCTOBER_HORROR_MOVIES = [
     root.addEventListener('click', function (event) {
       if (event.target.closest('.oh-jump')) {
         event.preventDefault();
-        setFiltersOpen(true);
+        setSectionOpen($('#oh-filters-toggle'), true);
         $('#oh-filters-toggle').focus();
         return;
       }
@@ -1291,8 +1295,8 @@ var OCTOBER_HORROR_MOVIES = [
       if (!target) return;
       if (target.matches('.oh-tab')) selectTab(target, false);
       else if (target.matches('.oh-movie__more')) toggleCard(target);
-      else if (target.id === 'oh-filters-toggle') {
-        setFiltersOpen(target.getAttribute('aria-expanded') !== 'true');
+      else if (target.matches('.oh-toggle')) {
+        setSectionOpen(target, target.getAttribute('aria-expanded') !== 'true');
       } else if (target.matches('.oh-clear')) {
         clearFilters();
         if (target.closest('#oh-picks-empty')) updatePicks();
@@ -1317,7 +1321,8 @@ var OCTOBER_HORROR_MOVIES = [
     win.setInterval(checkDate, 60000);
 
     buildGenreControls();
-    setFiltersOpen(false);
+    setSectionOpen($('#oh-filters-toggle'), false);
+    setSectionOpen($('#oh-catalog-toggle'), false);
     syncFilterControls();
     if (loaded.problem) showNotice(loaded.problem);
     initialPicks();

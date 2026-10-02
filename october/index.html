@@ -135,7 +135,6 @@
         <div class="oh-tabs" role="tablist" aria-label="October Horror views">
           <button type="button" role="tab" id="oh-tab-calendar" class="oh-tab" aria-controls="oh-panel-calendar" aria-selected="true">Calendar</button>
           <button type="button" role="tab" id="oh-tab-picks" class="oh-tab" aria-controls="oh-panel-picks" aria-selected="false" tabindex="-1">Tonight&rsquo;s picks</button>
-          <button type="button" role="tab" id="oh-tab-catalog" class="oh-tab" aria-controls="oh-panel-catalog" aria-selected="false" tabindex="-1">Full catalog</button>
           <button type="button" role="tab" id="oh-tab-mine" class="oh-tab" aria-controls="oh-panel-mine" aria-selected="false" tabindex="-1">Want to watch <span id="oh-tab-mine-count" class="oh-tab__count">0</span></button>
           <button type="button" role="tab" id="oh-tab-watched" class="oh-tab" aria-controls="oh-panel-watched" aria-selected="false" tabindex="-1">Watched <span id="oh-tab-watched-count" class="oh-tab__count">0</span></button>
         </div>
@@ -176,28 +175,6 @@
           </div>
         </div>
 
-        <div id="oh-panel-catalog" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-catalog" tabindex="0" hidden>
-          <h2 id="oh-catalog-heading" class="oh-sr" tabindex="-1">Full catalog</h2>
-          <div class="oh-catalog__bar">
-            <p id="oh-catalog-count" class="oh-status" aria-live="polite"></p>
-            <a href="#oh-filters-heading" class="oh-jump">Edit filters</a>
-            <div class="oh-field oh-field--inline">
-              <label for="oh-sort">Sort by</label>
-              <select id="oh-sort">
-                <option value="scheduled">Scheduled day</option>
-                <option value="title">Title</option>
-                <option value="year">Year</option>
-                <option value="intensity">Intensity</option>
-              </select>
-            </div>
-          </div>
-          <ul id="oh-catalog-list" class="oh-list"></ul>
-          <div id="oh-catalog-empty" class="oh-empty" hidden>
-            <p>No movies match these filters. Try a shorter search, more genres, or another intensity.</p>
-            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-          </div>
-        </div>
-
         <div id="oh-panel-mine" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-mine" tabindex="0" hidden>
           <h2 id="oh-mine-heading" class="oh-sr" tabindex="-1">Want to watch</h2>
           <p class="oh-lead">Season <span class="oh-season-year"></span> &middot; movies you ticked &ldquo;Want to watch&rdquo;.</p>
@@ -217,6 +194,38 @@
           <button type="button" id="oh-reset" class="btn btn--ghost">Reset my October</button>
           <p class="oh-hint">Clears this season&rsquo;s recommendation history and watch lists, and restores default filters.</p>
           <p id="oh-mine-status" class="oh-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt oh-section oh-catalog-section" aria-labelledby="oh-catalog-heading">
+      <div class="container">
+        <h2 id="oh-catalog-heading" class="oh-h2 oh-h2--toggle">
+          <button type="button" id="oh-catalog-toggle" class="oh-toggle" aria-expanded="true" aria-controls="oh-catalog-body">
+            <span>Full catalog</span>
+            <span id="oh-catalog-summary" class="oh-toggle__count"></span>
+            <svg class="oh-toggle__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </h2>
+        <div id="oh-catalog-body">
+          <div class="oh-catalog__bar">
+            <p id="oh-catalog-count" class="oh-status" aria-live="polite"></p>
+            <a href="#oh-filters-heading" class="oh-jump">Edit filters</a>
+            <div class="oh-field oh-field--inline">
+              <label for="oh-sort">Sort by</label>
+              <select id="oh-sort">
+                <option value="scheduled">Scheduled day</option>
+                <option value="title">Title</option>
+                <option value="year">Year</option>
+                <option value="intensity">Intensity</option>
+              </select>
+            </div>
+          </div>
+          <ul id="oh-catalog-list" class="oh-list"></ul>
+          <div id="oh-catalog-empty" class="oh-empty" hidden>
+            <p>No movies match these filters. Try a shorter search, more genres, or another intensity.</p>
+            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+          </div>
         </div>
       </div>
     </section>
