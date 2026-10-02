@@ -1598,3 +1598,77 @@ p {
     animation: none !important;
   }
 }
+
+/* October Horror: dark theme (October page only) */
+
+.oh-dark {
+  --color-primary: #e3906a;
+  --color-primary-light: #f0b08f;
+  --color-primary-dark: #f2ae8a;
+  --color-accent: #8fc1ba;
+  --color-accent-light: #a9d3cd;
+  --color-bg: #141011;
+  --color-bg-alt: #1c1618;
+  --color-card: #231c1d;
+  --color-text: #f2eae4;
+  --color-text-secondary: #cfc1b7;
+  --color-text-light: #a99a8f;
+  --color-border: #43363a;
+  --color-border-light: #31282a;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+.oh-dark .header {
+  background: rgba(20, 16, 17, 0.92);
+}
+
+.oh-dark .nav__link:hover,
+.oh-dark .nav__link--active {
+  background: rgba(227, 144, 106, 0.14);
+}
+
+.oh-dark .btn--primary,
+.oh-dark .btn--primary:hover {
+  color: #1a1112;
+}
+
+.oh-dark .btn--outline:hover,
+.oh-dark .btn--ghost:hover {
+  background: rgba(227, 144, 106, 0.12);
+}
+
+.oh-dark .oh {
+  --oh-pumpkin: #e8813f;
+  --oh-light: #74c47a;
+  --oh-moderate: #e8a93e;
+  --oh-intense: #f0675c;
+}
+
+.oh-dark .oh-header {
+  background: linear-gradient(180deg, #0f0b0c 0%, rgba(232, 129, 63, 0.08) 60%, var(--color-bg) 100%);
+}
+
+.oh-dark .oh-notice {
+  background: rgba(232, 129, 63, 0.12);
+  border-color: rgba(232, 129, 63, 0.4);
+}
+
+.oh-dark .oh-chip:has(input:checked) {
+  background: rgba(227, 144, 106, 0.18);
+}
+
+.oh-dark .oh-tag {
+  background: rgba(143, 193, 186, 0.12);
+}
+
+.oh-dark .oh-intensity__mark {
+  stroke: var(--color-card);
+}
+
+.oh-dark .oh-cal__day[aria-pressed="true"] {
+  color: #1a1112;
+}
