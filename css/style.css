@@ -1114,19 +1114,10 @@ p {
 }
 
 .oh-header {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(180deg, var(--color-bg-alt) 0%, rgba(180, 82, 26, 0.06) 60%, var(--color-bg) 100%);
 }
-
-.oh-header__art {
-  display: block;
-  width: 72px;
-  height: 45px;
-  margin: 0 auto 0.75rem;
-}
-
-.oh-header__moon { fill: var(--color-text-light); opacity: 0.55; }
-.oh-header__pumpkin { fill: var(--oh-pumpkin); }
-.oh-header__stem { fill: none; stroke: var(--color-accent); stroke-width: 2.5; stroke-linecap: round; }
 
 .oh-header .oh-header__note {
   margin-top: 0.75rem;
@@ -1147,6 +1138,48 @@ p {
 .oh-h3 {
   font-size: 1.2rem;
   margin: 1.5rem 0 1rem;
+}
+
+.oh-toggle {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.oh-toggle__count {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.oh-toggle__chevron {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--transition);
+}
+
+.oh-toggle[aria-expanded="true"] .oh-toggle__chevron {
+  transform: rotate(180deg);
+}
+
+.oh-toggle:hover {
+  color: var(--color-primary);
 }
 
 .oh-lead {
@@ -1599,76 +1632,193 @@ p {
   }
 }
 
-/* October Horror: dark theme (October page only) */
+/* October Horror: spooky Halloween dark theme (October page only) */
 
 .oh-dark {
-  --color-primary: #e3906a;
-  --color-primary-light: #f0b08f;
-  --color-primary-dark: #f2ae8a;
-  --color-accent: #8fc1ba;
-  --color-accent-light: #a9d3cd;
-  --color-bg: #141011;
-  --color-bg-alt: #1c1618;
-  --color-card: #231c1d;
-  --color-text: #f2eae4;
-  --color-text-secondary: #cfc1b7;
-  --color-text-light: #a99a8f;
-  --color-border: #43363a;
-  --color-border-light: #31282a;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
-  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --color-primary: #ff9a4d;
+  --color-primary-light: #ffb27a;
+  --color-primary-dark: #ffb27a;
+  --color-accent: #c7a6ff;
+  --color-accent-light: #dcc6ff;
+  --color-bg: #0c0912;
+  --color-bg-alt: #130e1c;
+  --color-card: #1b1426;
+  --color-text: #f5ede3;
+  --color-text-secondary: #cdbfda;
+  --color-text-light: #a495b6;
+  --color-border: #3b2d4d;
+  --color-border-light: #2a2038;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.6);
   color-scheme: dark;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(120, 72, 190, 0.18), transparent 55%),
+    var(--color-bg);
 }
 
 .oh-dark .header {
-  background: rgba(20, 16, 17, 0.92);
+  background: rgba(12, 9, 18, 0.92);
+  border-bottom-color: rgba(255, 122, 26, 0.25);
 }
 
 .oh-dark .nav__link:hover,
 .oh-dark .nav__link--active {
-  background: rgba(227, 144, 106, 0.14);
+  background: rgba(255, 154, 77, 0.14);
 }
 
 .oh-dark .btn--primary,
 .oh-dark .btn--primary:hover {
-  color: #1a1112;
+  color: #1a0f05;
+}
+
+.oh-dark .btn--primary:hover {
+  box-shadow: 0 0 0 1px rgba(255, 154, 77, 0.4), 0 6px 22px rgba(255, 122, 26, 0.35);
 }
 
 .oh-dark .btn--outline:hover,
 .oh-dark .btn--ghost:hover {
-  background: rgba(227, 144, 106, 0.12);
+  background: rgba(255, 154, 77, 0.12);
+}
+
+.oh-dark .section--alt {
+  background:
+    linear-gradient(180deg, rgba(120, 72, 190, 0.07), transparent 40%),
+    var(--color-bg-alt);
 }
 
 .oh-dark .oh {
-  --oh-pumpkin: #e8813f;
-  --oh-light: #74c47a;
-  --oh-moderate: #e8a93e;
-  --oh-intense: #f0675c;
+  --oh-pumpkin: #ff7a1a;
+  --oh-light: #8be37a;
+  --oh-moderate: #ffc94d;
+  --oh-intense: #ff6b6b;
 }
 
+/* Moonlit header: moon glow, bats, web and a jack-o'-lantern */
+
 .oh-dark .oh-header {
-  background: linear-gradient(180deg, #0f0b0c 0%, rgba(232, 129, 63, 0.08) 60%, var(--color-bg) 100%);
+  position: relative;
+  overflow: hidden;
+  padding-top: 2.5rem;
+  background:
+    radial-gradient(ellipse at 50% 120%, rgba(120, 72, 190, 0.35), transparent 60%),
+    linear-gradient(180deg, #07050b 0%, #120c1c 70%, var(--color-bg) 100%);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.oh-dark .oh-header .container {
+  position: relative;
+  z-index: 1;
+}
+
+.oh-scene {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  margin: -1rem auto 0.5rem;
+}
+
+.oh-scene__moon { fill: #f4e7c8; }
+.oh-scene__crater { fill: #e2d1aa; }
+.oh-scene__bat { fill: #05030a; stroke: rgba(199, 166, 255, 0.35); stroke-width: 0.6; }
+.oh-scene__shadow { fill: rgba(0, 0, 0, 0.55); }
+.oh-scene__pumpkin { fill: #ff7a1a; }
+.oh-scene__rib { fill: none; stroke: #c4520a; stroke-width: 1.4; }
+.oh-scene__stem { fill: none; stroke: #6f8f3a; stroke-width: 3; stroke-linecap: round; }
+.oh-scene__face { fill: #ffd27a; }
+
+.oh-web {
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 150px;
+  fill: none;
+  stroke: rgba(205, 191, 218, 0.22);
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.oh-web--left { left: 0; }
+.oh-web--right { right: 0; transform: scaleX(-1); }
+
+.oh-dark .oh-header .section__subtitle {
+  color: var(--oh-pumpkin);
+  letter-spacing: 0.3em;
+}
+
+.oh-dark .oh-header h1 {
+  color: #fff4e6;
+  text-shadow: 0 0 18px rgba(255, 122, 26, 0.35), 0 2px 0 #000;
+}
+
+@media (max-width: 400px) {
+  .oh-web { width: 90px; height: 90px; }
+}
+
+/* Spooky accents */
+
+.oh-dark .oh-h2 {
+  border-left-color: var(--oh-pumpkin);
+  text-shadow: 0 0 14px rgba(255, 122, 26, 0.2);
+}
+
+.oh-dark .oh-movie {
+  background: linear-gradient(180deg, #211830 0%, var(--color-card) 60%);
+}
+
+.oh-dark .oh-movie:hover {
+  box-shadow: 0 0 0 1px rgba(255, 154, 77, 0.25), 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 122, 26, 0.12);
 }
 
 .oh-dark .oh-notice {
-  background: rgba(232, 129, 63, 0.12);
-  border-color: rgba(232, 129, 63, 0.4);
+  background: rgba(255, 122, 26, 0.12);
+  border-color: rgba(255, 122, 26, 0.4);
 }
 
 .oh-dark .oh-chip:has(input:checked) {
-  background: rgba(227, 144, 106, 0.18);
+  background: rgba(255, 154, 77, 0.18);
+  border-color: var(--color-primary);
 }
 
 .oh-dark .oh-tag {
-  background: rgba(143, 193, 186, 0.12);
+  background: rgba(199, 166, 255, 0.12);
 }
 
 .oh-dark .oh-intensity__mark {
   stroke: var(--color-card);
 }
 
+.oh-dark .oh-legend,
+.oh-dark .oh-empty {
+  background: rgba(27, 20, 38, 0.8);
+}
+
 .oh-dark .oh-cal__day[aria-pressed="true"] {
-  color: #1a1112;
+  color: #1a0f05;
+  box-shadow: 0 0 16px rgba(255, 154, 77, 0.45);
+}
+
+.oh-dark .oh-cal__day--today {
+  box-shadow: 0 0 12px rgba(255, 122, 26, 0.35);
+}
+
+.oh-cal__day--halloween:not([aria-pressed="true"]) {
+  color: var(--color-primary);
+  border-color: var(--oh-pumpkin);
+  border-style: dashed;
+}
+
+.oh-cal__pumpkin {
+  width: 0.8rem;
+  height: 0.8rem;
+  fill: var(--oh-pumpkin);
+}
+
+.oh-cal__day[aria-pressed="true"] .oh-cal__pumpkin {
+  fill: currentColor;
+}
+
+.oh-dark .footer {
+  border-top-color: rgba(255, 122, 26, 0.2);
 }

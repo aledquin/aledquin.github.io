@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#141011">
+  <meta name="theme-color" content="#0c0912">
   <title>October Horror &mdash; Alvaro Quintana</title>
   <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar with eight scheduled options per night, daily picks, and personal watch tracking.">
   <link rel="stylesheet" href="../css/style.css">
@@ -40,12 +40,32 @@
 
     <section class="page-header oh-header" aria-labelledby="oh-title">
       <div class="container">
-        <svg class="oh-header__art" viewBox="0 0 64 40" aria-hidden="true" focusable="false">
-          <path d="M44 6a12 12 0 1 0 12 15A10 10 0 0 1 44 6z" class="oh-header__moon"/>
-          <path d="M14 22c-5 0-8 4-8 9s4 8 9 8c2 0 3-1 4-1s2 1 4 1c5 0 9-3 9-8s-3-9-8-9c-2 0-3 1-5 1s-3-1-5-1z" class="oh-header__pumpkin"/>
-          <path d="M19 22c0-3 1-5 3-6" class="oh-header__stem"/>
+        <svg class="oh-web oh-web--left" viewBox="0 0 150 150" aria-hidden="true" focusable="false"><path d="M0 0L150 0M0 0L143 46M0 0L121 88M0 0L88 121M0 0L46 143M0 0L0 150M28 0Q24 4 27 9Q21 11 23 16Q17 17 16 23Q11 21 9 27Q4 24 0 28M56 0Q48 8 53 17Q43 22 45 33Q34 34 33 45Q22 43 17 53Q8 48 0 56M86 0Q73 12 82 27Q66 34 70 51Q52 52 51 70Q34 66 27 82Q12 73 0 86M118 0Q100 16 112 36Q90 46 95 69Q72 72 69 95Q46 90 36 112Q16 100 0 118"/></svg>
+        <svg class="oh-web oh-web--right" viewBox="0 0 150 150" aria-hidden="true" focusable="false"><path d="M0 0L150 0M0 0L143 46M0 0L121 88M0 0L88 121M0 0L46 143M0 0L0 150M28 0Q24 4 27 9Q21 11 23 16Q17 17 16 23Q11 21 9 27Q4 24 0 28M56 0Q48 8 53 17Q43 22 45 33Q34 34 33 45Q22 43 17 53Q8 48 0 56M86 0Q73 12 82 27Q66 34 70 51Q52 52 51 70Q34 66 27 82Q12 73 0 86M118 0Q100 16 112 36Q90 46 95 69Q72 72 69 95Q46 90 36 112Q16 100 0 118"/></svg>
+        <svg class="oh-scene" viewBox="0 -18 240 110" aria-hidden="true" focusable="false">
+          <defs>
+            <radialGradient id="oh-moon-glow">
+              <stop offset="0" stop-color="#ffecc8" stop-opacity="0.35"/>
+              <stop offset="1" stop-color="#ffecc8" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="188" cy="28" r="44" fill="url(#oh-moon-glow)"/>
+          <circle cx="188" cy="28" r="19" class="oh-scene__moon"/>
+          <circle cx="181" cy="23" r="3.5" class="oh-scene__crater"/>
+          <circle cx="194" cy="35" r="2.5" class="oh-scene__crater"/>
+          <circle cx="192" cy="20" r="1.8" class="oh-scene__crater"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(150 22) scale(1.1)"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(212 50) scale(0.8)"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(58 26) scale(1.3)"/>
+          <path d="M0 2C-3-2-8-3-12 0c2 0 3 2 3 4 2-2 4-1 5 1 1-2 3-2 4-1 0-1 0-2 1-3 1 1 1 2 1 3 1-1 3-1 4 1 1-2 3-3 5-1 0-2 1-4 3-4-4-3-9-2-12 2z" class="oh-scene__bat" transform="translate(84 12) scale(0.7)"/>
+          <ellipse cx="120" cy="88" rx="40" ry="4" class="oh-scene__shadow"/>
+          <ellipse cx="120" cy="72" rx="22" ry="16" class="oh-scene__pumpkin"/>
+          <path d="M112 57q-6 15 0 30M128 57q6 15 0 30M120 56v32" class="oh-scene__rib"/>
+          <path d="M120 57q0-6 5-8" class="oh-scene__stem"/>
+          <path d="M107 69l5-7 5 7zM123 69l5-7 5 7zM118 74l2-3 2 3z" class="oh-scene__face"/>
+          <path d="M106 77q14 9 28 0l-3 4-3-2-3 3-5-2-5 2-3-3-3 2z" class="oh-scene__face"/>
         </svg>
-        <span class="section__subtitle">Seasonal</span>
+        <span class="section__subtitle">Halloween season</span>
         <h1 id="oh-title">October Horror</h1>
         <p>A horror movie for every night from October 1 through Halloween. Choose among the eight films scheduled for each night, or let the page suggest three personalized picks each day.</p>
         <p class="oh-header__note">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
@@ -62,66 +82,6 @@
       <p id="oh-notice" class="oh-notice" role="status" hidden></p>
     </div>
 
-    <section class="section oh-section" aria-labelledby="oh-filters-heading">
-      <div class="container">
-        <h2 id="oh-filters-heading" class="oh-h2">Filters</h2>
-        <p class="oh-lead">Filters narrow the full catalog and decide which movies can be recommended. They never change the scheduled calendar.</p>
-        <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
-          <div class="oh-field oh-field--search">
-            <label for="oh-search">Search titles</label>
-            <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false">
-          </div>
-
-          <fieldset class="oh-fieldset">
-            <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
-            <div id="oh-genres" class="oh-chips"></div>
-          </fieldset>
-
-          <fieldset class="oh-fieldset">
-            <legend>Maximum intensity</legend>
-            <div class="oh-chips">
-              <label class="oh-check oh-chip" for="oh-max-light"><input type="radio" name="oh-max" id="oh-max-light" value="light"> Light</label>
-              <label class="oh-check oh-chip" for="oh-max-moderate"><input type="radio" name="oh-max" id="oh-max-moderate" value="moderate"> Moderate</label>
-              <label class="oh-check oh-chip" for="oh-max-intense"><input type="radio" name="oh-max" id="oh-max-intense" value="intense" checked> Any</label>
-            </div>
-          </fieldset>
-
-          <div class="oh-filters__row">
-            <label class="oh-check oh-chip" for="oh-hide-watched"><input type="checkbox" id="oh-hide-watched" name="hideWatched"> Hide watched</label>
-            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-          </div>
-        </form>
-
-        <div class="oh-legend" aria-labelledby="oh-legend-title">
-          <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
-          <ul class="oh-legend__list">
-            <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
-            <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
-            <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
-          </ul>
-          <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--alt oh-section" aria-labelledby="oh-picks-heading">
-      <div class="container">
-        <h2 id="oh-picks-heading" class="oh-h2">Tonight&rsquo;s picks</h2>
-        <p id="oh-picks-date" class="oh-lead"></p>
-        <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
-        <div class="oh-picks__bar">
-          <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
-          <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
-        </div>
-        <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
-        <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
-        <div id="oh-picks-empty" class="oh-empty" hidden>
-          <p>Nothing matches these filters, so there are no picks to show.</p>
-          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-        </div>
-      </div>
-    </section>
-
     <section class="section oh-section" aria-labelledby="oh-cal-heading">
       <div class="container">
         <h2 id="oh-cal-heading" class="oh-h2">October calendar</h2>
@@ -136,6 +96,74 @@
           <h3 id="oh-day-heading" class="oh-day__heading"></h3>
           <p class="oh-hint">Scheduled options &mdash; unaffected by filters.</p>
           <ul id="oh-day-list" class="oh-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt oh-section" aria-labelledby="oh-filters-heading">
+      <div class="container">
+        <h2 id="oh-filters-heading" class="oh-h2 oh-h2--toggle">
+          <button type="button" id="oh-filters-toggle" class="oh-toggle" aria-expanded="true" aria-controls="oh-filters-body">
+            <span>Filters</span>
+            <span id="oh-filters-active" class="oh-toggle__count"></span>
+            <svg class="oh-toggle__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </h2>
+        <p class="oh-lead">Filters narrow the full catalog and decide which movies can be recommended. They never change the scheduled calendar.</p>
+        <div id="oh-filters-body" class="oh-filters__body">
+          <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
+            <div class="oh-field oh-field--search">
+              <label for="oh-search">Search titles</label>
+              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false">
+            </div>
+
+            <fieldset class="oh-fieldset">
+              <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
+              <div id="oh-genres" class="oh-chips"></div>
+            </fieldset>
+
+            <fieldset class="oh-fieldset">
+              <legend>Intensity <span class="oh-hint">(none selected means all)</span></legend>
+              <div class="oh-chips">
+                <label class="oh-check oh-chip" for="oh-intensity-light"><input type="checkbox" name="oh-intensity" id="oh-intensity-light" value="light"> Light</label>
+                <label class="oh-check oh-chip" for="oh-intensity-moderate"><input type="checkbox" name="oh-intensity" id="oh-intensity-moderate" value="moderate"> Moderate</label>
+                <label class="oh-check oh-chip" for="oh-intensity-intense"><input type="checkbox" name="oh-intensity" id="oh-intensity-intense" value="intense"> Intense</label>
+              </div>
+            </fieldset>
+
+            <div class="oh-filters__row">
+              <label class="oh-check oh-chip" for="oh-hide-watched"><input type="checkbox" id="oh-hide-watched" name="hideWatched"> Hide watched</label>
+              <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="oh-legend" aria-labelledby="oh-legend-title">
+          <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
+          <ul class="oh-legend__list">
+            <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
+            <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
+            <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
+          </ul>
+          <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section oh-section" aria-labelledby="oh-picks-heading">
+      <div class="container">
+        <h2 id="oh-picks-heading" class="oh-h2">Tonight&rsquo;s picks</h2>
+        <p id="oh-picks-date" class="oh-lead"></p>
+        <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
+        <div class="oh-picks__bar">
+          <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
+          <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
+        </div>
+        <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
+        <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
+        <div id="oh-picks-empty" class="oh-empty" hidden>
+          <p>Nothing matches these filters, so there are no picks to show.</p>
+          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
         </div>
       </div>
     </section>

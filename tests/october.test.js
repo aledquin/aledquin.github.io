@@ -190,18 +190,30 @@ test('filters: case/accent-insensitive search, OR genres, AND across groups', ()
   assert.deepEqual(OH.filterMovies(OH.MOVIES, { ...f, search: "bram stoker's" }, []).map((m) => m.id), ['bram-stokers-dracula-1992']);
   const vampOrZombie = OH.filterMovies(OH.MOVIES, { ...f, genres: ['vampire', 'zombie'] }, []);
   assert.ok(vampOrZombie.every((m) => m.genres.includes('vampire') || m.genres.includes('zombie')));
-  const lightVamp = OH.filterMovies(OH.MOVIES, { ...f, genres: ['vampire'], maxIntensity: 'light' }, []);
+  const lightVamp = OH.filterMovies(OH.MOVIES, { ...f, genres: ['vampire'], intensities: ['light'] }, []);
   assert.ok(lightVamp.length > 0 && lightVamp.every((m) => m.intensity === 'light' && m.genres.includes('vampire')));
-  const moderate = OH.filterMovies(OH.MOVIES, { ...f, maxIntensity: 'moderate' }, []);
-  assert.ok(moderate.every((m) => m.intensity !== 'intense'));
+  const intenseOnly = OH.filterMovies(OH.MOVIES, { ...f, intensities: ['intense'] }, []);
+  assert.equal(intenseOnly.length, OH.MOVIES.filter((m) => m.intensity === 'intense').length);
+  assert.ok(intenseOnly.every((m) => m.intensity === 'intense'));
+  const lightOrIntense = OH.filterMovies(OH.MOVIES, { ...f, intensities: ['light', 'intense'] }, []);
+  assert.ok(lightOrIntense.length > intenseOnly.length && lightOrIntense.every((m) => m.intensity !== 'moderate'));
   const hidden = OH.filterMovies(OH.MOVIES, { ...f, hideWatched: true }, ['alien-1979']);
   assert.equal(hidden.length, 247);
 });
 
+test('legacy maxIntensity filters are converted to intensity selections', () => {
+  assert.deepEqual(OH.normalizeFilters({ maxIntensity: 'light' }).intensities, ['light']);
+  assert.deepEqual(OH.normalizeFilters({ maxIntensity: 'moderate' }).intensities, ['light', 'moderate']);
+  assert.deepEqual(OH.normalizeFilters({ maxIntensity: 'intense' }).intensities, []);
+  assert.equal('maxIntensity' in OH.normalizeFilters({ maxIntensity: 'light' }), false);
+});
+
 test('signature is canonical and only includes watched IDs when Hide watched is on', () => {
-  const a = OH.filterSignature({ search: ' Ghost ', genres: ['zombie', 'ghost'], maxIntensity: 'moderate', hideWatched: false }, ['b', 'a'], 'v1');
-  const b = OH.filterSignature({ search: 'ghost', genres: ['ghost', 'zombie'], maxIntensity: 'moderate', hideWatched: false }, [], 'v1');
+  const a = OH.filterSignature({ search: ' Ghost ', genres: ['zombie', 'ghost'], intensities: ['moderate', 'light'], hideWatched: false }, ['b', 'a'], 'v1');
+  const b = OH.filterSignature({ search: 'ghost', genres: ['ghost', 'zombie'], intensities: ['light', 'moderate'], hideWatched: false }, [], 'v1');
   assert.equal(a, b);
+  const all = OH.filterSignature({ ...OH.defaultFilters(), intensities: ['intense', 'light', 'moderate'] }, [], 'v1');
+  assert.equal(all, OH.filterSignature(OH.defaultFilters(), [], 'v1'), 'all three intensities == none selected');
   const c = OH.filterSignature({ ...OH.defaultFilters(), hideWatched: true }, ['b', 'a'], 'v1');
   const d = OH.filterSignature({ ...OH.defaultFilters(), hideWatched: true }, ['a', 'b'], 'v1');
   assert.equal(c, d);
@@ -289,7 +301,7 @@ test('zero, one, two and three eligible movies', () => {
   const f = OH.defaultFilters();
   assert.deepEqual(select(movies, '2026-10-01', null, { ...f, search: 'zzz' }).ids, []);
   assert.deepEqual(select(movies, '2026-10-01', null, { ...f, search: 'a' }).ids, ['a']);
-  assert.deepEqual(select(movies, '2026-10-01', null, { ...f, maxIntensity: 'moderate' }).ids.sort(), ['a', 'b']);
+  assert.deepEqual(select(movies, '2026-10-01', null, { ...f, intensities: ['light', 'moderate'] }).ids.sort(), ['a', 'b']);
   assert.deepEqual(select(movies, '2026-10-01', null, f).ids.sort(), ['a', 'b', 'c']);
 
   const state = freshState();
@@ -315,7 +327,7 @@ test('intensity mix uses available groups and never breaks filters', () => {
     assert.ok(ids.includes('m1'));
     assert.equal(ids.length, 3);
   }
-  const ids = select(movies, '2026-10-01', null, { ...OH.defaultFilters(), maxIntensity: 'light' }).ids;
+  const ids = select(movies, '2026-10-01', null, { ...OH.defaultFilters(), intensities: ['light'] }).ids;
   assert.deepEqual(ids.sort(), ['l1', 'l2']);
 });
 
@@ -416,7 +428,7 @@ test('loadState handles missing, corrupt, unsupported and blocked storage', () =
 test('sanitizeState drops unknown ids, bad dates, bad enums and oversize batches', () => {
   const raw = {
     schemaVersion: 1,
-    filters: { search: 42, genres: ['ghost', 'nope', 'ghost'], maxIntensity: 'extreme', hideWatched: 'yes' },
+    filters: { search: 42, genres: ['ghost', 'nope', 'ghost'], intensities: ['extreme', 'intense', 'intense'], hideWatched: 'yes' },
     sort: 'random',
     seasons: {
       '2026': {
@@ -434,7 +446,7 @@ test('sanitizeState drops unknown ids, bad dates, bad enums and oversize batches
   };
   const { state, problem } = OH.sanitizeState(raw);
   assert.equal(problem, null);
-  assert.deepEqual(state.filters, { search: '', genres: ['ghost'], maxIntensity: 'intense', hideWatched: false });
+  assert.deepEqual(state.filters, { search: '', genres: ['ghost'], intensities: ['intense'], hideWatched: false });
   assert.equal(state.sort, 'scheduled');
   assert.deepEqual(Object.keys(state.seasons), ['2026']);
   const s = state.seasons['2026'];
