@@ -67,8 +67,6 @@
         </svg>
         <span class="section__subtitle">Halloween season</span>
         <h1 id="oh-title">October Horror</h1>
-        <p>A horror movie for every night from October 1 through Halloween. Choose among the eight films scheduled for each night, or let the page suggest three personalized picks each day.</p>
-        <p class="oh-header__note">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
       </div>
     </section>
 
@@ -82,25 +80,7 @@
       <p id="oh-notice" class="oh-notice" role="status" hidden></p>
     </div>
 
-    <section class="section oh-section" aria-labelledby="oh-cal-heading">
-      <div class="container">
-        <h2 id="oh-cal-heading" class="oh-h2">October calendar</h2>
-        <p class="oh-lead"><span id="oh-cal-year"></span> &mdash; pick a night to browse its eight scheduled films. Browsing doesn&rsquo;t change your picks or history.</p>
-        <div class="oh-cal">
-          <div class="oh-cal__weekdays" aria-hidden="true">
-            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-          </div>
-          <ol id="oh-cal-days" class="oh-cal__days" aria-label="Days of October"></ol>
-        </div>
-        <div class="oh-day">
-          <h3 id="oh-day-heading" class="oh-day__heading"></h3>
-          <p class="oh-hint">Scheduled options &mdash; unaffected by filters.</p>
-          <ul id="oh-day-list" class="oh-list"></ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--alt oh-section" aria-labelledby="oh-filters-heading">
+    <section class="section section--alt oh-section oh-filters-section" aria-labelledby="oh-filters-heading">
       <div class="container">
         <h2 id="oh-filters-heading" class="oh-h2 oh-h2--toggle">
           <button type="button" id="oh-filters-toggle" class="oh-toggle" aria-expanded="true" aria-controls="oh-filters-body">
@@ -109,8 +89,8 @@
             <svg class="oh-toggle__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
           </button>
         </h2>
-        <p class="oh-lead">Filters narrow the full catalog and decide which movies can be recommended. They never change the scheduled calendar.</p>
         <div id="oh-filters-body" class="oh-filters__body">
+          <p class="oh-lead">Filters narrow the calendar and the full catalog, and decide which movies can be recommended.</p>
           <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
             <div class="oh-field oh-field--search">
               <label for="oh-search">Search titles</label>
@@ -150,56 +130,90 @@
       </div>
     </section>
 
-    <section class="section oh-section" aria-labelledby="oh-picks-heading">
+    <section class="section oh-section oh-views" aria-label="October Horror views">
       <div class="container">
-        <h2 id="oh-picks-heading" class="oh-h2">Tonight&rsquo;s picks</h2>
-        <p id="oh-picks-date" class="oh-lead"></p>
-        <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
-        <div class="oh-picks__bar">
-          <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
-          <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
+        <div class="oh-tabs" role="tablist" aria-label="October Horror views">
+          <button type="button" role="tab" id="oh-tab-calendar" class="oh-tab" aria-controls="oh-panel-calendar" aria-selected="true">Calendar</button>
+          <button type="button" role="tab" id="oh-tab-picks" class="oh-tab" aria-controls="oh-panel-picks" aria-selected="false" tabindex="-1">Tonight&rsquo;s picks</button>
+          <button type="button" role="tab" id="oh-tab-catalog" class="oh-tab" aria-controls="oh-panel-catalog" aria-selected="false" tabindex="-1">Full catalog</button>
+          <button type="button" role="tab" id="oh-tab-mine" class="oh-tab" aria-controls="oh-panel-mine" aria-selected="false" tabindex="-1">Want to watch <span id="oh-tab-mine-count" class="oh-tab__count">0</span></button>
+          <button type="button" role="tab" id="oh-tab-watched" class="oh-tab" aria-controls="oh-panel-watched" aria-selected="false" tabindex="-1">Watched <span id="oh-tab-watched-count" class="oh-tab__count">0</span></button>
         </div>
-        <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
-        <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
-        <div id="oh-picks-empty" class="oh-empty" hidden>
-          <p>Nothing matches these filters, so there are no picks to show.</p>
-          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-        </div>
-      </div>
-    </section>
 
-    <section class="section section--alt oh-section" aria-labelledby="oh-catalog-heading">
-      <div class="container">
-        <h2 id="oh-catalog-heading" class="oh-h2" tabindex="-1">Full catalog</h2>
-        <div class="oh-catalog__bar">
-          <p id="oh-catalog-count" class="oh-status" aria-live="polite"></p>
-          <a href="#oh-filters-heading" class="oh-jump">Edit filters</a>
-          <div class="oh-field oh-field--inline">
-            <label for="oh-sort">Sort by</label>
-            <select id="oh-sort">
-              <option value="scheduled">Scheduled day</option>
-              <option value="title">Title</option>
-              <option value="year">Year</option>
-              <option value="intensity">Intensity</option>
-            </select>
+        <div id="oh-panel-calendar" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-calendar" tabindex="0">
+          <h2 id="oh-cal-heading" class="oh-sr">October calendar</h2>
+          <p class="oh-lead"><span id="oh-cal-year"></span> &mdash; pick a night to browse its scheduled films. Browsing doesn&rsquo;t change your picks or history.</p>
+          <div class="oh-cal">
+            <div class="oh-cal__weekdays" aria-hidden="true">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <ol id="oh-cal-days" class="oh-cal__days" aria-label="Days of October"></ol>
+          </div>
+          <div class="oh-day">
+            <h3 id="oh-day-heading" class="oh-day__heading" tabindex="-1"></h3>
+            <p id="oh-day-status" class="oh-status" aria-live="polite"></p>
+            <ul id="oh-day-list" class="oh-list"></ul>
+            <div id="oh-day-empty" class="oh-empty" hidden>
+              <p>None of this night&rsquo;s films match your filters.</p>
+              <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+            </div>
           </div>
         </div>
-        <ul id="oh-catalog-list" class="oh-list"></ul>
-        <div id="oh-catalog-empty" class="oh-empty" hidden>
-          <p>No movies match these filters. Try a shorter search, more genres, or a higher intensity.</p>
-          <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
-        </div>
-      </div>
-    </section>
 
-    <section class="section oh-section" aria-labelledby="oh-mine-heading">
-      <div class="container">
-        <h2 id="oh-mine-heading" class="oh-h2" tabindex="-1">My October</h2>
-        <p class="oh-lead"><span id="oh-mine-season"></span> &middot; <span id="oh-watched-count"></span></p>
-        <h3 class="oh-h3">Want to watch</h3>
-        <ul id="oh-mine-list" class="oh-list"></ul>
-        <p id="oh-mine-empty" class="oh-empty" hidden>Nothing here yet. Tick &ldquo;Want to watch&rdquo; on any movie to add it.</p>
+        <div id="oh-panel-picks" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-picks" tabindex="0" hidden>
+          <h2 id="oh-picks-heading" class="oh-sr">Tonight&rsquo;s picks</h2>
+          <p id="oh-picks-date" class="oh-lead"></p>
+          <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
+          <div class="oh-picks__bar">
+            <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
+            <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
+          </div>
+          <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
+          <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
+          <div id="oh-picks-empty" class="oh-empty" hidden>
+            <p>Nothing matches these filters, so there are no picks to show.</p>
+            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+          </div>
+        </div>
+
+        <div id="oh-panel-catalog" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-catalog" tabindex="0" hidden>
+          <h2 id="oh-catalog-heading" class="oh-sr" tabindex="-1">Full catalog</h2>
+          <div class="oh-catalog__bar">
+            <p id="oh-catalog-count" class="oh-status" aria-live="polite"></p>
+            <a href="#oh-filters-heading" class="oh-jump">Edit filters</a>
+            <div class="oh-field oh-field--inline">
+              <label for="oh-sort">Sort by</label>
+              <select id="oh-sort">
+                <option value="scheduled">Scheduled day</option>
+                <option value="title">Title</option>
+                <option value="year">Year</option>
+                <option value="intensity">Intensity</option>
+              </select>
+            </div>
+          </div>
+          <ul id="oh-catalog-list" class="oh-list"></ul>
+          <div id="oh-catalog-empty" class="oh-empty" hidden>
+            <p>No movies match these filters. Try a shorter search, more genres, or another intensity.</p>
+            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+          </div>
+        </div>
+
+        <div id="oh-panel-mine" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-mine" tabindex="0" hidden>
+          <h2 id="oh-mine-heading" class="oh-sr" tabindex="-1">Want to watch</h2>
+          <p class="oh-lead">Season <span class="oh-season-year"></span> &middot; movies you ticked &ldquo;Want to watch&rdquo;.</p>
+          <ul id="oh-mine-list" class="oh-list"></ul>
+          <p id="oh-mine-empty" class="oh-empty" hidden>Nothing here yet. Open a movie&rsquo;s details and tick &ldquo;Want to watch&rdquo; to add it.</p>
+        </div>
+
+        <div id="oh-panel-watched" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-watched" tabindex="0" hidden>
+          <h2 id="oh-watched-heading" class="oh-sr" tabindex="-1">Watched</h2>
+          <p class="oh-lead">Season <span class="oh-season-year"></span> &middot; <span id="oh-watched-count"></span></p>
+          <ul id="oh-watched-list" class="oh-list"></ul>
+          <p id="oh-watched-empty" class="oh-empty" hidden>Nothing watched yet. Open a movie&rsquo;s details and tick &ldquo;Watched&rdquo; to log it.</p>
+        </div>
+
         <div class="oh-reset">
+          <p class="oh-hint">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
           <button type="button" id="oh-reset" class="btn btn--ghost">Reset my October</button>
           <p class="oh-hint">Clears this season&rsquo;s recommendation history and watch lists, and restores default filters.</p>
           <p id="oh-mine-status" class="oh-status" aria-live="polite"></p>
