@@ -1077,12 +1077,18 @@ var OCTOBER_HORROR_MOVIES = [
 
     function renderAll() {
       root.querySelectorAll('.oh-season-year').forEach(function (node) { node.textContent = String(today.year); });
-      renderPicks();
-      renderRandom();
-      renderCalendar();
-      renderCatalog();
-      renderMine();
-      renderWatched();
+      // Keep each section independent so one missing node cannot blank the page.
+      [
+        renderCalendar,
+        renderPicks,
+        renderRandom,
+        renderCatalog,
+        renderMine,
+        renderWatched
+      ].forEach(function (render) {
+        try { render(); }
+        catch (err) { if (win.console && win.console.error) win.console.error(err); }
+      });
     }
 
     function syncTrackInputs(kind, id, value) {
