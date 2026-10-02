@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0c0912">
   <title>October Horror &mdash; Alvaro Quintana</title>
-  <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar with eight scheduled options per night, daily picks, and personal watch tracking.">
+  <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar with eight scheduled options per night, tonight&rsquo;s picks, a filtered randomizer, and personal watch tracking.">
   <link rel="stylesheet" href="../css/style.css">
   <noscript><style>.oh-section { display: none; }</style></noscript>
   <script src="../js/main.js" defer></script>
@@ -90,7 +90,7 @@
           </button>
         </h2>
         <div id="oh-filters-body" class="oh-filters__body">
-          <p class="oh-lead">Filters narrow the calendar and the full catalog, and decide which movies can be recommended.</p>
+          <p class="oh-lead">Filters narrow the calendar and the full catalog, and shape tonight&rsquo;s picks and the Randomizer.</p>
           <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
             <div class="oh-field oh-field--search">
               <label for="oh-search">Search titles</label>
@@ -135,6 +135,7 @@
         <div class="oh-tabs" role="tablist" aria-label="October Horror views">
           <button type="button" role="tab" id="oh-tab-calendar" class="oh-tab" aria-controls="oh-panel-calendar" aria-selected="true">Calendar</button>
           <button type="button" role="tab" id="oh-tab-picks" class="oh-tab" aria-controls="oh-panel-picks" aria-selected="false" tabindex="-1">Tonight&rsquo;s picks</button>
+          <button type="button" role="tab" id="oh-tab-random" class="oh-tab" aria-controls="oh-panel-random" aria-selected="false" tabindex="-1">Randomizer</button>
           <button type="button" role="tab" id="oh-tab-mine" class="oh-tab" aria-controls="oh-panel-mine" aria-selected="false" tabindex="-1">Want to watch <span id="oh-tab-mine-count" class="oh-tab__count">0</span></button>
           <button type="button" role="tab" id="oh-tab-watched" class="oh-tab" aria-controls="oh-panel-watched" aria-selected="false" tabindex="-1">Watched <span id="oh-tab-watched-count" class="oh-tab__count">0</span></button>
         </div>
@@ -162,15 +163,25 @@
         <div id="oh-panel-picks" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-picks" tabindex="0" hidden>
           <h2 id="oh-picks-heading" class="oh-sr">Tonight&rsquo;s picks</h2>
           <p id="oh-picks-date" class="oh-lead"></p>
-          <p class="oh-hint">Picks come from the whole catalog using your filters. A movie recommended on an earlier October night this season isn&rsquo;t recommended again until fewer than three unseen matches remain.</p>
-          <div class="oh-picks__bar">
-            <button type="button" id="oh-update" class="btn btn--primary">Generate picks</button>
-            <p id="oh-picks-pending" class="oh-pending" aria-live="polite"></p>
-          </div>
+          <p class="oh-hint">Chosen from tonight&rsquo;s calendar films that match your filters, mixing intensities. They stay the same all night.</p>
           <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
           <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
           <div id="oh-picks-empty" class="oh-empty" hidden>
-            <p>Nothing matches these filters, so there are no picks to show.</p>
+            <p>None of tonight&rsquo;s films match your filters.</p>
+            <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
+          </div>
+        </div>
+
+        <div id="oh-panel-random" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-random" tabindex="0" hidden>
+          <h2 id="oh-random-heading" class="oh-sr">Randomizer</h2>
+          <p class="oh-lead">Three random films from the whole catalog that match your filters.</p>
+          <div class="oh-picks__bar">
+            <button type="button" id="oh-shuffle" class="btn btn--primary">Shuffle</button>
+            <p id="oh-random-status" class="oh-status" aria-live="polite"></p>
+          </div>
+          <ul id="oh-random-list" class="oh-list oh-list--picks"></ul>
+          <div id="oh-random-empty" class="oh-empty" hidden>
+            <p>Nothing matches these filters, so there&rsquo;s nothing to draw from.</p>
             <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
           </div>
         </div>
@@ -192,7 +203,7 @@
         <div class="oh-reset">
           <p class="oh-hint">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
           <button type="button" id="oh-reset" class="btn btn--ghost">Reset my October</button>
-          <p class="oh-hint">Clears this season&rsquo;s recommendation history and watch lists, and restores default filters.</p>
+          <p class="oh-hint">Clears this season&rsquo;s Want to watch and Watched lists, and restores default filters.</p>
           <p id="oh-mine-status" class="oh-status" aria-live="polite"></p>
         </div>
       </div>

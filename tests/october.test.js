@@ -66,16 +66,17 @@ function mini(specs) {
   return specs.map(([id, intensity]) => ({ id, title: id, year: 2000, calendarDay: 1, intensity, genres: ['ghost'], blurb: 'x' }));
 }
 
-function select(movies, dateKey, season, filters) {
+function select(movies, seed, filters) {
   return OH.selectPicks({
     movies,
     filters: filters || OH.defaultFilters(),
     watchedIds: [],
-    dateKey,
-    season: season || { days: {} },
+    seed,
     catalogVersion: 'test'
   });
 }
+
+const byId = Object.fromEntries(OH.MOVIES.map((m) => [m.id, m]));
 
 function memoryStorage(initial) {
   const data = Object.assign({}, initial);
@@ -223,96 +224,75 @@ test('signature is canonical and only includes watched IDs when Hide watched is 
 
 // ── Selection ──
 
-test('identical inputs give identical picks; input order and sort do not matter', () => {
-  const season = { days: {} };
-  const one = select(OH.MOVIES, '2026-10-05', season);
-  const two = select(OH.MOVIES.slice().reverse(), '2026-10-05', season);
+test('identical inputs give identical picks; input order does not matter', () => {
+  const one = select(OH.MOVIES, 'seed-1');
+  const two = select(OH.MOVIES.slice().reverse(), 'seed-1');
   assert.deepEqual(one.ids, two.ids);
   assert.equal(new Set(one.ids).size, 3);
-
-  const s1 = freshState();
-  s1.sort = 'title';
-  const s2 = freshState();
-  s2.sort = 'intensity';
-  assert.deepEqual(OH.resolvePicks(s1, october(2026, 5), 'auto').ids, OH.resolvePicks(s2, october(2026, 5), 'auto').ids);
+  assert.equal(one.eligibleCount, 248);
 });
 
-test('31 simulated October nights with default filters never repeat and always mix intensities', () => {
-  const state = freshState();
+test('tonight’s picks come from that night’s calendar, mix intensities and never repeat across October', () => {
   const seen = new Set();
   for (let day = 1; day <= 31; day++) {
-    const result = OH.resolvePicks(state, october(2026, day), 'auto');
+    const result = OH.tonightPicks(october(2026, day), OH.defaultFilters(), []);
     assert.equal(result.ids.length, 3);
+    assert.equal(result.eligibleCount, 8);
     result.ids.forEach((id) => {
+      assert.equal(byId[id].calendarDay, day, `${id} is scheduled for day ${day}`);
       assert.ok(!seen.has(id), `day ${day} repeated ${id}`);
       seen.add(id);
     });
-    const levels = new Set(result.ids.map((id) => OH.MOVIES.find((m) => m.id === id).intensity));
-    assert.equal(levels.size, 3, `day ${day} intensity mix`);
-    assert.equal(OH.batchNotes(state, october(2026, day), result.ids).repeated, false);
+    const levels = new Set(result.ids.map((id) => byId[id].intensity));
+    const available = new Set(OH.MOVIES.filter((m) => m.calendarDay === day).map((m) => m.intensity));
+    assert.equal(levels.size, Math.min(3, available.size), `day ${day} intensity mix`);
   }
-  assert.equal(Object.keys(OH.getSeason(state, 2026).days).length, 31);
 });
 
-test('A → B → A restores A, and every committed batch counts as shown', () => {
-  const state = freshState();
-  const day = october(2026, 3);
-  const a = OH.resolvePicks(state, day, 'auto');
-  state.filters = OH.normalizeFilters({ genres: ['vampire'] });
-  const b = OH.resolvePicks(state, day, 'update');
-  state.filters = OH.defaultFilters();
-  const a2 = OH.resolvePicks(state, day, 'update');
-  assert.deepEqual(a2.ids, a.ids);
-  const record = OH.getSeason(state, 2026).days['2026-10-03'];
-  assert.equal(Object.keys(record.batches).length, 2);
-  assert.equal(record.activeSignature, a.signature);
-  [...a.ids, ...b.ids].forEach((id) => assert.ok(record.shownIds.includes(id)));
+test('tonight’s picks are stable for a date and follow the filters', () => {
+  const morning = OH.localDateInfo(new Date(2026, 9, 13, 8));
+  const night = OH.localDateInfo(new Date(2026, 9, 13, 23, 30));
+  const f = OH.defaultFilters();
+  assert.deepEqual(OH.tonightPicks(morning, f, []).ids, OH.tonightPicks(night, f, []).ids);
 
-  const again = OH.resolvePicks(state, day, 'update');
-  assert.deepEqual(again.ids, a.ids, 'repeated Update with unchanged inputs restores');
+  const intense = OH.tonightPicks(night, { ...f, intensities: ['intense'] }, []);
+  const day13Intense = OH.MOVIES.filter((m) => m.calendarDay === 13 && m.intensity === 'intense').length;
+  assert.equal(intense.eligibleCount, day13Intense);
+  assert.ok(intense.ids.every((id) => byId[id].calendarDay === 13 && byId[id].intensity === 'intense'));
 
-  const next = OH.resolvePicks(state, october(2026, 4), 'auto');
-  next.ids.forEach((id) => assert.ok(!a.ids.includes(id) && !b.ids.includes(id)));
+  const hidden = OH.tonightPicks(night, { ...f, hideWatched: true }, OH.MOVIES.filter((m) => m.calendarDay === 13).map((m) => m.id).slice(0, 6));
+  assert.equal(hidden.eligibleCount, 2);
+  assert.equal(hidden.ids.length, 2);
+
+  assert.deepEqual(OH.tonightPicks(night, { ...f, search: 'no such film' }, []).ids, []);
+  assert.deepEqual(OH.tonightPicks(OH.localDateInfo(new Date(2026, 10, 3, 12)), f, []), { ids: [], eligibleCount: 0 });
 });
 
-test('changing filters without Update creates no history', () => {
-  const state = freshState();
-  OH.resolvePicks(state, october(2026, 3), 'auto');
-  const before = JSON.stringify(state.seasons);
-  state.filters = OH.normalizeFilters({ search: 'gh' });
-  assert.equal(JSON.stringify(state.seasons), before);
-  const restored = OH.resolvePicks(state, october(2026, 3), 'auto');
-  assert.equal(JSON.stringify(state.seasons), before, 'auto mode restores active batch, ignoring pending filters');
-  assert.notEqual(restored.signature, OH.filterSignature(state.filters, [], OH.CATALOG_VERSION));
-});
+test('randomizer draws from the whole filtered catalog and changes with the seed', () => {
+  const f = OH.defaultFilters();
+  assert.deepEqual(OH.randomPicks(f, [], 'a').ids, OH.randomPicks(f, [], 'a').ids);
+  const draws = new Set();
+  for (let i = 0; i < 20; i++) draws.add(OH.randomPicks(f, [], String(i)).ids.join());
+  assert.ok(draws.size > 15, 'different seeds give different draws');
+  const days = new Set();
+  for (let i = 0; i < 20; i++) OH.randomPicks(f, [], 'd' + i).ids.forEach((id) => days.add(byId[id].calendarDay));
+  assert.ok(days.size > 10, 'not limited to one night');
 
-test('marking a pick watched does not rebuild the cached batch', () => {
-  const state = freshState();
-  const day = october(2026, 7);
-  state.filters.hideWatched = true;
-  const first = OH.resolvePicks(state, day, 'auto');
-  OH.setTracked(state, 2026, 'watched', first.ids[0], true);
-  const reloaded = OH.resolvePicks(state, day, 'auto');
-  assert.deepEqual(reloaded.ids, first.ids);
+  const vampires = OH.randomPicks({ ...f, genres: ['vampire'] }, [], 'x');
+  assert.ok(vampires.ids.every((id) => byId[id].genres.includes('vampire')));
+  const watched = OH.MOVIES.filter((m) => m.genres.includes('vampire')).map((m) => m.id).slice(1);
+  const one = OH.randomPicks({ ...f, genres: ['vampire'], hideWatched: true }, watched, 'x');
+  assert.equal(one.ids.length, 1);
+  assert.ok(!watched.includes(one.ids[0]));
 });
 
 test('zero, one, two and three eligible movies', () => {
   const movies = mini([['a', 'light'], ['b', 'moderate'], ['c', 'intense']]);
   const f = OH.defaultFilters();
-  assert.deepEqual(select(movies, '2026-10-01', null, { ...f, search: 'zzz' }).ids, []);
-  assert.deepEqual(select(movies, '2026-10-01', null, { ...f, search: 'a' }).ids, ['a']);
-  assert.deepEqual(select(movies, '2026-10-01', null, { ...f, intensities: ['light', 'moderate'] }).ids.sort(), ['a', 'b']);
-  assert.deepEqual(select(movies, '2026-10-01', null, f).ids.sort(), ['a', 'b', 'c']);
-
-  const state = freshState();
-  state.filters = OH.normalizeFilters({ search: 'Hausu' });
-  const one = OH.resolvePicks(state, october(2026, 9), 'auto');
-  assert.deepEqual(one.ids, ['house-hausu-1977']);
-  assert.deepEqual(OH.batchNotes(state, october(2026, 9), one.ids), { repeated: false, short: true, empty: false });
-  state.filters = OH.normalizeFilters({ search: 'no such film' });
-  const none = OH.resolvePicks(state, october(2026, 9), 'update');
-  assert.deepEqual(none.ids, []);
-  assert.equal(OH.batchNotes(state, october(2026, 9), none.ids).empty, true);
+  assert.deepEqual(select(movies, 's', { ...f, search: 'zzz' }).ids, []);
+  assert.deepEqual(select(movies, 's', { ...f, search: 'a' }).ids, ['a']);
+  assert.deepEqual(select(movies, 's', { ...f, intensities: ['light', 'moderate'] }).ids.sort(), ['a', 'b']);
+  assert.deepEqual(select(movies, 's', f).ids.sort(), ['a', 'b', 'c']);
 });
 
 test('intensity mix uses available groups and never breaks filters', () => {
@@ -327,33 +307,8 @@ test('intensity mix uses available groups and never breaks filters', () => {
     assert.ok(ids.includes('m1'));
     assert.equal(ids.length, 3);
   }
-  const ids = select(movies, '2026-10-01', null, { ...OH.defaultFilters(), intensities: ['light'] }).ids;
+  const ids = select(movies, 's', { ...OH.defaultFilters(), intensities: ['light'] }).ids;
   assert.deepEqual(ids.sort(), ['l1', 'l2']);
-});
-
-test('exhaustion falls back to least-recently-shown movies, oldest first', () => {
-  const movies = mini([['a', 'light'], ['b', 'light'], ['c', 'light'], ['d', 'light'], ['e', 'light']]);
-  const season = { days: {} };
-  OH.commitBatch(season, '2026-10-01', 's', ['a', 'b']);
-  OH.commitBatch(season, '2026-10-02', 's', ['c']);
-  OH.commitBatch(season, '2026-10-03', 's', ['a', 'd']);
-  // last shown: b=01, c=02, a=03, d=03; e never shown.
-  const result = select(movies, '2026-10-04', season);
-  assert.equal(result.ids[0], 'e');
-  assert.deepEqual(result.ids.slice(1), ['b', 'c']);
-  assert.equal(new Set(result.ids).size, 3);
-
-  const noRepeatsYet = select(movies, '2026-10-02', season);
-  assert.ok(!noRepeatsYet.ids.includes('a') && !noRepeatsYet.ids.includes('b'));
-});
-
-test('future-dated and same-day records do not count as earlier history', () => {
-  const movies = mini([['a', 'light'], ['b', 'moderate'], ['c', 'intense']]);
-  const season = { days: {} };
-  OH.commitBatch(season, '2026-10-20', 's', ['a', 'b', 'c']);
-  OH.commitBatch(season, '2026-10-10', 'other', ['a']);
-  assert.deepEqual(OH.lastShownBefore(season, '2026-10-10'), {});
-  assert.equal(select(movies, '2026-10-10', season).ids.length, 3);
 });
 
 // ── Dates ──
@@ -385,27 +340,13 @@ test('local date parts are used, including around UTC boundaries', () => {
   assert.equal(OH.octoberWeekday(2027, 1), 5, 'Oct 1 2027 is a Friday');
 });
 
-test('outside October previews never write history', () => {
-  const state = freshState();
-  const nov = OH.localDateInfo(new Date(2026, 10, 3, 12));
-  const sep = OH.localDateInfo(new Date(2026, 8, 20, 12));
-  const p1 = OH.resolvePicks(state, nov, 'update');
-  const p2 = OH.resolvePicks(state, sep, 'auto');
-  assert.equal(p1.preview, true);
-  assert.equal(p2.preview, true);
-  assert.equal(p1.ids.length, 3);
-  assert.deepEqual(state.seasons, {});
-});
-
 test('seasons are partitioned by year', () => {
   const state = freshState();
-  OH.resolvePicks(state, october(2026, 1), 'auto');
   OH.setTracked(state, 2026, 'watched', 'alien-1979', true);
-  const y27 = OH.resolvePicks(state, october(2027, 1), 'auto');
-  assert.equal(y27.ids.length, 3);
   assert.deepEqual(OH.getSeason(state, 2027).watchedIds, []);
+  OH.setTracked(state, 2027, 'selected', 'scream-1996', true);
   OH.resetSeason(state, 2027);
-  assert.ok(state.seasons['2026']);
+  assert.deepEqual(OH.getSeason(state, 2026).watchedIds, ['alien-1979']);
   assert.ok(!state.seasons['2027']);
 });
 
@@ -425,7 +366,7 @@ test('loadState handles missing, corrupt, unsupported and blocked storage', () =
   assert.equal(OH.saveState(full, OH.defaultState()), false);
 });
 
-test('sanitizeState drops unknown ids, bad dates, bad enums and oversize batches', () => {
+test('sanitizeState drops unknown ids, bad enums and old recommendation history', () => {
   const raw = {
     schemaVersion: 1,
     filters: { search: 42, genres: ['ghost', 'nope', 'ghost'], intensities: ['extreme', 'intense', 'intense'], hideWatched: 'yes' },
@@ -434,12 +375,7 @@ test('sanitizeState drops unknown ids, bad dates, bad enums and oversize batches
       '2026': {
         selectedIds: ['alien-1979', 'not-a-movie', 'alien-1979'],
         watchedIds: 'oops',
-        days: {
-          '2026-10-02': { activeSignature: 'sig', batches: { sig: ['alien-1979', 'ghost-id'], big: ['a', 'b', 'c', 'd'] }, shownIds: ['scream-1996'] },
-          '2026-10-32': { batches: { s: ['alien-1979'] } },
-          '2025-10-01': { batches: { s: ['alien-1979'] } },
-          '2026-11-01': { batches: { s: ['alien-1979'] } }
-        }
+        days: { '2026-10-02': { activeSignature: 'sig', batches: { sig: ['alien-1979'] }, shownIds: ['scream-1996'] } }
       },
       'abcd': {}
     }
@@ -448,37 +384,27 @@ test('sanitizeState drops unknown ids, bad dates, bad enums and oversize batches
   assert.equal(problem, null);
   assert.deepEqual(state.filters, { search: '', genres: ['ghost'], intensities: ['intense'], hideWatched: false });
   assert.equal(state.sort, 'scheduled');
-  assert.deepEqual(Object.keys(state.seasons), ['2026']);
-  const s = state.seasons['2026'];
-  assert.deepEqual(s.selectedIds, ['alien-1979']);
-  assert.deepEqual(s.watchedIds, []);
-  assert.deepEqual(Object.keys(s.days), ['2026-10-02']);
-  const day = s.days['2026-10-02'];
-  assert.deepEqual(day.batches, { sig: ['alien-1979'] });
-  assert.equal(day.activeSignature, 'sig');
-  assert.deepEqual(day.shownIds.sort(), ['alien-1979', 'scream-1996']);
+  assert.deepEqual(state.seasons, { '2026': { selectedIds: ['alien-1979'], watchedIds: [] } });
 });
 
-test('save/load round trip keeps active picks, pending filters and tracking; other keys untouched', () => {
+test('save/load round trip keeps filters and tracking; other keys untouched', () => {
   const storage = memoryStorage({ unrelated: 'keep me' });
   let { state } = OH.loadState(() => storage);
-  const day = october(2026, 12);
-  const active = OH.resolvePicks(state, day, 'auto');
-  OH.setTracked(state, 2026, 'selected', active.ids[0], true);
+  OH.setTracked(state, 2026, 'selected', 'alien-1979', true);
+  OH.setTracked(state, 2026, 'watched', 'scream-1996', true);
   state.filters = OH.normalizeFilters({ search: 'night' });
   assert.ok(OH.saveState(storage, state));
   state = OH.loadState(() => storage).state;
   assert.equal(state.filters.search, 'night');
-  assert.deepEqual(OH.resolvePicks(state, day, 'auto').ids, active.ids);
-  assert.deepEqual(OH.getSeason(state, 2026).selectedIds, [active.ids[0]]);
+  assert.deepEqual(OH.getSeason(state, 2026), { selectedIds: ['alien-1979'], watchedIds: ['scream-1996'] });
   assert.equal(storage.data.unrelated, 'keep me');
   assert.deepEqual(Object.keys(storage.data).sort(), ['octoberHorror', 'unrelated']);
 });
 
 test('resetSeason clears only that season and restores filter/sort defaults', () => {
   const state = freshState();
-  OH.resolvePicks(state, october(2025, 5), 'auto');
-  OH.resolvePicks(state, october(2026, 5), 'auto');
+  OH.setTracked(state, 2025, 'watched', 'alien-1979', true);
+  OH.setTracked(state, 2026, 'watched', 'alien-1979', true);
   state.filters = OH.normalizeFilters({ search: 'x', hideWatched: true });
   state.sort = 'year';
   OH.resetSeason(state, 2026);

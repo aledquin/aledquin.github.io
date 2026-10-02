@@ -1203,15 +1203,12 @@ p {
   margin-bottom: 1rem;
 }
 
-.oh-pending {
-  margin: 0;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--color-primary-dark);
+.oh-status:empty {
+  display: none;
 }
 
-.oh-pending:empty {
-  display: none;
+.oh-picks__bar .oh-status {
+  margin: 0;
 }
 
 .oh-empty {
@@ -1413,10 +1410,23 @@ p {
 .oh-movie--light { border-top-color: var(--oh-light); }
 .oh-movie--moderate { border-top-color: var(--oh-moderate); }
 
-.oh-movie__title {
-  font-size: 1.15rem;
+.oh-movie__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
   margin-bottom: 0.5rem;
+}
+
+.oh-movie__title {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 1.15rem;
+  margin: 0;
   overflow-wrap: anywhere;
+}
+
+.oh-movie__name {
+  color: var(--color-text);
 }
 
 .oh-movie__labels {
@@ -1433,11 +1443,11 @@ p {
 .oh-movie__more {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 0.3rem;
-  align-self: flex-start;
   min-height: 2.75rem;
-  margin-top: auto;
-  padding: 0.5rem 0 0;
+  margin: -0.5rem -0.25rem -0.5rem 0;
+  padding: 0.5rem 0.25rem;
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 600;
@@ -1467,33 +1477,31 @@ p {
 }
 
 .oh-movie__body {
-  padding-top: 0.25rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-light);
 }
 
-.oh-movie__imdb {
-  color: var(--color-text);
-  text-decoration: underline;
-  text-decoration-color: var(--color-border);
-  text-underline-offset: 0.2em;
+.oh-movie__refs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.82rem;
 }
 
-.oh-movie__imdb:hover {
-  color: var(--color-primary-dark);
-  text-decoration-color: currentColor;
-}
-
-.oh-ref-cue {
+.oh-movie__imdb,
+.oh-movie__rt {
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
-  margin-left: 0.4rem;
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  gap: 0.25rem;
+  min-height: 1.5rem;
   color: var(--color-primary-dark);
-  vertical-align: middle;
-  white-space: nowrap;
+}
+
+.oh-movie__imdb:hover,
+.oh-movie__rt:hover {
+  color: var(--color-primary);
 }
 
 .oh-ext {
@@ -1514,19 +1522,6 @@ p {
   margin-bottom: 0.25rem;
   font-size: 0.82rem;
   color: var(--color-text-secondary);
-}
-
-.oh-movie__rt {
-  margin-bottom: 0.6rem;
-  font-size: 0.82rem;
-}
-
-.oh-movie__rt a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  min-height: 1.5rem;
-  color: var(--color-primary-dark);
 }
 
 .oh-movie__blurb {
