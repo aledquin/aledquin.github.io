@@ -269,6 +269,18 @@ p {
   }
 }
 
+/* Tablet widths: keep every desktop nav item on one line */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav__list {
+    gap: 0;
+  }
+
+  .nav__link {
+    padding: 0.5rem 0.55rem;
+    font-size: 0.85rem;
+  }
+}
+
 /* ── Hero ─────────────────────────────────────────────────── */
 
 .hero {
