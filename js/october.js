@@ -265,7 +265,6 @@ var OCTOBER_HORROR_MOVIES = [
   var PICK_COUNT = 3;
   var FILMS_PER_DAY = 8;
   var MAX_SEARCH_LENGTH = 100;
-  var MAX_BATCHES_PER_DAY = 200;
 
   var GENRES = [
     'supernatural', 'ghost', 'possession', 'slasher', 'creature', 'vampire', 'zombie', 'psychological',
@@ -313,13 +312,6 @@ var OCTOBER_HORROR_MOVIES = [
       key: year + '-' + pad2(month) + '-' + pad2(day),
       inOctober: month === 10
     };
-  }
-
-  function isOctoberKeyForSeason(key, seasonYear) {
-    var match = /^(\d{4})-10-(\d{2})$/.exec(key);
-    if (!match || Number(match[1]) !== Number(seasonYear)) return false;
-    var day = Number(match[2]);
-    return day >= 1 && day <= 31;
   }
 
   function octoberWeekday(year, day) {
@@ -468,123 +460,63 @@ var OCTOBER_HORROR_MOVIES = [
     return list;
   }
 
-  // ── Recommendation history & selection ───────────────────────
-
-  function lastShownBefore(season, dateKey) {
-    var last = {};
-    var days = (season && season.days) || {};
-    Object.keys(days).forEach(function (key) {
-      if (key >= dateKey) return;
-      (days[key].shownIds || []).forEach(function (id) {
-        if (!last[id] || key > last[id]) last[id] = key;
-      });
-    });
-    return last;
-  }
+  // ── Selection ────────────────────────────────────────────────
+  // One film from each available intensity first, then the rest at random.
+  // The seed plus the filter signature fully determine the result.
 
   function selectPicks(options) {
     var movies = options.movies || MOVIES;
     var byId = {};
     movies.forEach(function (m) { byId[m.id] = m; });
-    var filters = options.filters;
-    var signature = filterSignature(filters, options.watchedIds, options.catalogVersion);
-    var eligible = filterMovies(movies, filters, options.watchedIds).map(function (m) { return m.id; }).sort();
-    var last = lastShownBefore(options.season, options.dateKey);
-    var rng = mulberry32(hashString(options.dateKey + '|' + signature));
-    var fresh = eligible.filter(function (id) { return !last[id]; });
+    var signature = filterSignature(options.filters, options.watchedIds, options.catalogVersion);
+    var eligible = filterMovies(movies, options.filters, options.watchedIds).map(function (m) { return m.id; }).sort();
+    var rng = mulberry32(hashString(options.seed + '|' + signature));
+    var groups = {};
+    INTENSITIES.forEach(function (level) {
+      groups[level] = seededShuffle(eligible.filter(function (id) { return byId[id].intensity === level; }), rng);
+    });
     var picks = [];
+    seededShuffle(INTENSITIES.filter(function (level) { return groups[level].length; }), rng)
+      .slice(0, PICK_COUNT)
+      .forEach(function (level) { picks.push(groups[level][0]); });
+    seededShuffle(eligible.filter(function (id) { return picks.indexOf(id) === -1; }), rng).forEach(function (id) {
+      if (picks.length < PICK_COUNT) picks.push(id);
+    });
+    return { ids: picks, eligibleCount: eligible.length };
+  }
 
-    if (fresh.length >= PICK_COUNT) {
-      var groups = {};
-      INTENSITIES.forEach(function (level) {
-        groups[level] = seededShuffle(fresh.filter(function (id) { return byId[id].intensity === level; }), rng);
-      });
-      var levels = seededShuffle(INTENSITIES.filter(function (level) { return groups[level].length; }), rng);
-      levels.slice(0, PICK_COUNT).forEach(function (level) { picks.push(groups[level][0]); });
-      seededShuffle(fresh.filter(function (id) { return picks.indexOf(id) === -1; }), rng).forEach(function (id) {
-        if (picks.length < PICK_COUNT) picks.push(id);
-      });
-    } else {
-      picks = seededShuffle(fresh, rng);
-      var shuffled = seededShuffle(eligible.filter(function (id) { return last[id]; }), rng);
-      var position = {};
-      shuffled.forEach(function (id, i) { position[id] = i; });
-      shuffled.sort(function (a, b) {
-        if (last[a] !== last[b]) return last[a] < last[b] ? -1 : 1;
-        return position[a] - position[b];
-      });
-      shuffled.forEach(function (id) {
-        if (picks.length < PICK_COUNT) picks.push(id);
-      });
-    }
+  function moviesOnDay(day) {
+    return MOVIES.filter(function (m) { return m.calendarDay === day; });
+  }
 
-    return { ids: picks, signature: signature, eligibleCount: eligible.length };
+  // Tonight's picks come only from tonight's scheduled films and stay fixed for the date.
+  function tonightPicks(today, filters, watchedIds) {
+    if (!today.inOctober) return { ids: [], eligibleCount: 0 };
+    return selectPicks({
+      movies: moviesOnDay(today.day),
+      filters: filters,
+      watchedIds: watchedIds,
+      seed: 'tonight|' + today.key,
+      catalogVersion: CATALOG_VERSION
+    });
+  }
+
+  function randomPicks(filters, watchedIds, seed) {
+    return selectPicks({
+      movies: MOVIES,
+      filters: filters,
+      watchedIds: watchedIds,
+      seed: 'random|' + seed,
+      catalogVersion: CATALOG_VERSION
+    });
   }
 
   function getSeason(state, year, create) {
     var key = String(year);
     if (!state.seasons[key] && create) {
-      state.seasons[key] = { selectedIds: [], watchedIds: [], days: {} };
+      state.seasons[key] = { selectedIds: [], watchedIds: [] };
     }
-    return state.seasons[key] || { selectedIds: [], watchedIds: [], days: {} };
-  }
-
-  function commitBatch(season, dateKey, signature, ids) {
-    var day = season.days[dateKey];
-    if (!day) {
-      day = { activeSignature: null, batches: {}, shownIds: [] };
-      season.days[dateKey] = day;
-    }
-    day.batches[signature] = ids.slice();
-    day.activeSignature = signature;
-    day.shownIds = uniqueStrings(day.shownIds.concat(ids));
-    return day;
-  }
-
-  function currentSignature(state, year) {
-    return filterSignature(state.filters, getSeason(state, year, false).watchedIds, CATALOG_VERSION);
-  }
-
-  // mode "auto": restore today's active batch, or generate one if none exists.
-  // mode "update": restore the batch cached for the current filters, or generate it.
-  // Outside October nothing is committed; the caller keeps the preview in memory.
-  function resolvePicks(state, today, mode) {
-    var season = getSeason(state, today.year, today.inOctober);
-    var signature = currentSignature(state, today.year);
-    if (today.inOctober) {
-      var day = season.days[today.key];
-      if (mode === 'auto' && day && day.activeSignature && day.batches[day.activeSignature]) {
-        return { ids: day.batches[day.activeSignature].slice(), signature: day.activeSignature, preview: false, created: false };
-      }
-      if (day && day.batches[signature]) {
-        day.activeSignature = signature;
-        return { ids: day.batches[signature].slice(), signature: signature, preview: false, created: false };
-      }
-    }
-    var result = selectPicks({
-      movies: MOVIES,
-      filters: state.filters,
-      watchedIds: season.watchedIds,
-      dateKey: today.key,
-      season: season,
-      catalogVersion: CATALOG_VERSION
-    });
-    if (today.inOctober) commitBatch(season, today.key, result.signature, result.ids);
-    return { ids: result.ids, signature: result.signature, preview: !today.inOctober, created: true };
-  }
-
-  function activeSignatureFor(state, today) {
-    var day = getSeason(state, today.year, false).days[today.key];
-    return day && day.activeSignature && day.batches[day.activeSignature] ? day.activeSignature : null;
-  }
-
-  function batchNotes(state, today, ids) {
-    var last = lastShownBefore(getSeason(state, today.year, false), today.key);
-    return {
-      repeated: ids.some(function (id) { return !!last[id]; }),
-      short: ids.length < PICK_COUNT,
-      empty: ids.length === 0
-    };
+    return state.seasons[key] || { selectedIds: [], watchedIds: [] };
   }
 
   function setTracked(state, year, kind, id, value) {
@@ -622,23 +554,6 @@ var OCTOBER_HORROR_MOVIES = [
     return Array.isArray(list) ? uniqueStrings(list).filter(function (id) { return MOVIE_BY_ID[id]; }) : [];
   }
 
-  function sanitizeDay(raw) {
-    if (!isPlainObject(raw)) return null;
-    var batches = {};
-    var union = knownIds(raw.shownIds);
-    if (isPlainObject(raw.batches)) {
-      Object.keys(raw.batches).slice(0, MAX_BATCHES_PER_DAY).forEach(function (signature) {
-        var ids = raw.batches[signature];
-        if (signature.length > 20000 || !Array.isArray(ids) || ids.length > PICK_COUNT) return;
-        batches[signature] = knownIds(ids);
-        union = uniqueStrings(union.concat(batches[signature]));
-      });
-    }
-    var active = typeof raw.activeSignature === 'string' && batches[raw.activeSignature] ? raw.activeSignature : null;
-    if (!union.length && !Object.keys(batches).length) return null;
-    return { activeSignature: active, batches: batches, shownIds: union };
-  }
-
   function sanitizeState(raw) {
     if (!isPlainObject(raw)) return { state: defaultState(), problem: 'corrupt' };
     if (raw.schemaVersion !== SCHEMA_VERSION) return { state: defaultState(), problem: 'unsupported' };
@@ -649,15 +564,7 @@ var OCTOBER_HORROR_MOVIES = [
       Object.keys(raw.seasons).forEach(function (year) {
         var season = raw.seasons[year];
         if (!/^\d{4}$/.test(year) || !isPlainObject(season)) return;
-        var clean = { selectedIds: knownIds(season.selectedIds), watchedIds: knownIds(season.watchedIds), days: {} };
-        if (isPlainObject(season.days)) {
-          Object.keys(season.days).forEach(function (key) {
-            if (!isOctoberKeyForSeason(key, year)) return;
-            var day = sanitizeDay(season.days[key]);
-            if (day) clean.days[key] = day;
-          });
-        }
-        state.seasons[year] = clean;
+        state.seasons[year] = { selectedIds: knownIds(season.selectedIds), watchedIds: knownIds(season.watchedIds) };
       });
     }
     return { state: state, problem: null };
@@ -803,20 +710,24 @@ var OCTOBER_HORROR_MOVIES = [
     var card = el(doc, 'article', 'oh-movie oh-movie--' + movie.intensity);
     card.setAttribute('data-movie-id', movie.id);
 
+    var n = ++uid;
+    var bodyId = 'oh-' + opts.context + '-' + movie.id + '-body-' + n;
+    var expanded = !!opts.expanded;
+
+    var top = el(doc, 'div', 'oh-movie__top');
     var heading = el(doc, opts.headingLevel || 'h3', 'oh-movie__title');
-    var imdb = el(doc, 'a', 'oh-movie__imdb');
-    imdb.href = links.imdb.href;
-    imdb.target = '_blank';
-    imdb.rel = 'noopener noreferrer';
-    imdb.appendChild(el(doc, 'span', 'oh-movie__name', movie.title));
-    var imdbCue = el(doc, 'span', 'oh-ref-cue', links.imdb.direct ? 'View on IMDb' : 'Search IMDb');
-    imdbCue.appendChild(externalIcon(doc));
-    imdb.appendChild(imdbCue);
-    imdb.setAttribute('aria-label', links.imdb.direct
-      ? movie.title + ': view on IMDb (opens in a new tab)'
-      : movie.title + ': search IMDb for ' + movieLabel(movie) + ' (opens in a new tab)');
-    heading.appendChild(imdb);
-    card.appendChild(heading);
+    heading.appendChild(el(doc, 'span', 'oh-movie__name', movie.title));
+    top.appendChild(heading);
+
+    var toggle = el(doc, 'button', 'oh-movie__more');
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    toggle.setAttribute('aria-controls', bodyId);
+    toggle.appendChild(el(doc, 'span', 'oh-movie__more-label', 'Details'));
+    toggle.appendChild(hiddenText(doc, ': ' + movieLabel(movie)));
+    toggle.appendChild(svgIcon(doc, [['path', { d: 'm6 9 6 6 6-6' }]], 'oh-movie__chevron', '0 0 24 24'));
+    top.appendChild(toggle);
+    card.appendChild(top);
 
     var labels = el(doc, 'div', 'oh-movie__labels');
     var tags = el(doc, 'ul', 'oh-tags');
@@ -825,18 +736,6 @@ var OCTOBER_HORROR_MOVIES = [
     labels.appendChild(tags);
     labels.appendChild(intensityBadge(doc, movie.intensity));
     card.appendChild(labels);
-
-    var n = ++uid;
-    var bodyId = 'oh-' + opts.context + '-' + movie.id + '-body-' + n;
-    var expanded = !!opts.expanded;
-    var toggle = el(doc, 'button', 'oh-movie__more');
-    toggle.type = 'button';
-    toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-    toggle.setAttribute('aria-controls', bodyId);
-    toggle.appendChild(el(doc, 'span', 'oh-movie__more-label', 'Details'));
-    toggle.appendChild(hiddenText(doc, ': ' + movieLabel(movie)));
-    toggle.appendChild(svgIcon(doc, [['path', { d: 'm6 9 6 6 6-6' }]], 'oh-movie__chevron', '0 0 24 24'));
-    card.appendChild(toggle);
 
     var body = el(doc, 'div', 'oh-movie__body');
     body.id = bodyId;
@@ -848,15 +747,27 @@ var OCTOBER_HORROR_MOVIES = [
     meta.appendChild(el(doc, 'span', '', 'Scheduled Oct ' + movie.calendarDay));
     body.appendChild(meta);
 
-    var rtLine = el(doc, 'p', 'oh-movie__rt');
-    var rt = el(doc, 'a', '', links.rt.direct ? 'Rotten Tomatoes' : 'Search Rotten Tomatoes');
+    var refs = el(doc, 'p', 'oh-movie__refs');
+    var imdb = el(doc, 'a', 'oh-movie__imdb');
+    imdb.href = links.imdb.href;
+    imdb.target = '_blank';
+    imdb.rel = 'noopener noreferrer';
+    imdb.appendChild(doc.createTextNode(links.imdb.direct ? 'View on IMDb' : 'Search IMDb'));
+    imdb.appendChild(externalIcon(doc));
+    imdb.setAttribute('aria-label', links.imdb.direct
+      ? movie.title + ': view on IMDb (opens in a new tab)'
+      : movie.title + ': search IMDb for ' + movieLabel(movie) + ' (opens in a new tab)');
+    refs.appendChild(imdb);
+
+    var rt = el(doc, 'a', 'oh-movie__rt');
     rt.href = links.rt.href;
     rt.target = '_blank';
     rt.rel = 'noopener noreferrer';
+    rt.appendChild(doc.createTextNode(links.rt.direct ? 'Rotten Tomatoes' : 'Search Rotten Tomatoes'));
     rt.appendChild(externalIcon(doc));
     rt.appendChild(hiddenText(doc, ' for ' + movieLabel(movie) + ' (opens in a new tab)'));
-    rtLine.appendChild(rt);
-    body.appendChild(rtLine);
+    refs.appendChild(rt);
+    body.appendChild(refs);
 
     body.appendChild(el(doc, 'p', 'oh-movie__blurb', movie.blurb));
 
@@ -902,8 +813,8 @@ var OCTOBER_HORROR_MOVIES = [
     var today = localDateInfo(now());
     var selectedDay = today.inOctober ? today.day : 1;
     var followToday = today.inOctober;
-    var preview = null;
-    var current = { ids: [], signature: null };
+    var random = deps.random || function () { return win.Math.random(); };
+    var randomSeed = String(random());
     var expandedCards = {};
     var $ = function (sel) { return root.querySelector(sel); };
 
@@ -928,23 +839,6 @@ var OCTOBER_HORROR_MOVIES = [
     function tracked() {
       var s = season();
       return { selected: s.selectedIds, watched: s.watchedIds };
-    }
-
-    function loadPicks(mode) {
-      var result = resolvePicks(state, today, mode);
-      current = { ids: result.ids, signature: result.signature };
-      if (result.preview) preview = current;
-      if (result.created && today.inOctober) persist();
-    }
-
-    function initialPicks() {
-      preview = null;
-      if (today.inOctober) loadPicks('auto');
-      else loadPicks('update');
-    }
-
-    function activeSignature() {
-      return today.inOctober ? activeSignatureFor(state, today) : (preview && preview.signature);
     }
 
     // ── Filters form ──
@@ -1064,40 +958,39 @@ var OCTOBER_HORROR_MOVIES = [
     }
 
     function renderPicks() {
-      var heading = $('#oh-picks-heading');
-      var intro = $('#oh-picks-date');
-      var button = $('#oh-update');
-      var matching = filterMovies(MOVIES, state.filters, season().watchedIds).length;
-      var active = activeSignature();
-      var pending = active !== null && active !== currentSignature(state, today.year);
-      heading.textContent = today.inOctober ? 'Tonight’s picks' : 'Preview picks';
-      $('#oh-tab-picks').textContent = heading.textContent;
-      intro.textContent = today.inOctober
-        ? formatLocalDate(today)
-        : formatLocalDate(today) + ' — it isn’t October, so these previews are never saved to your October history.';
-      button.textContent = active ? 'Update picks' : 'Generate picks';
-
-      var messages = [];
-      messages.push(matching + (matching === 1 ? ' movie matches' : ' movies match') + ' your filters.');
-      var notes = batchNotes(state, today, current.ids);
-      if (notes.short && !notes.empty) messages.push('Fewer than three movies match. Try loosening your filters.');
-      if (notes.repeated) messages.push('Some recommendations repeat because fewer than three unseen movies match your filters.');
-      $('#oh-picks-status').textContent = messages.join(' ');
-      var pendingBox = $('#oh-picks-pending');
-      pendingBox.textContent = !pending ? '' : state.filters.hideWatched && sameExceptWatched(active)
-        ? 'Your watched list changed while Hide watched is on — update picks to refresh.'
-        : 'Filters changed — update picks.';
-
-      renderCards($('#oh-picks-list'), current.ids, 'pick', 'h3');
-      $('#oh-picks-empty').hidden = !notes.empty;
+      var heading = $('#oh-picks-date');
+      var result = tonightPicks(today, state.filters, season().watchedIds);
+      var status;
+      if (!today.inOctober) {
+        heading.textContent = formatLocalDate(today);
+        status = 'Tonight’s picks come from the calendar from October 1 to 31. Until then, try the Randomizer.';
+      } else {
+        heading.textContent = formatLocalDate(today) + ' — three of tonight’s scheduled films.';
+        status = filtersActive()
+          ? result.eligibleCount + ' of tonight’s ' + FILMS_PER_DAY + ' films match your filters.'
+          : '';
+        if (result.eligibleCount > 0 && result.eligibleCount < PICK_COUNT) {
+          status += ' Fewer than three match, so fewer picks are shown.';
+        }
+      }
+      $('#oh-picks-status').textContent = status.trim();
+      renderCards($('#oh-picks-list'), result.ids, 'pick', 'h3');
+      $('#oh-picks-empty').hidden = !today.inOctober || result.ids.length !== 0;
     }
 
-    function sameExceptWatched(active) {
-      var a = JSON.parse(active);
-      var b = JSON.parse(currentSignature(state, today.year));
-      delete a.w;
-      delete b.w;
-      return JSON.stringify(a) === JSON.stringify(b);
+    function renderRandom() {
+      var result = randomPicks(state.filters, season().watchedIds, randomSeed);
+      var status = result.eligibleCount + (result.eligibleCount === 1 ? ' movie matches' : ' movies match') + ' your filters.';
+      if (result.eligibleCount > 0 && result.eligibleCount < PICK_COUNT) status += ' Fewer than three match, so fewer picks are shown.';
+      $('#oh-random-status').textContent = status;
+      renderCards($('#oh-random-list'), result.ids, 'random', 'h3');
+      $('#oh-random-empty').hidden = result.ids.length !== 0;
+      $('#oh-shuffle').disabled = result.eligibleCount <= PICK_COUNT;
+    }
+
+    function shuffle() {
+      randomSeed = String(random());
+      renderRandom();
     }
 
     function renderCalendar() {
@@ -1185,6 +1078,7 @@ var OCTOBER_HORROR_MOVIES = [
     function renderAll() {
       root.querySelectorAll('.oh-season-year').forEach(function (node) { node.textContent = String(today.year); });
       renderPicks();
+      renderRandom();
       renderCalendar();
       renderCatalog();
       renderMine();
@@ -1206,6 +1100,7 @@ var OCTOBER_HORROR_MOVIES = [
       renderCalendar();
       renderCatalog();
       renderPicks();
+      renderRandom();
     }
 
     var FOCUS_AFTER_REMOVAL = {
@@ -1228,6 +1123,7 @@ var OCTOBER_HORROR_MOVIES = [
         renderCalendar();
         renderCatalog();
         renderPicks();
+        renderRandom();
       }
       if (listSel && !input.isConnected) $(FOCUS_AFTER_REMOVAL[listSel]).focus();
     }
@@ -1239,26 +1135,18 @@ var OCTOBER_HORROR_MOVIES = [
       renderCalendar();
       renderCatalog();
       renderPicks();
-    }
-
-    function updatePicks() {
-      loadPicks('update');
-      persist();
-      renderPicks();
+      renderRandom();
     }
 
     function resetMyOctober() {
-      var ok = confirmFn('Reset your October ' + today.year + '? This clears this season’s recommendation history, ' +
-        'Want to watch and Watched lists, and restores default filters. Other seasons are kept.');
+      var ok = confirmFn('Reset your October ' + today.year + '? This clears this season’s Want to watch and ' +
+        'Watched lists, and restores default filters. Other seasons are kept.');
       if (!ok) return;
       resetSeason(state, today.year);
       syncFilterControls();
-      initialPicks();
       persist();
       renderAll();
-      $('#oh-mine-status').textContent = today.inOctober
-        ? 'Your October was reset. Recommendations restart from today with no history.'
-        : 'Your October was reset.';
+      $('#oh-mine-status').textContent = 'Your October was reset.';
     }
 
     function checkDate() {
@@ -1269,7 +1157,6 @@ var OCTOBER_HORROR_MOVIES = [
         selectedDay = today.inOctober ? today.day : selectedDay;
       }
       followToday = today.inOctober && selectedDay === today.day;
-      initialPicks();
       renderAll();
     }
 
@@ -1297,11 +1184,8 @@ var OCTOBER_HORROR_MOVIES = [
       else if (target.matches('.oh-movie__more')) toggleCard(target);
       else if (target.matches('.oh-toggle')) {
         setSectionOpen(target, target.getAttribute('aria-expanded') !== 'true');
-      } else if (target.matches('.oh-clear')) {
-        clearFilters();
-        if (target.closest('#oh-picks-empty')) updatePicks();
-      }
-      else if (target.id === 'oh-update') updatePicks();
+      } else if (target.matches('.oh-clear')) clearFilters();
+      else if (target.id === 'oh-shuffle') shuffle();
       else if (target.id === 'oh-reset') resetMyOctober();
       else if (target.matches('.oh-cal__day')) {
         selectedDay = Number(target.getAttribute('data-day'));
@@ -1325,7 +1209,6 @@ var OCTOBER_HORROR_MOVIES = [
     setSectionOpen($('#oh-catalog-toggle'), false);
     syncFilterControls();
     if (loaded.problem) showNotice(loaded.problem);
-    initialPicks();
     renderAll();
     root.classList.add('oh--ready');
 
@@ -1354,11 +1237,9 @@ var OCTOBER_HORROR_MOVIES = [
     hashString: hashString,
     mulberry32: mulberry32,
     seededShuffle: seededShuffle,
-    lastShownBefore: lastShownBefore,
     selectPicks: selectPicks,
-    commitBatch: commitBatch,
-    resolvePicks: resolvePicks,
-    batchNotes: batchNotes,
+    tonightPicks: tonightPicks,
+    randomPicks: randomPicks,
     getSeason: getSeason,
     setTracked: setTracked,
     resetSeason: resetSeason,
