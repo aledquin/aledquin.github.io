@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0c0912">
   <title>October Horror &mdash; Alvaro Quintana</title>
-  <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar with eight scheduled options per night, tonight&rsquo;s picks, a filtered randomizer, and personal watch tracking.">
+  <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar loaded from movies.json, with tonight&rsquo;s picks, a filtered randomizer, and personal watch tracking.">
   <link rel="stylesheet" href="../css/style.css">
   <noscript><style>.oh-section { display: none; }</style></noscript>
   <script src="../js/main.js" defer></script>
@@ -94,7 +94,7 @@
           <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
             <div class="oh-field oh-field--search">
               <label for="oh-search">Search titles</label>
-              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false">
+              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Title, alias, genre, or country focus">
             </div>
 
             <fieldset class="oh-fieldset">
@@ -116,16 +116,16 @@
               <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
             </div>
           </form>
-        </div>
 
-        <div class="oh-legend" aria-labelledby="oh-legend-title">
-          <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
-          <ul class="oh-legend__list">
-            <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
-            <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
-            <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
-          </ul>
-          <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
+          <div class="oh-legend" aria-labelledby="oh-legend-title">
+            <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
+            <ul class="oh-legend__list">
+              <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
+              <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
+              <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
+            </ul>
+            <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
+          </div>
         </div>
       </div>
     </section>

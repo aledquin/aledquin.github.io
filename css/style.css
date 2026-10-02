@@ -1120,7 +1120,24 @@ p {
 }
 
 .oh-section.section {
-  padding: 3rem 0;
+  padding: 2rem 0;
+}
+
+.oh-filters-section.section {
+  padding: 1.25rem 0;
+}
+
+.oh-views.section {
+  padding-top: 0.75rem;
+  padding-bottom: 1.5rem;
+}
+
+.oh-views .oh-lead {
+  margin-bottom: 0.35rem;
+}
+
+.oh-day__heading {
+  margin-top: 0;
 }
 
 .oh-h2 {
@@ -1530,6 +1547,13 @@ p {
   margin-bottom: 0.75rem;
 }
 
+.oh-movie__note {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: -0.35rem 0 0.75rem;
+  color: var(--color-text-secondary);
+}
+
 .oh-tags {
   display: flex;
   flex-wrap: wrap;
@@ -1559,7 +1583,7 @@ p {
 
 .oh-cal {
   max-width: 560px;
-  margin: 1.25rem 0 2rem;
+  margin: 0.75rem 0 1.25rem;
 }
 
 .oh-cal__weekdays,
@@ -1631,8 +1655,8 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--color-border-light);
 }
 
@@ -1823,11 +1847,15 @@ p {
 .oh-dark .oh-header {
   position: relative;
   overflow: hidden;
-  padding-top: 2.5rem;
+  padding: 1rem 0 0.75rem;
   background:
     radial-gradient(ellipse at 50% 120%, rgba(120, 72, 190, 0.35), transparent 60%),
     linear-gradient(180deg, #07050b 0%, #120c1c 70%, var(--color-bg) 100%);
   border-bottom: 1px solid var(--color-border-light);
+}
+
+.oh-dark .oh-header h1 {
+  margin-bottom: 0;
 }
 
 .oh-dark .oh-header .container {
@@ -1837,9 +1865,9 @@ p {
 
 .oh-scene {
   display: block;
-  width: min(100%, 420px);
+  width: min(100%, 220px);
   height: auto;
-  margin: -1rem auto 0.5rem;
+  margin: -0.25rem auto 0;
 }
 
 .oh-scene__moon { fill: #f4e7c8; }
@@ -1906,6 +1934,14 @@ p {
 
 .oh-dark .oh-tag {
   background: rgba(199, 166, 255, 0.12);
+}
+
+.oh-tag--focus {
+  color: var(--color-primary-dark);
+}
+
+.oh-tag--score {
+  color: var(--color-text-secondary);
 }
 
 .oh-dark .oh-intensity__mark {
