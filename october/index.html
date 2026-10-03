@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0c0912">
   <title>October Horror &mdash; Alvaro Quintana</title>
-  <meta name="description" content="October Horror &mdash; a 31-night horror movie calendar loaded from movies.json, with tonight&rsquo;s picks, a filtered randomizer, and personal watch tracking.">
+  <meta name="description" content="October Horror &mdash; a streaming horror calendar with four movies per night, service filters, tonight&rsquo;s picks, a randomizer, and personal watch tracking.">
   <link rel="stylesheet" href="../css/style.css">
   <noscript><style>.oh-section { display: none; }</style></noscript>
   <script src="../js/main.js" defer></script>
@@ -111,6 +111,11 @@
               </div>
             </fieldset>
 
+            <fieldset class="oh-fieldset">
+              <legend>Streaming available <span class="oh-hint">(none selected means all)</span></legend>
+              <div id="oh-services" class="oh-chips"></div>
+            </fieldset>
+
             <div class="oh-filters__row">
               <label class="oh-check oh-chip" for="oh-hide-watched"><input type="checkbox" id="oh-hide-watched" name="hideWatched"> Hide watched</label>
               <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
@@ -142,7 +147,7 @@
 
         <div id="oh-panel-calendar" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-calendar" tabindex="0">
           <h2 id="oh-cal-heading" class="oh-sr">October calendar</h2>
-          <p class="oh-lead"><span id="oh-cal-year"></span> &mdash; pick a night to browse its scheduled films. Browsing doesn&rsquo;t change your picks or history.</p>
+          <p class="oh-lead"><span id="oh-cal-year"></span> &mdash; pick a night to browse its scheduled films (four per covered night). Browsing doesn&rsquo;t change your picks or history.</p>
           <div class="oh-cal">
             <div class="oh-cal__weekdays" aria-hidden="true">
               <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
@@ -154,7 +159,7 @@
             <p id="oh-day-theme" class="oh-day__theme"></p>
             <p id="oh-day-status" class="oh-status" aria-live="polite"></p>
             <div id="oh-day-picks-wrap">
-              <h4 id="oh-day-picks-heading" class="oh-day__section-title">Top picks</h4>
+              <h4 id="oh-day-picks-heading" class="oh-day__section-title">Scheduled films</h4>
               <ul id="oh-day-list" class="oh-list oh-list--picks" aria-labelledby="oh-day-picks-heading"></ul>
             </div>
             <div id="oh-day-more-wrap" class="oh-day__more" hidden>
@@ -179,7 +184,7 @@
         <div id="oh-panel-picks" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-picks" tabindex="0" hidden>
           <h2 id="oh-picks-heading" class="oh-sr">Tonight&rsquo;s picks</h2>
           <p id="oh-picks-date" class="oh-lead"></p>
-          <p class="oh-hint">Chosen from tonight&rsquo;s calendar films that match your filters, mixing intensities. They stay the same all night.</p>
+          <p class="oh-hint">Chosen from tonight&rsquo;s four calendar films that match your filters, mixing intensities. They stay the same all night.</p>
           <p id="oh-picks-status" class="oh-status" aria-live="polite"></p>
           <ul id="oh-picks-list" class="oh-list oh-list--picks"></ul>
           <div id="oh-picks-empty" class="oh-empty" hidden>
@@ -190,7 +195,7 @@
 
         <div id="oh-panel-random" class="oh-panel" role="tabpanel" aria-labelledby="oh-tab-random" tabindex="0" hidden>
           <h2 id="oh-random-heading" class="oh-sr">Randomizer</h2>
-          <p class="oh-lead">Three random films from the whole catalog that match your filters.</p>
+          <p class="oh-lead">Four random films from the whole catalog that match your filters.</p>
           <div class="oh-picks__bar">
             <button type="button" id="oh-shuffle" class="btn btn--primary">Shuffle</button>
             <p id="oh-random-status" class="oh-status" aria-live="polite"></p>
@@ -255,7 +260,7 @@
           </div>
           <ul id="oh-catalog-list" class="oh-list"></ul>
           <div id="oh-catalog-empty" class="oh-empty" hidden>
-            <p>No movies match these filters. Try a shorter search, more genres, or another intensity.</p>
+            <p>No movies match these filters. Try a shorter search, another streaming service, more genres, or another intensity.</p>
             <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
           </div>
         </div>
