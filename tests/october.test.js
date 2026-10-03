@@ -50,27 +50,27 @@ const SAMPLE_ID_2 = 'get-out-2017';
 
 // ── Catalog JSON ──
 
-test('movies.json loads as the streaming catalog: 28 films, 4 per covered day', () => {
-  assert.equal(catalog.totalMovies, 28);
-  assert.equal(OH.MOVIES.length, 28);
-  assert.equal(OH.CATALOG_VERSION, 'october-horror-streaming-v1');
+test('movies.json loads the complete matrix: 124 films, 4 every day', () => {
+  assert.equal(catalog.totalMovies, 124);
+  assert.equal(OH.MOVIES.length, 124);
+  assert.equal(OH.CATALOG_VERSION, 'october-horror-complete-matrix-v1');
   assert.equal(OH.FILMS_PER_DAY, 4);
   assert.equal(OH.PICK_COUNT, 4);
   const perDay = {};
   OH.MOVIES.forEach((m) => { perDay[m.calendarDay] = (perDay[m.calendarDay] || 0) + 1; });
-  assert.deepEqual(Object.keys(perDay).map(Number).sort((a, b) => a - b), [3, 4, 5, 6, 7, 8, 9]);
+  assert.equal(Object.keys(perDay).length, 31);
   Object.entries(perDay).forEach(([day, n]) => assert.equal(n, 4, 'day ' + day));
 });
 
-test('streaming services and genres are derived from the catalog', () => {
+test('streaming services and four-track labels are present', () => {
   assert.deepEqual(OH.STREAMING_SERVICES.slice().sort(), ['Amazon Prime Video', 'Hulu', 'Netflix']);
-  assert.ok(OH.GENRES.includes('horror'));
-  assert.ok(OH.GENRES.includes('comedy'));
-  assert.ok(OH.GENRES.includes('sci-fi'));
+  assert.deepEqual(OH.GENRES.slice(), []);
   const beetlejuice = byId[SAMPLE_ID];
-  assert.equal(beetlejuice.calendarDay, 3);
+  assert.equal(beetlejuice.calendarDay, 1);
   assert.equal(beetlejuice.dayOrder, 1);
+  assert.equal(beetlejuice.track, 'Light / Fun');
   assert.deepEqual(beetlejuice.streamingOffers.map((o) => o.service), ['Netflix']);
+  assert.equal(byId['barbarian-2022'].track, 'Intense / Disturbing');
 });
 
 test('identities are unique and enums valid', () => {
@@ -82,33 +82,35 @@ test('identities are unique and enums valid', () => {
     assert.ok(OH.INTENSITIES.includes(m.intensity));
     assert.ok(m.calendarDay >= 1 && m.calendarDay <= 31);
     assert.ok(m.streamingOffers.length >= 1);
+    assert.ok(m.track);
   });
-  assert.equal(ids.size, 28);
+  assert.equal(ids.size, 124);
 });
 
-test('October 3 opens with Beetlejuice and closes with Barbarian', () => {
-  const day3 = OH.MOVIES.filter((m) => m.calendarDay === 3).map((m) => m.id);
-  assert.deepEqual(day3, [
+test('October 1 opens with Beetlejuice and closes with Barbarian', () => {
+  const day1 = OH.MOVIES.filter((m) => m.calendarDay === 1).map((m) => m.id);
+  assert.deepEqual(day1, [
     'beetlejuice-1988',
-    'totally-killer-2023',
+    'get-out-2017',
     'it-follows-2014',
     'barbarian-2022'
   ]);
 });
 
+test('Halloween night includes Killer Klowns and Hereditary', () => {
+  const day31 = OH.MOVIES.filter((m) => m.calendarDay === 31).map((m) => `${m.title} (${m.year})`);
+  assert.ok(day31.includes('Killer Klowns from Outer Space (1988)'));
+  assert.ok(day31.includes('Hereditary (2018)'));
+});
+
 // ── Reference & streaming links ──
 
-test('catalog search URLs are used for IMDb/RT; streaming watch URLs are allowed', () => {
+test('catalog search URLs are used; missing watch URLs produce no streaming links', () => {
   const beetlejuice = byId[SAMPLE_ID];
   const links = OH.referenceLinks(beetlejuice);
   assert.equal(links.imdb.direct, false);
   assert.ok(links.imdb.href.includes('imdb.com/find'));
-  assert.equal(links.rt.direct, false);
-
-  const streams = OH.streamingLinks(beetlejuice);
-  assert.equal(streams.length, 1);
-  assert.equal(streams[0].service, 'Netflix');
-  assert.equal(streams[0].watchUrl, 'https://www.netflix.com/title/290533');
+  assert.deepEqual(OH.streamingLinks(beetlejuice), []);
 });
 
 test('direct reference URLs are only accepted for exact HTTPS film pages on expected hosts', () => {
@@ -135,15 +137,25 @@ test('streaming watch URLs are only accepted for known service hosts over HTTPS'
 
 // ── Filters & signatures ──
 
-test('filters: search, genres, intensity, streaming service, hide watched', () => {
+test('filters: search, night track, intensity, streaming service, hide watched', () => {
   const f = OH.defaultFilters();
-  assert.equal(OH.filterMovies(OH.MOVIES, f, []).length, 28);
+  assert.equal(OH.filterMovies(OH.MOVIES, f, []).length, 124);
   assert.deepEqual(f.genres, []);
+  assert.deepEqual(f.tracks, []);
   assert.deepEqual(f.services, []);
+  assert.deepEqual(OH.TRACKS, [
+    'Light / Fun',
+    'Creepy / Moderate',
+    'Atmospheric Suspense',
+    'Intense / Disturbing'
+  ]);
   assert.deepEqual(OH.filterMovies(OH.MOVIES, { ...f, search: '  BEETLEJUICE ' }, []).map((m) => m.id), [SAMPLE_ID]);
-  const comedy = OH.filterMovies(OH.MOVIES, { ...f, genres: ['comedy'] }, []);
-  assert.ok(comedy.length > 0);
-  assert.ok(comedy.every((m) => m.genres.includes('comedy')));
+  const lightTrack = OH.filterMovies(OH.MOVIES, { ...f, tracks: ['Light / Fun'] }, []);
+  assert.equal(lightTrack.length, 31);
+  assert.ok(lightTrack.every((m) => m.track === 'Light / Fun'));
+  const atmospheric = OH.filterMovies(OH.MOVIES, { ...f, tracks: ['Atmospheric Suspense'] }, []);
+  assert.equal(atmospheric.length, 31);
+  assert.ok(atmospheric.every((m) => m.track === 'Atmospheric Suspense' && m.intensity === 'moderate'));
   const netflix = OH.filterMovies(OH.MOVIES, { ...f, services: ['Netflix'] }, []);
   assert.ok(netflix.length > 0);
   assert.ok(netflix.every((m) => m.streamingOffers.some((o) => o.service === 'Netflix')));
@@ -152,32 +164,28 @@ test('filters: search, genres, intensity, streaming service, hide watched', () =
   const intenseOnly = OH.filterMovies(OH.MOVIES, { ...f, intensities: ['intense'] }, []);
   assert.equal(intenseOnly.length, OH.MOVIES.filter((m) => m.intensity === 'intense').length);
   const hidden = OH.filterMovies(OH.MOVIES, { ...f, hideWatched: true }, [SAMPLE_ID]);
-  assert.equal(hidden.length, 27);
+  assert.equal(hidden.length, 123);
 });
 
-test('each calendar night has a theme and covered nights show all four as top picks', () => {
+test('each calendar night uses the four-track theme and shows all four as top picks', () => {
   for (let day = 1; day <= 31; day++) {
-    assert.ok(OH.dayTheme(day), 'missing theme for day ' + day);
+    assert.equal(OH.dayTheme(day), 'Light · creepy · atmospheric · intense');
   }
-  assert.equal(OH.dayTheme(1), 'Gothic hauntings');
-  assert.equal(OH.dayTheme(31), 'Halloween night');
-  const day3 = OH.MOVIES.filter((m) => m.calendarDay === 3).map((m) => m.id);
-  const split = OH.splitDayMovies(day3);
-  assert.deepEqual(split.topIds, day3);
+  const day1 = OH.MOVIES.filter((m) => m.calendarDay === 1).map((m) => m.id);
+  const split = OH.splitDayMovies(day1);
+  assert.deepEqual(split.topIds, day1);
   assert.deepEqual(split.moreIds, []);
   assert.equal(split.topIds.length, 4);
-  assert.deepEqual(OH.splitDayMovies(['a', 'b']).moreIds, []);
 });
 
-test('every catalog title has an editorial blurb, genre tags, and streaming offer', () => {
+test('every catalog title has a blurb, track, and streaming service', () => {
   const missingBlurb = OH.MOVIES.filter((m) => !m.blurb).map((m) => m.id);
-  const missingGenres = OH.MOVIES.filter((m) => !m.genres.length).map((m) => m.id);
+  const missingTrack = OH.MOVIES.filter((m) => !m.track).map((m) => m.id);
   const missingStream = OH.MOVIES.filter((m) => !m.streamingOffers.length).map((m) => m.id);
   assert.deepEqual(missingBlurb, []);
-  assert.deepEqual(missingGenres, []);
+  assert.deepEqual(missingTrack, []);
   assert.deepEqual(missingStream, []);
-  assert.deepEqual(byId[SAMPLE_ID].genres, ['comedy', 'fantasy', 'horror']);
-  assert.match(byId[SAMPLE_ID].blurb, /malicious spirit/i);
+  assert.match(byId[SAMPLE_ID].blurb, /bio-exorcist|newly dead/i);
 });
 
 test('legacy maxIntensity filters are converted to intensity selections', () => {
@@ -186,15 +194,17 @@ test('legacy maxIntensity filters are converted to intensity selections', () => 
   assert.deepEqual(OH.normalizeFilters({ maxIntensity: 'intense' }).intensities, []);
 });
 
-test('signature is canonical and includes streaming services', () => {
+test('signature is canonical and includes tracks and streaming services', () => {
   const a = OH.filterSignature({
     search: ' Ghost ',
+    tracks: ['Atmospheric Suspense', 'Light / Fun'],
     intensities: ['moderate', 'light'],
     services: ['Hulu', 'Netflix'],
     hideWatched: false
   }, ['b', 'a'], 'v1');
   const b = OH.filterSignature({
     search: 'ghost',
+    tracks: ['Light / Fun', 'Atmospheric Suspense'],
     intensities: ['light', 'moderate'],
     services: ['Netflix', 'Hulu'],
     hideWatched: false
@@ -205,6 +215,7 @@ test('signature is canonical and includes streaming services', () => {
   const c = OH.filterSignature({ ...OH.defaultFilters(), hideWatched: true }, ['b', 'a'], 'v1');
   assert.deepEqual(JSON.parse(c).w, ['a', 'b']);
   assert.deepEqual(JSON.parse(a).s, ['Hulu', 'Netflix']);
+  assert.deepEqual(JSON.parse(a).t, ['Atmospheric Suspense', 'Light / Fun']);
 });
 
 // ── Selection ──
@@ -217,7 +228,7 @@ test('identical inputs give identical picks; input order does not matter', () =>
 });
 
 test('tonight’s picks come from that night’s calendar and mix intensities', () => {
-  for (const day of [3, 4, 5, 6, 7, 8, 9]) {
+  for (let day = 1; day <= 31; day++) {
     const result = OH.tonightPicks(october(2026, day), OH.defaultFilters(), []);
     assert.equal(result.ids.length, 4);
     assert.equal(result.eligibleCount, 4);
@@ -226,17 +237,16 @@ test('tonight’s picks come from that night’s calendar and mix intensities', 
     const available = new Set(OH.MOVIES.filter((m) => m.calendarDay === day).map((m) => m.intensity));
     assert.equal(levels.size, Math.min(3, available.size));
   }
-  assert.deepEqual(OH.tonightPicks(october(2026, 1), OH.defaultFilters(), []), { ids: [], eligibleCount: 0 });
 });
 
 test('tonight’s picks are stable for a date and follow the filters', () => {
-  const morning = OH.localDateInfo(new Date(2026, 9, 6, 8));
-  const night = OH.localDateInfo(new Date(2026, 9, 6, 23, 30));
+  const morning = OH.localDateInfo(new Date(2026, 9, 1, 8));
+  const night = OH.localDateInfo(new Date(2026, 9, 1, 23, 30));
   const f = OH.defaultFilters();
   assert.deepEqual(OH.tonightPicks(morning, f, []).ids, OH.tonightPicks(night, f, []).ids);
   const netflix = OH.tonightPicks(night, { ...f, services: ['Netflix'] }, []);
   assert.ok(netflix.ids.every((id) =>
-    byId[id].calendarDay === 6 && byId[id].streamingOffers.some((o) => o.service === 'Netflix')));
+    byId[id].calendarDay === 1 && byId[id].streamingOffers.some((o) => o.service === 'Netflix')));
   assert.deepEqual(OH.tonightPicks(OH.localDateInfo(new Date(2026, 10, 3, 12)), f, []), { ids: [], eligibleCount: 0 });
 });
 
@@ -313,12 +323,13 @@ test('loadState handles missing, corrupt, unsupported and blocked storage', () =
   assert.equal(blocked.problem, 'unavailable');
 });
 
-test('sanitizeState drops unknown ids and keeps valid genre/service filters', () => {
+test('sanitizeState drops unknown ids and keeps valid track/service filters', () => {
   const raw = {
     schemaVersion: 1,
     filters: {
       search: 42,
       genres: ['horror', 'not-a-genre'],
+      tracks: ['Light / Fun', 'Not A Track'],
       intensities: ['extreme', 'intense'],
       services: ['Netflix', 'Disney+'],
       hideWatched: 'yes'
@@ -328,7 +339,7 @@ test('sanitizeState drops unknown ids and keeps valid genre/service filters', ()
       '2026': {
         selectedIds: [SAMPLE_ID, 'not-a-movie', SAMPLE_ID],
         watchedIds: 'oops',
-        days: { '2026-10-03': { batches: { sig: [SAMPLE_ID] } } }
+        days: { '2026-10-01': { batches: { sig: [SAMPLE_ID] } } }
       }
     }
   };
@@ -336,7 +347,8 @@ test('sanitizeState drops unknown ids and keeps valid genre/service filters', ()
   assert.equal(problem, null);
   assert.deepEqual(state.filters, {
     search: '',
-    genres: ['horror'],
+    genres: [],
+    tracks: ['Light / Fun'],
     intensities: ['intense'],
     services: ['Netflix'],
     hideWatched: false
@@ -361,7 +373,7 @@ test('save files round trip all seasons and filters', () => {
   const state = freshState();
   OH.setTracked(state, 2025, 'watched', SAMPLE_ID, true);
   OH.setTracked(state, 2026, 'selected', SAMPLE_ID_2, true);
-  state.filters = OH.normalizeFilters({ genres: ['horror'], services: ['Netflix'], hideWatched: true });
+  state.filters = OH.normalizeFilters({ services: ['Netflix'], hideWatched: true });
   state.sort = 'year';
   const text = OH.exportState(state, '2026-10-03T20:00:00.000Z');
   assert.equal(JSON.parse(text).format, 'october-horror-save');

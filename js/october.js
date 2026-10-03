@@ -12,8 +12,12 @@
   var DEFAULT_CATALOG_URL = 'movies.json';
 
   // Replaced from catalog metadata when movies.json loads.
-  var GENRES = [
-    'comedy', 'crime', 'drama', 'family', 'fantasy', 'horror', 'mystery', 'romance', 'sci-fi', 'thriller'
+  var GENRES = [];
+  var TRACKS = [
+    'Light / Fun',
+    'Creepy / Moderate',
+    'Atmospheric Suspense',
+    'Intense / Disturbing'
   ];
   var STREAMING_SERVICES = ['Amazon Prime Video', 'Hulu', 'Netflix'];
   var INTENSITIES = ['light', 'moderate', 'intense'];
@@ -28,40 +32,10 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 
-  // Editorial night themes for the calendar day panel (not stored in movies.json).
-  var DAY_THEMES = {
-    1: 'Gothic hauntings',
-    2: 'Slashers & scream queens',
-    3: 'Meta horror & cabin nights',
-    4: 'Zombie night',
-    5: 'Classic ghosts',
-    6: 'Curses from Japan & beyond',
-    7: 'Ghost stories',
-    8: 'Sci-fi horror',
-    9: 'Creatures & body horror',
-    10: 'Survival horror',
-    11: 'Horror comedies',
-    12: 'Vampire night',
-    13: 'Nightmares & the mind',
-    14: 'Curses & contagion',
-    15: 'Paranoia & social horror',
-    16: 'Haunted houses',
-    17: 'Found footage',
-    18: 'Games & traps',
-    19: 'Strange nights',
-    20: 'Folk horror',
-    21: 'Weird & international',
-    22: 'Grief & motherhood',
-    23: 'Possession & the occult',
-    24: 'Family dread',
-    25: 'Psychological dread',
-    26: 'Exorcisms',
-    27: 'Woods & wilderness',
-    28: 'Critters & creatures',
-    29: 'Slasher classics',
-    30: 'Halloween eve',
-    31: 'Halloween night'
-  };
+  // Night themes come from movies.json (dayThemes) when present; fallback is the four-track frame.
+  var DAY_THEMES = {};
+  var DEFAULT_DAY_THEME = 'Light · creepy · atmospheric · intense';
+  for (var themeDay = 1; themeDay <= 31; themeDay++) DAY_THEMES[themeDay] = DEFAULT_DAY_THEME;
 
   var MOVIES = [];
   var ORDER = {};
@@ -70,7 +44,7 @@
   var catalogMeta = { version: '', filmsPerDay: 0 };
 
   function dayTheme(day) {
-    return DAY_THEMES[day] || '';
+    return DAY_THEMES[day] || DEFAULT_DAY_THEME;
   }
 
   // Split a night's filtered ids into editorial top picks (schedule order) and the rest.
@@ -142,6 +116,7 @@
       rtType: rt.type === 'movie' ? 'direct' : 'search',
       streamingOffers: offers,
       eligibilityStatus: typeof raw.eligibilityStatus === 'string' ? raw.eligibilityStatus : null,
+      track: typeof raw.track === 'string' && raw.track ? raw.track : null,
       reception: {
         status: reception.status || 'unreviewed',
         criticPercent: typeof reception.criticPercent === 'number' ? reception.criticPercent : null,
@@ -170,6 +145,13 @@
         if (typeof raw.intensityLegend[level] === 'string') INTENSITY_LABELS[level] = raw.intensityLegend[level];
       });
     }
+    if (raw.dayThemes && typeof raw.dayThemes === 'object') {
+      for (var d = 1; d <= 31; d++) {
+        var key = String(d);
+        if (typeof raw.dayThemes[key] === 'string' && raw.dayThemes[key]) DAY_THEMES[d] = raw.dayThemes[key];
+        else if (typeof raw.dayThemes[d] === 'string' && raw.dayThemes[d]) DAY_THEMES[d] = raw.dayThemes[d];
+      }
+    }
     var normalized = raw.movies.map(normalizeMovie).filter(function (m) {
       return m.id && m.title && m.year && m.calendarDay >= 1 && m.calendarDay <= 31;
     });
@@ -183,10 +165,15 @@
     }
     if (catalogMeta.filmsPerDay > 0) PICK_COUNT = catalogMeta.filmsPerDay;
 
-    var genreSource = Array.isArray(raw.genreTaxonomy) && raw.genreTaxonomy.length
+    var genreSource = Array.isArray(raw.genreTaxonomy)
       ? raw.genreTaxonomy.map(slugifyGenre)
       : normalized.reduce(function (all, movie) { return all.concat(movie.genres); }, []);
     replaceStringList(GENRES, genreSource);
+
+    var trackSource = raw.calendar && Array.isArray(raw.calendar.tracks) && raw.calendar.tracks.length
+      ? raw.calendar.tracks
+      : normalized.map(function (movie) { return movie.track; }).filter(Boolean);
+    replaceStringList(TRACKS, trackSource);
 
     var serviceSource = Array.isArray(raw.streamingServices) && raw.streamingServices.length
       ? raw.streamingServices
@@ -250,7 +237,7 @@
   // ── Filters ─────────────────────────────────────────────────
 
   function defaultFilters() {
-    return { search: '', genres: [], intensities: [], services: [], hideWatched: false };
+    return { search: '', genres: [], tracks: [], intensities: [], services: [], hideWatched: false };
   }
 
   function foldText(text) {
@@ -280,6 +267,9 @@
     if (Array.isArray(raw.genres)) {
       filters.genres = uniqueStrings(raw.genres.map(slugifyGenre)).filter(function (g) { return GENRES.indexOf(g) !== -1; });
     }
+    if (Array.isArray(raw.tracks)) {
+      filters.tracks = uniqueStrings(raw.tracks).filter(function (track) { return TRACKS.indexOf(track) !== -1; });
+    }
     if (Array.isArray(raw.intensities)) {
       filters.intensities = INTENSITIES.filter(function (level) { return raw.intensities.indexOf(level) !== -1; });
     } else if (raw.maxIntensity === 'light' || raw.maxIntensity === 'moderate') {
@@ -302,6 +292,7 @@
     return [movie.title]
       .concat(movie.aliases || [])
       .concat(movie.version ? [movie.version] : [])
+      .concat(movie.track ? [movie.track] : [])
       .concat(movie.culturalFocus ? [movie.culturalFocus] : [])
       .concat(movie.genres || [])
       .concat(movieServices(movie))
@@ -314,6 +305,7 @@
     if (filters.genres.length && !(movie.genres || []).some(function (g) { return filters.genres.indexOf(g) !== -1; })) {
       return false;
     }
+    if (filters.tracks && filters.tracks.length && filters.tracks.indexOf(movie.track) === -1) return false;
     if (filters.intensities.length && filters.intensities.indexOf(movie.intensity) === -1) return false;
     if (filters.services && filters.services.length) {
       var services = movieServices(movie);
@@ -339,6 +331,7 @@
       v: catalogVersion || catalogMeta.version,
       q: filters.search.trim().toLowerCase(),
       g: (filters.genres || []).slice().sort(),
+      t: (filters.tracks || []).slice().sort(),
       i: filters.intensities.length === INTENSITIES.length ? [] : INTENSITIES.filter(function (level) {
         return filters.intensities.indexOf(level) !== -1;
       }),
@@ -733,6 +726,7 @@
       labels.appendChild(tags);
     }
     labels.appendChild(intensityBadge(doc, movie.intensity));
+    if (movie.track) labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--track', movie.track));
     if (movie.culturalFocus) labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--focus', movie.culturalFocus));
     if (movie.reception && movie.reception.criticPercent != null) {
       labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--score', movie.reception.criticPercent + '% critics'));
@@ -882,6 +876,9 @@
       root.querySelectorAll('input[name="oh-genre"]').forEach(function (box) {
         box.checked = f.genres.indexOf(box.value) !== -1;
       });
+      root.querySelectorAll('input[name="oh-track"]').forEach(function (box) {
+        box.checked = (f.tracks || []).indexOf(box.value) !== -1;
+      });
       root.querySelectorAll('input[name="oh-intensity"]').forEach(function (box) {
         box.checked = f.intensities.indexOf(box.value) !== -1;
       });
@@ -895,8 +892,8 @@
 
     function renderFilterSummary() {
       var f = state.filters;
-      var active = (f.search.trim() ? 1 : 0) + f.genres.length + f.intensities.length +
-        (f.services ? f.services.length : 0) + (f.hideWatched ? 1 : 0);
+      var active = (f.search.trim() ? 1 : 0) + f.genres.length + (f.tracks ? f.tracks.length : 0) +
+        f.intensities.length + (f.services ? f.services.length : 0) + (f.hideWatched ? 1 : 0);
       $('#oh-filters-active').textContent = active ? active + ' active' : 'none active';
     }
 
@@ -924,7 +921,17 @@
     }
 
     function buildGenreControls() {
-      buildChipControls($('#oh-genres'), GENRES, 'oh-genre', 'oh-genre-');
+      var box = $('#oh-genres');
+      buildChipControls(box, GENRES, 'oh-genre', 'oh-genre-');
+      var fieldset = box && box.closest('fieldset');
+      if (fieldset) fieldset.hidden = GENRES.length === 0;
+    }
+
+    function buildTrackControls() {
+      var box = $('#oh-tracks');
+      buildChipControls(box, TRACKS, 'oh-track', 'oh-track-');
+      var fieldset = box && box.closest('fieldset');
+      if (fieldset) fieldset.hidden = TRACKS.length === 0;
     }
 
     function buildServiceControls() {
@@ -934,6 +941,8 @@
     function readFilters() {
       var genres = [];
       root.querySelectorAll('input[name="oh-genre"]:checked').forEach(function (box) { genres.push(box.value); });
+      var tracks = [];
+      root.querySelectorAll('input[name="oh-track"]:checked').forEach(function (box) { tracks.push(box.value); });
       var intensities = [];
       root.querySelectorAll('input[name="oh-intensity"]:checked').forEach(function (box) { intensities.push(box.value); });
       var services = [];
@@ -941,6 +950,7 @@
       state.filters = normalizeFilters({
         search: $('#oh-search').value,
         genres: genres,
+        tracks: tracks,
         intensities: intensities,
         services: services,
         hideWatched: $('#oh-hide-watched').checked
@@ -1121,8 +1131,8 @@
 
     function filtersActive() {
       var f = state.filters;
-      return !!(f.search.trim() || f.genres.length || f.intensities.length ||
-        (f.services && f.services.length) || f.hideWatched);
+      return !!(f.search.trim() || f.genres.length || (f.tracks && f.tracks.length) ||
+        f.intensities.length || (f.services && f.services.length) || f.hideWatched);
     }
 
     function renderCatalog() {
@@ -1359,6 +1369,7 @@
     win.setInterval(checkDate, 60000);
 
     buildGenreControls();
+    buildTrackControls();
     buildServiceControls();
     setSectionOpen($('#oh-filters-toggle'), false);
     setSectionOpen($('#oh-catalog-toggle'), false);
@@ -1434,6 +1445,7 @@
     get PICK_COUNT() { return PICK_COUNT; },
     STORAGE_KEY: STORAGE_KEY,
     GENRES: GENRES,
+    TRACKS: TRACKS,
     STREAMING_SERVICES: STREAMING_SERVICES,
     INTENSITIES: INTENSITIES,
     INTENSITY_LABELS: INTENSITY_LABELS,
