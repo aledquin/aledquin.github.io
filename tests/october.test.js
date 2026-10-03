@@ -291,6 +291,34 @@ test('save/load round trip keeps filters and tracking', () => {
   assert.equal(storage.data.unrelated, 'keep me');
 });
 
+test('save files round trip all seasons and filters', () => {
+  const state = freshState();
+  OH.setTracked(state, 2025, 'watched', 'alien-1979', true);
+  OH.setTracked(state, 2026, 'selected', 'scream-1996', true);
+  state.filters = OH.normalizeFilters({ genres: ['ghost'], hideWatched: true });
+  state.sort = 'year';
+  const text = OH.exportState(state, '2026-10-02T20:00:00.000Z');
+  assert.equal(JSON.parse(text).format, 'october-horror-save');
+  const { state: loaded, problem } = OH.importState(text);
+  assert.equal(problem, null);
+  assert.deepEqual(loaded.seasons, state.seasons);
+  assert.deepEqual(loaded.filters, state.filters);
+  assert.equal(loaded.sort, 'year');
+});
+
+test('importState rejects non-saves, bad JSON, old versions and oversized files', () => {
+  assert.equal(OH.importState('').problem, 'notASave');
+  assert.equal(OH.importState('{oops').problem, 'corrupt');
+  assert.equal(OH.importState(JSON.stringify(freshState())).problem, 'notASave');
+  assert.equal(OH.importState(JSON.stringify({ format: 'october-horror-save', state: { schemaVersion: 99 } })).problem, 'unsupported');
+  assert.equal(OH.importState('x'.repeat(OH.MAX_SAVE_BYTES + 1)).problem, 'tooLarge');
+  const tampered = JSON.stringify({
+    format: 'october-horror-save',
+    state: { schemaVersion: 1, seasons: { '2026': { selectedIds: ['not-a-movie', 'alien-1979'] }, evil: {} } }
+  });
+  assert.deepEqual(OH.importState(tampered).state.seasons, { '2026': { selectedIds: ['alien-1979'], watchedIds: [] } });
+});
+
 test('resetSeason clears only that season and restores filter/sort defaults', () => {
   const state = freshState();
   OH.setTracked(state, 2025, 'watched', 'alien-1979', true);

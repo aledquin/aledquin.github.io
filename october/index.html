@@ -202,8 +202,13 @@
 
         <div class="oh-reset">
           <p class="oh-hint">Your Want to watch and Watched lists stay in this browser &mdash; nothing is sent anywhere.</p>
-          <button type="button" id="oh-reset" class="btn btn--ghost">Reset my October</button>
-          <p class="oh-hint">Clears this season&rsquo;s Want to watch and Watched lists, and restores default filters.</p>
+          <div class="oh-reset__actions">
+            <button type="button" id="oh-save" class="btn btn--outline">Save my October</button>
+            <button type="button" id="oh-load" class="btn btn--outline">Load my October</button>
+            <input type="file" id="oh-load-file" accept=".json,application/json" hidden>
+            <button type="button" id="oh-reset" class="btn btn--ghost">Reset my October</button>
+          </div>
+          <p class="oh-hint">Save downloads your lists and filters as a file; Load restores them from that file, on this or another device. Reset clears this season&rsquo;s Want to watch and Watched lists, and restores default filters.</p>
           <p id="oh-mine-status" class="oh-status" aria-live="polite"></p>
         </div>
       </div>
