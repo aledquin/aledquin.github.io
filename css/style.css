@@ -1446,6 +1446,12 @@ p {
   color: var(--color-text);
 }
 
+.oh-movie__year {
+  color: var(--color-text-secondary);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
 .oh-movie__labels {
   display: flex;
   flex-wrap: wrap;
@@ -1646,7 +1652,43 @@ p {
 }
 
 .oh-day__heading {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
+}
+
+.oh-day__theme {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--oh-pumpkin, var(--color-primary));
+}
+
+.oh-day__section-title {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.oh-day__more {
+  margin-top: 0.75rem;
+}
+
+.oh-day__more-heading {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.oh-day__more .oh-toggle {
+  width: 100%;
+  justify-content: flex-start;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 0.65rem;
+}
+
+.oh-day__more .oh-list {
+  margin-top: 0.5rem;
 }
 
 /* Tabs */

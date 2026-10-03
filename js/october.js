@@ -27,11 +27,59 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 
+  // Editorial night themes for the calendar day panel (not stored in movies.json).
+  var DAY_THEMES = {
+    1: 'Gothic hauntings',
+    2: 'Slashers & scream queens',
+    3: 'Meta horror & cabin nights',
+    4: 'Zombie night',
+    5: 'Classic ghosts',
+    6: 'Curses from Japan & beyond',
+    7: 'Ghost stories',
+    8: 'Sci-fi horror',
+    9: 'Creatures & body horror',
+    10: 'Survival horror',
+    11: 'Horror comedies',
+    12: 'Vampire night',
+    13: 'Nightmares & the mind',
+    14: 'Curses & contagion',
+    15: 'Paranoia & social horror',
+    16: 'Haunted houses',
+    17: 'Found footage',
+    18: 'Games & traps',
+    19: 'Strange nights',
+    20: 'Folk horror',
+    21: 'Weird & international',
+    22: 'Grief & motherhood',
+    23: 'Possession & the occult',
+    24: 'Family dread',
+    25: 'Psychological dread',
+    26: 'Exorcisms',
+    27: 'Woods & wilderness',
+    28: 'Critters & creatures',
+    29: 'Slasher classics',
+    30: 'Halloween eve',
+    31: 'Halloween night'
+  };
+
   var MOVIES = [];
   var ORDER = {};
   var MOVIE_BY_ID = {};
   var CATALOG = null;
   var catalogMeta = { version: '', filmsPerDay: 0 };
+
+  function dayTheme(day) {
+    return DAY_THEMES[day] || '';
+  }
+
+  // Split a night's filtered ids into editorial top picks (schedule order) and the rest.
+  function splitDayMovies(ids) {
+    var list = (ids || []).slice();
+    return {
+      topIds: list.slice(0, PICK_COUNT),
+      moreIds: list.slice(PICK_COUNT)
+    };
+  }
 
   function normalizeMovie(raw, index) {
     var refs = raw && raw.references ? raw.references : {};
@@ -558,6 +606,8 @@
     var top = el(doc, 'div', 'oh-movie__top');
     var heading = el(doc, opts.headingLevel || 'h3', 'oh-movie__title');
     heading.appendChild(el(doc, 'span', 'oh-movie__name', movie.title));
+    heading.appendChild(doc.createTextNode(' '));
+    heading.appendChild(el(doc, 'span', 'oh-movie__year', '(' + movie.year + (movie.version ? ', ' + movie.version : '') + ')'));
     top.appendChild(heading);
 
     var toggle = el(doc, 'button', 'oh-movie__more');
@@ -664,6 +714,7 @@
     var today = localDateInfo(now());
     var selectedDay = today.inOctober ? today.day : 1;
     var followToday = today.inOctober;
+    var dayMoreOpen = false;
     var random = deps.random || function () { return win.Math.random(); };
     var randomSeed = String(random());
     var expandedCards = {};
@@ -888,11 +939,31 @@
         list.appendChild(item);
       }
       $('#oh-day-heading').textContent = formatOctoberDate(year, selectedDay);
+      var theme = dayTheme(selectedDay);
+      var themeEl = $('#oh-day-theme');
+      themeEl.textContent = theme;
+      themeEl.hidden = !theme;
       var ids = matchesByDay[selectedDay] || [];
+      var split = splitDayMovies(ids);
+      var scheduledTotal = totalByDay[selectedDay] || 0;
       $('#oh-day-status').textContent = filtered
-        ? ids.length + ' of ' + (totalByDay[selectedDay] || 0) + ' scheduled films match your filters.'
-        : (totalByDay[selectedDay] || 0) + ' scheduled films.';
-      renderCards($('#oh-day-list'), ids, 'day', 'h4');
+        ? ids.length + ' of ' + scheduledTotal + ' scheduled films match your filters.'
+        : scheduledTotal + ' scheduled films.';
+      renderCards($('#oh-day-list'), split.topIds, 'day', 'h4');
+      $('#oh-day-picks-wrap').hidden = split.topIds.length === 0;
+      var moreWrap = $('#oh-day-more-wrap');
+      var moreToggle = $('#oh-day-more-toggle');
+      if (split.moreIds.length) {
+        moreWrap.hidden = false;
+        $('#oh-day-more-count').textContent = String(split.moreIds.length);
+        renderCards($('#oh-day-more-list'), split.moreIds, 'day-more', 'h5');
+        setSectionOpen(moreToggle, dayMoreOpen);
+      } else {
+        moreWrap.hidden = true;
+        dayMoreOpen = false;
+        setSectionOpen(moreToggle, false);
+        renderCards($('#oh-day-more-list'), [], 'day-more', 'h5');
+      }
       $('#oh-day-empty').hidden = ids.length !== 0;
     }
 
@@ -966,6 +1037,7 @@
 
     var FOCUS_AFTER_REMOVAL = {
       '#oh-day-list': '#oh-day-heading',
+      '#oh-day-more-list': '#oh-day-more-toggle',
       '#oh-catalog-list': '#oh-catalog-toggle',
       '#oh-mine-list': '#oh-mine-heading',
       '#oh-watched-list': '#oh-watched-heading'
@@ -1106,14 +1178,18 @@
       if (target.matches('.oh-tab')) selectTab(target, false);
       else if (target.matches('.oh-movie__more')) toggleCard(target);
       else if (target.matches('.oh-toggle')) {
-        setSectionOpen(target, target.getAttribute('aria-expanded') !== 'true');
+        var open = target.getAttribute('aria-expanded') !== 'true';
+        setSectionOpen(target, open);
+        if (target.id === 'oh-day-more-toggle') dayMoreOpen = open;
       } else if (target.matches('.oh-clear')) clearFilters();
       else if (target.id === 'oh-shuffle') shuffle();
       else if (target.id === 'oh-reset') resetMyOctober();
       else if (target.id === 'oh-save') saveMyOctober();
       else if (target.id === 'oh-load') $('#oh-load-file').click();
       else if (target.matches('.oh-cal__day')) {
-        selectedDay = Number(target.getAttribute('data-day'));
+        var nextDay = Number(target.getAttribute('data-day'));
+        if (nextDay !== selectedDay) dayMoreOpen = false;
+        selectedDay = nextDay;
         followToday = today.inOctober && selectedDay === today.day;
         renderCalendar();
         var again = root.querySelector('.oh-cal__day[data-day="' + selectedDay + '"]');
@@ -1221,6 +1297,9 @@
     selectPicks: selectPicks,
     tonightPicks: tonightPicks,
     randomPicks: randomPicks,
+    dayTheme: dayTheme,
+    DAY_THEMES: DAY_THEMES,
+    splitDayMovies: splitDayMovies,
     getSeason: getSeason,
     setTracked: setTracked,
     resetSeason: resetSeason,

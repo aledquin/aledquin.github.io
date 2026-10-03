@@ -151,8 +151,24 @@
           </div>
           <div class="oh-day">
             <h3 id="oh-day-heading" class="oh-day__heading" tabindex="-1"></h3>
+            <p id="oh-day-theme" class="oh-day__theme"></p>
             <p id="oh-day-status" class="oh-status" aria-live="polite"></p>
-            <ul id="oh-day-list" class="oh-list"></ul>
+            <div id="oh-day-picks-wrap">
+              <h4 id="oh-day-picks-heading" class="oh-day__section-title">Top picks</h4>
+              <ul id="oh-day-list" class="oh-list oh-list--picks" aria-labelledby="oh-day-picks-heading"></ul>
+            </div>
+            <div id="oh-day-more-wrap" class="oh-day__more" hidden>
+              <h4 class="oh-day__more-heading">
+                <button type="button" id="oh-day-more-toggle" class="oh-toggle" aria-expanded="false" aria-controls="oh-day-more-body">
+                  <span>More this night</span>
+                  <span id="oh-day-more-count" class="oh-toggle__count"></span>
+                  <svg class="oh-toggle__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+              </h4>
+              <div id="oh-day-more-body" hidden>
+                <ul id="oh-day-more-list" class="oh-list" aria-label="More films this night"></ul>
+              </div>
+            </div>
             <div id="oh-day-empty" class="oh-empty" hidden>
               <p>None of this night&rsquo;s films match your filters.</p>
               <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
