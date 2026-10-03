@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "october-279-v2",
+  "catalogVersion": "october-280-v3",
   "title": "October Horror Movie Catalog",
   "updatedAt": "2026-10-02",
-  "totalMovies": 279,
+  "totalMovies": 280,
   "calendar": {
     "month": 10,
     "days": 31,
@@ -812,6 +812,51 @@
       "viewingNote": null,
       "genres": [],
       "blurb": ""
+    },
+    {
+      "id": "donnie-darko-2001",
+      "title": "Donnie Darko",
+      "aliases": [
+        "Danny Darko"
+      ],
+      "year": 2001,
+      "versionLabel": null,
+      "calendarDay": 2,
+      "dayOrder": 10,
+      "intensity": "moderate",
+      "productionCountries": [],
+      "countryVerification": {
+        "status": "unverified",
+        "checkedAt": null,
+        "sourceUrls": [],
+        "note": null
+      },
+      "culturalFocus": null,
+      "references": {
+        "imdb": {
+          "url": "https://www.imdb.com/find/?q=Donnie%20Darko%202001&s=tt",
+          "type": "search"
+        },
+        "rottenTomatoes": {
+          "url": "https://www.rottentomatoes.com/search?search=Donnie%20Darko%202001",
+          "type": "search"
+        }
+      },
+      "reception": {
+        "status": "unreviewed",
+        "criticPercent": null,
+        "criticReviewCount": null,
+        "limitedSample": null,
+        "source": null,
+        "sourceUrl": null,
+        "checkedAt": null
+      },
+      "viewingNote": null,
+      "genres": [
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "After surviving a freak accident, a troubled teenager is visited by a man in a menacing rabbit suit who tells him the world will end in 28 days."
     },
     {
       "id": "the-cabin-in-the-woods-2012",
@@ -11972,6 +12017,6 @@
       "blurb": ""
     }
   ],
-  "blurbCoverage": 247,
-  "genreCoverage": 247
+  "blurbCoverage": 248,
+  "genreCoverage": 248
 }
