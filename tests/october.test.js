@@ -137,12 +137,25 @@ test('streaming watch URLs are only accepted for known service hosts over HTTPS'
 
 // ── Filters & signatures ──
 
-test('filters: search, intensity, streaming service, hide watched', () => {
+test('filters: search, night track, intensity, streaming service, hide watched', () => {
   const f = OH.defaultFilters();
   assert.equal(OH.filterMovies(OH.MOVIES, f, []).length, 124);
   assert.deepEqual(f.genres, []);
+  assert.deepEqual(f.tracks, []);
   assert.deepEqual(f.services, []);
+  assert.deepEqual(OH.TRACKS, [
+    'Light / Fun',
+    'Creepy / Moderate',
+    'Atmospheric Suspense',
+    'Intense / Disturbing'
+  ]);
   assert.deepEqual(OH.filterMovies(OH.MOVIES, { ...f, search: '  BEETLEJUICE ' }, []).map((m) => m.id), [SAMPLE_ID]);
+  const lightTrack = OH.filterMovies(OH.MOVIES, { ...f, tracks: ['Light / Fun'] }, []);
+  assert.equal(lightTrack.length, 31);
+  assert.ok(lightTrack.every((m) => m.track === 'Light / Fun'));
+  const atmospheric = OH.filterMovies(OH.MOVIES, { ...f, tracks: ['Atmospheric Suspense'] }, []);
+  assert.equal(atmospheric.length, 31);
+  assert.ok(atmospheric.every((m) => m.track === 'Atmospheric Suspense' && m.intensity === 'moderate'));
   const netflix = OH.filterMovies(OH.MOVIES, { ...f, services: ['Netflix'] }, []);
   assert.ok(netflix.length > 0);
   assert.ok(netflix.every((m) => m.streamingOffers.some((o) => o.service === 'Netflix')));
@@ -181,15 +194,17 @@ test('legacy maxIntensity filters are converted to intensity selections', () => 
   assert.deepEqual(OH.normalizeFilters({ maxIntensity: 'intense' }).intensities, []);
 });
 
-test('signature is canonical and includes streaming services', () => {
+test('signature is canonical and includes tracks and streaming services', () => {
   const a = OH.filterSignature({
     search: ' Ghost ',
+    tracks: ['Atmospheric Suspense', 'Light / Fun'],
     intensities: ['moderate', 'light'],
     services: ['Hulu', 'Netflix'],
     hideWatched: false
   }, ['b', 'a'], 'v1');
   const b = OH.filterSignature({
     search: 'ghost',
+    tracks: ['Light / Fun', 'Atmospheric Suspense'],
     intensities: ['light', 'moderate'],
     services: ['Netflix', 'Hulu'],
     hideWatched: false
@@ -200,6 +215,7 @@ test('signature is canonical and includes streaming services', () => {
   const c = OH.filterSignature({ ...OH.defaultFilters(), hideWatched: true }, ['b', 'a'], 'v1');
   assert.deepEqual(JSON.parse(c).w, ['a', 'b']);
   assert.deepEqual(JSON.parse(a).s, ['Hulu', 'Netflix']);
+  assert.deepEqual(JSON.parse(a).t, ['Atmospheric Suspense', 'Light / Fun']);
 });
 
 // ── Selection ──
@@ -307,12 +323,13 @@ test('loadState handles missing, corrupt, unsupported and blocked storage', () =
   assert.equal(blocked.problem, 'unavailable');
 });
 
-test('sanitizeState drops unknown ids and keeps valid service filters', () => {
+test('sanitizeState drops unknown ids and keeps valid track/service filters', () => {
   const raw = {
     schemaVersion: 1,
     filters: {
       search: 42,
       genres: ['horror', 'not-a-genre'],
+      tracks: ['Light / Fun', 'Not A Track'],
       intensities: ['extreme', 'intense'],
       services: ['Netflix', 'Disney+'],
       hideWatched: 'yes'
@@ -331,6 +348,7 @@ test('sanitizeState drops unknown ids and keeps valid service filters', () => {
   assert.deepEqual(state.filters, {
     search: '',
     genres: [],
+    tracks: ['Light / Fun'],
     intensities: ['intense'],
     services: ['Netflix'],
     hideWatched: false

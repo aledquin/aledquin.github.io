@@ -94,20 +94,25 @@
           <form id="oh-filters" class="oh-filters" role="search" aria-label="Filter movies">
             <div class="oh-field oh-field--search">
               <label for="oh-search">Search titles</label>
-              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Title, alias, genre, or country focus">
+              <input type="search" id="oh-search" name="search" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Title, track, or streaming service">
             </div>
 
-            <fieldset class="oh-fieldset">
+            <fieldset class="oh-fieldset" hidden>
               <legend>Genres <span class="oh-hint">(none selected means all)</span></legend>
               <div id="oh-genres" class="oh-chips"></div>
             </fieldset>
 
             <fieldset class="oh-fieldset">
+              <legend>Night track <span class="oh-hint">(none selected means all)</span></legend>
+              <div id="oh-tracks" class="oh-chips"></div>
+            </fieldset>
+
+            <fieldset class="oh-fieldset">
               <legend>Intensity <span class="oh-hint">(none selected means all)</span></legend>
               <div class="oh-chips">
-                <label class="oh-check oh-chip" for="oh-intensity-light"><input type="checkbox" name="oh-intensity" id="oh-intensity-light" value="light"> Light</label>
-                <label class="oh-check oh-chip" for="oh-intensity-moderate"><input type="checkbox" name="oh-intensity" id="oh-intensity-moderate" value="moderate"> Moderate</label>
-                <label class="oh-check oh-chip" for="oh-intensity-intense"><input type="checkbox" name="oh-intensity" id="oh-intensity-intense" value="intense"> Intense</label>
+                <label class="oh-check oh-chip" for="oh-intensity-light"><input type="checkbox" name="oh-intensity" id="oh-intensity-light" value="light"> Light / fun</label>
+                <label class="oh-check oh-chip" for="oh-intensity-moderate"><input type="checkbox" name="oh-intensity" id="oh-intensity-moderate" value="moderate"> Creepy / atmospheric</label>
+                <label class="oh-check oh-chip" for="oh-intensity-intense"><input type="checkbox" name="oh-intensity" id="oh-intensity-intense" value="intense"> Intense / disturbing</label>
               </div>
             </fieldset>
 
@@ -123,13 +128,14 @@
           </form>
 
           <div class="oh-legend" aria-labelledby="oh-legend-title">
-            <p id="oh-legend-title" class="oh-legend__title">Intensity</p>
+            <p id="oh-legend-title" class="oh-legend__title">Night tracks</p>
             <ul class="oh-legend__list">
-              <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / fun</span></p></li>
-              <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / moderate</span></p></li>
-              <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / disturbing</span></p></li>
+              <li><p class="oh-intensity oh-intensity--light"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6"/></svg><span>Light / Fun</span></p></li>
+              <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Creepy / Moderate</span></p></li>
+              <li><p class="oh-intensity oh-intensity--moderate"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5 15 14.5H1z"/></svg><span>Atmospheric Suspense</span></p></li>
+              <li><p class="oh-intensity oh-intensity--intense"><svg class="oh-intensity__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1 15 8 8 15 1 8z"/><path d="M8 4.5v4.5M8 11.2v.3" class="oh-intensity__mark"/></svg><span>Intense / Disturbing</span></p></li>
             </ul>
-            <p class="oh-legend__note">Intensity is subjective. Lighter horror comedies may still contain gore.</p>
+            <p class="oh-legend__note">Each night has one film per track. Intensity is subjective; lighter picks may still contain gore.</p>
           </div>
         </div>
       </div>
@@ -260,7 +266,7 @@
           </div>
           <ul id="oh-catalog-list" class="oh-list"></ul>
           <div id="oh-catalog-empty" class="oh-empty" hidden>
-            <p>No movies match these filters. Try a shorter search, another streaming service, more genres, or another intensity.</p>
+            <p>No movies match these filters. Try a shorter search, another night track, streaming service, or intensity.</p>
             <button type="button" class="btn btn--outline oh-clear">Clear filters</button>
           </div>
         </div>

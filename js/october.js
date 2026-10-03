@@ -12,8 +12,12 @@
   var DEFAULT_CATALOG_URL = 'movies.json';
 
   // Replaced from catalog metadata when movies.json loads.
-  var GENRES = [
-    'comedy', 'crime', 'drama', 'family', 'fantasy', 'horror', 'mystery', 'romance', 'sci-fi', 'thriller'
+  var GENRES = [];
+  var TRACKS = [
+    'Light / Fun',
+    'Creepy / Moderate',
+    'Atmospheric Suspense',
+    'Intense / Disturbing'
   ];
   var STREAMING_SERVICES = ['Amazon Prime Video', 'Hulu', 'Netflix'];
   var INTENSITIES = ['light', 'moderate', 'intense'];
@@ -166,6 +170,11 @@
       : normalized.reduce(function (all, movie) { return all.concat(movie.genres); }, []);
     replaceStringList(GENRES, genreSource);
 
+    var trackSource = raw.calendar && Array.isArray(raw.calendar.tracks) && raw.calendar.tracks.length
+      ? raw.calendar.tracks
+      : normalized.map(function (movie) { return movie.track; }).filter(Boolean);
+    replaceStringList(TRACKS, trackSource);
+
     var serviceSource = Array.isArray(raw.streamingServices) && raw.streamingServices.length
       ? raw.streamingServices
       : normalized.reduce(function (all, movie) {
@@ -228,7 +237,7 @@
   // ── Filters ─────────────────────────────────────────────────
 
   function defaultFilters() {
-    return { search: '', genres: [], intensities: [], services: [], hideWatched: false };
+    return { search: '', genres: [], tracks: [], intensities: [], services: [], hideWatched: false };
   }
 
   function foldText(text) {
@@ -257,6 +266,9 @@
     if (typeof raw.search === 'string') filters.search = raw.search.slice(0, MAX_SEARCH_LENGTH);
     if (Array.isArray(raw.genres)) {
       filters.genres = uniqueStrings(raw.genres.map(slugifyGenre)).filter(function (g) { return GENRES.indexOf(g) !== -1; });
+    }
+    if (Array.isArray(raw.tracks)) {
+      filters.tracks = uniqueStrings(raw.tracks).filter(function (track) { return TRACKS.indexOf(track) !== -1; });
     }
     if (Array.isArray(raw.intensities)) {
       filters.intensities = INTENSITIES.filter(function (level) { return raw.intensities.indexOf(level) !== -1; });
@@ -293,6 +305,7 @@
     if (filters.genres.length && !(movie.genres || []).some(function (g) { return filters.genres.indexOf(g) !== -1; })) {
       return false;
     }
+    if (filters.tracks && filters.tracks.length && filters.tracks.indexOf(movie.track) === -1) return false;
     if (filters.intensities.length && filters.intensities.indexOf(movie.intensity) === -1) return false;
     if (filters.services && filters.services.length) {
       var services = movieServices(movie);
@@ -318,6 +331,7 @@
       v: catalogVersion || catalogMeta.version,
       q: filters.search.trim().toLowerCase(),
       g: (filters.genres || []).slice().sort(),
+      t: (filters.tracks || []).slice().sort(),
       i: filters.intensities.length === INTENSITIES.length ? [] : INTENSITIES.filter(function (level) {
         return filters.intensities.indexOf(level) !== -1;
       }),
@@ -862,6 +876,9 @@
       root.querySelectorAll('input[name="oh-genre"]').forEach(function (box) {
         box.checked = f.genres.indexOf(box.value) !== -1;
       });
+      root.querySelectorAll('input[name="oh-track"]').forEach(function (box) {
+        box.checked = (f.tracks || []).indexOf(box.value) !== -1;
+      });
       root.querySelectorAll('input[name="oh-intensity"]').forEach(function (box) {
         box.checked = f.intensities.indexOf(box.value) !== -1;
       });
@@ -875,8 +892,8 @@
 
     function renderFilterSummary() {
       var f = state.filters;
-      var active = (f.search.trim() ? 1 : 0) + f.genres.length + f.intensities.length +
-        (f.services ? f.services.length : 0) + (f.hideWatched ? 1 : 0);
+      var active = (f.search.trim() ? 1 : 0) + f.genres.length + (f.tracks ? f.tracks.length : 0) +
+        f.intensities.length + (f.services ? f.services.length : 0) + (f.hideWatched ? 1 : 0);
       $('#oh-filters-active').textContent = active ? active + ' active' : 'none active';
     }
 
@@ -910,6 +927,13 @@
       if (fieldset) fieldset.hidden = GENRES.length === 0;
     }
 
+    function buildTrackControls() {
+      var box = $('#oh-tracks');
+      buildChipControls(box, TRACKS, 'oh-track', 'oh-track-');
+      var fieldset = box && box.closest('fieldset');
+      if (fieldset) fieldset.hidden = TRACKS.length === 0;
+    }
+
     function buildServiceControls() {
       buildChipControls($('#oh-services'), STREAMING_SERVICES, 'oh-service', 'oh-service-');
     }
@@ -917,6 +941,8 @@
     function readFilters() {
       var genres = [];
       root.querySelectorAll('input[name="oh-genre"]:checked').forEach(function (box) { genres.push(box.value); });
+      var tracks = [];
+      root.querySelectorAll('input[name="oh-track"]:checked').forEach(function (box) { tracks.push(box.value); });
       var intensities = [];
       root.querySelectorAll('input[name="oh-intensity"]:checked').forEach(function (box) { intensities.push(box.value); });
       var services = [];
@@ -924,6 +950,7 @@
       state.filters = normalizeFilters({
         search: $('#oh-search').value,
         genres: genres,
+        tracks: tracks,
         intensities: intensities,
         services: services,
         hideWatched: $('#oh-hide-watched').checked
@@ -1104,8 +1131,8 @@
 
     function filtersActive() {
       var f = state.filters;
-      return !!(f.search.trim() || f.genres.length || f.intensities.length ||
-        (f.services && f.services.length) || f.hideWatched);
+      return !!(f.search.trim() || f.genres.length || (f.tracks && f.tracks.length) ||
+        f.intensities.length || (f.services && f.services.length) || f.hideWatched);
     }
 
     function renderCatalog() {
@@ -1342,6 +1369,7 @@
     win.setInterval(checkDate, 60000);
 
     buildGenreControls();
+    buildTrackControls();
     buildServiceControls();
     setSectionOpen($('#oh-filters-toggle'), false);
     setSectionOpen($('#oh-catalog-toggle'), false);
@@ -1417,6 +1445,7 @@
     get PICK_COUNT() { return PICK_COUNT; },
     STORAGE_KEY: STORAGE_KEY,
     GENRES: GENRES,
+    TRACKS: TRACKS,
     STREAMING_SERVICES: STREAMING_SERVICES,
     INTENSITIES: INTENSITIES,
     INTENSITY_LABELS: INTENSITY_LABELS,
