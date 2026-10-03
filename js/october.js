@@ -535,6 +535,8 @@
     var top = el(doc, 'div', 'oh-movie__top');
     var heading = el(doc, opts.headingLevel || 'h3', 'oh-movie__title');
     heading.appendChild(el(doc, 'span', 'oh-movie__name', movie.title));
+    heading.appendChild(doc.createTextNode(' '));
+    heading.appendChild(el(doc, 'span', 'oh-movie__year', '(' + movie.year + (movie.version ? ', ' + movie.version : '') + ')'));
     top.appendChild(heading);
 
     var toggle = el(doc, 'button', 'oh-movie__more');

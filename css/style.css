@@ -1446,6 +1446,12 @@ p {
   color: var(--color-text);
 }
 
+.oh-movie__year {
+  color: var(--color-text-secondary);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
 .oh-movie__labels {
   display: flex;
   flex-wrap: wrap;
