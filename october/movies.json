@@ -23,8 +23,7 @@
     "References marked search lead to search results, not verified movie pages.",
     "Critic percentages are dated positive-review shares, not live scores or average ratings.",
     "Reception is unreviewed where no current research snapshot was recorded; this does not indicate poor quality.",
-    "Original festival-release years can differ from U.S. release years on reference sites.",
-    "Blurbs and genre tags for titles carried over from the prior editorial catalog; new international additions may omit them until supplied."
+    "Original festival-release years can differ from U.S. release years on reference sites."
   ],
   "verifiedCoverage": {
     "productionCountries": 4,
@@ -428,8 +427,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "vampire",
+        "supernatural"
+      ],
+      "blurb": "An antiques dealer finds a centuries-old golden scarab that grants eternal life, and a terrible thirst for blood."
     },
     {
       "id": "scream-1996",
@@ -810,8 +812,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "Two carnivorous mermaid sisters join a 1980s Warsaw nightclub act in this wild, bloody horror musical fairy tale."
     },
     {
       "id": "the-cabin-in-the-woods-2012",
@@ -1194,8 +1199,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Sequel; graphic gore despite its comic tone.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "A survivor with a Nazi zombie's arm sewn on raises his own undead army in this gleefully gory splatter sequel."
     },
     {
       "id": "shaun-of-the-dead-2004",
@@ -1577,8 +1585,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "zombie",
+        "comedy"
+      ],
+      "blurb": "A Havana slacker turns a zombie outbreak into a business, charging to dispatch your loved ones in this satire."
     },
     {
       "id": "the-others-2001",
@@ -1962,8 +1973,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "Orphaned street kids in a cartel-ravaged Mexican town are trailed by whispering ghosts in this dark fairy tale."
     },
     {
       "id": "the-ring-2002",
@@ -2346,8 +2360,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "supernatural",
+        "ghost"
+      ],
+      "blurb": "After their ailing mother dies, a struggling family in rural Indonesia is visited by something wearing her face."
     },
     {
       "id": "the-sixth-sense-1999",
@@ -2735,8 +2752,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Jayro Bustamante's film; not The Curse of La Llorona (2019).",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "ghost",
+        "folk"
+      ],
+      "blurb": "A wailing spirit haunts the household of a Guatemalan ex-general on trial for genocide in this political ghost story."
     },
     {
       "id": "alien-1979",
@@ -3120,8 +3140,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Bleak existential science fiction rather than conventional monster horror.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "sci-fi",
+        "psychological"
+      ],
+      "blurb": "A ship carrying settlers to Mars is knocked off course, and its passengers slowly unravel as the void stretches on."
     },
     {
       "id": "the-thing-1982",
@@ -3506,8 +3529,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "body-horror",
+        "psychological"
+      ],
+      "blurb": "A lifelong vegetarian at veterinary school is forced to eat raw meat and develops a hunger she cannot control."
     },
     {
       "id": "the-descent-2005",
@@ -3890,8 +3916,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Especially graphic and disturbing.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "slasher",
+        "thriller"
+      ],
+      "blurb": "A pregnant widow alone on Christmas Eve is besieged by a scissor-wielding stranger who wants her unborn baby."
     },
     {
       "id": "tucker-dale-vs-evil-2010",
@@ -4274,8 +4303,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Addresses suicide despite its gentler tone.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "vampire",
+        "comedy"
+      ],
+      "blurb": "A tender-hearted teen vampire who refuses to kill strikes a deal with a lonely boy who wants to die. Deadpan and sweet."
     },
     {
       "id": "the-lost-boys-1987",
@@ -4658,8 +4690,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "vampire",
+        "thriller"
+      ],
+      "blurb": "A priest turned vampire by a failed medical trial falls into a lurid affair with his friend's restless wife."
     },
     {
       "id": "a-nightmare-on-elm-street-1984",
@@ -5041,8 +5076,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Adult animated psychological thriller.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "psychological",
+        "thriller"
+      ],
+      "blurb": "A pop idol turned actress loses her grip on reality as a stalker and a sinister double invade her life. Anime."
     },
     {
       "id": "it-follows-2014",
@@ -5424,8 +5462,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "ghost",
+        "supernatural"
+      ],
+      "blurb": "Ghosts seep into Tokyo through the internet, leaving lonely users to vanish into dark stains in this bleak chiller."
     },
     {
       "id": "get-out-2017",
@@ -5816,8 +5857,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "supernatural",
+        "psychological"
+      ],
+      "blurb": "In war-torn 1980s Tehran, a mother and daughter are stalked by a djinn as missiles rain down on the city."
     },
     {
       "id": "the-conjuring-2013",
@@ -6201,8 +6245,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "folk",
+        "psychological"
+      ],
+      "blurb": "In 1750 Austria, a pious new bride sinks into despair and contemplates a terrible way out. Based on court records."
     },
     {
       "id": "rec-2007",
@@ -6586,8 +6633,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "found-footage",
+        "supernatural"
+      ],
+      "blurb": "Vatican investigators sent to debunk a miracle at an English country church uncover something far older below."
     },
     {
       "id": "ready-or-not-2019",
@@ -6969,8 +7019,10 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "thriller"
+      ],
+      "blurb": "A class of Japanese teens is dumped on an island and forced by law to kill each other until one survivor remains."
     },
     {
       "id": "the-autopsy-of-jane-doe-2016",
@@ -7351,8 +7403,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Especially disturbing; its dark-comedy label does not indicate light intensity.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "comedy",
+        "thriller"
+      ],
+      "blurb": "A new father's ugly coffee table purchase leads to an unthinkable accident in this excruciating pitch-black comedy."
     },
     {
       "id": "the-witch-2015",
@@ -7736,8 +7791,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "folk",
+        "creature"
+      ],
+      "blurb": "Across three generations, a greedy man returns to a cursed village to steal gold from a fallen god's ravenous son."
     },
     {
       "id": "the-wailing-2016",
@@ -8126,8 +8184,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "supernatural",
+        "folk"
+      ],
+      "blurb": "A shaman, a feng shui master, and an undertaker dig up a wealthy family's ancestral grave and unleash a curse."
     },
     {
       "id": "the-babadook-2014",
@@ -8514,8 +8575,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "body-horror",
+        "supernatural"
+      ],
+      "blurb": "A young expectant mother is pursued by a contorting, bone-cracking presence that seems tied to her doubts."
     },
     {
       "id": "talk-to-me-2022",
@@ -8683,8 +8747,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Lighter relative to adult horror; imagery can still be frightening.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "spooky-adventure",
+        "supernatural"
+      ],
+      "blurb": "A bored girl finds a hidden door to a better version of her home, where the Other Mother wants button eyes on her."
     },
     {
       "id": "the-black-phone-2021",
@@ -8896,8 +8963,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "folk",
+        "supernatural"
+      ],
+      "blurb": "A woman returns to her ancestral village to claim an inheritance and finds villagers who want her skin."
     },
     {
       "id": "hereditary-2018",
@@ -9286,8 +9356,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "psychological",
+        "folk"
+      ],
+      "blurb": "A girl fleeing a Chilean cult colony hides in a house that warps around her in this nightmarish stop-motion fable."
     },
     {
       "id": "the-shining-1980",
@@ -9666,8 +9739,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "folk",
+        "supernatural"
+      ],
+      "blurb": "Estonian peasants trade souls for scrap-metal servants and steal from the dead in a strange black-and-white fable."
     },
     {
       "id": "the-exorcist-1973",
@@ -10050,8 +10126,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Especially graphic and disturbing.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "supernatural",
+        "body-horror"
+      ],
+      "blurb": "Five cops answer a backup call at an abandoned building and descend into a hellish black mass. Extremely graphic."
     },
     {
       "id": "the-blair-witch-project-1999",
@@ -10433,8 +10512,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "found-footage",
+        "creature"
+      ],
+      "blurb": "Student filmmakers follow a gruff government agent whose secret job is keeping Norway's trolls out of sight."
     },
     {
       "id": "the-return-of-the-living-dead-1985",
@@ -10819,8 +10901,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "comedy",
+        "supernatural"
+      ],
+      "blurb": "A priest decodes the date of the Antichrist's birth and teams with a metalhead to sin his way to Satan in Madrid."
     },
     {
       "id": "halloween-1978",
@@ -11199,8 +11284,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": "Especially disturbing.",
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "psychological",
+        "thriller"
+      ],
+      "blurb": "A widower stages a fake casting call to find a new wife and falls for a quiet woman with a horrifying secret."
     },
     {
       "id": "trick-r-treat-2007",
@@ -11582,8 +11670,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "creature",
+        "comedy"
+      ],
+      "blurb": "A Finnish dig unearths the real Santa Claus, a monstrous figure, and local kids start vanishing before Christmas."
     },
     {
       "id": "the-evil-dead-1981",
@@ -11968,8 +12059,11 @@
         "checkedAt": "2026-10-02"
       },
       "viewingNote": null,
-      "genres": [],
-      "blurb": ""
+      "genres": [
+        "folk",
+        "supernatural"
+      ],
+      "blurb": "Two women survive by killing samurai in the reeds of war-torn Japan until a demon mask takes hold. Erotic and eerie."
     }
   ],
   "blurbCoverage": 247,

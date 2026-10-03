@@ -126,11 +126,12 @@ test('filters: case/accent-insensitive search, genres, intensity, hide watched',
   assert.equal(hidden.length, 278);
 });
 
-test('most catalog titles keep editorial blurbs and genre tags in Details data', () => {
-  const withBlurb = OH.MOVIES.filter((m) => m.blurb);
-  const withGenres = OH.MOVIES.filter((m) => m.genres.length);
-  assert.ok(withBlurb.length >= 240, 'expected blurbs on carried-over titles, got ' + withBlurb.length);
-  assert.ok(withGenres.length >= 240, 'expected genres on carried-over titles, got ' + withGenres.length);
+test('every catalog title has an editorial blurb and genre tags in Details data', () => {
+  const missingBlurb = OH.MOVIES.filter((m) => !m.blurb).map((m) => m.id);
+  const missingGenres = OH.MOVIES.filter((m) => !m.genres.length).map((m) => m.id);
+  assert.deepEqual(missingBlurb, []);
+  assert.deepEqual(missingGenres, []);
+  assert.deepEqual(byId['the-lure-2015'].genres, ['creature', 'comedy']);
   const sleepy = byId['sleepy-hollow-1999'];
   assert.match(sleepy.blurb, /headless horseman/i);
   assert.deepEqual(sleepy.genres, ['gothic', 'supernatural']);
