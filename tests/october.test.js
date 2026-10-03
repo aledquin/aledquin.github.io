@@ -135,6 +135,21 @@ test('filters: case/accent-insensitive search, genres, intensity, hide watched',
   assert.equal(hidden.length, 279);
 });
 
+test('each calendar night has a theme and splits into top picks plus more', () => {
+  for (let day = 1; day <= 31; day++) {
+    assert.ok(OH.dayTheme(day), 'missing theme for day ' + day);
+  }
+  assert.equal(OH.dayTheme(1), 'Gothic hauntings');
+  assert.equal(OH.dayTheme(31), 'Halloween night');
+  const day1 = OH.MOVIES.filter((m) => m.calendarDay === 1).map((m) => m.id);
+  const split = OH.splitDayMovies(day1);
+  assert.deepEqual(split.topIds, day1.slice(0, 3));
+  assert.deepEqual(split.moreIds, day1.slice(3));
+  assert.equal(split.topIds.length, 3);
+  assert.ok(split.moreIds.length >= 6);
+  assert.deepEqual(OH.splitDayMovies(['a', 'b']).moreIds, []);
+});
+
 test('every catalog title has an editorial blurb and genre tags in Details data', () => {
   const missingBlurb = OH.MOVIES.filter((m) => !m.blurb).map((m) => m.id);
   const missingGenres = OH.MOVIES.filter((m) => !m.genres.length).map((m) => m.id);
