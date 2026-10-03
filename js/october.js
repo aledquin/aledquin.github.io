@@ -797,7 +797,7 @@
       } else {
         heading.textContent = formatLocalDate(today) + ' — three of tonight’s scheduled films.';
         status = filtersActive()
-          ? result.eligibleCount + ' of tonight’s ' + catalogMeta.filmsPerDay + ' films match your filters.'
+          ? result.eligibleCount + ' of tonight’s ' + moviesOnDay(today.day).length + ' films match your filters.'
           : '';
         if (result.eligibleCount > 0 && result.eligibleCount < PICK_COUNT) {
           status += ' Fewer than three match, so fewer picks are shown.';
@@ -831,6 +831,8 @@
       var offset = octoberWeekday(year, 1);
       var filtered = filtersActive();
       var matchesByDay = {};
+      var totalByDay = {};
+      MOVIES.forEach(function (m) { totalByDay[m.calendarDay] = (totalByDay[m.calendarDay] || 0) + 1; });
       filterMovies(MOVIES, state.filters, season().watchedIds).forEach(function (m) {
         (matchesByDay[m.calendarDay] = matchesByDay[m.calendarDay] || []).push(m.id);
       });
@@ -858,15 +860,15 @@
         if (filtered && !matchCount) button.classList.add('oh-cal__day--none');
         button.setAttribute('aria-label', formatOctoberDate(year, day) +
           (day === 31 ? ' (Halloween)' : '') + (isToday ? ' (today)' : '') +
-          (filtered ? ', ' + matchCount + ' of ' + catalogMeta.filmsPerDay + ' films match' : ''));
+          (filtered ? ', ' + matchCount + ' of ' + (totalByDay[day] || 0) + ' films match' : ''));
         item.appendChild(button);
         list.appendChild(item);
       }
       $('#oh-day-heading').textContent = formatOctoberDate(year, selectedDay);
       var ids = matchesByDay[selectedDay] || [];
       $('#oh-day-status').textContent = filtered
-        ? ids.length + ' of ' + catalogMeta.filmsPerDay + ' scheduled films match your filters.'
-        : catalogMeta.filmsPerDay + ' scheduled films.';
+        ? ids.length + ' of ' + (totalByDay[selectedDay] || 0) + ' scheduled films match your filters.'
+        : (totalByDay[selectedDay] || 0) + ' scheduled films.';
       renderCards($('#oh-day-list'), ids, 'day', 'h4');
       $('#oh-day-empty').hidden = ids.length !== 0;
     }
