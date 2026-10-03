@@ -1591,6 +1591,11 @@ p {
   background: rgba(180, 83, 49, 0.12);
 }
 
+.oh-tag--track {
+  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .oh-movie__track {
   display: flex;
   flex-wrap: wrap;
@@ -2002,6 +2007,11 @@ p {
 .oh-dark .oh-tag--stream {
   color: #ffb089;
   background: rgba(255, 122, 26, 0.16);
+}
+
+.oh-dark .oh-tag--track {
+  color: rgba(232, 220, 245, 0.75);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .oh-tag--focus {

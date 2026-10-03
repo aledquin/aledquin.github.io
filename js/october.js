@@ -28,40 +28,10 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 
-  // Editorial night themes for the calendar day panel (not stored in movies.json).
-  var DAY_THEMES = {
-    1: 'Gothic hauntings',
-    2: 'Slashers & scream queens',
-    3: 'Meta horror & cabin nights',
-    4: 'Zombie night',
-    5: 'Classic ghosts',
-    6: 'Curses from Japan & beyond',
-    7: 'Ghost stories',
-    8: 'Sci-fi horror',
-    9: 'Creatures & body horror',
-    10: 'Survival horror',
-    11: 'Horror comedies',
-    12: 'Vampire night',
-    13: 'Nightmares & the mind',
-    14: 'Curses & contagion',
-    15: 'Paranoia & social horror',
-    16: 'Haunted houses',
-    17: 'Found footage',
-    18: 'Games & traps',
-    19: 'Strange nights',
-    20: 'Folk horror',
-    21: 'Weird & international',
-    22: 'Grief & motherhood',
-    23: 'Possession & the occult',
-    24: 'Family dread',
-    25: 'Psychological dread',
-    26: 'Exorcisms',
-    27: 'Woods & wilderness',
-    28: 'Critters & creatures',
-    29: 'Slasher classics',
-    30: 'Halloween eve',
-    31: 'Halloween night'
-  };
+  // Night themes come from movies.json (dayThemes) when present; fallback is the four-track frame.
+  var DAY_THEMES = {};
+  var DEFAULT_DAY_THEME = 'Light · creepy · atmospheric · intense';
+  for (var themeDay = 1; themeDay <= 31; themeDay++) DAY_THEMES[themeDay] = DEFAULT_DAY_THEME;
 
   var MOVIES = [];
   var ORDER = {};
@@ -70,7 +40,7 @@
   var catalogMeta = { version: '', filmsPerDay: 0 };
 
   function dayTheme(day) {
-    return DAY_THEMES[day] || '';
+    return DAY_THEMES[day] || DEFAULT_DAY_THEME;
   }
 
   // Split a night's filtered ids into editorial top picks (schedule order) and the rest.
@@ -142,6 +112,7 @@
       rtType: rt.type === 'movie' ? 'direct' : 'search',
       streamingOffers: offers,
       eligibilityStatus: typeof raw.eligibilityStatus === 'string' ? raw.eligibilityStatus : null,
+      track: typeof raw.track === 'string' && raw.track ? raw.track : null,
       reception: {
         status: reception.status || 'unreviewed',
         criticPercent: typeof reception.criticPercent === 'number' ? reception.criticPercent : null,
@@ -170,6 +141,13 @@
         if (typeof raw.intensityLegend[level] === 'string') INTENSITY_LABELS[level] = raw.intensityLegend[level];
       });
     }
+    if (raw.dayThemes && typeof raw.dayThemes === 'object') {
+      for (var d = 1; d <= 31; d++) {
+        var key = String(d);
+        if (typeof raw.dayThemes[key] === 'string' && raw.dayThemes[key]) DAY_THEMES[d] = raw.dayThemes[key];
+        else if (typeof raw.dayThemes[d] === 'string' && raw.dayThemes[d]) DAY_THEMES[d] = raw.dayThemes[d];
+      }
+    }
     var normalized = raw.movies.map(normalizeMovie).filter(function (m) {
       return m.id && m.title && m.year && m.calendarDay >= 1 && m.calendarDay <= 31;
     });
@@ -183,7 +161,7 @@
     }
     if (catalogMeta.filmsPerDay > 0) PICK_COUNT = catalogMeta.filmsPerDay;
 
-    var genreSource = Array.isArray(raw.genreTaxonomy) && raw.genreTaxonomy.length
+    var genreSource = Array.isArray(raw.genreTaxonomy)
       ? raw.genreTaxonomy.map(slugifyGenre)
       : normalized.reduce(function (all, movie) { return all.concat(movie.genres); }, []);
     replaceStringList(GENRES, genreSource);
@@ -302,6 +280,7 @@
     return [movie.title]
       .concat(movie.aliases || [])
       .concat(movie.version ? [movie.version] : [])
+      .concat(movie.track ? [movie.track] : [])
       .concat(movie.culturalFocus ? [movie.culturalFocus] : [])
       .concat(movie.genres || [])
       .concat(movieServices(movie))
@@ -733,6 +712,7 @@
       labels.appendChild(tags);
     }
     labels.appendChild(intensityBadge(doc, movie.intensity));
+    if (movie.track) labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--track', movie.track));
     if (movie.culturalFocus) labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--focus', movie.culturalFocus));
     if (movie.reception && movie.reception.criticPercent != null) {
       labels.appendChild(el(doc, 'span', 'oh-tag oh-tag--score', movie.reception.criticPercent + '% critics'));
@@ -924,7 +904,10 @@
     }
 
     function buildGenreControls() {
-      buildChipControls($('#oh-genres'), GENRES, 'oh-genre', 'oh-genre-');
+      var box = $('#oh-genres');
+      buildChipControls(box, GENRES, 'oh-genre', 'oh-genre-');
+      var fieldset = box && box.closest('fieldset');
+      if (fieldset) fieldset.hidden = GENRES.length === 0;
     }
 
     function buildServiceControls() {
