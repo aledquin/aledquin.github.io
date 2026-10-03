@@ -47,15 +47,24 @@ const byId = Object.fromEntries(OH.MOVIES.map((m) => [m.id, m]));
 
 // ── Catalog JSON ──
 
-test('movies.json loads as the catalog: 279 films, 9 per day', () => {
-  assert.equal(catalog.totalMovies, 279);
-  assert.equal(OH.MOVIES.length, 279);
-  assert.equal(OH.CATALOG_VERSION, 'october-279-v2');
+test('movies.json loads as the catalog: 280 films, 9 per day plus an extra on Oct 2', () => {
+  assert.equal(catalog.totalMovies, 280);
+  assert.equal(OH.MOVIES.length, 280);
+  assert.equal(OH.CATALOG_VERSION, 'october-280-v3');
   assert.equal(OH.FILMS_PER_DAY, 9);
   const perDay = {};
   OH.MOVIES.forEach((m) => { perDay[m.calendarDay] = (perDay[m.calendarDay] || 0) + 1; });
   assert.equal(Object.keys(perDay).length, 31);
-  Object.values(perDay).forEach((n) => assert.equal(n, 9));
+  Object.entries(perDay).forEach(([day, n]) => assert.equal(n, day === '2' ? 10 : 9, 'day ' + day));
+});
+
+test('Donnie Darko (2001) is scheduled for October 2 and findable as "Danny Darko"', () => {
+  const darko = byId['donnie-darko-2001'];
+  assert.ok(darko);
+  assert.equal(darko.calendarDay, 2);
+  assert.equal(darko.dayOrder, 10);
+  const hits = OH.filterMovies(OH.MOVIES, { ...OH.defaultFilters(), search: 'danny darko' }, []);
+  assert.deepEqual(hits.map((m) => m.id), ['donnie-darko-2001']);
 });
 
 test('identities are unique and enums valid', () => {
@@ -67,7 +76,7 @@ test('identities are unique and enums valid', () => {
     assert.ok(OH.INTENSITIES.includes(m.intensity));
     assert.ok(m.calendarDay >= 1 && m.calendarDay <= 31);
   });
-  assert.equal(ids.size, 279);
+  assert.equal(ids.size, 280);
 });
 
 test('October 22 has The Monster (2016); Coraline replaces The Haunted Mansion', () => {
@@ -114,7 +123,7 @@ test('direct reference URLs are only accepted for exact HTTPS film pages on expe
 
 test('filters: case/accent-insensitive search, genres, intensity, hide watched', () => {
   const f = OH.defaultFilters();
-  assert.equal(OH.filterMovies(OH.MOVIES, f, []).length, 279);
+  assert.equal(OH.filterMovies(OH.MOVIES, f, []).length, 280);
   assert.deepEqual(f.genres, []);
   assert.deepEqual(OH.filterMovies(OH.MOVIES, { ...f, search: '  CORALINE ' }, []).map((m) => m.id), ['coraline-2009']);
   const ghost = OH.filterMovies(OH.MOVIES, { ...f, genres: ['ghost'] }, []);
@@ -123,7 +132,7 @@ test('filters: case/accent-insensitive search, genres, intensity, hide watched',
   const intenseOnly = OH.filterMovies(OH.MOVIES, { ...f, intensities: ['intense'] }, []);
   assert.equal(intenseOnly.length, OH.MOVIES.filter((m) => m.intensity === 'intense').length);
   const hidden = OH.filterMovies(OH.MOVIES, { ...f, hideWatched: true }, ['alien-1979']);
-  assert.equal(hidden.length, 278);
+  assert.equal(hidden.length, 279);
 });
 
 test('every catalog title has an editorial blurb and genre tags in Details data', () => {
@@ -166,7 +175,7 @@ test('tonight’s picks come from that night’s calendar and mix intensities', 
   for (let day = 1; day <= 31; day++) {
     const result = OH.tonightPicks(october(2026, day), OH.defaultFilters(), []);
     assert.equal(result.ids.length, 3);
-    assert.equal(result.eligibleCount, 9);
+    assert.equal(result.eligibleCount, OH.MOVIES.filter((m) => m.calendarDay === day).length);
     result.ids.forEach((id) => assert.equal(byId[id].calendarDay, day));
     const levels = new Set(result.ids.map((id) => byId[id].intensity));
     const available = new Set(OH.MOVIES.filter((m) => m.calendarDay === day).map((m) => m.intensity));
@@ -281,6 +290,34 @@ test('save/load round trip keeps filters and tracking', () => {
   assert.equal(state.filters.search, 'night');
   assert.deepEqual(OH.getSeason(state, 2026).selectedIds, ['alien-1979']);
   assert.equal(storage.data.unrelated, 'keep me');
+});
+
+test('save files round trip all seasons and filters', () => {
+  const state = freshState();
+  OH.setTracked(state, 2025, 'watched', 'alien-1979', true);
+  OH.setTracked(state, 2026, 'selected', 'scream-1996', true);
+  state.filters = OH.normalizeFilters({ genres: ['ghost'], hideWatched: true });
+  state.sort = 'year';
+  const text = OH.exportState(state, '2026-10-02T20:00:00.000Z');
+  assert.equal(JSON.parse(text).format, 'october-horror-save');
+  const { state: loaded, problem } = OH.importState(text);
+  assert.equal(problem, null);
+  assert.deepEqual(loaded.seasons, state.seasons);
+  assert.deepEqual(loaded.filters, state.filters);
+  assert.equal(loaded.sort, 'year');
+});
+
+test('importState rejects non-saves, bad JSON, old versions and oversized files', () => {
+  assert.equal(OH.importState('').problem, 'notASave');
+  assert.equal(OH.importState('{oops').problem, 'corrupt');
+  assert.equal(OH.importState(JSON.stringify(freshState())).problem, 'notASave');
+  assert.equal(OH.importState(JSON.stringify({ format: 'october-horror-save', state: { schemaVersion: 99 } })).problem, 'unsupported');
+  assert.equal(OH.importState('x'.repeat(OH.MAX_SAVE_BYTES + 1)).problem, 'tooLarge');
+  const tampered = JSON.stringify({
+    format: 'october-horror-save',
+    state: { schemaVersion: 1, seasons: { '2026': { selectedIds: ['not-a-movie', 'alien-1979'] }, evil: {} } }
+  });
+  assert.deepEqual(OH.importState(tampered).state.seasons, { '2026': { selectedIds: ['alien-1979'], watchedIds: [] } });
 });
 
 test('resetSeason clears only that season and restores filter/sort defaults', () => {

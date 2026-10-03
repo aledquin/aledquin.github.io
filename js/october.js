@@ -424,6 +424,29 @@
     }
   }
 
+  // ── Save files (download / load) ─────────────────────────────
+
+  var SAVE_FORMAT = 'october-horror-save';
+  var MAX_SAVE_BYTES = 512 * 1024;
+
+  function exportState(state, savedAt) {
+    return JSON.stringify({ format: SAVE_FORMAT, savedAt: savedAt || null, state: state }, null, 2) + '\n';
+  }
+
+  function importState(text) {
+    if (typeof text !== 'string' || !text) return { state: null, problem: 'notASave' };
+    if (text.length > MAX_SAVE_BYTES) return { state: null, problem: 'tooLarge' };
+    var parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (err) {
+      return { state: null, problem: 'corrupt' };
+    }
+    if (!isPlainObject(parsed) || parsed.format !== SAVE_FORMAT) return { state: null, problem: 'notASave' };
+    var result = sanitizeState(parsed.state);
+    return result.problem ? { state: null, problem: result.problem } : { state: result.state, problem: null };
+  }
+
   // ── Reference links ──────────────────────────────────────────
 
   var REFERENCE_RULES = {
@@ -799,7 +822,7 @@
       } else {
         heading.textContent = formatLocalDate(today) + ' — three of tonight’s scheduled films.';
         status = filtersActive()
-          ? result.eligibleCount + ' of tonight’s ' + catalogMeta.filmsPerDay + ' films match your filters.'
+          ? result.eligibleCount + ' of tonight’s ' + moviesOnDay(today.day).length + ' films match your filters.'
           : '';
         if (result.eligibleCount > 0 && result.eligibleCount < PICK_COUNT) {
           status += ' Fewer than three match, so fewer picks are shown.';
@@ -833,6 +856,8 @@
       var offset = octoberWeekday(year, 1);
       var filtered = filtersActive();
       var matchesByDay = {};
+      var totalByDay = {};
+      MOVIES.forEach(function (m) { totalByDay[m.calendarDay] = (totalByDay[m.calendarDay] || 0) + 1; });
       filterMovies(MOVIES, state.filters, season().watchedIds).forEach(function (m) {
         (matchesByDay[m.calendarDay] = matchesByDay[m.calendarDay] || []).push(m.id);
       });
@@ -860,15 +885,15 @@
         if (filtered && !matchCount) button.classList.add('oh-cal__day--none');
         button.setAttribute('aria-label', formatOctoberDate(year, day) +
           (day === 31 ? ' (Halloween)' : '') + (isToday ? ' (today)' : '') +
-          (filtered ? ', ' + matchCount + ' of ' + catalogMeta.filmsPerDay + ' films match' : ''));
+          (filtered ? ', ' + matchCount + ' of ' + (totalByDay[day] || 0) + ' films match' : ''));
         item.appendChild(button);
         list.appendChild(item);
       }
       $('#oh-day-heading').textContent = formatOctoberDate(year, selectedDay);
       var ids = matchesByDay[selectedDay] || [];
       $('#oh-day-status').textContent = filtered
-        ? ids.length + ' of ' + catalogMeta.filmsPerDay + ' scheduled films match your filters.'
-        : catalogMeta.filmsPerDay + ' scheduled films.';
+        ? ids.length + ' of ' + (totalByDay[selectedDay] || 0) + ' scheduled films match your filters.'
+        : (totalByDay[selectedDay] || 0) + ' scheduled films.';
       renderCards($('#oh-day-list'), ids, 'day', 'h4');
       $('#oh-day-empty').hidden = ids.length !== 0;
     }
@@ -987,6 +1012,67 @@
       $('#oh-mine-status').textContent = 'Your October was reset.';
     }
 
+    var LOAD_PROBLEMS = {
+      tooLarge: 'That file is too large to be an October save.',
+      corrupt: 'That file could not be read as an October save.',
+      notASave: 'That file is not an October save. Use a file made with “Save my October”.',
+      unsupported: 'That save came from an unsupported version, so it was not loaded.',
+      unreadable: 'Your browser could not read that file.'
+    };
+
+    function seasonSummary(s) {
+      return s.selectedIds.length + ' want to watch, ' + s.watchedIds.length + ' watched';
+    }
+
+    function saveMyOctober() {
+      var status = $('#oh-mine-status');
+      if (typeof win.Blob !== 'function' || !win.URL || typeof win.URL.createObjectURL !== 'function') {
+        status.textContent = 'This browser cannot download files.';
+        return;
+      }
+      var name = 'my-october-' + today.key + '.json';
+      var url = win.URL.createObjectURL(new win.Blob([exportState(state, now().toISOString())], { type: 'application/json' }));
+      var link = doc.createElement('a');
+      link.href = url;
+      link.download = name;
+      link.hidden = true;
+      doc.body.appendChild(link);
+      link.click();
+      link.remove();
+      win.setTimeout(function () { win.URL.revokeObjectURL(url); }, 0);
+      status.textContent = 'Saved ' + name + ' (' + seasonSummary(season()) + ' in ' + today.year + ').';
+    }
+
+    function applyLoaded(text, name) {
+      var status = $('#oh-mine-status');
+      var result = importState(text);
+      if (result.problem) {
+        status.textContent = LOAD_PROBLEMS[result.problem] || LOAD_PROBLEMS.corrupt;
+        return;
+      }
+      var ok = confirmFn('Load ' + name + '? It replaces your Want to watch and Watched lists for every season, ' +
+        'and your filters, in this browser.');
+      if (!ok) return;
+      state = result.state;
+      syncFilterControls();
+      persist();
+      renderAll();
+      status.textContent = 'Loaded ' + name + ' (' + seasonSummary(season()) + ' in ' + today.year + ').';
+    }
+
+    function loadMyOctober(input) {
+      var file = input.files && input.files[0];
+      input.value = '';
+      if (!file) return;
+      if (file.size > MAX_SAVE_BYTES) {
+        $('#oh-mine-status').textContent = LOAD_PROBLEMS.tooLarge;
+        return;
+      }
+      file.text().then(function (text) { applyLoaded(text, file.name); }, function () {
+        $('#oh-mine-status').textContent = LOAD_PROBLEMS.unreadable;
+      });
+    }
+
     function checkDate() {
       var next = localDateInfo(now());
       if (next.key === today.key) return;
@@ -1001,6 +1087,7 @@
     root.addEventListener('change', function (event) {
       var target = event.target;
       if (target.matches('input[data-track]')) onTrackChange(target);
+      else if (target.id === 'oh-load-file') loadMyOctober(target);
       else if (target.matches('#oh-sort')) {
         state.sort = SORTS.indexOf(target.value) !== -1 ? target.value : 'scheduled';
         persist();
@@ -1025,6 +1112,8 @@
       } else if (target.matches('.oh-clear')) clearFilters();
       else if (target.id === 'oh-shuffle') shuffle();
       else if (target.id === 'oh-reset') resetMyOctober();
+      else if (target.id === 'oh-save') saveMyOctober();
+      else if (target.id === 'oh-load') $('#oh-load-file').click();
       else if (target.matches('.oh-cal__day')) {
         selectedDay = Number(target.getAttribute('data-day'));
         followToday = today.inOctober && selectedDay === today.day;
@@ -1141,6 +1230,9 @@
     sanitizeState: sanitizeState,
     loadState: loadState,
     saveState: saveState,
+    MAX_SAVE_BYTES: MAX_SAVE_BYTES,
+    exportState: exportState,
+    importState: importState,
     isAllowedReferenceUrl: isAllowedReferenceUrl,
     searchQuery: searchQuery,
     referenceLinks: referenceLinks,

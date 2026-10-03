@@ -1765,6 +1765,12 @@ p {
   margin: 0.5rem 0;
 }
 
+.oh-reset__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 @media (max-width: 400px) {
   .oh-cal__weekdays,
   .oh-cal__days {
