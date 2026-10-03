@@ -1514,7 +1514,8 @@ p {
 }
 
 .oh-movie__imdb,
-.oh-movie__rt {
+.oh-movie__rt,
+.oh-movie__stream {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -1523,8 +1524,13 @@ p {
 }
 
 .oh-movie__imdb:hover,
-.oh-movie__rt:hover {
+.oh-movie__rt:hover,
+.oh-movie__stream:hover {
   color: var(--color-primary);
+}
+
+.oh-movie__refs--stream {
+  margin-bottom: 0.35rem;
 }
 
 .oh-ext {
@@ -1574,6 +1580,15 @@ p {
   color: var(--color-accent);
   background: rgba(61, 90, 87, 0.08);
   border-radius: 100px;
+}
+
+.oh-tags--stream {
+  margin-bottom: 0;
+}
+
+.oh-tag--stream {
+  color: #8b3a2a;
+  background: rgba(180, 83, 49, 0.12);
 }
 
 .oh-movie__track {
@@ -1982,6 +1997,11 @@ p {
 
 .oh-dark .oh-tag {
   background: rgba(199, 166, 255, 0.12);
+}
+
+.oh-dark .oh-tag--stream {
+  color: #ffb089;
+  background: rgba(255, 122, 26, 0.16);
 }
 
 .oh-tag--focus {
