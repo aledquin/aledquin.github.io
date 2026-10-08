@@ -32,9 +32,9 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 
-  // Night themes come from movies.json (dayThemes) when present; fallback is the four-track frame.
+  // Editorial night themes come from movies.json (dayThemes) when present.
   var DAY_THEMES = {};
-  var DEFAULT_DAY_THEME = 'Light · creepy · atmospheric · intense';
+  var DEFAULT_DAY_THEME = '';
   for (var themeDay = 1; themeDay <= 31; themeDay++) DAY_THEMES[themeDay] = DEFAULT_DAY_THEME;
 
   var MOVIES = [];
