@@ -53,7 +53,7 @@ const SAMPLE_ID_2 = 'get-out-2017';
 test('movies.json loads the complete matrix: 124 films, 4 every day', () => {
   assert.equal(catalog.totalMovies, 124);
   assert.equal(OH.MOVIES.length, 124);
-  assert.equal(OH.CATALOG_VERSION, 'october-horror-complete-matrix-v1');
+  assert.equal(OH.CATALOG_VERSION, 'october-horror-themed-nights-v2');
   assert.equal(OH.FILMS_PER_DAY, 4);
   assert.equal(OH.PICK_COUNT, 4);
   const perDay = {};
@@ -167,10 +167,22 @@ test('filters: search, night track, intensity, streaming service, hide watched',
   assert.equal(hidden.length, 123);
 });
 
-test('each calendar night uses the four-track theme and shows all four as top picks', () => {
+test('each calendar night has a unique editorial theme and shows all four tracks as top picks', () => {
+  const themes = new Set();
   for (let day = 1; day <= 31; day++) {
-    assert.equal(OH.dayTheme(day), 'Light · creepy · atmospheric · intense');
+    const theme = OH.dayTheme(day);
+    assert.ok(theme && theme !== 'Light · creepy · atmospheric · intense', 'missing theme for day ' + day);
+    assert.ok(!themes.has(theme), 'duplicate theme: ' + theme);
+    themes.add(theme);
+    const ids = OH.MOVIES.filter((m) => m.calendarDay === day).map((m) => m.id);
+    assert.equal(ids.length, 4);
+    assert.deepEqual(
+      ids.map((id) => byId[id].track),
+      ['Light / Fun', 'Creepy / Moderate', 'Atmospheric Suspense', 'Intense / Disturbing']
+    );
   }
+  assert.equal(OH.dayTheme(1), 'Home is where the horror is');
+  assert.equal(OH.dayTheme(31), 'Halloween night');
   const day1 = OH.MOVIES.filter((m) => m.calendarDay === 1).map((m) => m.id);
   const split = OH.splitDayMovies(day1);
   assert.deepEqual(split.topIds, day1);
